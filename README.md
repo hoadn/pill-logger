@@ -1,4 +1,4 @@
 pill-logger
 ===========
 
-An application for Android that helps you track the pills you take
+An app for Android that helps you track the pills you take.
