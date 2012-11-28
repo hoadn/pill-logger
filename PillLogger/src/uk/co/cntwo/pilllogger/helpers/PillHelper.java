@@ -6,20 +6,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
-import android.widget.Toast;
 
-import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.models.*;
 
 public class PillHelper {
 	private static List<Pill> _pills;
 	
+	@SuppressWarnings("unchecked")
 	public static List<Pill> getPills(Context context){
 		if(_pills != null)
 			return _pills;

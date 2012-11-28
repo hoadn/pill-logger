@@ -1,17 +1,13 @@
 package uk.co.cntwo.pilllogger.activities;
 
 import uk.co.cntwo.pilllogger.R;
-import uk.co.cntwo.pilllogger.R.layout;
-import uk.co.cntwo.pilllogger.R.menu;
 import uk.co.cntwo.pilllogger.helpers.PillHelper;
 import uk.co.cntwo.pilllogger.models.Pill;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class NewPillActivity extends Activity {
 
