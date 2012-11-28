@@ -1,3 +1,0 @@
-INDEX VERSION 1.126+/home/alex/Development/pill-logger/.metadata/.plugins/org.eclipse.jdt.core
-1862757540.index
-3353207003.index
