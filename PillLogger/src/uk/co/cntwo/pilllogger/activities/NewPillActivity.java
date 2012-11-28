@@ -25,7 +25,7 @@ public class NewPillActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_main, menu);
+        getMenuInflater().inflate(R.menu.activity_newpill, menu);
         return true;
     }
     
@@ -33,11 +33,15 @@ public class NewPillActivity extends Activity {
     	Pill pill = new Pill();
     	
     	String name = ((EditText)findViewById(R.id.name)).getText().toString();
-    	int size = Integer.parseInt(((EditText)findViewById(R.id.size)).getText().toString());
-    	pill.setName(name);
-    	pill.setSize(size);
+    	EditText sizeText = (EditText)findViewById(R.id.size);
     	
-    	PillHelper.addPill(getBaseContext(), pill);    
+    	if(sizeText != null){
+	    	int size = Integer.parseInt(sizeText.getText().toString());
+	    	pill.setName(name);
+	    	pill.setSize(size);
+	    	
+	    	PillHelper.addPill(getBaseContext(), pill);    
+    	}
     }
     
 }
