@@ -11,28 +11,33 @@ import java.util.List;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
+import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.models.*;
 
 public class PillHelper {
+	private static List<Pill> _pills;
+	
 	public static List<Pill> getPills(Context context){
-		File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-		File file = new File(path, "pills");
+		if(_pills != null)
+			return _pills;
+		
+		File file = getPillsFile();
 		try{
 			FileInputStream fis = new FileInputStream(file);
 			ObjectInputStream is = new ObjectInputStream(fis);
 			List<Pill> pills = (List<Pill>)is.readObject();
 			is.close();
 			
+			_pills = pills;
 			return pills;
 		}
 		catch(IOException e){
-			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-			//TODO: Error handling
+			ErrorHelper.logError(context, e.getMessage(), e);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ErrorHelper.logError(context, e.getMessage(), e);
 		}
 		return null;
 	}
@@ -43,13 +48,12 @@ public class PillHelper {
 			pills.add(pill);
 			savePills(context, pills);
 		}else{
-			Toast.makeText(context, "Pills was null =(", Toast.LENGTH_LONG).show();
+			ErrorHelper.logError(context, "Pills collection was null");
 		}
 	}
 	
 	private static void savePills(Context context, List<Pill> pills){
-		File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-		File file = new File(path, "pills");
+		File file = getPillsFile();
 		try{
 			FileOutputStream fos = new FileOutputStream(file);
 			ObjectOutputStream os = new ObjectOutputStream(fos);
@@ -57,8 +61,12 @@ public class PillHelper {
 			os.close();
 		}
 		catch(IOException e){
-			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-			//TODO: Error handling
+			ErrorHelper.logError(context, e.getMessage(), e);
 		}
+	}
+	
+	private static File getPillsFile(){
+		File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+		return new File(path, "pills");
 	}
 }
