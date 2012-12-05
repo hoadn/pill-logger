@@ -4,6 +4,7 @@
 package uk.co.cntwo.pilllogger.models;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * @author alex
@@ -14,6 +15,7 @@ public class Pill implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private UUID _id;
 	private String _name;
 	private int _size;
 
@@ -43,5 +45,19 @@ public class Pill implements Serializable {
 	 */
 	public void setSize(int size) {
 		_size = size;
+	}
+
+	public UUID getId() {
+		return _id;
+	}
+	
+
+	public Pill() {
+		_id = UUID.randomUUID();
+	}
+
+	@Override
+	public String toString(){
+		return getName() + '(' + getSize() + ')';
 	}
 }

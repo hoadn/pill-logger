@@ -8,5 +8,7 @@
     <string name="pill_size_hint">Pill Size</string>
     <string name="units">g</string>
     <string name="add_button">Add</string>
+    <string name="title_pill_detail">Pill Detail</string>
+    <string name="title_pill_list">Pills</string>
 
 </resources>
