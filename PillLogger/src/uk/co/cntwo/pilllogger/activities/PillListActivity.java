@@ -3,8 +3,6 @@ package uk.co.cntwo.pilllogger.activities;
 import java.util.UUID;
 
 import uk.co.cntwo.pilllogger.R;
-import uk.co.cntwo.pilllogger.R.id;
-import uk.co.cntwo.pilllogger.R.layout;
 import uk.co.cntwo.pilllogger.fragments.PillDetailFragment;
 import uk.co.cntwo.pilllogger.fragments.PillListFragment;
 import android.content.Intent;

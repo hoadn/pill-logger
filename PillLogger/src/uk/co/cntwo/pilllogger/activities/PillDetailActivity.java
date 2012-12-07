@@ -1,8 +1,6 @@
 package uk.co.cntwo.pilllogger.activities;
 
 import uk.co.cntwo.pilllogger.R;
-import uk.co.cntwo.pilllogger.R.id;
-import uk.co.cntwo.pilllogger.R.layout;
 import uk.co.cntwo.pilllogger.fragments.PillDetailFragment;
 import android.content.Intent;
 import android.os.Bundle;
