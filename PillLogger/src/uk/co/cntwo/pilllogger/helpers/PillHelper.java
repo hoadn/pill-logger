@@ -43,9 +43,9 @@ public class PillHelper {
 			return pills;
 		}
 		catch(IOException e){
-			ErrorHelper.logError(context, e.getMessage(), e);
+			Logger.e(context, e.getMessage(), e);
 		} catch (ClassNotFoundException e) {
-			ErrorHelper.logError(context, e.getMessage(), e);
+			Logger.e(context, e.getMessage(), e);
 		}
 		return null;
 	}
@@ -65,7 +65,7 @@ public class PillHelper {
 			pills.add(pill);
 			savePills(context, pills);
 		}else{
-			ErrorHelper.logError(context, "Pills collection was null");
+			Logger.e(context, "Pills collection was null");
 		}
 	}
 	
@@ -78,7 +78,7 @@ public class PillHelper {
 			os.close();
 		}
 		catch(IOException e){
-			ErrorHelper.logError(context, e.getMessage(), e);
+			Logger.e(context, e.getMessage(), e);
 		}
 	}
 	
