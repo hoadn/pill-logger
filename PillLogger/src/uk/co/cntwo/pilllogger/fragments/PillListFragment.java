@@ -50,7 +50,7 @@ public class PillListFragment extends ListFragment {
 		/**
 		 * Callback for when an item has been selected.
 		 */
-		public void onItemSelected(UUID id);
+		public void onItemSelected(int id);
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class PillListFragment extends ListFragment {
 	 */
 	private static Callbacks sDummyCallbacks = new Callbacks() {
 		@Override
-		public void onItemSelected(UUID id) {
+		public void onItemSelected(int id) {
 		}
 	};
 
@@ -80,17 +80,17 @@ public class PillListFragment extends ListFragment {
 				android.R.id.text1, pills));
 	}
 
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-
-		// Restore the previously serialized activated item position.
-		if (savedInstanceState != null
-				&& savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
-			setActivatedPosition(savedInstanceState
-					.getInt(STATE_ACTIVATED_POSITION));
-		}
-	}
+//	@Override
+//	public void onViewCreated(View view, Bundle savedInstanceState) {
+//		super.onViewCreated(view, savedInstanceState);
+//
+//		// Restore the previously serialized activated item position.
+//		if (savedInstanceState != null
+//				&& savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
+//			setActivatedPosition(savedInstanceState
+//					.getInt(STATE_ACTIVATED_POSITION));
+//		}
+//	}
 
 	@Override
 	public void onAttach(Activity activity) {

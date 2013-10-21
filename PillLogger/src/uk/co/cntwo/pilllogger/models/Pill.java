@@ -15,9 +15,17 @@ public class Pill implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private UUID _id;
+	private int _id;
 	private String _name;
 	private int _size;
+
+    public Pill() {
+    }
+
+    public Pill(String name, int size) {
+        _name = name;
+        _size = size;
+    }
 
 	/**
 	 * @return the name
@@ -47,14 +55,13 @@ public class Pill implements Serializable {
 		_size = size;
 	}
 
-	public UUID getId() {
+	public int getId() {
 		return _id;
 	}
-	
 
-	public Pill() {
-		_id = UUID.randomUUID();
-	}
+    public void setId(int id) {
+        _id = id;
+    }
 
 	@Override
 	public String toString(){

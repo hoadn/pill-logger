@@ -1,10 +1,15 @@
 package uk.co.cntwo.pilllogger.activities;
 
+import java.util.List;
 import java.util.UUID;
 
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.fragments.PillDetailFragment;
 import uk.co.cntwo.pilllogger.fragments.PillListFragment;
+import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
+import uk.co.cntwo.pilllogger.helpers.Logger;
+import uk.co.cntwo.pilllogger.models.Pill;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -51,6 +56,11 @@ public class PillListActivity extends FragmentActivity implements
 					R.id.pill_list)).setActivateOnItemClick(true);
 		}
 
+        Logger.v("TestLogger", "Before opening database");
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
+        List<Pill> pills = dbHelper.getAllPills();
+        Logger.v("TestLogger", "Before opening database, pill: " + pills.get(0).getName());
+
 		// TODO: If exposing deep links into your app, handle intents here.
 	}
 
@@ -59,13 +69,13 @@ public class PillListActivity extends FragmentActivity implements
 	 * the item with the given ID was selected.
 	 */
 	@Override
-	public void onItemSelected(UUID id) {
+	public void onItemSelected(int id) {
 		if (mTwoPane) {
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a
 			// fragment transaction.
 			Bundle arguments = new Bundle();
-			arguments.putString(PillDetailFragment.ARG_ITEM_ID, id.toString());
+			arguments.putString(PillDetailFragment.ARG_ITEM_ID, String.valueOf(id));
 			PillDetailFragment fragment = new PillDetailFragment();
 			fragment.setArguments(arguments);
 			getSupportFragmentManager().beginTransaction()

@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,32 +23,8 @@ public class PillHelper {
 	
 	@SuppressWarnings("unchecked")
 	public static List<Pill> getPills(Context context){
-		if(_pills != null)
-			return _pills;
-		
-		File file = getPillsFile();
-		try{
-			FileInputStream fis = new FileInputStream(file);
-			ObjectInputStream is = new ObjectInputStream(fis);
-			List<Pill> pills = (List<Pill>)is.readObject();
-			is.close();
-			
-			_pills = pills;
-			
-			_pillMap = new HashMap<UUID, Pill>();
-			
-			for(Pill pill : pills){
-				_pillMap.put(pill.getId(), pill);
-			}
-			
-			return pills;
-		}
-		catch(IOException e){
-			Logger.e("PillHelper.getPills", e.getMessage(), e);
-		} catch (ClassNotFoundException e) {
-			Logger.e("PillHelper.getPills", e.getMessage(), e);
-		}
-		return null;
+        DatabaseHelper dbh = new DatabaseHelper(context);
+        return dbh.getAllPills();
 	}
 	
 	public static Map<UUID, Pill> getPillMap(Context context){
@@ -60,13 +37,8 @@ public class PillHelper {
 	}
 	
 	public static void addPill(Context context, Pill pill){
-		List<Pill> pills = getPills(context);
-		if(pills != null){
-			pills.add(pill);
-			savePills(context, pills);
-		}else{
-			Logger.e("PillHelper.addPill", "Pills collection was null");
-		}
+		DatabaseHelper dbh = new DatabaseHelper(context);
+        dbh.insertPill(pill);
 	}
 	
 	private static void savePills(Context context, List<Pill> pills){

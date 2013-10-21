@@ -9,7 +9,7 @@ import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 /**
- * An activity representing a single Pill detail screen. This activity is only
+ * An activity representing a single Pills detail screen. This activity is only
  * used on handset devices. On tablet-size devices, item details are presented
  * side-by-side with a list of items in a {@link PillListActivity}.
  * <p>

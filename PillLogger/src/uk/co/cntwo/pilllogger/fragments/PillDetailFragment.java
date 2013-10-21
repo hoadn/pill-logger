@@ -14,7 +14,7 @@ import uk.co.cntwo.pilllogger.helpers.PillHelper;
 import uk.co.cntwo.pilllogger.models.Pill;
 
 /**
- * A fragment representing a single Pill detail screen. This fragment is either
+ * A fragment representing a single Pills detail screen. This fragment is either
  * contained in a {@link PillListActivity} in two-pane mode (on tablets) or a
  * {@link PillDetailActivity} on handsets.
  */
