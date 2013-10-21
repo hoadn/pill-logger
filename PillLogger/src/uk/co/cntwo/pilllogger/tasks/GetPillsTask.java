@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import java.util.List;
 
 import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
-import uk.co.cntwo.pilllogger.interfaces.PillsRecievedListener;
+import uk.co.cntwo.pilllogger.interfaces.PillsReceivedListener;
 import uk.co.cntwo.pilllogger.models.Pill;
 
 /**
@@ -15,9 +15,9 @@ import uk.co.cntwo.pilllogger.models.Pill;
 public class GetPillsTask extends AsyncTask<Void, Void, List<Pill>>{
 
     Context _context;
-    PillsRecievedListener _listener;
+    PillsReceivedListener _listener;
 
-    public GetPillsTask(Context context, PillsRecievedListener listener) {
+    public GetPillsTask(Context context, PillsReceivedListener listener) {
         _context = context;
         _listener = listener;
     }
@@ -31,6 +31,6 @@ public class GetPillsTask extends AsyncTask<Void, Void, List<Pill>>{
 
     @Override
     protected void onPostExecute(List<Pill> pills) {
-        _listener.pillsRecieved(pills);
+        _listener.pillsReceived(pills);
     }
 }

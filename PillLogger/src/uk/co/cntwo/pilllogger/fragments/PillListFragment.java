@@ -1,19 +1,16 @@
 package uk.co.cntwo.pilllogger.fragments;
 
 import java.util.List;
-import java.util.UUID;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import uk.co.cntwo.pilllogger.helpers.Logger;
 import uk.co.cntwo.pilllogger.helpers.PillHelper;
-import uk.co.cntwo.pilllogger.interfaces.PillsRecievedListener;
+import uk.co.cntwo.pilllogger.interfaces.PillsReceivedListener;
 import uk.co.cntwo.pilllogger.models.Pill;
 import uk.co.cntwo.pilllogger.tasks.GetPillsTask;
 
@@ -26,7 +23,7 @@ import uk.co.cntwo.pilllogger.tasks.GetPillsTask;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class PillListFragment extends ListFragment implements PillsRecievedListener {
+public class PillListFragment extends ListFragment implements PillsReceivedListener {
 
 
     /**
@@ -158,7 +155,7 @@ public class PillListFragment extends ListFragment implements PillsRecievedListe
 	}
 
     @Override
-    public void pillsRecieved(List<Pill> pills) {
+    public void pillsReceived(List<Pill> pills) {
         // TODO: replace with a real list adapter.
         setListAdapter(new ArrayAdapter<Pill>(getActivity(),
                 android.R.layout.simple_list_item_activated_1,

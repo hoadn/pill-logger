@@ -7,7 +7,7 @@ import uk.co.cntwo.pilllogger.models.Pill;
 /**
  * Created by nick on 21/10/13.
  */
-public interface PillsRecievedListener {
+public interface PillsReceivedListener {
 
-    public void pillsRecieved(List<Pill> pills);
+    public void pillsReceived(List<Pill> pills);
 }
