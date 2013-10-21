@@ -4,14 +4,18 @@ import java.util.List;
 import java.util.UUID;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import uk.co.cntwo.pilllogger.helpers.Logger;
 import uk.co.cntwo.pilllogger.helpers.PillHelper;
+import uk.co.cntwo.pilllogger.interfaces.PillsRecievedListener;
 import uk.co.cntwo.pilllogger.models.Pill;
+import uk.co.cntwo.pilllogger.tasks.GetPillsTask;
 
 /**
  * A list fragment representing a list of Pills. This fragment also supports
@@ -22,9 +26,10 @@ import uk.co.cntwo.pilllogger.models.Pill;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class PillListFragment extends ListFragment {
+public class PillListFragment extends ListFragment implements PillsRecievedListener {
 
-	/**
+
+    /**
 	 * The serialization (saved instance state) Bundle key representing the
 	 * activated item position. Only used on tablets.
 	 */
@@ -74,10 +79,7 @@ public class PillListFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		List<Pill> pills = PillHelper.getPills(getActivity());
-		// TODO: replace with a real list adapter.
-		setListAdapter(new ArrayAdapter<Pill>(getActivity(),
-				android.R.layout.simple_list_item_activated_1,
-				android.R.id.text1, pills));
+        new GetPillsTask(getActivity(), this).execute();
 	}
 
 //	@Override
@@ -121,7 +123,7 @@ public class PillListFragment extends ListFragment {
 		List<Pill> pills = PillHelper.getPills(getActivity());
 		// Notify the active callbacks interface (the activity, if the
 		// fragment is attached to one) that an item has been selected.
-		mCallbacks.onItemSelected(pills.get(position).getId());
+        mCallbacks.onItemSelected(pills.get(position).getId());
 	}
 
 	@Override
@@ -154,4 +156,12 @@ public class PillListFragment extends ListFragment {
 
 		mActivatedPosition = position;
 	}
+
+    @Override
+    public void pillsRecieved(List<Pill> pills) {
+        // TODO: replace with a real list adapter.
+        setListAdapter(new ArrayAdapter<Pill>(getActivity(),
+                android.R.layout.simple_list_item_activated_1,
+                android.R.id.text1, pills));
+    }
 }

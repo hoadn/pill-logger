@@ -39,8 +39,8 @@ public class PillDetailActivity extends FragmentActivity {
 			// Create the detail fragment and add it to the activity
 			// using a fragment transaction.
 			Bundle arguments = new Bundle();
-			arguments.putString(PillDetailFragment.ARG_ITEM_ID, getIntent()
-					.getStringExtra(PillDetailFragment.ARG_ITEM_ID));
+			arguments.putInt(PillDetailFragment.ARG_ITEM_ID, getIntent()
+					.getIntExtra(PillDetailFragment.ARG_ITEM_ID, 0));
 			PillDetailFragment fragment = new PillDetailFragment();
 			fragment.setArguments(arguments);
 			getSupportFragmentManager().beginTransaction()

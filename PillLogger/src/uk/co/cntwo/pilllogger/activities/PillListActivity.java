@@ -56,7 +56,6 @@ public class PillListActivity extends FragmentActivity implements
 					R.id.pill_list)).setActivateOnItemClick(true);
 		}
 
-
 		// TODO: If exposing deep links into your app, handle intents here.
 	}
 
@@ -71,7 +70,7 @@ public class PillListActivity extends FragmentActivity implements
 			// adding or replacing the detail fragment using a
 			// fragment transaction.
 			Bundle arguments = new Bundle();
-			arguments.putString(PillDetailFragment.ARG_ITEM_ID, String.valueOf(id));
+			arguments.putInt(PillDetailFragment.ARG_ITEM_ID, id);
 			PillDetailFragment fragment = new PillDetailFragment();
 			fragment.setArguments(arguments);
 			getSupportFragmentManager().beginTransaction()

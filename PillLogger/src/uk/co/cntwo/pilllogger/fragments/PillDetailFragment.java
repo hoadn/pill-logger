@@ -7,9 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.activities.PillDetailActivity;
 import uk.co.cntwo.pilllogger.activities.PillListActivity;
+import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
+import uk.co.cntwo.pilllogger.helpers.Logger;
 import uk.co.cntwo.pilllogger.helpers.PillHelper;
 import uk.co.cntwo.pilllogger.models.Pill;
 
@@ -45,8 +49,12 @@ public class PillDetailFragment extends Fragment {
 			// Load the dummy content specified by the fragment
 			// arguments. In a real-world scenario, use a Loader
 			// to load content from a content provider.
-			_item = PillHelper.getPillMap(getActivity()).get(getArguments().getString(
-					ARG_ITEM_ID));
+            DatabaseHelper dbh = new DatabaseHelper(getActivity());
+            List<Pill> pills = dbh.getAllPills();
+            for (Pill pill : pills) {
+                if (pill.getId() == getArguments().getInt(ARG_ITEM_ID))
+                    _item = pill;
+            }
 		}
 	}
 
@@ -60,7 +68,11 @@ public class PillDetailFragment extends Fragment {
 		if (_item != null) {
 			((TextView) rootView.findViewById(R.id.pill_detail))
 					.setText(_item.getName());
+            Logger.v("PillDetailFragment.onCreateView", "pill name is " + _item.getName());
 		}
+        else {
+            Logger.v("PillDetailFragment.onCreateView", "item is null");
+        }
 
 		return rootView;
 	}
