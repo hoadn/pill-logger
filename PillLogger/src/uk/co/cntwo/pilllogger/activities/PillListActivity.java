@@ -56,10 +56,6 @@ public class PillListActivity extends FragmentActivity implements
 					R.id.pill_list)).setActivateOnItemClick(true);
 		}
 
-        Logger.v("TestLogger", "Before opening database");
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        List<Pill> pills = dbHelper.getAllPills();
-        Logger.v("TestLogger", "Before opening database, pill: " + pills.get(0).getName());
 
 		// TODO: If exposing deep links into your app, handle intents here.
 	}
