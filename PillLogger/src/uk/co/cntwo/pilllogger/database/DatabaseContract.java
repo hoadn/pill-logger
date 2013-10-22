@@ -7,8 +7,6 @@ import android.provider.BaseColumns;
  */
 public final class DatabaseContract {
 
-    public static final String CREATE_STATEMENTS = CreateTables.CREATE_PILL_TABLE + ";" + CreateTables.CREATE_CONSUMPTION_TABLE;
-    public static final String DELETE_STATEMENTS = DeleteTables.DELETE_PILL_TABLE + ";" + DeleteTables.DELETE_CONSUMPTION_TABLE;
     //To stop accidentally instantiating the contract class I put an empty constructor
     public DatabaseContract() {}
 

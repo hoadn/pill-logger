@@ -16,11 +16,13 @@ public class DatabaseCreator extends SQLiteOpenHelper{
     }
 
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DatabaseContract.CREATE_STATEMENTS);
+        db.execSQL(DatabaseContract.CreateTables.CREATE_PILL_TABLE);
+        db.execSQL(DatabaseContract.CreateTables.CREATE_CONSUMPTION_TABLE);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(DatabaseContract.DELETE_STATEMENTS);
+        db.execSQL(DatabaseContract.DeleteTables.DELETE_PILL_TABLE);
+        db.execSQL(DatabaseContract.DeleteTables.DELETE_CONSUMPTION_TABLE);
         onCreate(db);
     }
 
