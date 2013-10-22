@@ -5,13 +5,15 @@
                 android:layout_height="match_parent"
                 android:columnCount="5"
                 android:gravity="fill"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                >
 
     <LinearLayout
         android:id="@+id/main_top_images_layout"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:orientation="horizontal" >
+        android:layout_height="150dp"
+        android:orientation="horizontal"
+        android:background="@drawable/container_dropshadow">
 
         <ImageView
                 android:id="@+id/main_add"
@@ -19,7 +21,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:padding="10dp"
-                android:src="@drawable/plus" />
+                android:src="@drawable/plus"
+                android:clickable="true"
+                android:background="?android:attr/selectableItemBackground"/>
 
         <ImageView
                 android:id="@+id/main_graph"
@@ -27,7 +31,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:padding="10dp"
-                android:src="@drawable/graph" />
+                android:src="@drawable/graph"/>
 
     </LinearLayout>
 
@@ -35,7 +39,11 @@
         android:id="@+id/main_consumption_list"
         android:layout_below="@id/main_top_images_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="15dp"
+        android:paddingLeft="15dp"/>
 
 
 </RelativeLayout>

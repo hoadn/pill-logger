@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
         this.setTitle("Consumption");
 
         List<Consumption> consumptions = new ArrayList<Consumption>();
-        for (int i = 0; i < 15; i ++) {
+        for (int i = 0; i < 15; i ++) { //I am only doing this to see what a list of consumption would look like
             Consumption consumption = new Consumption("Paracetamol", new Date());
             consumptions.add(consumption);
         }
