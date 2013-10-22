@@ -32,11 +32,13 @@ public class DatabaseHelper {
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.Pills.COLUMN_NAME, name);
         values.put(DatabaseContract.Pills.COLUMN_SIZE, size);
-
-        long newRowId = db.insert(
+        long newRowId = 0L;
+        if (db != null) {
+        newRowId = db.insert(
                 DatabaseContract.Pills.TABLE_NAME,
                 null,
                 values);
+        }
         return newRowId;
     }
 
@@ -50,26 +52,27 @@ public class DatabaseHelper {
         };
 
         String sortOrder = DatabaseContract.Pills._ID + " DESC";
-
-        Cursor c = db.query(
-                DatabaseContract.Pills.TABLE_NAME,
-                projection,
-                null,
-                null,
-                null,
-                null,
-                sortOrder
-        );
-
         List<Pill> pills = new ArrayList<Pill>();
-        c.moveToFirst();
-        while (!c.isAfterLast()) {
-            Pill pill = new Pill();
-            pill.setId(c.getInt(c.getColumnIndex(DatabaseContract.Pills._ID)));
-            pill.setName(c.getString(c.getColumnIndex(DatabaseContract.Pills.COLUMN_NAME)));
-            pill.setSize(c.getInt(c.getColumnIndex(DatabaseContract.Pills.COLUMN_SIZE)));
-            pills.add(pill);
-            c.moveToNext();
+        if (db != null) {
+            Cursor c = db.query(
+                    DatabaseContract.Pills.TABLE_NAME,
+                    projection,
+                    null,
+                    null,
+                    null,
+                    null,
+                    sortOrder
+            );
+
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                Pill pill = new Pill();
+                pill.setId(c.getInt(c.getColumnIndex(DatabaseContract.Pills._ID)));
+                pill.setName(c.getString(c.getColumnIndex(DatabaseContract.Pills.COLUMN_NAME)));
+                pill.setSize(c.getInt(c.getColumnIndex(DatabaseContract.Pills.COLUMN_SIZE)));
+                pills.add(pill);
+                c.moveToNext();
+            }
         }
 
         return pills;
