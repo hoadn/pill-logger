@@ -6,37 +6,51 @@
                 android:columnCount="5"
                 android:gravity="fill"
                 android:orientation="horizontal"
+                android:background="#dedede"
                 >
 
     <RelativeLayout
         android:id="@+id/main_top_images_layout"
-        android:layout_height="170dp"
-        android:orientation="horizontal"
-        android:background="@drawable/container_dropshadow"
-        android:layout_width="wrap_content">
+        android:layout_height="165dp"
+        android:layout_width="160dp"
+        android:orientation="vertical"
+        android:layout_margin="10dp"
+        android:background="@drawable/cornered">
 
         <ImageView
                 android:id="@+id/main_add"
-                android:layout_width="170dp"
-                android:layout_height="match_parent"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
                 android:padding="10dp"
                 android:src="@drawable/plus"
                 android:clickable="true"
                 android:background="?android:attr/selectableItemBackground"/>
+        <View
+            android:id="@+id/shadow"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@drawable/container_dropshadow"
+            android:layout_below="@id/main_add"/>
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/main_top_images_layout2"
-        android:layout_height="170dp"
+        android:layout_height="165dp"
+        android:layout_width="160dp"
         android:orientation="horizontal"
-        android:background="@drawable/container_dropshadow"
-        android:layout_width="wrap_content"
-        android:layout_alignParentRight="true">
+        android:layout_margin="10dp"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/cornered">
         <ImageView
                 android:id="@+id/main_graph"
                 android:layout_width="170dp"
-                android:layout_height="match_parent"
+                android:layout_height="160dp"
                 android:padding="10dp"
-                android:src="@drawable/graph"/>
+                android:src="@drawable/graph"/><View
+        android:id="@+id/shadow"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@drawable/container_dropshadow"
+        android:layout_below="@id/main_graph"/>
     </RelativeLayout>
 
     <ListView
