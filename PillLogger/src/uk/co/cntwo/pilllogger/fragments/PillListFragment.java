@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import uk.co.cntwo.pilllogger.R;
+import uk.co.cntwo.pilllogger.adapters.PillsListAdapter;
 import uk.co.cntwo.pilllogger.helpers.PillHelper;
 import uk.co.cntwo.pilllogger.interfaces.PillsReceivedListener;
 import uk.co.cntwo.pilllogger.models.Pill;
@@ -157,8 +159,7 @@ public class PillListFragment extends ListFragment implements PillsReceivedListe
     @Override
     public void pillsReceived(List<Pill> pills) {
         // TODO: replace with a real list adapter.
-        setListAdapter(new ArrayAdapter<Pill>(getActivity(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1, pills));
+        setListAdapter(new PillsListAdapter(getActivity(),
+                R.layout.pill_list_item, pills));
     }
 }
