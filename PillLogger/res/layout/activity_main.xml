@@ -11,22 +11,23 @@
 
     <RelativeLayout
         android:id="@+id/main_top_images_layout"
-        android:layout_height="165dp"
-        android:layout_width="160dp"
+        android:layout_height="170dp"
+        android:layout_width="165dp"
         android:orientation="vertical"
         android:layout_margin="10dp"
+        android:layout_marginBottom="5dp"
         android:background="@drawable/cornered">
 
         <ImageView
                 android:id="@+id/main_add"
-                android:layout_width="160dp"
-                android:layout_height="160dp"
+                android:layout_width="165dp"
+                android:layout_height="165dp"
                 android:padding="10dp"
                 android:src="@drawable/plus"
                 android:clickable="true"
                 android:background="?android:attr/selectableItemBackground"/>
         <View
-            android:id="@+id/shadow"
+            android:id="@+id/add_shadow"
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:background="@drawable/container_dropshadow"
@@ -34,19 +35,21 @@
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/main_top_images_layout2"
-        android:layout_height="165dp"
-        android:layout_width="160dp"
+        android:layout_height="170dp"
+        android:layout_width="165dp"
         android:orientation="horizontal"
         android:layout_margin="10dp"
+        android:layout_marginBottom="5dp"
         android:layout_alignParentRight="true"
         android:background="@drawable/cornered">
         <ImageView
                 android:id="@+id/main_graph"
-                android:layout_width="170dp"
-                android:layout_height="160dp"
+                android:layout_width="165dp"
+                android:layout_height="165dp"
                 android:padding="10dp"
-                android:src="@drawable/graph"/><View
-        android:id="@+id/shadow"
+                android:src="@drawable/graph"/>
+        <View
+        android:id="@+id/graph_shadow"
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:background="@drawable/container_dropshadow"
@@ -58,10 +61,13 @@
         android:layout_below="@id/main_top_images_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
+        android:paddingTop="0dp"
         android:paddingRight="0dp"
         android:paddingBottom="0dp"
-        android:paddingLeft="0dp"/>
-
-
+        android:paddingLeft="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="@drawable/cornered"/>
 </RelativeLayout>
