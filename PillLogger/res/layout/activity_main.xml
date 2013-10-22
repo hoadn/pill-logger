@@ -8,32 +8,36 @@
                 android:orientation="horizontal"
                 >
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/main_top_images_layout"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="170dp"
         android:orientation="horizontal"
-        android:background="@drawable/container_dropshadow">
+        android:background="@drawable/container_dropshadow"
+        android:layout_width="wrap_content">
 
         <ImageView
                 android:id="@+id/main_add"
-                android:layout_width="0dp"
+                android:layout_width="170dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:padding="10dp"
                 android:src="@drawable/plus"
                 android:clickable="true"
                 android:background="?android:attr/selectableItemBackground"/>
-
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/main_top_images_layout2"
+        android:layout_height="170dp"
+        android:orientation="horizontal"
+        android:background="@drawable/container_dropshadow"
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true">
         <ImageView
                 android:id="@+id/main_graph"
-                android:layout_width="0dp"
+                android:layout_width="170dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:padding="10dp"
                 android:src="@drawable/graph"/>
-
-    </LinearLayout>
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/main_consumption_list"
