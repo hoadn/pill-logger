@@ -37,6 +37,16 @@ public class MainActivity extends Activity {
     }
 
     private void insertData() {
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
+        List<Pill> pills = dbHelper.getAllPills();
+
+        if (pills.size() == 0) { //This will insert 2 pills as test data if your database doens't have any in
+            Pill pill1 = new Pill("Paracetamol", 400);
+            Pill pill2 = new Pill("Ibuprofen", 200);
+            dbHelper.insertPill(pill1);
+            dbHelper.insertPill(pill2);
+        }
+
         for (int i = 0; i < 15; i ++) { //I am only doing this to see what a list of consumption would look like
             Pill pill = new Pill("Ibuprofen", 400);
             Consumption consumption = new Consumption(pill, new Date());
