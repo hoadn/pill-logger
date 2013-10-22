@@ -16,7 +16,7 @@ public final class DatabaseContract {
         public static final String COLUMN_SIZE = "size";
     }
 
-    public static abstract class Consumption implements BaseColumns {
+    public static abstract class Consumptions implements BaseColumns {
         public static final String TABLE_NAME = "consumption";
         public static final String COLUMN_PILL_ID = "pill_id";
         public static final String COLUMN_DATE_TIME = "date_time";
@@ -30,15 +30,15 @@ public final class DatabaseContract {
                 Pills.COLUMN_NAME + " TEXT, " +
                 Pills.COLUMN_SIZE + " INTEGER)";
         public static final String CREATE_CONSUMPTION_TABLE =
-                "CREATE TABLE " + Consumption.TABLE_NAME + " (" +
-                Consumption._ID + " INTEGER PRIMARY KEY," +
-                Consumption.COLUMN_PILL_ID + " INTEGER, " +
-                Consumption.COLUMN_DATE_TIME + " TEXT)";
+                "CREATE TABLE " + Consumptions.TABLE_NAME + " (" +
+                Consumptions._ID + " INTEGER PRIMARY KEY," +
+                Consumptions.COLUMN_PILL_ID + " INTEGER, " +
+                Consumptions.COLUMN_DATE_TIME + " TEXT)";
 
     }
 
     public static abstract class DeleteTables implements BaseColumns {
         public static final String DELETE_PILL_TABLE = "DROP TABLE IF EXISTS " + Pills.TABLE_NAME;
-        public static final String DELETE_CONSUMPTION_TABLE = "DROP TABLE IF EXISTS " + Consumption.TABLE_NAME;
+        public static final String DELETE_CONSUMPTION_TABLE = "DROP TABLE IF EXISTS " + Consumptions.TABLE_NAME;
     }
 }
