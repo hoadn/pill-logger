@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import uk.co.cntwo.pilllogger.R;
+import uk.co.cntwo.pilllogger.adapters.ConsumptionListAdapter;
 import uk.co.cntwo.pilllogger.models.Consumption;
 
 /**
@@ -21,18 +22,13 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         this.setTitle("Consumption");
 
-        Consumption consumption = new Consumption("Paracetamol", new Date());
-        Consumption consumption2 = new Consumption("Ibuprofen", new Date());
-
         List<Consumption> consumptions = new ArrayList<Consumption>();
-        consumptions.add(consumption);
-        consumptions.add(consumption2);
+        for (int i = 0; i < 15; i ++) {
+            Consumption consumption = new Consumption("Paracetamol", new Date());
+            consumptions.add(consumption);
+        }
 
         ListView list = (ListView) findViewById(R.id.main_consumption_list);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line);
-        list.setAdapter(adapter);
-
-        adapter.add(consumption.get_pillName());
-        adapter.add(consumption2.get_pillName());
+        list.setAdapter(new ConsumptionListAdapter(this, R.layout.pill_list_item, consumptions));
     }
 }

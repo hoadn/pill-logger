@@ -6,12 +6,12 @@
         android:padding="10dp">
 
         <TextView android:textSize="22dp"
-                  android:id="@+id/pill_list_name"
+                  android:id="@+id/consumption_list_name"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content" />
 
         <TextView android:textSize="20dip"
-                  android:id="@+id/pill_list_size"
+                  android:id="@+id/consumption_list_date"
                   android:layout_alignParentRight="true"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content" />

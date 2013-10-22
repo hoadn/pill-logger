@@ -5,8 +5,7 @@
                 android:layout_height="match_parent"
                 android:columnCount="5"
                 android:gravity="fill"
-                android:orientation="horizontal"
-                android:padding="20dp" >
+                android:orientation="horizontal" >
 
     <LinearLayout
         android:id="@+id/main_top_images_layout"
