@@ -1,5 +1,6 @@
 package uk.co.cntwo.pilllogger.models;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -7,27 +8,35 @@ import java.util.Date;
  */
 public class Consumption {
 
-    private String _pillName;
-    private Date _date;
+    private Pill _pill;
+    private String _date;
 
-    public Consumption(String _pillName, Date _date) {
-        this._pillName = _pillName;
-        this._date = _date;
+    public Consumption(Pill pill, Date date) {
+        this._pill = pill;
+        this._date = new SimpleDateFormat("H:m  dd/MM").format(date);
     }
 
-    public String get_pillName() {
-        return _pillName;
+    public Pill get_pill() {
+        return _pill;
     }
 
-    public void set_pillName(String _pillName) {
-        this._pillName = _pillName;
+    public void set_pillName(Pill pill) {
+        this._pill = pill;
     }
 
-    public Date get_date() {
+    public String get_date() {
         return _date;
     }
 
-    public void set_date(Date _date) {
-        this._date = _date;
+    public void set_date(Date date) {
+        this._date = new SimpleDateFormat("H:m  dd/MM").format(date);
+    }
+
+    public void set_date(String date) {
+        this._date = date;
+    }
+
+    public int get_pill_id() {
+        return _pill.getId();
     }
 }

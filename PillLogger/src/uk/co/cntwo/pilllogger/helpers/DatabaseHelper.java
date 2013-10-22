@@ -10,6 +10,7 @@ import java.util.List;
 
 import uk.co.cntwo.pilllogger.database.DatabaseContract;
 import uk.co.cntwo.pilllogger.database.DatabaseCreator;
+import uk.co.cntwo.pilllogger.models.Consumption;
 import uk.co.cntwo.pilllogger.models.Pill;
 
 /**
@@ -40,6 +41,40 @@ public class DatabaseHelper {
                 values);
         }
         return newRowId;
+    }
+
+    public Pill getPill(int id) {
+        SQLiteDatabase db = _dbCreator.getReadableDatabase();
+
+        String[] projection = {
+                DatabaseContract.Pills._ID,
+                DatabaseContract.Pills.COLUMN_NAME,
+                DatabaseContract.Pills.COLUMN_SIZE,
+        };
+
+        String selection = DatabaseContract.Pills._ID + " =?";
+        String[] selectionArgs = { String.valueOf(id) };
+        Pill pill = new Pill();
+        if (db != null) {
+            Cursor c = db.query(
+                    DatabaseContract.Pills.TABLE_NAME,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    null
+            );
+
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                pill.setId(c.getInt(c.getColumnIndex(DatabaseContract.Pills._ID)));
+                pill.setName(c.getString(c.getColumnIndex(DatabaseContract.Pills.COLUMN_NAME)));
+                pill.setSize(c.getInt(c.getColumnIndex(DatabaseContract.Pills.COLUMN_SIZE)));
+                c.moveToNext();
+            }
+        }
+        return pill;
     }
 
     public List<Pill> getAllPills() {
@@ -76,5 +111,21 @@ public class DatabaseHelper {
         }
 
         return pills;
+    }
+
+    public long insertConsumption(Consumption consumption) {
+        SQLiteDatabase db = _dbCreator.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.Consumptions.COLUMN_PILL_ID, consumption.get_pill_id());
+        values.put(DatabaseContract.Pills.COLUMN_SIZE, consumption.get_date());
+        long newRowId = 0L;
+        if (db != null) {
+            newRowId = db.insert(
+                    DatabaseContract.Consumptions.TABLE_NAME,
+                    null,
+                    values);
+        }
+        return newRowId;
     }
 }
