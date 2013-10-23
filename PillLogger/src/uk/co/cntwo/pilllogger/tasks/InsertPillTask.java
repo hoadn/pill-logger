@@ -21,7 +21,7 @@ public class InsertPillTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        DatabaseHelper dbHelper = new DatabaseHelper(_activity);
+        DatabaseHelper dbHelper = DatabaseHelper.getSingleton(_activity);
         dbHelper.insertPill(_pill);
         return null;
     }

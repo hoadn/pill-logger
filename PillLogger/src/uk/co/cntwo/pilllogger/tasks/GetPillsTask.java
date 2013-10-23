@@ -24,7 +24,7 @@ public class GetPillsTask extends AsyncTask<Void, Void, List<Pill>>{
     @Override
     protected List<Pill> doInBackground(Void... voids) {
         List<Pill> pills;
-        DatabaseHelper dBHelper = new DatabaseHelper(_context);
+        DatabaseHelper dBHelper = DatabaseHelper.getSingleton(_context);
         pills = dBHelper.getAllPills();
         return pills;
     }

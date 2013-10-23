@@ -6,7 +6,7 @@
     android:columnCount="5"
     android:gravity="fill"
     android:orientation="horizontal"
-    android:background="#dedede"
+    android:background="@color/background_grey"
     >
 
     <RelativeLayout

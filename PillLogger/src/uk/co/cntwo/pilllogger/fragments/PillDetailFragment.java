@@ -49,7 +49,7 @@ public class PillDetailFragment extends Fragment {
 			// Load the dummy content specified by the fragment
 			// arguments. In a real-world scenario, use a Loader
 			// to load content from a content provider.
-            DatabaseHelper dbh = new DatabaseHelper(getActivity());
+            DatabaseHelper dbh = DatabaseHelper.getSingleton(getActivity());
             List<Pill> pills = dbh.getAllPills();
             for (Pill pill : pills) {
                 if (pill.getId() == getArguments().getInt(ARG_ITEM_ID))

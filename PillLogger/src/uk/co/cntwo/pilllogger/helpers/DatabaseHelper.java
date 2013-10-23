@@ -19,9 +19,17 @@ import uk.co.cntwo.pilllogger.models.Pill;
 public class DatabaseHelper {
 
     DatabaseCreator _dbCreator;
+    private static DatabaseHelper _instance;
 
-    public DatabaseHelper(Context context) {
+    private DatabaseHelper(Context context) {
         _dbCreator = new DatabaseCreator(context);
+    }
+
+    public static DatabaseHelper getSingleton(Context context) {
+        if (_instance == null) {
+            _instance = new DatabaseHelper(context);
+        }
+        return _instance;
     }
 
     public long insertPill(Pill pill) {

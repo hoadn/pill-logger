@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <fragment android:name="uk.co.cntwo.pilllogger.fragments.MainFragment"
-        android:id="@+id/pill_list_fragment"
+        android:id="@+id/main_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

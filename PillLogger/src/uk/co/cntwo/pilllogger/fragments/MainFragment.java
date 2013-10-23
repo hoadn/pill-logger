@@ -40,7 +40,7 @@ public class MainFragment extends Fragment {
     }
 
     private void insertData() {
-        DatabaseHelper dbHelper = new DatabaseHelper(getActivity());
+        DatabaseHelper dbHelper = DatabaseHelper.getSingleton(getActivity());
         List<Pill> pills = dbHelper.getAllPills();
 
         if (pills.size() == 0) { //This will insert 2 pills as test data if your database doens't have any in

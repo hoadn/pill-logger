@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -15,6 +16,7 @@ import java.util.List;
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.activities.MainActivity;
 import uk.co.cntwo.pilllogger.activities.PillListActivity;
+import uk.co.cntwo.pilllogger.fragments.MainFragment;
 import uk.co.cntwo.pilllogger.fragments.PillListFragment;
 
 /**
@@ -23,11 +25,16 @@ import uk.co.cntwo.pilllogger.fragments.PillListFragment;
 public class DrawerItemClickListener implements ListView.OnItemClickListener {
 
     Activity _activity;
-    List<String> _nacvigationItems;
+    List<String> _navigationItems;
+    private DrawerLayout _drawerLayout;
+    private ListView _drawerList;
 
-    public DrawerItemClickListener(Activity activity, List<String> nacvigationItems) {
+    public DrawerItemClickListener(Activity activity, List<String> navigationItems, DrawerLayout drawerLayout, ListView drawerList) {
         _activity = activity;
-        _nacvigationItems = nacvigationItems;
+        _navigationItems = navigationItems;
+        _drawerLayout = drawerLayout;
+        _drawerList = drawerList;
+
     }
     @Override
     public void onItemClick(AdapterView parent, View view, int position, long id) {
@@ -35,19 +42,35 @@ public class DrawerItemClickListener implements ListView.OnItemClickListener {
     }
 
     private void selectItem(int position) {
-        if (_nacvigationItems.get(position).equals(_activity.getResources().getString(R.string.drawer_home))) {
-            Intent intent = new Intent(_activity, MainActivity.class);
-            _activity.startActivity(intent);
-        }
-        else if (_nacvigationItems.get(position).equals(_activity.getResources().getString(R.string.drawer_pills))) {
-            ListFragment fragment = new PillListFragment();
+        String title = _activity.getResources().getString(R.string.app_name);
+        String consumption = _activity.getResources().getString(R.string.drawer_consumption);
+        String pills = _activity.getResources().getString(R.string.drawer_pills);
+        if (_navigationItems.get(position).equals(consumption)) {
+            Fragment fragment = new MainFragment();
 
             // Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = ((FragmentActivity)_activity).getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.main_activity_top_layout, fragment)
+                    .replace(R.id.main_fragment, fragment)
                     .commit();
+            title = consumption;
+
         }
+        else if (_navigationItems.get(position).equals(pills)) {
+            Fragment fragment = new PillListFragment();
+
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = ((FragmentActivity)_activity).getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.main_fragment, fragment)
+                    .commit();
+            title = pills;
+        }
+
+        _drawerList.setItemChecked(position, true);
+        _drawerLayout.closeDrawer(_drawerList);
+
+        _activity.getActionBar().setTitle(title);
 
     }
 }

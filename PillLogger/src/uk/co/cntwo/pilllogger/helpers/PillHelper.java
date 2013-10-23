@@ -23,12 +23,12 @@ public class PillHelper {
 	
 	@SuppressWarnings("unchecked")
 	public static List<Pill> getPills(Context context){
-        DatabaseHelper dbh = new DatabaseHelper(context);
+        DatabaseHelper dbh = DatabaseHelper.getSingleton(context);
         return dbh.getAllPills();
 	}
 	
 	public static void addPill(Context context, Pill pill){
-		DatabaseHelper dbh = new DatabaseHelper(context);
+		DatabaseHelper dbh = DatabaseHelper.getSingleton(context);
         dbh.insertPill(pill);
 	}
 
