@@ -11,4 +11,7 @@
     <string name="title_pill_detail">Pill Detail</string>
     <string name="title_pill_list">Pills</string>
 
+    <string name="drawer_home">Home</string>
+    <string name="drawer_pills">Pills</string>
+
 </resources>
