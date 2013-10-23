@@ -118,7 +118,7 @@ public class DatabaseHelper {
 
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.Consumptions.COLUMN_PILL_ID, consumption.get_pill_id());
-        values.put(DatabaseContract.Pills.COLUMN_SIZE, consumption.get_date());
+        values.put(DatabaseContract.Consumptions.COLUMN_DATE_TIME, consumption.get_date());
         long newRowId = 0L;
         if (db != null) {
             newRowId = db.insert(
@@ -127,5 +127,79 @@ public class DatabaseHelper {
                     values);
         }
         return newRowId;
+    }
+
+    public Consumption getConsumption(int id) {
+        SQLiteDatabase db = _dbCreator.getReadableDatabase();
+
+        String[] projection = {
+                DatabaseContract.Consumptions._ID,
+                DatabaseContract.Consumptions.COLUMN_PILL_ID,
+                DatabaseContract.Consumptions.COLUMN_DATE_TIME,
+        };
+
+        String selection = DatabaseContract.Consumptions._ID + " =?";
+        String[] selectionArgs = { String.valueOf(id) };
+        Consumption consumption = new Consumption();
+        if (db != null) {
+            Cursor c = db.query(
+                    DatabaseContract.Consumptions.TABLE_NAME,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    null
+            );
+
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                consumption.set_id(c.getInt(c.getColumnIndex(DatabaseContract.Consumptions._ID)));
+                consumption.set_date(c.getString(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_DATE_TIME)));
+                int pillId = c.getInt(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_PILL_ID));
+                Pill pill = getPill(pillId);
+                consumption.set_pill(pill);
+                c.moveToNext();
+            }
+        }
+        return consumption;
+    }
+
+    public List<Consumption> getAllConsumptions() {
+        SQLiteDatabase db = _dbCreator.getReadableDatabase();
+
+        String[] projection = {
+                DatabaseContract.Consumptions._ID,
+                DatabaseContract.Consumptions.COLUMN_PILL_ID,
+                DatabaseContract.Consumptions.COLUMN_DATE_TIME,
+        };
+
+        String sortOrder = DatabaseContract.Consumptions._ID + " DESC";
+        List<Consumption> consumptions = new ArrayList<Consumption>();
+        if (db != null) {
+            Cursor c = db.query(
+                    DatabaseContract.Consumptions.TABLE_NAME,
+                    projection,
+                    null,
+                    null,
+                    null,
+                    null,
+                    sortOrder
+            );
+
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                Consumption consumption = new Consumption();
+                consumption.set_id(c.getInt(c.getColumnIndex(DatabaseContract.Consumptions._ID)));
+                consumption.set_date(c.getString(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_DATE_TIME)));
+                int pillId = c.getInt(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_PILL_ID));
+                Pill pill = getPill(pillId);
+                consumption.set_pill(pill);
+                consumptions.add(consumption);
+                c.moveToNext();
+            }
+        }
+
+        return consumptions;
     }
 }

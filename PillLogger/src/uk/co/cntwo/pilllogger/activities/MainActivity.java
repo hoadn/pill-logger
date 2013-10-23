@@ -47,10 +47,16 @@ public class MainActivity extends Activity {
             dbHelper.insertPill(pill2);
         }
 
-        for (int i = 0; i < 15; i ++) { //I am only doing this to see what a list of consumption would look like
-            Pill pill = new Pill("Ibuprofen", 400);
-            Consumption consumption = new Consumption(pill, new Date());
-            _consumptions.add(consumption);
-        }
+        List<Consumption> consumptions = dbHelper.getAllConsumptions();
+
+       if (consumptions.size() == 0) { //This will insert some consumptions as test data if your data doesn't have any in
+           for (int i = 0; i < 10; i ++) { //I am only doing this to see what a list of consumption would look like
+               Pill pill = dbHelper.getPill(1);
+               Consumption consumption = new Consumption(pill, new Date());
+               dbHelper.insertConsumption(consumption);
+           }
+       }
+
+       _consumptions = dbHelper.getAllConsumptions();
     }
 }

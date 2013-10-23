@@ -10,6 +10,11 @@ public class Consumption {
 
     private Pill _pill;
     private String _date;
+    private int _id;
+
+    public Consumption() {
+
+    }
 
     public Consumption(Pill pill, Date date) {
         this._pill = pill;
@@ -20,7 +25,7 @@ public class Consumption {
         return _pill;
     }
 
-    public void set_pillName(Pill pill) {
+    public void set_pill(Pill pill) {
         this._pill = pill;
     }
 
@@ -34,6 +39,14 @@ public class Consumption {
 
     public void set_date(String date) {
         this._date = date;
+    }
+
+    public int get_id() {
+        return _id;
+    }
+
+    public void set_id(int _id) {
+        this._id = _id;
     }
 
     public int get_pill_id() {
