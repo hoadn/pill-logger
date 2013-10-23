@@ -5,11 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment android:name="uk.co.cntwo.pilllogger.fragments.MainFragment"
-        android:id="@+id/main_fragment"
+    <LinearLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/main_fragment" />
+        android:orientation="horizontal">
+    </LinearLayout>
 
     <ListView android:id="@+id/left_drawer"
         android:layout_width="240dp"

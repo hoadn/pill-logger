@@ -27,7 +27,7 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		List<Pill> pills = PillHelper.getPills(getActivity());
+
         new GetPillsTask(getActivity(), this).execute();
 	}
 

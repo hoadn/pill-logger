@@ -43,26 +43,24 @@ public class DrawerItemClickListener implements ListView.OnItemClickListener {
         String consumption = _activity.getResources().getString(R.string.drawer_consumption);
         String pills = _activity.getResources().getString(R.string.drawer_pills);
         Logger.d(TAG, "selectItem, position: " + position);
-        if (_navigationItems.get(position).equals(consumption)) {
-            Fragment fragment = new MainFragment();
 
-            // Insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = ((FragmentActivity)_activity).getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.main_fragment, fragment)
-                    .commit();
+        Fragment fragment = null;
+        if (_navigationItems.get(position).equals(consumption)) {
+            fragment = new MainFragment();
             title = consumption;
 
         }
         else if (_navigationItems.get(position).equals(pills)) {
-            Fragment fragment = new PillListFragment();
+            fragment = new PillListFragment();
+            title = pills;
+        }
 
+        if(fragment != null){
             // Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = ((FragmentActivity)_activity).getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.main_fragment, fragment)
+                    .replace(R.id.fragment_container, fragment)
                     .commit();
-            title = pills;
         }
 
         _drawerList.setItemChecked(position, true);

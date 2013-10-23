@@ -1,6 +1,7 @@
 package uk.co.cntwo.pilllogger.activities;
 
 import android.app.ActionBar;
+import android.support.v4.app.Fragment;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.adapters.LeftDrawerAdapter;
+import uk.co.cntwo.pilllogger.fragments.MainFragment;
 import uk.co.cntwo.pilllogger.listeners.DrawerItemClickListener;
 
 /**
@@ -56,6 +58,14 @@ public class MainActivity extends FragmentActivity {
         ActionBar bar = getActionBar();
         if(bar != null)
             bar.setDisplayHomeAsUpEnabled(true);
+
+        if(savedInstanceState == null){
+            Fragment fragment = new MainFragment();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_container, fragment)
+                    .commit();
+        }
     }
 
     private void setUpDrawerNavigation() {
