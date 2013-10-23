@@ -28,10 +28,12 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.main_fragment, container, false);
 
+        if(_listView == null){
         //Doing this to test - will not be needed when working fully
-        new InitTestDbTask(this.getActivity(), this).execute();
+            new InitTestDbTask(this.getActivity(), this).execute();
 
-        _listView = (ListView) (v != null ? v.findViewById(R.id.main_consumption_list) : null);
+            _listView = (ListView) (v != null ? v.findViewById(R.id.main_consumption_list) : null);
+        }
 
         return v;
     }

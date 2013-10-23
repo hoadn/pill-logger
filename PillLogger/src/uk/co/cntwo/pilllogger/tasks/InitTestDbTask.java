@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
+import uk.co.cntwo.pilllogger.helpers.Logger;
 import uk.co.cntwo.pilllogger.models.Consumption;
 import uk.co.cntwo.pilllogger.models.Pill;
 
@@ -14,6 +15,7 @@ import uk.co.cntwo.pilllogger.models.Pill;
  * Created by alex on 23/10/13.
  */
 public class InitTestDbTask extends AsyncTask<Void, Void, Void>{
+    private String TAG = "InitTestDbTask";
 
     private Context _context;
     private ITaskComplete _listener;
@@ -21,6 +23,8 @@ public class InitTestDbTask extends AsyncTask<Void, Void, Void>{
     public InitTestDbTask(Context context, ITaskComplete listener){
         _context = context;
         _listener = listener;
+
+        Logger.d(TAG, "Ctor");
     }
 
     @Override
