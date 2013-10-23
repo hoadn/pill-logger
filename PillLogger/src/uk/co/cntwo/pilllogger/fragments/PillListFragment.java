@@ -2,27 +2,22 @@ package uk.co.cntwo.pilllogger.fragments;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import uk.co.cntwo.pilllogger.R;
-import uk.co.cntwo.pilllogger.adapters.ConsumptionListAdapter;
 import uk.co.cntwo.pilllogger.adapters.PillsListAdapter;
 import uk.co.cntwo.pilllogger.helpers.PillHelper;
-import uk.co.cntwo.pilllogger.interfaces.PillsReceivedListener;
 import uk.co.cntwo.pilllogger.listeners.PillItemClickListener;
 import uk.co.cntwo.pilllogger.models.Pill;
 import uk.co.cntwo.pilllogger.tasks.GetPillsTask;
 
 
-public class PillListFragment extends Fragment implements PillsReceivedListener {
+public class PillListFragment extends Fragment implements GetPillsTask.ITaskComplete {
 
     private ListView _list;
 
