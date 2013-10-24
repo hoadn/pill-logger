@@ -76,6 +76,7 @@ public class MainActivity extends FragmentActivity {
         ListView drawerList = (ListView) findViewById(R.id.left_drawer);
 
         drawerList.setAdapter(new LeftDrawerAdapter(this, _navigationItems));
+        drawerList.setItemChecked(1, true);
         drawerList.setOnItemClickListener(new DrawerItemClickListener(this, _navigationItems, _drawerLayout, drawerList));
         _drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
     }

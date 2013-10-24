@@ -65,6 +65,8 @@ public class DrawerItemClickListener implements ListView.OnItemClickListener {
         }
 
         _drawerList.setItemChecked(position, true);
+        int selectedItem = _drawerList.getCheckedItemPosition();
+        Logger.v("DrawerItemClickListener", "selectedItem = " + selectedItem);
         _drawerLayout.closeDrawer(_drawerList);
 
         _activity.getActionBar().setTitle(title);
