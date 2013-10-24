@@ -60,6 +60,7 @@ public class DrawerItemClickListener implements ListView.OnItemClickListener {
             FragmentManager fragmentManager = ((FragmentActivity)_activity).getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(fragment.toString())
                     .commit();
         }
 

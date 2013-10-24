@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
@@ -76,6 +77,7 @@ public class MainActivity extends FragmentActivity {
 
         drawerList.setAdapter(new LeftDrawerAdapter(this, _navigationItems));
         drawerList.setOnItemClickListener(new DrawerItemClickListener(this, _navigationItems, _drawerLayout, drawerList));
+        _drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
     }
 
     @Override

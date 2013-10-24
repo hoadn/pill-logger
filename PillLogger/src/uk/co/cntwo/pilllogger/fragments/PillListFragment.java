@@ -27,8 +27,6 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-        new GetPillsTask(getActivity(), this).execute();
 	}
 
     @Override
@@ -39,6 +37,7 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
 
         _list = (ListView) v.findViewById(R.id.pill_list);
         _list.setOnItemClickListener(new PillItemClickListener(getActivity()));
+        new GetPillsTask(getActivity(), this).execute();
         return v;
     }
 
