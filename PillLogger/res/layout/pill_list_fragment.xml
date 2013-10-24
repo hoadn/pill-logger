@@ -59,9 +59,11 @@
                 android:paddingBottom="5dp"
                 android:textSize="22sp"
                 android:hint="Size"
+                android:inputType="number"
                 android:background="@null"/>
 
             <ImageView
+                android:id="@+id/pill_fragment_add_pill_completed"
                 android:layout_height="40dp"
                 android:layout_width="40dp"
                 android:src="@drawable/tick"

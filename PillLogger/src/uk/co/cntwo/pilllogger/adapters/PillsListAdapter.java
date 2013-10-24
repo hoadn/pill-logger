@@ -60,4 +60,16 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
         }
         return v;
     }
+
+    @Override
+    public int getCount() {
+        if (_pills != null)
+            return _pills.size();
+        return 0;
+    }
+
+    public void updateAdapter(List<Pill> pills) {
+        _pills = pills;
+        this.notifyDataSetChanged();
+    }
 }

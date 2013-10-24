@@ -2,13 +2,19 @@ package uk.co.cntwo.pilllogger.fragments;
 
 import java.util.List;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,6 +30,8 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
 
     private ListView _list;
     private Typeface _openSans;
+    private EditText _addPillName;
+    private EditText _addPillSize;
 
 	public PillListFragment() {
 	}
@@ -47,11 +55,14 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
         new GetPillsTask(getActivity(), this).execute();
 
         TextView addPillTitle = (TextView) v.findViewById(R.id.pill_fragment_add_pill_title);
-        EditText addPillName = (EditText) v.findViewById(R.id.pill_fragment_add_pill_name);
-        EditText addPillSize = (EditText) v.findViewById(R.id.pill_fragment_add_pill_size);
+        _addPillName = (EditText) v.findViewById(R.id.pill_fragment_add_pill_name);
+        _addPillSize = (EditText) v.findViewById(R.id.pill_fragment_add_pill_size);
         addPillTitle.setTypeface(_openSans);
-        addPillName.setTypeface(_openSans);
-        addPillSize.setTypeface(_openSans);
+        _addPillName.setTypeface(_openSans);
+        _addPillSize.setTypeface(_openSans);
+
+        View completed = v.findViewById(R.id.pill_fragment_add_pill_completed);
+        completed.setOnClickListener(new AddPillClickListener(this));
 
         return v;
     }
@@ -71,9 +82,35 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
 
     @Override
     public void pillsReceived(List<Pill> pills) {
-        // TODO: replace with a real list adapter.
-        _list.setAdapter(new PillsListAdapter(getActivity(),
-                R.layout.pill_list_item, pills));
+        if (_list.getAdapter() == null)
+            _list.setAdapter(new PillsListAdapter(getActivity(), R.layout.pill_list_item, pills));
+        else
+            ((PillsListAdapter)_list.getAdapter()).updateAdapter(pills);
+    }
+
+    private class AddPillClickListener implements View.OnClickListener {
+
+        GetPillsTask.ITaskComplete _listener;
+        public AddPillClickListener(GetPillsTask.ITaskComplete listener) {
+            _listener = listener;
+        }
+
+        @Override
+        public void onClick(View view) {
+            Pill newPill = new Pill();
+            newPill.setName(_addPillName.getText().toString());
+            newPill.setSize(Integer.parseInt(_addPillSize.getText().toString()));
+            PillHelper.addPill(getActivity(), newPill);
+
+            new GetPillsTask(getActivity(), _listener).execute();
+            _addPillName.setText("");
+            _addPillSize.setText("");
+            _addPillSize.clearFocus();
+
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
 }
