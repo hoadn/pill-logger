@@ -124,7 +124,7 @@
         android:layout_marginRight="20dp">
         <ListView
             android:id="@+id/add_consumption_pill_list"
-            android:layout_height="200dp"
+            android:layout_height="150dp"
             android:layout_width="match_parent"/>
     </LinearLayout>
 
