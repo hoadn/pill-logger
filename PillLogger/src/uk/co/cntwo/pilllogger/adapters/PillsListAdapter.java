@@ -28,7 +28,7 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
         super(activity, textViewResourceId, pills);
         _activity = activity;
         _pills = pills;
-        _openSans = Typeface.createFromAsset(activity.getAssets(), "fonts/OpenSans-Regular.ttf");
+        _openSans = Typeface.createFromAsset(activity.getAssets(), "fonts/OpenSans-Light.ttf");
     }
 
     public static class ViewHolder {

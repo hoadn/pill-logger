@@ -5,8 +5,81 @@
     android:layout_height="match_parent"
     android:background="@color/background_grey"
     >
+    <RelativeLayout
+        android:id="@+id/pill_fragment_quick_create"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:background="@drawable/container_dropshadow"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/pill_fragment_add_pill_title"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:text="Create Pill"
+            android:textSize="20sp"
+            android:padding="5dp"
+            android:textAllCaps="true"/>
+        <EditText
+            android:id="@+id/pill_fragment_add_pill_name"
+            android:layout_height="40dp"
+            android:layout_width="match_parent"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:textSize="22sp"
+            android:layout_below="@id/pill_fragment_add_pill_title"
+            android:hint="Name"
+            android:background="@null"/>
+
+        <View
+            android:id="@+id/pill_fragment_add_pill_divider"
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:background="#cccccc"
+            android:layout_below="@id/pill_fragment_add_pill_name"/>
+
+        <LinearLayout
+            android:layout_height="40dp"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_below="@id/pill_fragment_add_pill_divider">
+            <EditText
+                android:id="@+id/pill_fragment_add_pill_size"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textSize="22sp"
+                android:hint="Size"
+                android:background="@null"/>
+
+            <ImageView
+                android:layout_height="40dp"
+                android:layout_width="40dp"
+                android:src="@drawable/tick"
+                android:layout_weight="0"
+                android:padding="5dp"
+                android:clickable="true"
+                android:background="?android:attr/selectableItemBackground"/>
+        </LinearLayout>
+
+    </RelativeLayout>
     <ListView
         android:id="@+id/pill_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_below="@id/pill_fragment_quick_create"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/container_dropshadow"/>
 </RelativeLayout>

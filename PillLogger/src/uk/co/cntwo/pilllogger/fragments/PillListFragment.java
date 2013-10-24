@@ -2,12 +2,15 @@ package uk.co.cntwo.pilllogger.fragments;
 
 import java.util.List;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.adapters.PillsListAdapter;
@@ -20,6 +23,7 @@ import uk.co.cntwo.pilllogger.tasks.GetPillsTask;
 public class PillListFragment extends Fragment implements GetPillsTask.ITaskComplete {
 
     private ListView _list;
+    private Typeface _openSans;
 
 	public PillListFragment() {
 	}
@@ -37,7 +41,18 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
 
         _list = (ListView) v.findViewById(R.id.pill_list);
         _list.setOnItemClickListener(new PillItemClickListener(getActivity()));
+
+        _openSans = Typeface.createFromAsset(getActivity().getAssets(), "fonts/OpenSans-Light.ttf");
+
         new GetPillsTask(getActivity(), this).execute();
+
+        TextView addPillTitle = (TextView) v.findViewById(R.id.pill_fragment_add_pill_title);
+        EditText addPillName = (EditText) v.findViewById(R.id.pill_fragment_add_pill_name);
+        EditText addPillSize = (EditText) v.findViewById(R.id.pill_fragment_add_pill_size);
+        addPillTitle.setTypeface(_openSans);
+        addPillName.setTypeface(_openSans);
+        addPillSize.setTypeface(_openSans);
+
         return v;
     }
 

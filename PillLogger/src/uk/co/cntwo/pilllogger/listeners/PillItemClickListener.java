@@ -43,7 +43,6 @@ public class PillItemClickListener implements ListView.OnItemClickListener {
                     .replace(R.id.fragment_container, fragment)
                     .addToBackStack(fragment.toString())
                     .commit();
-
     }
 
 
