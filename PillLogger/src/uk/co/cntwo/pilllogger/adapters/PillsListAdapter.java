@@ -23,11 +23,13 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
     private List<Pill> _pills;
     private Activity _activity;
     private Typeface _openSans;
+    private int _resouceId;
 
     public PillsListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
         super(activity, textViewResourceId, pills);
         _activity = activity;
         _pills = pills;
+        _resouceId = textViewResourceId;
         _openSans = Typeface.createFromAsset(activity.getAssets(), "fonts/OpenSans-Light.ttf");
     }
 
@@ -42,7 +44,7 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
         ViewHolder holder;
         if (v == null) {
             LayoutInflater inflater = (LayoutInflater)_activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.pill_list_item, null);
+            v = inflater.inflate(_resouceId, null);
             holder = new ViewHolder();
             holder.name = (TextView) v.findViewById(R.id.pill_list_name);
             holder.size = (TextView) v.findViewById(R.id.pill_list_size);

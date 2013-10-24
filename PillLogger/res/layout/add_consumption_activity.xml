@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/add_consumption_top_buttons"
+        android:layout_height="60dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/done_cancel_grey">
+
+        <LinearLayout
+            android:id="@+id/add_consumption_cancel_layout"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:onClick="cancel">
+
+            <ImageView
+                android:id="@+id/add_consumption_cancel_icon"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
+                android:src="@drawable/cancel"/>
+
+            <TextView
+                android:id="@+id/add_consumption_cancel_text"
+                android:layout_height="match_parent"
+                android:singleLine="true"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:textAllCaps="true"
+                android:text="Cancel"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_height="match_parent"
+            android:layout_width="1dp"
+            android:layout_weight="0"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="#BBBBBB" />
+
+        <LinearLayout
+            android:id="@+id/add_consumption_done_layout"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true">
+
+            <ImageView
+                android:id="@+id/add_consumption_done_icon"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
+                android:src="@drawable/tick"/>
+
+            <TextView
+                android:id="@+id/add_consumption_done_text"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:singleLine="true"
+                android:gravity="center_vertical"
+                android:textAllCaps="true"
+                android:text="Done"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/add_consumption_select_pill_title"
+        android:layout_below="@id/add_consumption_top_buttons"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="Choose Your Pill"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:textAllCaps="true"
+        android:textColor="@color/text_grey_medium"/>
+    <View
+        android:id="@+id/add_consumption_select_pill_title_divider"
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:layout_below="@id/add_consumption_select_pill_title"
+        android:layout_margin="5dp"
+        android:background="#CCCCCC" />
+    <RadioGroup
+        android:id="@+id/add_consumption_pill_type_selection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_consumption_select_pill_title_divider"
+        android:orientation="horizontal">
+        <RadioButton android:id="@+id/add_consumption_select_select_pill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:checked="true"
+            android:text="Select Pill"/>
+        <RadioButton android:id="@+id/add_consumption_select_new_pill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="New Pill"/>
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/add_consumption_select_pill_layout"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@id/add_consumption_pill_type_selection"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+        <ListView
+            android:id="@+id/add_consumption_pill_list"
+            android:layout_height="200dp"
+            android:layout_width="match_parent"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/add_consumption_select_time_title"
+        android:layout_below="@id/add_consumption_select_pill_layout"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="Set Time"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:textAllCaps="true"
+        android:textColor="@color/text_grey_medium"/>
+    <View
+        android:id="@+id/add_consumption_select_time_title_divider"
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:layout_below="@id/add_consumption_select_time_title"
+        android:layout_margin="5dp"
+        android:background="#CCCCCC" />
+    <RadioGroup
+        android:id="@+id/add_consumption_time_type_selection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_consumption_select_time_title_divider"
+        android:orientation="horizontal">
+        <RadioButton android:id="@+id/add_consumption_select_select_now"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:checked="true"
+            android:text="Now"/>
+    </RadioGroup>
+
+
+</RelativeLayout>

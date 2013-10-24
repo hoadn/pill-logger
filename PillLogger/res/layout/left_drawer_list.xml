@@ -3,7 +3,7 @@
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="55dp"
-    android:background="#222222">
+    android:background="@color/drawer_item_grey">
 
     <ImageView
         android:id="@+id/drawer_item_icon"

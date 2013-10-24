@@ -5,12 +5,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.util.List;
 
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.adapters.ConsumptionListAdapter;
+import uk.co.cntwo.pilllogger.listeners.AddConsumptionClickListener;
 import uk.co.cntwo.pilllogger.models.Consumption;
 import uk.co.cntwo.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.cntwo.pilllogger.tasks.InitTestDbTask;
@@ -33,7 +35,8 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
         new InitTestDbTask(this.getActivity(), this).execute();
 
         _listView = (ListView) (v != null ? v.findViewById(R.id.main_consumption_list) : null);
-
+        ImageView addConsumption = (ImageView) v.findViewById(R.id.main_add);
+        addConsumption.setOnClickListener(new AddConsumptionClickListener(getActivity()));
 
         return v;
     }
