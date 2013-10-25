@@ -4,15 +4,14 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.List;
 
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.adapters.PillsListAdapter;
-import uk.co.cntwo.pilllogger.models.Consumption;
 import uk.co.cntwo.pilllogger.models.Pill;
-import uk.co.cntwo.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.cntwo.pilllogger.tasks.GetPillsTask;
 
 /**
@@ -36,5 +35,13 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
 
     public void cancel(View view) {
         finish();
+    }
+
+    public class AddConsumptionPillItemClickListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+        }
     }
 }
