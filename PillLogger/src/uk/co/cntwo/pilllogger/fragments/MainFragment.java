@@ -38,8 +38,12 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
         ImageView addConsumption = (ImageView) v.findViewById(R.id.main_add);
         addConsumption.setOnClickListener(new AddConsumptionClickListener(getActivity()));
 
+        if (_listView.getAdapter() != null) //Trying this to make the list refresh after adding the new consumption
+            ((ConsumptionListAdapter)_listView.getAdapter()).notifyDataSetChanged();
+
         return v;
     }
+
 
     @Override
     public void initComplete() {

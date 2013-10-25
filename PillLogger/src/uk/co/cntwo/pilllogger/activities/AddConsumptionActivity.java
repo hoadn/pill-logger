@@ -9,15 +9,18 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.Date;
 import java.util.List;
 
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.cntwo.pilllogger.adapters.PillsListAdapter;
 import uk.co.cntwo.pilllogger.animations.AddPillToConsumptionAnimation;
+import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
 import uk.co.cntwo.pilllogger.helpers.Logger;
 import uk.co.cntwo.pilllogger.listeners.AddConsumptionPillItemClickListener;
 import uk.co.cntwo.pilllogger.listeners.PillItemClickListener;
+import uk.co.cntwo.pilllogger.models.Consumption;
 import uk.co.cntwo.pilllogger.models.Pill;
 import uk.co.cntwo.pilllogger.tasks.GetPillsTask;
 
@@ -52,6 +55,11 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
     public void done(View view) {
         AddConsumptionPillListAdapter adapter = (AddConsumptionPillListAdapter) _pillsList.getAdapter();
         List<Pill> consumptionPills = adapter.getPillsConsumed();
-        Toast.makeText(this, "Number of pills: " + consumptionPills.size(), Toast.LENGTH_SHORT).show();
+
+        for (Pill pill : consumptionPills) {
+            Consumption consumption = new Consumption(pill, new Date());
+            DatabaseHelper.getSingleton(this).insertConsumption(consumption);
+        }
+        finish();
     }
 }
