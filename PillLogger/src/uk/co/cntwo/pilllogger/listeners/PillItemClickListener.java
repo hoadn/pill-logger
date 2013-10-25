@@ -14,6 +14,7 @@ import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.activities.PillDetailActivity;
 import uk.co.cntwo.pilllogger.fragments.PillDetailFragment;
 import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
+import uk.co.cntwo.pilllogger.helpers.Logger;
 import uk.co.cntwo.pilllogger.models.Pill;
 
 /**
@@ -21,28 +22,29 @@ import uk.co.cntwo.pilllogger.models.Pill;
  */
 public class PillItemClickListener implements ListView.OnItemClickListener {
 
-    FragmentActivity _activity;
+    Activity _activity;
 
-    public PillItemClickListener(FragmentActivity activity) {
+    public PillItemClickListener(Activity activity) {
         _activity = activity;
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Logger.v("AddConsumptionPillItemClickListener", "testingWidth, this is being called");
         DatabaseHelper dbHelper = DatabaseHelper.getSingleton(_activity);
         List<Pill> pills = dbHelper.getAllPills();
         onItemSelected(pills.get(i).getId());
     }
 
     public void onItemSelected(int id) {
-            Bundle arguments = new Bundle();
-            arguments.putInt(PillDetailFragment.ARG_ITEM_ID, id);
-            PillDetailFragment fragment = new PillDetailFragment();
-            fragment.setArguments(arguments);
-            _activity.getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(fragment.toString())
-                    .commit();
+//            Bundle arguments = new Bundle();
+//            arguments.putInt(PillDetailFragment.ARG_ITEM_ID, id);
+//            PillDetailFragment fragment = new PillDetailFragment();
+//            fragment.setArguments(arguments);
+//            _activity.getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.fragment_container, fragment)
+//                    .addToBackStack(fragment.toString())
+//                    .commit();
     }
 
 

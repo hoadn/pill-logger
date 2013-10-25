@@ -4,22 +4,22 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:layout_height="50dp"
-    android:clickable="true"
-    android:background="?android:attr/selectableItemBackground">
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    tools:layout_height="50dp">
 
     <TextView android:textSize="18dp"
-              android:id="@+id/pill_list_name"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_centerVertical="true"
-                tools:text="Ibuprofen"/>
+        android:id="@+id/pill_list_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        tools:text="Ibuprofen"/>
 
 
     <LinearLayout
         android:id="@+id/add_consumption_after_click_layout"
         android:layout_height="match_parent"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_alignParentRight="true"
         android:orientation="horizontal">
         <View
@@ -30,22 +30,31 @@
             android:layout_marginBottom="10dip"
             android:layout_marginTop="10dip"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="5dp"
             android:background="?android:attr/dividerVertical"/>
-        <Button
-            style="@style/flatButton"
+        <TextView
+            android:id="@+id/add_consumption_amount"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:text="1"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:text="-"
-            android:id="@+id/button"
-            android:layout_centerVertical="true"
+            android:id="@+id/add_consumption_minus"
+            android:gravity="center"
             android:clickable="true"
-            android:background="?android:attr/selectableItemBackground"/>
-        <Button
-            style="@style/flatButton"
+            android:background="?android:attr/selectableItemBackground"
+            android:focusable="false"/>
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:text="+"
-            android:id="@+id/button2"
-            android:layout_centerVertical="true"
+            android:id="@+id/add_consumption_add"
+            android:gravity="center"
             android:clickable="true"
-            android:background="?android:attr/selectableItemBackground"/>
+            android:background="?android:attr/selectableItemBackground"
+            android:focusable="false"/>
 
     </LinearLayout>
 
