@@ -8,4 +8,6 @@
     <color name="light_green">#7DC71D</color>
     <color name="drawer_item_grey">#222222</color>
     <color name="done_cancel_grey">#dddddd</color>
+    <color name="add_green">#49d811</color>
+    <color name="minus_red">#d81b11</color>
 </resources>
