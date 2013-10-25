@@ -1,7 +1,6 @@
 package uk.co.cntwo.pilllogger.listeners;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -9,6 +8,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import uk.co.cntwo.pilllogger.R;
+import uk.co.cntwo.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.cntwo.pilllogger.animations.AddPillToConsumptionAnimation;
 import uk.co.cntwo.pilllogger.helpers.LayoutHelper;
 import uk.co.cntwo.pilllogger.helpers.Logger;
@@ -19,9 +19,11 @@ import uk.co.cntwo.pilllogger.helpers.Logger;
 public class AddConsumptionPillItemClickListener implements ListView.OnItemClickListener {
 
     Activity _activity;
+    AddConsumptionPillListAdapter _adapter;
 
-    public AddConsumptionPillItemClickListener(Activity activity) {
+    public AddConsumptionPillItemClickListener(Activity activity, AddConsumptionPillListAdapter adapter) {
         _activity = activity;
+        _adapter = adapter;
     }
 
     @Override
@@ -34,13 +36,14 @@ public class AddConsumptionPillItemClickListener implements ListView.OnItemClick
         if (width > 0) {
             animation = new AddPillToConsumptionAnimation(addButtonLayout, width, false, _activity);
             color = android.R.color.transparent;
+            _adapter.removeAllInstancesOfPill(i);
         }
         else {
             animation = new AddPillToConsumptionAnimation(addButtonLayout, (int)LayoutHelper.dpToPx(_activity, 125), true, _activity);
             color = R.color.done_cancel_grey;
+            _adapter.addConsumedPillAtStart(i);
             TextView amount = (TextView) view.findViewById(R.id.add_consumption_amount);
-            if (amount.getText().equals("0"))
-                amount.setText("1");
+            amount.setText("1");
         }
 
         view.setBackgroundColor(_activity.getResources().getColor(color));

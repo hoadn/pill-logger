@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.cntwo.pilllogger.R;
@@ -26,6 +27,7 @@ import uk.co.cntwo.pilllogger.models.Pill;
 public class AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
 
     private List<Pill> _pills;
+    private List<Pill> _consumptionPills = new ArrayList<Pill>();
     private Activity _activity;
     private Typeface _openSans;
     private int _resouceId;
@@ -73,9 +75,9 @@ public class AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
             holder.size.setText(String.valueOf(pill.getSize()));
         }
         TextView add = (TextView)v.findViewById(R.id.add_consumption_add);
-        add.setOnClickListener(new buttonClick(true, holder.amount));
+        add.setOnClickListener(new buttonClick(true, holder.amount, position, this));
         TextView minus = (TextView)v.findViewById(R.id.add_consumption_minus);
-        minus.setOnClickListener(new buttonClick(false, holder.amount));
+        minus.setOnClickListener(new buttonClick(false, holder.amount, position, this));
         return v;
     }
 
@@ -91,26 +93,72 @@ public class AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
         this.notifyDataSetChanged();
     }
 
+    public void addConsumedPill(Pill pill) {
+        _consumptionPills.add(pill);
+    }
+
+    public void removeConsumedPill(Pill pill) {
+        if (_consumptionPills.contains(pill))
+            _consumptionPills.remove(pill);
+    }
+
+    /*
+    This is only used when pill selected first time and the pill is auto
+    added to the conumption
+     */
+    public void addConsumedPillAtStart(int position) {
+        Pill pill = _pills.get(position);
+        if (!_consumptionPills.contains(pill))
+        _consumptionPills.add(pill);
+    }
+
+    /*
+    This is only used when the pill is deselected to remove all instances
+     */
+    public void removeAllInstancesOfPill(int position) {
+        Pill removePill = _pills.get(position);
+        List<Pill> pillsToRemove = new ArrayList<Pill>();
+        for(Pill pill : _consumptionPills) {
+            if (pill.getId() == removePill.getId())
+                pillsToRemove.add(pill);
+        }
+        for (Pill pill : pillsToRemove) {
+            _consumptionPills.remove(pill);
+        }
+    }
+
+    public List<Pill> getPillsConsumed() {
+        return _consumptionPills;
+    }
+
     private class buttonClick implements View.OnClickListener {
 
         private boolean _add;
         private TextView _amount;
+        private int _position;
+        private AddConsumptionPillListAdapter _adapter;
 
-        public buttonClick(boolean add, TextView amount) {
+        public buttonClick(boolean add, TextView amount, int position, AddConsumptionPillListAdapter adapter) {
             _add = add;
             _amount = amount;
+            _position = position;
+            _adapter = adapter;
         }
 
         @Override
         public void onClick(View view) {
+            Pill pill = _pills.get(_position);
             if (_add) {
                 int amount = Integer.parseInt(_amount.getText().toString()) + 1;
                 _amount.setText(String.valueOf(amount));
+                _adapter.addConsumedPill(pill);
             }
             else {
                 int amount = Integer.parseInt(_amount.getText().toString()) - 1;
-                if (amount >= 0)
+                if (amount >= 0) {
                     _amount.setText(String.valueOf(amount));
+                    _adapter.removeConsumedPill(pill);
+                }
             }
 
         }

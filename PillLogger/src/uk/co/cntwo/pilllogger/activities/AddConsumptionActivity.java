@@ -7,6 +7,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -25,22 +26,32 @@ import uk.co.cntwo.pilllogger.tasks.GetPillsTask;
  */
 public class AddConsumptionActivity extends Activity implements GetPillsTask.ITaskComplete {
 
+    ListView _pillsList;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.add_consumption_activity);
+
+        _pillsList = (ListView)findViewById(R.id.add_consumption_pill_list);
 
         new GetPillsTask(this, this).execute();
     }
 
     @Override
     public void pillsReceived(List<Pill> pills) {
-        ListView pillsList = (ListView)findViewById(R.id.add_consumption_pill_list);
-        pillsList.setAdapter(new AddConsumptionPillListAdapter(this, R.layout.add_consumption_pill_list, pills));
-        pillsList.setOnItemClickListener(new AddConsumptionPillItemClickListener(this));
+
+        _pillsList.setAdapter(new AddConsumptionPillListAdapter(this, R.layout.add_consumption_pill_list, pills));
+        _pillsList.setOnItemClickListener(new AddConsumptionPillItemClickListener(this, (AddConsumptionPillListAdapter)_pillsList.getAdapter()));
     }
 
     public void cancel(View view) {
         finish();
+    }
+
+    public void done(View view) {
+        AddConsumptionPillListAdapter adapter = (AddConsumptionPillListAdapter) _pillsList.getAdapter();
+        List<Pill> consumptionPills = adapter.getPillsConsumed();
+        Toast.makeText(this, "Number of pills: " + consumptionPills.size(), Toast.LENGTH_SHORT).show();
     }
 }
