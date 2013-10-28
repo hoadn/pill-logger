@@ -77,6 +77,21 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
         return 0;
     }
 
+    public Pill getPillAtPosition(int pos){
+        if(_pills == null || pos > _pills.size() || pos < 0)
+            return null;
+
+        return _pills.get(pos);
+    }
+
+    public void removeAtPosition(int pos){
+        if(_pills == null || pos > _pills.size() || pos < 0)
+            return;
+
+        _pills.remove(pos);
+        this.notifyDataSetChanged();
+    }
+
     public void updateAdapter(List<Pill> pills) {
         _pills = pills;
         this.notifyDataSetChanged();

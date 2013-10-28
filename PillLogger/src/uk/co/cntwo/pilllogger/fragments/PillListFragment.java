@@ -15,16 +15,20 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.haarman.listviewanimations.itemmanipulation.contextualundo.ContextualUndoAdapter;
+
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.adapters.PillsListAdapter;
+import uk.co.cntwo.pilllogger.helpers.Logger;
 import uk.co.cntwo.pilllogger.helpers.PillHelper;
 import uk.co.cntwo.pilllogger.listeners.PillItemClickListener;
 import uk.co.cntwo.pilllogger.models.Pill;
+import uk.co.cntwo.pilllogger.tasks.DeletePillTask;
 import uk.co.cntwo.pilllogger.tasks.GetPillsTask;
 
 
-public class PillListFragment extends Fragment implements GetPillsTask.ITaskComplete {
-
+public class PillListFragment extends Fragment implements GetPillsTask.ITaskComplete, ContextualUndoAdapter.DeleteItemCallback {
+    private String TAG = "PillListFragment";
     private ListView _list;
     private Typeface _openSans;
     private EditText _addPillName;
@@ -45,7 +49,7 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
         View v = inflater.inflate(R.layout.pill_list_fragment, container, false);
 
         _list = (ListView) v.findViewById(R.id.pill_list);
-        _list.setOnItemClickListener(new PillItemClickListener(getActivity()));
+        //_list.setOnItemClickListener(new PillItemClickListener(getActivity()));
 
         _openSans = Typeface.createFromAsset(getActivity().getAssets(), "fonts/OpenSans-Light.ttf");
 
@@ -62,16 +66,16 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
         completed.setOnClickListener(new AddPillClickListener(this));
 
 
-        _list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-            public boolean onItemLongClick(AdapterView<?> arg0, View v,
-                                           int pos, long id) {
-                v.setBackgroundColor(getActivity().getResources().getColor(R.color.text_grey));
-                View deleteLayout = v.findViewById(R.id.pill_list_delete_layout);
-                deleteLayout.setVisibility(View.VISIBLE);
-                return true;
-            }
-        });
+//        _list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//
+//            public boolean onItemLongClick(AdapterView<?> arg0, View v,
+//                                           int pos, long id) {
+//                v.setBackgroundColor(getActivity().getResources().getColor(R.color.text_grey));
+//                View deleteLayout = v.findViewById(R.id.pill_list_delete_layout);
+//                deleteLayout.setVisibility(View.VISIBLE);
+//                return true;
+//            }
+//        });
         return v;
     }
 
@@ -83,17 +87,33 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
 	public void setActivateOnItemClick(boolean activateOnItemClick) {
 		// When setting CHOICE_MODE_SINGLE, ListView will automatically
 		// give items the 'activated' state when touched.
-		_list.setChoiceMode(
-				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
-						: ListView.CHOICE_MODE_NONE);
+//		_list.setChoiceMode(
+//				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
+//						: ListView.CHOICE_MODE_NONE);
 	}
 
     @Override
     public void pillsReceived(List<Pill> pills) {
-        if (_list.getAdapter() == null)
-            _list.setAdapter(new PillsListAdapter(getActivity(), R.layout.pill_list_item, pills));
+        if (_list.getAdapter() == null){ //we need to init the adapter
+            PillsListAdapter adapter = new PillsListAdapter(getActivity(), R.layout.pill_list_item, pills);
+
+            ContextualUndoAdapter undoAdapter = new ContextualUndoAdapter(adapter, R.layout.pill_list_item_delete, R.id.pill_list_undo);
+            undoAdapter.setAbsListView(_list);
+            _list.setAdapter(undoAdapter);
+
+            undoAdapter.setDeleteItemCallback(this);
+        }
         else
             ((PillsListAdapter)_list.getAdapter()).updateAdapter(pills);
+    }
+
+    @Override
+    public void deleteItem(int i) {
+        PillsListAdapter adapter = ((PillsListAdapter)((ContextualUndoAdapter)_list.getAdapter()).getDecoratedBaseAdapter());
+        Pill p = adapter.getPillAtPosition(i);
+        adapter.removeAtPosition(i);
+
+        new DeletePillTask(getActivity(), p).execute();
     }
 
     private class AddPillClickListener implements View.OnClickListener {
