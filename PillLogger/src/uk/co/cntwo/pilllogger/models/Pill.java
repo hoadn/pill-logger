@@ -67,4 +67,26 @@ public class Pill implements Serializable {
 	public String toString(){
 		return getName() + '(' + getSize() + ')';
 	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Pill pill = (Pill) o;
+
+        if (_id != pill._id) return false;
+        if (_size != pill._size) return false;
+        if (!_name.equals(pill._name)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = _id;
+        result = 31 * result + _name.hashCode();
+        result = 31 * result + _size;
+        return result;
+    }
 }

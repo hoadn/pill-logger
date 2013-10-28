@@ -16,9 +16,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import uk.co.cntwo.pilllogger.R;
+import uk.co.cntwo.pilllogger.helpers.LayoutHelper;
+import uk.co.cntwo.pilllogger.helpers.Logger;
 import uk.co.cntwo.pilllogger.models.Pill;
+import uk.co.cntwo.pilllogger.state.State;
 
 
 /**
@@ -64,7 +68,6 @@ public class AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
             holder.container = v;
             holder.amount = (TextView) v.findViewById(R.id.add_consumption_amount);
             v.setTag(holder);
-
         }
         else
             holder=(ViewHolder) v.getTag();
@@ -73,11 +76,34 @@ public class AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
         if (pill != null) {
             holder.name.setText(pill.getName());
             holder.size.setText(String.valueOf(pill.getSize()));
+            Map<Pill, Integer> openPills = State.getSingleton().getOpenPillsList();
+            Logger.v("Testing", "openPillsList size: " + openPills.size());
+            if (State.getSingleton().getOpenPillsList().containsKey(pill)) {
+                v = open(v);
+                holder.amount.setText(openPills.get(pill).toString());
+            }
+            else {
+                v = close(v);
+            }
         }
         TextView add = (TextView)v.findViewById(R.id.add_consumption_add);
         add.setOnClickListener(new buttonClick(true, holder.amount, position, this));
         TextView minus = (TextView)v.findViewById(R.id.add_consumption_minus);
         minus.setOnClickListener(new buttonClick(false, holder.amount, position, this));
+        return v;
+    }
+
+    private View open(View v) {
+        v.setBackgroundColor(_activity.getResources().getColor(R.color.done_cancel_grey));
+        View view = v.findViewById(R.id.add_consumption_after_click_layout);
+        view.getLayoutParams().width = (int) LayoutHelper.dpToPx(_activity, 125);
+        return v;
+    }
+
+    private View close(View v) {
+        v.setBackgroundColor(_activity.getResources().getColor(android.R.color.transparent));
+        View view = v.findViewById(R.id.add_consumption_after_click_layout);
+        view.getLayoutParams().width = (int) LayoutHelper.dpToPx(_activity, 0);
         return v;
     }
 
@@ -148,19 +174,22 @@ public class AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
         @Override
         public void onClick(View view) {
             Pill pill = _pills.get(_position);
+            Map<Pill, Integer> openPills = State.getSingleton().getOpenPillsList();
             if (_add) {
                 int amount = Integer.parseInt(_amount.getText().toString()) + 1;
+                openPills.put(pill, openPills.get(pill) + 1);
                 _amount.setText(String.valueOf(amount));
                 _adapter.addConsumedPill(pill);
             }
             else {
                 int amount = Integer.parseInt(_amount.getText().toString()) - 1;
                 if (amount >= 0) {
+                    openPills.put(pill, openPills.get(pill) - 1);
                     _amount.setText(String.valueOf(amount));
                     _adapter.removeConsumedPill(pill);
                 }
             }
-
+            State.getSingleton().setOpenPillsList(openPills);
         }
     }
 }

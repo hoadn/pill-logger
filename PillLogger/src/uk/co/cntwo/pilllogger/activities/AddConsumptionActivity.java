@@ -22,6 +22,7 @@ import uk.co.cntwo.pilllogger.listeners.AddConsumptionPillItemClickListener;
 import uk.co.cntwo.pilllogger.listeners.PillItemClickListener;
 import uk.co.cntwo.pilllogger.models.Consumption;
 import uk.co.cntwo.pilllogger.models.Pill;
+import uk.co.cntwo.pilllogger.state.State;
 import uk.co.cntwo.pilllogger.tasks.GetPillsTask;
 
 /**
@@ -49,10 +50,12 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
     }
 
     public void cancel(View view) {
+        State.getSingleton().clearOpenPillsList();
         finish();
     }
 
     public void done(View view) {
+        State.getSingleton().clearOpenPillsList();
         AddConsumptionPillListAdapter adapter = (AddConsumptionPillListAdapter) _pillsList.getAdapter();
         List<Pill> consumptionPills = adapter.getPillsConsumed();
 
