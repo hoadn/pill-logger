@@ -4,6 +4,33 @@
         android:layout_height="match_parent"
         android:padding="10dp">
 
+        <LinearLayout
+            android:id="@+id/pill_list_delete_layout"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_alignParentLeft="true"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:src="@drawable/bin"/>
+
+            <TextView
+                android:id="@+id/pill_list_delete"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:text="Delete"
+                android:textSize="22dp"
+                android:textColor="@color/text_grey_light"/>
+
+
+        </LinearLayout>
+
+
+
         <TextView android:textSize="22dp"
                   android:id="@+id/pill_list_name"
                   android:layout_width="wrap_content"

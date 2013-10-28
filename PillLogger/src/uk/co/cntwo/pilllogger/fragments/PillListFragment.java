@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -60,6 +61,17 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
         View completed = v.findViewById(R.id.pill_fragment_add_pill_completed);
         completed.setOnClickListener(new AddPillClickListener(this));
 
+
+        _list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            public boolean onItemLongClick(AdapterView<?> arg0, View v,
+                                           int pos, long id) {
+                v.setBackgroundColor(getActivity().getResources().getColor(R.color.text_grey));
+                View deleteLayout = v.findViewById(R.id.pill_list_delete_layout);
+                deleteLayout.setVisibility(View.VISIBLE);
+                return true;
+            }
+        });
         return v;
     }
 

@@ -51,6 +51,14 @@ public class DatabaseHelper {
         return newRowId;
     }
 
+    public void deletePill(Pill pill) {
+        SQLiteDatabase db = _dbCreator.getWritableDatabase();
+
+        String id = String.valueOf(pill.getId());
+
+        db.delete(DatabaseContract.Pills.TABLE_NAME, "_ID = ?", new String[] { id });
+    }
+
     public Pill getPill(int id) {
         SQLiteDatabase db = _dbCreator.getReadableDatabase();
 
