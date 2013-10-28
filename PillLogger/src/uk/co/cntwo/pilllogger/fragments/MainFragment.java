@@ -12,6 +12,7 @@ import java.util.List;
 
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.adapters.ConsumptionListAdapter;
+import uk.co.cntwo.pilllogger.helpers.Logger;
 import uk.co.cntwo.pilllogger.listeners.AddConsumptionClickListener;
 import uk.co.cntwo.pilllogger.models.Consumption;
 import uk.co.cntwo.pilllogger.tasks.GetConsumptionsTask;
@@ -30,7 +31,7 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.main_fragment, container, false);
 
-
+        Logger.v("MainFragment.onCreateView", "onCreateView Called");
         //Doing this to test - will not be needed when working fully
         new InitTestDbTask(this.getActivity(), this).execute();
 
@@ -47,6 +48,12 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
 
     @Override
     public void initComplete() {
+        new GetConsumptionsTask(this.getActivity(), this).execute();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         new GetConsumptionsTask(this.getActivity(), this).execute();
     }
 
