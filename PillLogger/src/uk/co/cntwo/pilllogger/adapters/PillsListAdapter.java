@@ -37,8 +37,6 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
     public static class ViewHolder {
         public TextView name;
         public TextView size;
-        public TextView delete;
-        public View deleteLayout;
     }
 
     @Override
@@ -55,7 +53,6 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
             //holder.deleteLayout = v.findViewById(R.id.pill_list_delete_layout);
             holder.name.setTypeface(_openSans);
             holder.size.setTypeface(_openSans);
-            holder.delete.setTypeface(_openSans);
             v.setTag(holder);
         }
         else
