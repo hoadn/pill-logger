@@ -7,7 +7,7 @@
             android:padding="10dp"
             android:orientation="horizontal"
             android:visibility="gone"
-            android:background="@color/deleted_background_grey">
+            android:background="@color/background_grey">
 
             <TextView
                 android:layout_height="30dp"
@@ -15,13 +15,13 @@
                 android:text="Deleted"
                 android:textSize="16dp"
                 android:gravity="center_vertical"
-                android:textColor="@android:color/white"
+                android:textColor="@color/text_grey_medium"
                 android:layout_weight="3"/>
     
             <View
                 android:layout_height="match_parent"
                 android:layout_width="1dp"
-                android:background="@android:color/white"
+                android:background="@color/text_grey_medium"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="10dp"
@@ -47,7 +47,7 @@
                     android:text="Undo"
                     android:textSize="14dp"
                     android:textAllCaps="true"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@color/text_grey_medium"/>
 
                 </LinearLayout>
 
