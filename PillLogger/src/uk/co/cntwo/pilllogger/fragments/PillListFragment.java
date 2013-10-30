@@ -104,7 +104,10 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
             undoAdapter.setDeleteItemCallback(this);
         }
         else
-            ((PillsListAdapter)_list.getAdapter()).updateAdapter(pills);
+        {
+           ContextualUndoAdapter undoAdapter = (ContextualUndoAdapter)_list.getAdapter();
+           ((PillsListAdapter)undoAdapter.getDecoratedBaseAdapter()).updateAdapter(pills);
+        }
     }
 
     @Override
