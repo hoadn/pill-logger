@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:padding="10dp"
@@ -9,12 +10,24 @@
         <TextView android:textSize="22dp"
                   android:id="@+id/pill_list_name"
                   android:layout_width="wrap_content"
-                  android:layout_height="match_parent" />
+                  android:layout_height="match_parent"
+                    tools:text="@string/placeholder_pill_text"/>
 
-        <TextView android:textSize="20dip"
-                  android:id="@+id/pill_list_size"
-                  android:layout_alignParentRight="true"
-                  android:layout_width="wrap_content"
-                  android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/pill_list_units"
+            android:textSize="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignBaseline="@id/pill_list_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pill_units"/>
+        <TextView
+            android:textSize="20dip"
+            android:id="@+id/pill_list_size"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/pill_list_units"
+            android:layout_alignBaseline="@id/pill_list_name"
+            tools:text="@string/placeholder_pill_size"/>
 
 </RelativeLayout>

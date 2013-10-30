@@ -17,4 +17,9 @@
     <string name="drawer_open">Menu</string>
     <string name="drawer_close">Close</string>
 
+    <string name="pill_units">mg</string>
+
+    <string name="placeholder_pill_text">Paracetamol</string>
+    <string name="placeholder_pill_size">500</string>
+
 </resources>
