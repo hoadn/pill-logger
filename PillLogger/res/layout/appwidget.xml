@@ -4,13 +4,16 @@
     android:layout_height="match_parent"
     android:gravity="fill"
     android:orientation="horizontal"
-    android:background="@color/background_grey"
+    android:background="@drawable/widget_background"
     >
 
-    <TextView
+    <ImageView
         android:id="@+id/widget_text"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:text="Test Widget"/>
+        android:layout_width="165dp"
+        android:layout_height="165dp"
+        android:padding="10dp"
+        android:src="@drawable/plus"
+        android:clickable="true"
+        android:background="?android:attr/selectableItemBackground"/>
 
 </RelativeLayout>

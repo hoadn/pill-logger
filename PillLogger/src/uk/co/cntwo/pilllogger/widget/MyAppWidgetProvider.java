@@ -7,8 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
+import java.util.Date;
+
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.activities.MainActivity;
+import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
+import uk.co.cntwo.pilllogger.models.Consumption;
+import uk.co.cntwo.pilllogger.models.Pill;
+import uk.co.cntwo.pilllogger.tasks.InsertConsumptionTask;
 
 /**
  * Created by nick on 31/10/13.
@@ -30,6 +36,12 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             // to the button
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.appwidget);
             views.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
+
+//            Pill pill = DatabaseHelper.getSingleton(context).getPill(1);
+//            if (pill != null) {
+//                Consumption consumption = new Consumption(pill, new Date());
+//                new InsertConsumptionTask(context, consumption).execute();
+//            }
 
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
