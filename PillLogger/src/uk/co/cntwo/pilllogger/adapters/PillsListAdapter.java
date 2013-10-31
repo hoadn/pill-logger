@@ -37,6 +37,7 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
     public static class ViewHolder {
         public TextView name;
         public TextView size;
+        public TextView units;
     }
 
     @Override
@@ -49,10 +50,11 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
             holder = new ViewHolder();
             holder.name = (TextView) v.findViewById(R.id.pill_list_name);
             holder.size = (TextView) v.findViewById(R.id.pill_list_size);
-            //holder.delete = (TextView) v.findViewById(R.id.pill_list_delete);
-            //holder.deleteLayout = v.findViewById(R.id.pill_list_delete_layout);
+            holder.units = (TextView) v.findViewById(R.id.pill_list_units);
+
             holder.name.setTypeface(_openSans);
             holder.size.setTypeface(_openSans);
+            holder.units.setTypeface(_openSans);
             v.setTag(holder);
         }
         else
@@ -62,7 +64,6 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
         if (pill != null) {
             holder.name.setText(pill.getName());
             holder.size.setText(String.valueOf(pill.getSize()));
-            //holder.deleteLayout.setOnClickListener(new DeletePillClickListener(_activity, pill));
         }
         return v;
     }

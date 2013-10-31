@@ -48,6 +48,7 @@ public class
     public static class ViewHolder {
         public TextView name;
         public TextView size;
+        public TextView units;
         public View buttonLayout;
         public View container;
         public TextView amount;
@@ -63,8 +64,10 @@ public class
             holder = new ViewHolder();
             holder.name = (TextView) v.findViewById(R.id.pill_list_name);
             holder.size = (TextView) v.findViewById(R.id.pill_list_size);
+            holder.units = (TextView) v.findViewById(R.id.pill_list_units);
             holder.name.setTypeface(_openSans);
             holder.size.setTypeface(_openSans);
+            holder.units.setTypeface(_openSans);
             holder.buttonLayout = v.findViewById(R.id.add_consumption_after_click_layout);
             holder.container = v;
             holder.amount = (TextView) v.findViewById(R.id.add_consumption_amount);

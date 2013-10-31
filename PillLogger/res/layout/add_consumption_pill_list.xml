@@ -62,12 +62,23 @@
 
     </LinearLayout>
 
-    <TextView android:textSize="14dp"
-        android:id="@+id/pill_list_size"
+
+    <TextView
+        android:id="@+id/pill_list_units"
+        android:textSize="12dp"
+        android:layout_alignBaseline="@id/pill_list_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/add_consumption_after_click_layout"
-        tools:text="200mg"/>
+        android:text="@string/pill_units"/>
+    <TextView android:textSize="14dp"
+        android:id="@+id/pill_list_size"
+        android:layout_alignBaseline="@id/pill_list_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/pill_list_units"
+        tools:text="200"/>
 
 </RelativeLayout>
