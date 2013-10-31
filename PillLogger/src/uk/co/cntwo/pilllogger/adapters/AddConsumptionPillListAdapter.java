@@ -28,7 +28,8 @@ import uk.co.cntwo.pilllogger.state.State;
 /**
  * Created by nick on 22/10/13.
  */
-public class AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
+public class
+        AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
 
     private List<Pill> _pills;
     private List<Pill> _consumptionPills = new ArrayList<Pill>();
