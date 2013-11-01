@@ -3,5 +3,6 @@
     android:minHeight="40dp"
     android:initialLayout="@layout/appwidget"
     android:resizeMode="horizontal|vertical"
-    android:widgetCategory="home_screen">
+    android:widgetCategory="home_screen"
+    android:configure="uk.co.cntwo.pilllogger.activities.AppWidgetConfigure">
 </appwidget-provider>
