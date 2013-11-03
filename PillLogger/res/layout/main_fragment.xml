@@ -48,14 +48,21 @@
             android:background="?android:attr/selectableItemBackground"/>
     </RelativeLayout>
     <RelativeLayout
-        android:id="@+id/main_top_images_layout2"
+        android:id="@+id/main_top_images_custom"
         android:layout_height="50dp"
         android:layout_width="50dp"
         android:orientation="horizontal"
         android:layout_margin="5dp"
         android:layout_marginBottom="5dp"
         android:background="@drawable/container_dropshadow">
-
+        <ImageView
+            android:id="@+id/main_add_custom"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="15dp"
+            android:src="@drawable/ellipsis_horizontal"
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackground"/>
     </RelativeLayout>
 
     </LinearLayout>
