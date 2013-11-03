@@ -39,7 +39,7 @@ public class SettingsFragment extends PreferenceFragment{
                     @Override
                     public boolean onPreferenceClick(Preference arg0) {
                         Intent composeIntent = new Intent(arg0.getContext(), WebViewActivity.class);
-                        composeIntent.putExtra("type", "compose");
+                        composeIntent.putExtra(getString(R.string.key_web_address), "file:///android_asset/html/licenses/index.html");
 
                         startActivity(composeIntent);
                         return true;
