@@ -9,9 +9,8 @@
         android:id="@+id/drawer_item_icon"
         android:layout_width="55dp"
         android:layout_height="55dp"
-        android:src="@drawable/graph"
-        android:padding="5dp"
-        android:background="@color/light_green"/>
+        android:src="@drawable/list"
+        android:padding="15dp"/>
 
 
     <TextView

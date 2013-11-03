@@ -60,8 +60,17 @@ public class LeftDrawerAdapter extends BaseAdapter{
         drawerText.setText(_source.get(position));
         drawerText.setTypeface(_openSans);
 
-        if (_source.get(position).equals(_activity.getResources().getString(R.string.drawer_pills)))
-            drawerIcon.setBackgroundColor(_activity.getResources().getColor(R.color.light_blue));
+        if(_source.get(position).equals(_activity.getString(R.string.drawer_consumption))){
+            drawerIcon.setImageDrawable(_activity.getResources().getDrawable(R.drawable.list));
+        }
+
+        if (_source.get(position).equals(_activity.getString(R.string.drawer_pills))){
+            drawerIcon.setImageDrawable(_activity.getResources().getDrawable(R.drawable.medkit));
+        }
+
+        if(_source.get(position).equals(_activity.getString(R.string.drawer_settings))){
+            drawerIcon.setImageDrawable(_activity.getResources().getDrawable(R.drawable.cogs));
+        }
 
 
         return v;
