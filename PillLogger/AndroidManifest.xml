@@ -40,6 +40,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.AddConsumptionActivity" />
+        <activity android:name=".activities.SettingsActivity" />
+        <activity android:name=".activities.WebViewActivity" />
     </application>
 
 </manifest>

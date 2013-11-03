@@ -5,12 +5,11 @@ import java.util.List;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,9 +18,7 @@ import com.haarman.listviewanimations.itemmanipulation.contextualundo.Contextual
 
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.adapters.PillsListAdapter;
-import uk.co.cntwo.pilllogger.helpers.Logger;
 import uk.co.cntwo.pilllogger.helpers.PillHelper;
-import uk.co.cntwo.pilllogger.listeners.PillItemClickListener;
 import uk.co.cntwo.pilllogger.models.Pill;
 import uk.co.cntwo.pilllogger.tasks.DeletePillTask;
 import uk.co.cntwo.pilllogger.tasks.GetPillsTask;
