@@ -32,17 +32,17 @@
         android:orientation="vertical"
         android:layout_margin="5dp"
         android:layout_marginBottom="5dp"
-        android:paddingTop="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingBottom="8dp"
+        android:paddingTop="0dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingBottom="3dp"
         android:background="@drawable/container_dropshadow">
 
         <ImageView
             android:id="@+id/main_add"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:padding="10dp"
+            android:padding="15dp"
             android:src="@drawable/plus"
             android:clickable="true"
             android:background="?android:attr/selectableItemBackground"/>
