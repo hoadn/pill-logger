@@ -35,12 +35,11 @@ public class DatabaseHelper {
     public long insertPill(Pill pill) {
         SQLiteDatabase db = _dbCreator.getWritableDatabase();
 
-        String name = pill.getName();
-        int size = pill.getSize();
-
         ContentValues values = new ContentValues();
-        values.put(DatabaseContract.Pills.COLUMN_NAME, name);
-        values.put(DatabaseContract.Pills.COLUMN_SIZE, size);
+        values.put(DatabaseContract.Pills.COLUMN_NAME, pill.getName());
+        values.put(DatabaseContract.Pills.COLUMN_SIZE, pill.getSize());
+        values.put(DatabaseContract.Pills.COLUMN_COLOUR, pill.getColour());
+        values.put(DatabaseContract.Pills.COLUMN_FAVOURITE, pill.isFavourite());
         long newRowId = 0L;
         if (db != null) {
         newRowId = db.insert(
@@ -66,6 +65,8 @@ public class DatabaseHelper {
                 DatabaseContract.Pills._ID,
                 DatabaseContract.Pills.COLUMN_NAME,
                 DatabaseContract.Pills.COLUMN_SIZE,
+                DatabaseContract.Pills.COLUMN_COLOUR,
+                DatabaseContract.Pills.COLUMN_FAVOURITE
         };
 
         String selection = DatabaseContract.Pills._ID + " =?";
@@ -87,6 +88,11 @@ public class DatabaseHelper {
                 pill.setId(c.getInt(c.getColumnIndex(DatabaseContract.Pills._ID)));
                 pill.setName(c.getString(c.getColumnIndex(DatabaseContract.Pills.COLUMN_NAME)));
                 pill.setSize(c.getInt(c.getColumnIndex(DatabaseContract.Pills.COLUMN_SIZE)));
+                pill.setColour(c.getString(c.getColumnIndex(DatabaseContract.Pills.COLUMN_COLOUR)));
+
+                int fav =c.getInt(c.getColumnIndex(DatabaseContract.Pills.COLUMN_FAVOURITE));
+                pill.setFavourite(fav != 0);
+
                 c.moveToNext();
             }
         }
