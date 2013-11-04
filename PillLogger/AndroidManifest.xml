@@ -40,6 +40,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.AddConsumptionActivity" />
+        <activity android:name=".activities.SettingsActivity" />
+        <activity android:name=".activities.WebViewActivity" />
         <receiver android:name=".widget.MyAppWidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

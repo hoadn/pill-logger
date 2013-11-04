@@ -1,11 +1,11 @@
 package uk.co.cntwo.pilllogger.activities;
 
 import android.app.ActionBar;
-import android.support.v4.app.Fragment;
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
@@ -23,7 +23,7 @@ import uk.co.cntwo.pilllogger.listeners.DrawerItemClickListener;
 /**
  * Created by nick on 22/10/13.
  */
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends Activity {
 
     private List<String> _navigationItems = new ArrayList<String>();
     private DrawerLayout _drawerLayout;
@@ -62,7 +62,7 @@ public class MainActivity extends FragmentActivity {
 
         if(savedInstanceState == null){
             Fragment fragment = new MainFragment();
-            getSupportFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();
@@ -72,6 +72,7 @@ public class MainActivity extends FragmentActivity {
     private void setUpDrawerNavigation() {
         _navigationItems.add(this.getResources().getString(R.string.drawer_consumption));
         _navigationItems.add(this.getResources().getString(R.string.drawer_pills));
+        _navigationItems.add(this.getResources().getString(R.string.drawer_settings));
         _drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ListView drawerList = (ListView) findViewById(R.id.left_drawer);
 

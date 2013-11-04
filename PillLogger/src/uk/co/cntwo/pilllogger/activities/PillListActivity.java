@@ -37,7 +37,7 @@ public class PillListActivity extends FragmentActivity {
 
 			// In two-pane mode, list items should be given the
 			// 'activated' state when touched.
-			((PillListFragment) getSupportFragmentManager().findFragmentById(
+			((PillListFragment) getFragmentManager().findFragmentById(
 					R.id.pill_list)).setActivateOnItemClick(true);
 		}
 

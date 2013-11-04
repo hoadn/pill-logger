@@ -8,49 +8,68 @@
     android:orientation="horizontal"
     android:background="@color/background_grey"
     >
+    <ImageView
+        android:id="@+id/main_graph"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_height="165dp"
+        android:padding="10dp"
+        android:src="@drawable/graph"
+        android:background="@color/text_grey_light"/>
 
+    <LinearLayout
+        android:id="@+id/button_container"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/main_graph"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="-30dp">
     <RelativeLayout
         android:id="@+id/main_top_images_layout"
-        android:layout_height="170dp"
-        android:layout_width="165dp"
+        android:layout_height="50dp"
+        android:layout_width="50dp"
         android:orientation="vertical"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:layout_marginBottom="5dp"
-        android:paddingTop="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingBottom="8dp"
+        android:paddingTop="0dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingBottom="3dp"
         android:background="@drawable/container_dropshadow">
 
         <ImageView
             android:id="@+id/main_add"
-            android:layout_width="165dp"
-            android:layout_height="165dp"
-            android:padding="10dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="15dp"
             android:src="@drawable/plus"
             android:clickable="true"
             android:background="?android:attr/selectableItemBackground"/>
     </RelativeLayout>
     <RelativeLayout
-        android:id="@+id/main_top_images_layout2"
-        android:layout_height="170dp"
-        android:layout_width="165dp"
+        android:id="@+id/main_top_images_custom"
+        android:layout_height="50dp"
+        android:layout_width="50dp"
         android:orientation="horizontal"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_alignParentRight="true"
         android:background="@drawable/container_dropshadow">
         <ImageView
-            android:id="@+id/main_graph"
-            android:layout_width="165dp"
-            android:layout_height="165dp"
-            android:padding="10dp"
-            android:src="@drawable/graph"/>
+            android:id="@+id/main_add_custom"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="15dp"
+            android:src="@drawable/ellipsis_horizontal"
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackground"/>
     </RelativeLayout>
+
+    </LinearLayout>
 
     <ListView
         android:id="@+id/main_consumption_list"
-        android:layout_below="@id/main_top_images_layout"
+        android:layout_below="@id/button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"

@@ -1,9 +1,8 @@
 package uk.co.cntwo.pilllogger.listeners;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentActivity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,6 +13,7 @@ import java.util.List;
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.fragments.MainFragment;
 import uk.co.cntwo.pilllogger.fragments.PillListFragment;
+import uk.co.cntwo.pilllogger.fragments.SettingsFragment;
 import uk.co.cntwo.pilllogger.helpers.Logger;
 
 /**
@@ -42,22 +42,29 @@ public class DrawerItemClickListener implements ListView.OnItemClickListener {
         String title = _activity.getResources().getString(R.string.app_name);
         String consumption = _activity.getResources().getString(R.string.drawer_consumption);
         String pills = _activity.getResources().getString(R.string.drawer_pills);
+        String settings = _activity.getResources().getString(R.string.drawer_settings);
         Logger.d(TAG, "selectItem, position: " + position);
 
         Fragment fragment = null;
-        if (_navigationItems.get(position).equals(consumption)) {
+        String selectedItem = _navigationItems.get(position);
+
+        if (selectedItem.equals(consumption)) {
             fragment = new MainFragment();
             title = consumption;
 
         }
-        else if (_navigationItems.get(position).equals(pills)) {
+        else if (selectedItem.equals(pills)) {
             fragment = new PillListFragment();
             title = pills;
+        }
+        else if(selectedItem.equals(settings)){
+            fragment = new SettingsFragment();
+            title = settings;
         }
 
         if(fragment != null){
             // Insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = ((FragmentActivity)_activity).getSupportFragmentManager();
+            FragmentManager fragmentManager = _activity.getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, fragment)
                     .addToBackStack(fragment.toString())
@@ -65,8 +72,8 @@ public class DrawerItemClickListener implements ListView.OnItemClickListener {
         }
 
         _drawerList.setItemChecked(position, true);
-        int selectedItem = _drawerList.getCheckedItemPosition();
-        Logger.v("DrawerItemClickListener", "selectedItem = " + selectedItem);
+        int selectedPos = _drawerList.getCheckedItemPosition();
+        Logger.v("DrawerItemClickListener", "selectedPos = " + selectedPos);
         _drawerLayout.closeDrawer(_drawerList);
 
         _activity.getActionBar().setTitle(title);
