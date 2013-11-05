@@ -93,7 +93,6 @@ public class AppWidgetConfigure extends Activity implements GetPillsTask.ITaskCo
         Bundle bundle = new Bundle();
         bundle.putInt(AppWidgetConfigure.PILL_ID, _chosenPill.getId());
         _newIntent.putExtras(bundle);
-        _newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 
     public void cancelPillSelection(View view) {
@@ -116,7 +115,7 @@ public class AppWidgetConfigure extends Activity implements GetPillsTask.ITaskCo
             int pillId = bundle.getInt(AppWidgetConfigure.PILL_ID);
             Toast.makeText(_context, "Id = " + pillId, Toast.LENGTH_SHORT).show();
             //Create a pending intent from our intent
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(_context, 0, _newIntent, 0);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(_context, 0, _newIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(_context);
 
