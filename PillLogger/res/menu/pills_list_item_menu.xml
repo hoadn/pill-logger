@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/pill_list_item_menu_favourite"
+          android:title="@string/favourite"
+          android:icon="@drawable/ic_menu_star"/>
+
+</menu>

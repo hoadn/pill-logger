@@ -22,5 +22,6 @@
     <string name="placeholder_pill_text">Paracetamol</string>
     <string name="placeholder_pill_size">500</string>
     <string name="drawer_settings">Settings</string>
+    <string name="favourite">Favourite</string>
 
 </resources>
