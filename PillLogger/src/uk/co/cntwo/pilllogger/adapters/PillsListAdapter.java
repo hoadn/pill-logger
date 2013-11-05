@@ -38,6 +38,7 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
         public TextView name;
         public TextView size;
         public TextView units;
+        public View favourite;
     }
 
     @Override
@@ -51,6 +52,7 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
             holder.name = (TextView) v.findViewById(R.id.pill_list_name);
             holder.size = (TextView) v.findViewById(R.id.pill_list_size);
             holder.units = (TextView) v.findViewById(R.id.pill_list_units);
+            holder.favourite = v.findViewById(R.id.pill_list_favourite);
 
             holder.name.setTypeface(_openSans);
             holder.size.setTypeface(_openSans);
@@ -64,6 +66,9 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
         if (pill != null) {
             holder.name.setText(pill.getName());
             holder.size.setText(String.valueOf(pill.getSize()));
+
+            int visibility = pill.isFavourite() ? View.VISIBLE : View.INVISIBLE;
+            holder.favourite.setVisibility(visibility);
         }
         return v;
     }
