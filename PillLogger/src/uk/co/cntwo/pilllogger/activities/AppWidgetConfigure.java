@@ -5,15 +5,21 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.RemoteViews;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.adapters.PillsListAdapter;
+import uk.co.cntwo.pilllogger.animations.HeightAnimation;
+import uk.co.cntwo.pilllogger.helpers.LayoutHelper;
+import uk.co.cntwo.pilllogger.listeners.WidgetPillsClickListener;
 import uk.co.cntwo.pilllogger.models.Pill;
 import uk.co.cntwo.pilllogger.tasks.GetPillsTask;
 import uk.co.cntwo.pilllogger.widget.MyAppWidgetProvider;
@@ -25,10 +31,17 @@ public class AppWidgetConfigure extends Activity implements GetPillsTask.ITaskCo
 
     public static String CLICK_ACTION = "ClickAction";
     int _appWidgetId = -1;
+    Pill _chosenPill;
+    Typeface _openSans;
+    TextView _selectedPillName, _selectedPillSize;
+    ListView _pillsList;
+    View _selectedPillLayout;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_widget_configure);
+
+        _openSans = Typeface.createFromAsset(this.getAssets(), "fonts/OpenSans-Light.ttf");
 
         this.setResult(RESULT_CANCELED);
         new GetPillsTask(this, this).execute();
@@ -44,15 +57,39 @@ public class AppWidgetConfigure extends Activity implements GetPillsTask.ITaskCo
         View finishButton = findViewById(R.id.widget_finish);
         finishButton.setOnClickListener(new finishConfigureClickListener(this));
 
+        _selectedPillName = (TextView) findViewById(R.id.widget_configure_selected_pill_name);
+        _selectedPillSize = (TextView) findViewById(R.id.widget_configure_selected_pill_size);
+        _selectedPillName.setTypeface(_openSans);
+        _selectedPillSize.setTypeface(_openSans);
     }
 
     @Override
     public void pillsReceived(List<Pill> pills) {
         ListView pillsList = (ListView) findViewById(R.id.widget_configure_pill_list);
         if (pillsList != null) {
-            PillsListAdapter adapter = new PillsListAdapter(this, R.layout.pill_list_item, pills);
+            PillsListAdapter adapter = new PillsListAdapter(this, R.layout.widget_pill_list_item, pills);
             pillsList.setAdapter(adapter);
+            pillsList.setOnItemClickListener(new WidgetPillsClickListener(this));
         }
+    }
+
+    public void setChosenPill(Pill pill) {
+        _chosenPill = pill;
+        _selectedPillName.setText(pill.getName());
+        _selectedPillSize.setText(String.valueOf(pill.getSize()));
+        _selectedPillLayout = findViewById(R.id.widget_configure_selected_pill);
+
+
+        _pillsList = (ListView)findViewById(R.id.widget_configure_pill_list);
+        _pillsList.setVisibility(View.GONE);
+        //HeightAnimation animationShow = new HeightAnimation(_selectedPillLayout, (int)LayoutHelper.dpToPx(this, 50), true, this);
+        //animationShow.setDuration(200);
+        _selectedPillLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void cancelPillSelection(View view) {
+        _pillsList.setVisibility(View.VISIBLE);`
+        _selectedPillLayout.setVisibility(View.GONE);
     }
 
     public class finishConfigureClickListener implements View.OnClickListener {
