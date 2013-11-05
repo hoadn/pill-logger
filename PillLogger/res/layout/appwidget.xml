@@ -7,13 +7,21 @@
     android:background="@drawable/widget_background"
     >
 
-    <ImageView
+    <TextView
         android:id="@+id/widget_text"
         android:layout_width="165dp"
         android:layout_height="165dp"
         android:padding="10dp"
-        android:src="@drawable/plus"
+        android:textColor="@color/text_grey"
+        android:textSize="50dp"
+        android:gravity="center"
         android:clickable="true"
         android:background="?android:attr/selectableItemBackground"/>
+
+    <TextView
+        android:id="@+id/widget_pill_id"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:visibility="gone"/>
 
 </RelativeLayout>

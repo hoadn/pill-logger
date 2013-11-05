@@ -30,12 +30,14 @@ import uk.co.cntwo.pilllogger.widget.MyAppWidgetProvider;
 public class AppWidgetConfigure extends Activity implements GetPillsTask.ITaskComplete {
 
     public static String CLICK_ACTION = "ClickAction";
+    public static String PILL_ID = "uk.co.cntwo.pilllogger.activities.AppWidgetConfigure.PILL_ID";
     int _appWidgetId = -1;
     Pill _chosenPill;
     Typeface _openSans;
     TextView _selectedPillName, _selectedPillSize;
     ListView _pillsList;
     View _selectedPillLayout;
+    Intent _newIntent;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +63,10 @@ public class AppWidgetConfigure extends Activity implements GetPillsTask.ITaskCo
         _selectedPillSize = (TextView) findViewById(R.id.widget_configure_selected_pill_size);
         _selectedPillName.setTypeface(_openSans);
         _selectedPillSize.setTypeface(_openSans);
+
+
+        _newIntent = new Intent(this, MyAppWidgetProvider.class);
+
     }
 
     @Override
@@ -82,13 +88,16 @@ public class AppWidgetConfigure extends Activity implements GetPillsTask.ITaskCo
 
         _pillsList = (ListView)findViewById(R.id.widget_configure_pill_list);
         _pillsList.setVisibility(View.GONE);
-        //HeightAnimation animationShow = new HeightAnimation(_selectedPillLayout, (int)LayoutHelper.dpToPx(this, 50), true, this);
-        //animationShow.setDuration(200);
         _selectedPillLayout.setVisibility(View.VISIBLE);
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(AppWidgetConfigure.PILL_ID, _chosenPill.getId());
+        _newIntent.putExtras(bundle);
+        _newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 
     public void cancelPillSelection(View view) {
-        _pillsList.setVisibility(View.VISIBLE);`
+        _pillsList.setVisibility(View.VISIBLE);
         _selectedPillLayout.setVisibility(View.GONE);
     }
 
@@ -102,18 +111,21 @@ public class AppWidgetConfigure extends Activity implements GetPillsTask.ITaskCo
 
         @Override
         public void onClick(View view) {
-            Intent newIntent = new Intent(_context, MyAppWidgetProvider.class);
-            newIntent.setAction(CLICK_ACTION);
-
+            _newIntent.setAction(CLICK_ACTION);
+            Bundle bundle = _newIntent.getExtras();
+            int pillId = bundle.getInt(AppWidgetConfigure.PILL_ID);
+            Toast.makeText(_context, "Id = " + pillId, Toast.LENGTH_SHORT).show();
             //Create a pending intent from our intent
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(_context, 0, newIntent, 0);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(_context, 0, _newIntent, 0);
 
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(_context);
 
             RemoteViews views = new RemoteViews(_context.getPackageName(),
                     R.layout.appwidget);
             views.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
+            views.setTextViewText(R.id.widget_text, _chosenPill.getName().substring(0,1));
             appWidgetManager.updateAppWidget(_appWidgetId, views);
+
 
             Intent resultValue = new Intent();
             resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, _appWidgetId);
