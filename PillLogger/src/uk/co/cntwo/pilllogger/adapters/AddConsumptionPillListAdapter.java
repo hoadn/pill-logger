@@ -81,13 +81,16 @@ public class
             holder.name.setText(pill.getName());
             holder.size.setText(String.valueOf(pill.getSize()));
             Map<Pill, Integer> openPills = State.getSingleton().getOpenPillsList();
-            Logger.v("Testing", "openPillsList size: " + openPills.size());
             if (State.getSingleton().getOpenPillsList().containsKey(pill)) {
                 v = open(v);
                 holder.amount.setText(openPills.get(pill).toString());
             }
             else {
+                Logger.v("PillName", "pill: " + pill.getName() + " pill id: " + pill.getId());
                 v = close(v);
+                for (Pill aPill : openPills.keySet()) {
+                    Logger.v("PillName", "open pill " + aPill.getName() + " id: " + aPill.getId());
+                }
             }
         }
         TextView add = (TextView)v.findViewById(R.id.add_consumption_add);
