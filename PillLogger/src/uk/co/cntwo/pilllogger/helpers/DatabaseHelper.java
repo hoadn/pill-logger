@@ -85,47 +85,33 @@ public class DatabaseHelper {
     }
 
     public Pill getPill(int id) {
-        SQLiteDatabase db = _dbCreator.getReadableDatabase();
-
-        String[] projection = getPillProjection();
-
         String selection = DatabaseContract.Pills._ID + " =?";
         String[] selectionArgs = { String.valueOf(id) };
-        Pill pill = new Pill();
+
+        return getPill(selection, selectionArgs);
+    }
+
+    public List<Pill> getAllPills() {
+        return getPills(null, null);
+    }
+
+    private Pill getPill(String selection, String[] selectionArgs){
+        List<Pill> pills = getPills(selection, selectionArgs);
+
+        return pills.size() == 0 ? null : pills.get(0);
+    }
+
+    private List<Pill> getPills(String selection, String[] selectionArgs){
+        SQLiteDatabase db = _dbCreator.getReadableDatabase();
+        String[] projection = getPillProjection();
+        String sortOrder = DatabaseContract.Pills._ID + " ASC";
+        List<Pill> pills = new ArrayList<Pill>();
         if (db != null) {
             Cursor c = db.query(
                     DatabaseContract.Pills.TABLE_NAME,
                     projection,
                     selection,
                     selectionArgs,
-                    null,
-                    null,
-                    null
-            );
-
-            c.moveToFirst();
-            while (!c.isAfterLast()) {
-                pill = getPillfromCursor(c);
-
-                c.moveToNext();
-            }
-        }
-        return pill;
-    }
-
-    public List<Pill> getAllPills() {
-        SQLiteDatabase db = _dbCreator.getReadableDatabase();
-
-        String[] projection = getPillProjection();
-
-        String sortOrder = DatabaseContract.Pills._ID + " DESC";
-        List<Pill> pills = new ArrayList<Pill>();
-        if (db != null) {
-            Cursor c = db.query(
-                    DatabaseContract.Pills.TABLE_NAME,
-                    projection,
-                    null,
-                    null,
                     null,
                     null,
                     sortOrder
