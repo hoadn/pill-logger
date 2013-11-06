@@ -18,7 +18,7 @@ public class Consumption {
 
     public Consumption(Pill pill, Date date) {
         this._pill = pill;
-        this._date = new SimpleDateFormat("H:m  dd/MM").format(date);
+        this._date = new SimpleDateFormat("HH:mm  dd/MM").format(date);
     }
 
     public Pill get_pill() {
