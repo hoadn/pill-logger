@@ -95,6 +95,13 @@ public class DatabaseHelper {
         return getPills(null, null);
     }
 
+    public List<Pill> getFavouritePills(){
+        String selection = DatabaseContract.Pills.COLUMN_FAVOURITE + " =?";
+        String[] selectionArgs = {String.valueOf(1) };
+
+        return getPills(selection, selectionArgs);
+    }
+
     private Pill getPill(String selection, String[] selectionArgs){
         List<Pill> pills = getPills(selection, selectionArgs);
 
