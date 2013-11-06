@@ -164,7 +164,6 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
                     mode.finish(); // Action picked, so close the CAB
                     return true;
 
-
                 default:
                     return false;
             }
