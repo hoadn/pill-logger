@@ -19,6 +19,7 @@ import java.util.List;
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.listeners.DeletePillClickListener;
 import uk.co.cntwo.pilllogger.models.Pill;
+import uk.co.cntwo.pilllogger.tasks.UpdatePillTask;
 
 /**
  * Created by nick on 22/10/13.
@@ -159,6 +160,8 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
                     boolean setFavourite = item.getItemId() == R.id.pill_list_item_menu_favourite;
                     if(_selectedPill != null)
                         _selectedPill.setFavourite(setFavourite);
+
+                    new UpdatePillTask(_activity, _selectedPill).execute();
 
                     notifyDataSetChanged();
                     mode.finish(); // Action picked, so close the CAB
