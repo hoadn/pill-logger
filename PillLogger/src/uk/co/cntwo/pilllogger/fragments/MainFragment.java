@@ -81,7 +81,7 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
         int children = _favouriteContainer.getChildCount();
         int start = 1;
 
-        if(pills.size() > 0) //remove customise button
+        if(pills.size() == 0) //remove customise button
             start = 2;
 
         _favouriteContainer.removeViews(start, children -start);
