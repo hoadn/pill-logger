@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/pill_list_item_menu_favourite"
+          android:title="@string/favourite"
+          android:icon="@drawable/ic_menu_star"/>
+    <item android:id="@+id/pill_list_item_menu_unfavourite"
+          android:title="@string/unfavourite"
+          android:icon="@drawable/ic_menu_empty_star"/>
+    <item android:id="@+id/pill_list_item_menu_delete"
+          android:title="@string/delete"
+          android:icon="@drawable/bin"
+            android:visible="false"/>
+
+</menu>

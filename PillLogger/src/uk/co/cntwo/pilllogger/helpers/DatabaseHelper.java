@@ -18,6 +18,7 @@ import uk.co.cntwo.pilllogger.models.Pill;
  */
 public class DatabaseHelper {
 
+    private static final String TAG = "DatabaseHelper";
     DatabaseCreator _dbCreator;
     private static DatabaseHelper _instance;
 
@@ -35,12 +36,7 @@ public class DatabaseHelper {
     public long insertPill(Pill pill) {
         SQLiteDatabase db = _dbCreator.getWritableDatabase();
 
-        String name = pill.getName();
-        int size = pill.getSize();
-
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.Pills.COLUMN_NAME, name);
-        values.put(DatabaseContract.Pills.COLUMN_SIZE, size);
+        ContentValues values = getPillContentValues(pill);
         long newRowId = 0L;
         if (db != null) {
         newRowId = db.insert(
@@ -51,26 +47,72 @@ public class DatabaseHelper {
         return newRowId;
     }
 
+    public void updatePill(Pill pill){
+        SQLiteDatabase db = _dbCreator.getWritableDatabase();
+
+        ContentValues values = getPillContentValues(pill);
+
+        if(db != null){
+            int update = db.update(
+                    DatabaseContract.Pills.TABLE_NAME,
+                    values,
+                    "_ID = ?",
+                    new String[]{String.valueOf(pill.getId())});
+
+            Logger.d(TAG, "Pill updated. Favourite: " + pill.isFavourite());
+        }
+    }
+
+    private ContentValues getPillContentValues(Pill pill){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.Pills.COLUMN_NAME, pill.getName());
+        values.put(DatabaseContract.Pills.COLUMN_SIZE, pill.getSize());
+        values.put(DatabaseContract.Pills.COLUMN_COLOUR, pill.getColour());
+        values.put(DatabaseContract.Pills.COLUMN_FAVOURITE, pill.isFavourite());
+
+        return values;
+    }
+
     public void deletePill(Pill pill) {
         SQLiteDatabase db = _dbCreator.getWritableDatabase();
 
         String id = String.valueOf(pill.getId());
 
-        db.delete(DatabaseContract.Pills.TABLE_NAME, "_ID = ?", new String[] { id });
+        db.delete(
+                DatabaseContract.Pills.TABLE_NAME,
+                "_ID = ?",
+                new String[]{id});
     }
 
     public Pill getPill(int id) {
-        SQLiteDatabase db = _dbCreator.getReadableDatabase();
-
-        String[] projection = {
-                DatabaseContract.Pills._ID,
-                DatabaseContract.Pills.COLUMN_NAME,
-                DatabaseContract.Pills.COLUMN_SIZE,
-        };
-
         String selection = DatabaseContract.Pills._ID + " =?";
         String[] selectionArgs = { String.valueOf(id) };
-        Pill pill = new Pill();
+
+        return getPill(selection, selectionArgs);
+    }
+
+    public List<Pill> getAllPills() {
+        return getPills(null, null);
+    }
+
+    public List<Pill> getFavouritePills(){
+        String selection = DatabaseContract.Pills.COLUMN_FAVOURITE + " =?";
+        String[] selectionArgs = {String.valueOf(1) };
+
+        return getPills(selection, selectionArgs);
+    }
+
+    private Pill getPill(String selection, String[] selectionArgs){
+        List<Pill> pills = getPills(selection, selectionArgs);
+
+        return pills.size() == 0 ? null : pills.get(0);
+    }
+
+    private List<Pill> getPills(String selection, String[] selectionArgs){
+        SQLiteDatabase db = _dbCreator.getReadableDatabase();
+        String[] projection = getPillProjection();
+        String sortOrder = DatabaseContract.Pills._ID + " ASC";
+        List<Pill> pills = new ArrayList<Pill>();
         if (db != null) {
             Cursor c = db.query(
                     DatabaseContract.Pills.TABLE_NAME,
@@ -79,54 +121,42 @@ public class DatabaseHelper {
                     selectionArgs,
                     null,
                     null,
-                    null
-            );
-
-            c.moveToFirst();
-            while (!c.isAfterLast()) {
-                pill.setId(c.getInt(c.getColumnIndex(DatabaseContract.Pills._ID)));
-                pill.setName(c.getString(c.getColumnIndex(DatabaseContract.Pills.COLUMN_NAME)));
-                pill.setSize(c.getInt(c.getColumnIndex(DatabaseContract.Pills.COLUMN_SIZE)));
-                c.moveToNext();
-            }
-        }
-        return pill;
-    }
-
-    public List<Pill> getAllPills() {
-        SQLiteDatabase db = _dbCreator.getReadableDatabase();
-
-        String[] projection = {
-                DatabaseContract.Pills._ID,
-                DatabaseContract.Pills.COLUMN_NAME,
-                DatabaseContract.Pills.COLUMN_SIZE,
-        };
-
-        String sortOrder = DatabaseContract.Pills._ID + " DESC";
-        List<Pill> pills = new ArrayList<Pill>();
-        if (db != null) {
-            Cursor c = db.query(
-                    DatabaseContract.Pills.TABLE_NAME,
-                    projection,
-                    null,
-                    null,
-                    null,
-                    null,
                     sortOrder
             );
 
             c.moveToFirst();
             while (!c.isAfterLast()) {
-                Pill pill = new Pill();
-                pill.setId(c.getInt(c.getColumnIndex(DatabaseContract.Pills._ID)));
-                pill.setName(c.getString(c.getColumnIndex(DatabaseContract.Pills.COLUMN_NAME)));
-                pill.setSize(c.getInt(c.getColumnIndex(DatabaseContract.Pills.COLUMN_SIZE)));
+                Pill pill = getPillfromCursor(c);
                 pills.add(pill);
                 c.moveToNext();
             }
         }
 
         return pills;
+    }
+
+    private String[] getPillProjection(){
+        String[] projection = {
+                DatabaseContract.Pills._ID,
+                DatabaseContract.Pills.COLUMN_NAME,
+                DatabaseContract.Pills.COLUMN_SIZE,
+                DatabaseContract.Pills.COLUMN_COLOUR,
+                DatabaseContract.Pills.COLUMN_FAVOURITE
+        };
+
+        return projection;
+    }
+
+    private Pill getPillfromCursor(Cursor c){
+        Pill pill = new Pill();
+        pill.setId(c.getInt(c.getColumnIndex(DatabaseContract.Pills._ID)));
+        pill.setName(c.getString(c.getColumnIndex(DatabaseContract.Pills.COLUMN_NAME)));
+        pill.setSize(c.getInt(c.getColumnIndex(DatabaseContract.Pills.COLUMN_SIZE)));
+        pill.setColour(c.getString(c.getColumnIndex(DatabaseContract.Pills.COLUMN_COLOUR)));
+
+        int fav = c.getInt(c.getColumnIndex(DatabaseContract.Pills.COLUMN_FAVOURITE));
+        pill.setFavourite(fav != 0);
+        return pill;
     }
 
     public long insertConsumption(Consumption consumption) {

@@ -16,8 +16,10 @@ public class Pill implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private int _id;
-	private String _name;
+	private String _name = "";
 	private int _size;
+    private String _colour = "";
+    private boolean _favourite = false;
 
     public Pill() {
     }
@@ -63,7 +65,23 @@ public class Pill implements Serializable {
         _id = id;
     }
 
-	@Override
+    public String getColour() {
+        return _colour;
+    }
+
+    public void setColour(String colour) {
+        _colour = colour;
+    }
+
+    public boolean isFavourite() {
+        return _favourite;
+    }
+
+    public void setFavourite(boolean favourite) {
+        _favourite = favourite;
+    }
+
+    @Override
 	public String toString(){
 		return getName() + '(' + getSize() + ')';
 	}
@@ -75,8 +93,10 @@ public class Pill implements Serializable {
 
         Pill pill = (Pill) o;
 
+        if (_favourite != pill._favourite) return false;
         if (_id != pill._id) return false;
         if (_size != pill._size) return false;
+        if (!_colour.equals(pill._colour)) return false;
         if (!_name.equals(pill._name)) return false;
 
         return true;
@@ -87,6 +107,8 @@ public class Pill implements Serializable {
         int result = _id;
         result = 31 * result + _name.hashCode();
         result = 31 * result + _size;
+        result = 31 * result + _colour.hashCode();
+        result = 31 * result + (_favourite ? 1 : 0);
         return result;
     }
 }
