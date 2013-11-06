@@ -653,7 +653,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -663,7 +663,10 @@
      inkscape:label="capsula"
      style="display:inline">
     <g
-       id="g5017">
+       id="g5017"
+       inkscape:export-filename="/Users/alex/Development/pill-logger/PillLogger/res/drawable-xxhdpi/ic_launcher.png"
+       inkscape:export-xdpi="13.872405"
+       inkscape:export-ydpi="13.872405">
       <rect
          y="-253.34227"
          x="-5.514677"
@@ -679,7 +682,10 @@
     </g>
     <g
        id="g5141"
-       style="stroke-width:3;stroke-miterlimit:4;stroke-dasharray:none;stroke:#44c7fa;stroke-opacity:1">
+       style="stroke-width:3;stroke-miterlimit:4;stroke-dasharray:none;stroke:#44c7fa;stroke-opacity:1"
+       inkscape:export-filename="/Users/alex/Development/pill-logger/PillLogger/res/drawable-xxhdpi/ic_launcher.png"
+       inkscape:export-xdpi="13.872405"
+       inkscape:export-ydpi="13.872405">
       <g
          id="g5129"
          style="stroke-width:3;stroke-miterlimit:4;stroke-dasharray:none;stroke:#44c7fa;stroke-opacity:1">
@@ -791,7 +797,10 @@
     </g>
     <g
        id="g5029"
-       style="fill-opacity:1;fill:url(#linearGradient5041);opacity:0.2">
+       style="fill-opacity:1;fill:url(#linearGradient5041);opacity:0.2"
+       inkscape:export-filename="/Users/alex/Development/pill-logger/PillLogger/res/drawable-xxhdpi/ic_launcher.png"
+       inkscape:export-xdpi="13.872405"
+       inkscape:export-ydpi="13.872405">
       <rect
          style="fill:url(#linearGradient5041);fill-opacity:1;stroke:none"
          id="rect5031"
@@ -822,9 +831,9 @@
        d="m -1081.6814,602.17524 216.97514,-380.47369 65.36093,102.50419 179.69234,-415.10242 79.33058,258.3313 137.10307,-150.719208 139.00405,397.886938"
        style="opacity:0.85;fill:none;stroke:#000000;stroke-width:51.61738968000000227;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;filter:url(#filter5067)"
        transform="matrix(1.0030267,0,0,0.95900614,1091.6628,-31.330121)"
-       inkscape:export-filename="C:\Users\Alex\Desktop\96.png"
-       inkscape:export-xdpi="10.17"
-       inkscape:export-ydpi="10.17" />
+       inkscape:export-filename="/Users/alex/Development/pill-logger/PillLogger/res/drawable-xxhdpi/ic_launcher.png"
+       inkscape:export-xdpi="13.872405"
+       inkscape:export-ydpi="13.872405" />
     <image
        y="-612.24774"
        x="1740.1407"
@@ -835,7 +844,10 @@
        style="fill:#0665a5;fill-opacity:1" />
     <g
        id="g3891"
-       transform="matrix(0.73273676,0,0,0.73273676,221.71701,305.25319)">
+       transform="matrix(0.73273676,0,0,0.73273676,221.71701,305.25319)"
+       inkscape:export-filename="/Users/alex/Development/pill-logger/PillLogger/res/drawable-xxhdpi/ic_launcher.png"
+       inkscape:export-xdpi="13.872405"
+       inkscape:export-ydpi="13.872405">
       <path
          id="rect2817"
          d="m 176.76342,15.119775 435.60028,0 c 86.46467,0 156.0734,70.773656 156.0734,158.685335 0,87.91168 -69.60873,158.68533 -156.0734,158.68533 l -435.60028,0 c -86.464669,0 -156.073451,-70.77365 -156.073451,-158.68533 0,-87.911679 69.608782,-158.685335 156.073451,-158.685335 z"
@@ -857,14 +869,20 @@
        style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#7fcb1d;fill-opacity:1;stroke:#036a03;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
        d="m 476.3125,-199.5625 -26.9375,56.65625 -170.46875,358.5625 -43.8125,-62.5625 -21.96875,-31.375 -20.34375,32.46875 -228.4375,364.6875 -13.5,21.53125 43.0625,26.96875 13.46875,-21.53125 208.09375,-332.25 46.84375,66.90625 25.03125,35.6875 18.71875,-39.375 162.25,-341.25 63.46875,188.1875 13.09375,38.8125 28.9375,-28.96875 116.71875,-116.8125 132.3125,344.875 9.09375,23.71875 47.40625,-18.1875 L 870.25,343.46875 723.90625,-37.9375 709.875,-74.46875 l -27.65625,27.6875 -115.40625,115.5 -70.4375,-208.8125 -20.0625,-59.46875 z"
        id="path4217"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/Users/alex/Development/pill-logger/PillLogger/res/drawable-xxhdpi/ic_launcher.png"
+       inkscape:export-xdpi="13.872405"
+       inkscape:export-ydpi="13.872405" />
     <rect
        style="opacity:0.84999999999999998;fill:none;fill-opacity:1;stroke:none;stroke-width:3.12138939000000004;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect3316"
        width="934.22876"
        height="934.22876"
        x="-51.659637"
-       y="-313.60635" />
+       y="-313.60635"
+       inkscape:export-filename="/Users/alex/Development/pill-logger/PillLogger/res/drawable-xxhdpi/ic_launcher.png"
+       inkscape:export-xdpi="13.872405"
+       inkscape:export-ydpi="13.872405" />
   </g>
   <g
      style="display:inline"
