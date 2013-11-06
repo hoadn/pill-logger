@@ -1,0 +1,31 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/favourite_pill_layout"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    >
+
+<RelativeLayout
+android:id="@+id/main_top_images_layout"
+android:layout_height="50dp"
+android:layout_width="50dp"
+android:orientation="vertical"
+android:layout_margin="5dp"
+android:layout_marginBottom="5dp"
+android:paddingTop="0dp"
+android:paddingLeft="0dp"
+android:paddingRight="0dp"
+android:paddingBottom="3dp"
+android:background="@drawable/container_dropshadow">
+
+<TextView
+    android:id="@+id/pill_letter"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    tools:text="P"
+    android:textSize="24sp"
+    android:textStyle="bold"
+    android:layout_centerInParent="true"/>
+</RelativeLayout>
+</LinearLayout>
