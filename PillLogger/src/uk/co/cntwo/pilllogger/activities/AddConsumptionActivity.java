@@ -24,6 +24,7 @@ import uk.co.cntwo.pilllogger.models.Consumption;
 import uk.co.cntwo.pilllogger.models.Pill;
 import uk.co.cntwo.pilllogger.state.State;
 import uk.co.cntwo.pilllogger.tasks.GetPillsTask;
+import uk.co.cntwo.pilllogger.tasks.InsertConsumptionTask;
 
 /**
  * Created by nick on 24/10/13.
@@ -61,7 +62,7 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
 
         for (Pill pill : consumptionPills) {
             Consumption consumption = new Consumption(pill, new Date());
-            DatabaseHelper.getSingleton(this).insertConsumption(consumption);
+            new InsertConsumptionTask(this, consumption).execute();
         }
         finish();
     }
