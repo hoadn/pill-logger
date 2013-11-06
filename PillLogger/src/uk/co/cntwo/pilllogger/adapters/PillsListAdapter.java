@@ -93,6 +93,11 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
                 ViewHolder viewHolder = (ViewHolder)view.getTag();
                 _selectedPill = viewHolder.pill;
                 view.setSelected(true);
+
+                Menu actionModeMenu = _actionMode.getMenu();
+                actionModeMenu.findItem(R.id.pill_list_item_menu_favourite).setVisible(!_selectedPill.isFavourite());
+                actionModeMenu.findItem(R.id.pill_list_item_menu_unfavourite).setVisible(_selectedPill.isFavourite());
+
                 return true;
             }
         });
@@ -150,12 +155,16 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.pill_list_item_menu_favourite:
+                case R.id.pill_list_item_menu_unfavourite:
+                    boolean setFavourite = item.getItemId() == R.id.pill_list_item_menu_favourite;
                     if(_selectedPill != null)
-                        _selectedPill.setFavourite(true);
+                        _selectedPill.setFavourite(setFavourite);
 
                     notifyDataSetChanged();
                     mode.finish(); // Action picked, so close the CAB
                     return true;
+
+
                 default:
                     return false;
             }

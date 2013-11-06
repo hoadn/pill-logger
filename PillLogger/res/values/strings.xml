@@ -23,5 +23,6 @@
     <string name="placeholder_pill_size">500</string>
     <string name="drawer_settings">Settings</string>
     <string name="favourite">Favourite</string>
+    <string name="unfavourite">Unfavourite</string>
 
 </resources>

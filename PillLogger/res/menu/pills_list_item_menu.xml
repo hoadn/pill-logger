@@ -4,5 +4,7 @@
     <item android:id="@+id/pill_list_item_menu_favourite"
           android:title="@string/favourite"
           android:icon="@drawable/ic_menu_star"/>
-
+    <item android:id="@+id/pill_list_item_menu_unfavourite"
+          android:title="@string/unfavourite"
+          android:icon="@drawable/ic_menu_empty_star"/>
 </menu>
