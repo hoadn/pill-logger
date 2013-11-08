@@ -13,12 +13,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.haarman.listviewanimations.itemmanipulation.contextualundo.ContextualUndoAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.listeners.DeletePillClickListener;
 import uk.co.cntwo.pilllogger.models.Pill;
+import uk.co.cntwo.pilllogger.tasks.DeletePillTask;
 import uk.co.cntwo.pilllogger.tasks.UpdatePillTask;
 
 /**
@@ -166,6 +169,15 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
 
                     notifyDataSetChanged();
                     mode.finish(); // Action picked, so close the CAB
+                    return true;
+
+                case R.id.pill_list_item_menu_delete:
+                    int index = _pills.indexOf(_selectedPill);
+                    removeAtPosition(index); //remove() doesn't like newly created pills, so remove manually
+
+                    new DeletePillTask(_activity, _selectedPill).execute();
+                    notifyDataSetChanged();
+                    mode.finish();
                     return true;
 
                 default:
