@@ -77,7 +77,8 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
             holder.size.setText(String.valueOf(pill.getSize()));
 
             int visibility = pill.isFavourite() ? View.VISIBLE : View.INVISIBLE;
-            holder.favourite.setVisibility(visibility);
+            if (holder.favourite != null)
+                holder.favourite.setVisibility(visibility);
 
             holder.pill = pill;
         }
