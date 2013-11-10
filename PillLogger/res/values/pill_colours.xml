@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Pill colours -->
+    <color name="pill_colour1">#336699</color>
+    <color name="pill_colour2">#FF9900</color>
+    <color name="pill_colour3">#996699</color>
+    <color name="pill_colour4">#CC0000</color>
+    <color name="pill_colour5">#FFCC00</color>
+    <color name="pill_colour6">#7DC71D</color>
+    <color name="pill_colour7">#CCCCCC</color>
+    <color name="pill_colour8">#FFBAD2</color>
+
+    <string name="pill_colour_name1">Blue</string>
+    <string name="pill_colour_name2">Orange</string>
+    <string name="pill_colour_name3">Purple</string>
+    <string name="pill_colour_name4">Red</string>
+    <string name="pill_colour_name5">Yellow</string>
+    <string name="pill_colour_name6">Green</string>
+    <string name="pill_colour_name7">Grey</string>
+    <string name="pill_colour_name8">Pink</string>
+</resources>

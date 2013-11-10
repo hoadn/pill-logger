@@ -152,7 +152,7 @@ public class DatabaseHelper {
         pill.setId(c.getInt(c.getColumnIndex(DatabaseContract.Pills._ID)));
         pill.setName(c.getString(c.getColumnIndex(DatabaseContract.Pills.COLUMN_NAME)));
         pill.setSize(c.getInt(c.getColumnIndex(DatabaseContract.Pills.COLUMN_SIZE)));
-        pill.setColour(c.getString(c.getColumnIndex(DatabaseContract.Pills.COLUMN_COLOUR)));
+        pill.setColour(c.getInt(c.getColumnIndex(DatabaseContract.Pills.COLUMN_COLOUR)));
 
         int fav = c.getInt(c.getColumnIndex(DatabaseContract.Pills.COLUMN_FAVOURITE));
         pill.setFavourite(fav != 0);

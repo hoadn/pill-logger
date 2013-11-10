@@ -13,4 +13,7 @@
     <color name="deleted_background_grey">#555555</color>
     <color name="white">#ffffff</color>
     <color name="gold">#FFD700</color>
+    <color name="green_border">#29c801</color>
+
+    <!-- Pill colours are in pill_colours.xml -->
 </resources>

@@ -31,7 +31,7 @@ public final class DatabaseContract {
                 Pills._ID + " INTEGER PRIMARY KEY," +
                 Pills.COLUMN_NAME + " TEXT, " +
                 Pills.COLUMN_SIZE + " INTEGER," +
-                Pills.COLUMN_COLOUR + " TEXT, " +
+                Pills.COLUMN_COLOUR + " INTEGER, " +
                 Pills.COLUMN_FAVOURITE + " INTEGER" +
                 ")";
         public static final String CREATE_CONSUMPTION_TABLE =

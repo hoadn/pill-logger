@@ -3,6 +3,8 @@ package uk.co.cntwo.pilllogger.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.haarman.listviewanimations.itemmanipulation.contextualundo.ContextualUndoAdapter;
@@ -23,6 +26,7 @@ import uk.co.cntwo.pilllogger.listeners.DeletePillClickListener;
 import uk.co.cntwo.pilllogger.models.Pill;
 import uk.co.cntwo.pilllogger.tasks.DeletePillTask;
 import uk.co.cntwo.pilllogger.tasks.UpdatePillTask;
+import uk.co.cntwo.pilllogger.views.ColourIndicator;
 
 /**
  * Created by nick on 22/10/13.
@@ -51,6 +55,10 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
         public TextView size;
         public TextView units;
         public View favourite;
+        public ColourIndicator colour;
+        public ViewGroup pickerContainer;
+        public ViewGroup colourContainer;
+        public boolean open;
     }
 
     @Override
@@ -58,23 +66,27 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
         View v = convertView;
         ViewHolder holder;
         if (v == null) {
-            LayoutInflater inflater = (LayoutInflater)_activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) _activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(_resouceId, null);
             holder = new ViewHolder();
-            holder.name = (TextView) v.findViewById(R.id.pill_list_name);
-            holder.size = (TextView) v.findViewById(R.id.pill_list_size);
-            holder.units = (TextView) v.findViewById(R.id.pill_list_units);
-            holder.favourite = v.findViewById(R.id.pill_list_favourite);
+            if (v != null) {
+                holder.name = (TextView) v.findViewById(R.id.pill_list_name);
+                holder.size = (TextView) v.findViewById(R.id.pill_list_size);
+                holder.units = (TextView) v.findViewById(R.id.pill_list_units);
+                holder.favourite = v.findViewById(R.id.pill_list_favourite);
+                holder.colour = (ColourIndicator) v.findViewById(R.id.pill_list_colour);
+                holder.pickerContainer = (ViewGroup) v.findViewById(R.id.pill_list_colour_picker_container);
+                holder.colourContainer = (ViewGroup) v.findViewById(R.id.pill_list_colour_container);
 
-            holder.name.setTypeface(_openSans);
-            holder.size.setTypeface(_openSans);
-            holder.units.setTypeface(_openSans);
-            v.setTag(holder);
-        }
-        else
-            holder=(ViewHolder) v.getTag();
+                holder.name.setTypeface(_openSans);
+                holder.size.setTypeface(_openSans);
+                holder.units.setTypeface(_openSans);
+                v.setTag(holder);
+            }
+        } else
+            holder = (ViewHolder) v.getTag();
 
-        Pill pill = _pills.get(position);
+        final Pill pill = _pills.get(position);
         if (pill != null) {
             holder.name.setText(pill.getName());
             holder.size.setText(String.valueOf(pill.getSize()));
@@ -83,29 +95,76 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
             if (holder.favourite != null)
                 holder.favourite.setVisibility(visibility);
 
+            holder.colour.setColour(pill.getColour());
+
             holder.pill = pill;
         }
 
-        v.setOnLongClickListener(new View.OnLongClickListener() {
-            // Called when the user long-clicks on someView
-            public boolean onLongClick(View view) {
-                if (_actionMode != null) {
-                    return false;
+        final View listItem = v;
+        if (v != null) {
+            v.setOnLongClickListener(new View.OnLongClickListener() {
+                // Called when the user long-clicks on someView
+                public boolean onLongClick(View view) {
+                    if (_actionMode != null) {
+                        return false;
+                    }
+
+                    // Start the CAB using the ActionMode.Callback defined above
+                    _actionMode = _activity.startActionMode(actionModeCallback);
+                    ViewHolder viewHolder = (ViewHolder) view.getTag();
+                    _selectedPill = viewHolder.pill;
+                    view.setSelected(true);
+
+                    Menu actionModeMenu = _actionMode.getMenu();
+                    actionModeMenu.findItem(R.id.pill_list_item_menu_favourite).setVisible(!_selectedPill.isFavourite());
+                    actionModeMenu.findItem(R.id.pill_list_item_menu_unfavourite).setVisible(_selectedPill.isFavourite());
+
+                    return true;
                 }
+            });
 
-                // Start the CAB using the ActionMode.Callback defined above
-                _actionMode = _activity.startActionMode(actionModeCallback);
-                ViewHolder viewHolder = (ViewHolder)view.getTag();
-                _selectedPill = viewHolder.pill;
-                view.setSelected(true);
+            holder.colourContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final ViewHolder viewholder = (ViewHolder) listItem.getTag();
+                    if (viewholder.open) {
+                        viewholder.pickerContainer.setVisibility(View.GONE);
+                        ViewGroup colourContainer = (ViewGroup) viewholder.pickerContainer.findViewById(R.id.colour_container);
+                        int colourCount = colourContainer.getChildCount();
+                        for (int i = 0; i < colourCount; i++) {
+                            View colourView = colourContainer.getChildAt(i);
+                            if (colourView != null) {
+                                colourView.setOnClickListener(null);
+                            }
+                        }
+                    } else {
+                        viewholder.pickerContainer.setVisibility(View.VISIBLE);
+                        ViewGroup colourContainer = (ViewGroup) viewholder.pickerContainer.findViewById(R.id.colour_container);
+                        int colourCount = colourContainer.getChildCount();
+                        for (int i = 0; i < colourCount; i++) {
+                            View colourView = colourContainer.getChildAt(i);
+                            if (colourView != null) {
+                                colourView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        int colour = ((ColourIndicator) view).getColour();
+                                        if (pill != null) {
+                                            pill.setColour(colour);
 
-                Menu actionModeMenu = _actionMode.getMenu();
-                actionModeMenu.findItem(R.id.pill_list_item_menu_favourite).setVisible(!_selectedPill.isFavourite());
-                actionModeMenu.findItem(R.id.pill_list_item_menu_unfavourite).setVisible(_selectedPill.isFavourite());
+                                            new UpdatePillTask(_activity, pill).execute();
 
-                return true;
-            }
-        });
+                                            notifyDataSetChanged();
+                                            viewholder.pickerContainer.setVisibility(View.GONE);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                    viewholder.open = !viewholder.open;
+                }
+            });
+        }
 
         return v;
     }
@@ -117,15 +176,15 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
         return 0;
     }
 
-    public Pill getPillAtPosition(int pos){
-        if(_pills == null || pos > _pills.size() || pos < 0)
+    public Pill getPillAtPosition(int pos) {
+        if (_pills == null || pos > _pills.size() || pos < 0)
             return null;
 
         return _pills.get(pos);
     }
 
-    public void removeAtPosition(int pos){
-        if(_pills == null || pos > _pills.size() || pos < 0)
+    public void removeAtPosition(int pos) {
+        if (_pills == null || pos > _pills.size() || pos < 0)
             return;
 
         _pills.remove(pos);
@@ -162,7 +221,7 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
                 case R.id.pill_list_item_menu_favourite:
                 case R.id.pill_list_item_menu_unfavourite:
                     boolean setFavourite = item.getItemId() == R.id.pill_list_item_menu_favourite;
-                    if(_selectedPill != null)
+                    if (_selectedPill != null)
                         _selectedPill.setFavourite(setFavourite);
 
                     new UpdatePillTask(_activity, _selectedPill).execute();
