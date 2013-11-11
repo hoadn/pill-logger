@@ -39,11 +39,12 @@ public class ColourIndicator extends ImageView {
 
     private void preInit(Context context) {
         Drawable background = context.getResources().getDrawable(R.drawable.colour_indicator);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            this.setBackground(background);
-        } else {
-            this.setBackgroundDrawable(background);
-        }
+        this.setImageDrawable(background);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//            this.setBackground(background);
+//        } else {
+//            this.setBackgroundDrawable(background);
+//        }
     }
 
     private void init(AttributeSet attrs) {
@@ -78,7 +79,7 @@ public class ColourIndicator extends ImageView {
             preInit(getContext());
         }
 
-        GradientDrawable background = (GradientDrawable) this.getBackground();
+        GradientDrawable background = (GradientDrawable) this.getDrawable();
 
         if (background != null) {
             background.setColor(colour);
