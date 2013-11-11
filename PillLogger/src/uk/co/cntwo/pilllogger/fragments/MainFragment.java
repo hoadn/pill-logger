@@ -16,6 +16,8 @@ import com.echo.holographlibrary.Line;
 import com.echo.holographlibrary.LineGraph;
 import com.echo.holographlibrary.LinePoint;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import uk.co.cntwo.pilllogger.R;
@@ -28,6 +30,9 @@ import uk.co.cntwo.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.cntwo.pilllogger.tasks.GetFavouritePillsTask;
 import uk.co.cntwo.pilllogger.tasks.InitTestDbTask;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+
 /**
  * Created by nick on 23/10/13.
  */
@@ -36,12 +41,14 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
     private static final String TAG = "MainFragment";
     ListView _listView;
     ViewGroup _favouriteContainer;
+    View _mainLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.main_fragment, container, false);
+        _mainLayout = v;
 
         Logger.v(TAG, "onCreateView Called");
         //Doing this to test - will not be needed when working fully
@@ -54,26 +61,6 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
 
         if (_listView.getAdapter() != null) //Trying this to make the list refresh after adding the new consumption
             ((ConsumptionListAdapter)_listView.getAdapter()).notifyDataSetChanged();
-
-        Line l = new Line();
-        LinePoint p = new LinePoint();
-        p.setX(0);
-        p.setY(5);
-        l.addPoint(p);
-        p = new LinePoint();
-        p.setX(8);
-        p.setY(8);
-        l.addPoint(p);
-        p = new LinePoint();
-        p.setX(10);
-        p.setY(4);
-        l.addPoint(p);
-        l.setColor(Color.parseColor("#FFBB33"));
-
-        LineGraph li = (LineGraph)v.findViewById(R.id.main_graph);
-        li.addLine(l);
-        li.setRangeY(0, 10);
-        li.setLineToFill(0);
 
         return v;
     }
@@ -94,8 +81,58 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
 
     @Override
     public void consumptionsReceived(List<Consumption> consumptions) {
-        if(consumptions != null && consumptions.size() > 0)
+        if(consumptions != null && consumptions.size() > 0){
             _listView.setAdapter(new ConsumptionListAdapter(getActivity(), R.layout.pill_list_item, consumptions));
+
+
+            LineGraph li = (LineGraph)_mainLayout.findViewById(R.id.main_graph);
+
+            HashMap<Integer, Line> lines = new HashMap<Integer, Line>();
+            int i = 0;
+            for(Consumption c : consumptions){
+                int pillId = c.get_pill_id();
+                boolean newline = false;
+                Line l;
+                if(lines.containsKey(pillId))
+                    l = lines.get(pillId);
+                else{
+                    l = new Line();
+                    lines.put(pillId, l);
+                    l.setColor(Color.parseColor("#FFBB33"));
+                    newline = true;
+                }
+
+                DateTime monthAgo = new DateTime().minusMonths(1);
+
+                Days days = Days.daysBetween(monthAgo, new DateTime(c.get_date()));
+                int x = days.getDays();
+                x-=i++;
+                Logger.d(TAG, "x: " + x);
+                if(x >= 0){
+                    List<LinePoint> points = l.getPoints();
+                    boolean found = false;
+                    for(LinePoint point : points){
+                        if(point.getX() == x){
+                            point.setY(point.getY() + 1);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(!found){
+                        LinePoint lp = new LinePoint();
+                        lp.setX(x);
+                        lp.setY(1);
+
+                        l.addPoint(lp);
+                    }
+                    if(newline)
+                        li.addLine(l);
+                }
+            }
+
+            li.setRangeY(0, 10);
+            li.setLineToFill(0);
+        }
     }
 
     @Override

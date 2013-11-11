@@ -9,7 +9,7 @@ import java.util.Date;
 public class Consumption {
 
     private Pill _pill;
-    private String _date;
+    private Date _date;
     private int _id;
 
     public Consumption() {
@@ -18,7 +18,7 @@ public class Consumption {
 
     public Consumption(Pill pill, Date date) {
         this._pill = pill;
-        this._date = new SimpleDateFormat("HH:mm  dd/MM").format(date);
+        this._date = date;
     }
 
     public Pill get_pill() {
@@ -29,15 +29,11 @@ public class Consumption {
         this._pill = pill;
     }
 
-    public String get_date() {
+    public Date get_date() {
         return _date;
     }
 
     public void set_date(Date date) {
-        this._date = new SimpleDateFormat("H:m  dd/MM").format(date);
-    }
-
-    public void set_date(String date) {
         this._date = date;
     }
 

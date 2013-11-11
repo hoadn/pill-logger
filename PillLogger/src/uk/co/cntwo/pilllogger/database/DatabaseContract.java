@@ -38,7 +38,7 @@ public final class DatabaseContract {
                 "CREATE TABLE " + Consumptions.TABLE_NAME + " (" +
                 Consumptions._ID + " INTEGER PRIMARY KEY," +
                 Consumptions.COLUMN_PILL_ID + " INTEGER, " +
-                Consumptions.COLUMN_DATE_TIME + " TEXT)";
+                Consumptions.COLUMN_DATE_TIME + " LONG)";
 
     }
 

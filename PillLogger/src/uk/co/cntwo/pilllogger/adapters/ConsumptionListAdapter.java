@@ -56,7 +56,8 @@ public class ConsumptionListAdapter extends ArrayAdapter<Consumption> {
         Consumption consumption = _consumptions.get(position);
         if (consumption != null) {
             holder.name.setText(consumption.get_pill().getName());
-            holder.date.setText(consumption.get_date());
+            String date = new SimpleDateFormat("HH:mm dd/MM").format(consumption.get_date());
+            holder.date.setText(date);
         }
         return v;
     }
