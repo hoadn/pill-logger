@@ -69,7 +69,7 @@ public class PillsListAdapter extends PillsListBaseAdapter {
             });
             ViewHolder holder = (ViewHolder) v.getTag();
             final Pill pill = _pills.get(position);
-            holder.colourContainer.setOnClickListener(new View.OnClickListener() {
+            holder.colour.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     final ViewHolder viewholder = (ViewHolder) listItem.getTag();

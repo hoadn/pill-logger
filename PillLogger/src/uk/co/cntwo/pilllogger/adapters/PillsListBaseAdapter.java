@@ -65,7 +65,6 @@ public class PillsListBaseAdapter extends ArrayAdapter<Pill> {
                 holder.favourite = v.findViewById(R.id.pill_list_favourite);
                 holder.colour = (ColourIndicator) v.findViewById(R.id.pill_list_colour);
                 holder.pickerContainer = (ViewGroup) v.findViewById(R.id.pill_list_colour_picker_container);
-                holder.colourContainer = (ViewGroup) v.findViewById(R.id.pill_list_colour_container);
 
                 holder.name.setTypeface(_openSans);
                 holder.size.setTypeface(_openSans);

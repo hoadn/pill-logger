@@ -25,28 +25,23 @@
                 android:layout_height="wrap_content"
                 tools:text="@string/placeholder_pill_text"/>
 
-            <LinearLayout
-                android:id="@+id/pill_list_colour_container"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:paddingLeft="15dp"
-                android:paddingRight="5dp"
-                android:gravity="center">
+
                 <uk.co.cntwo.pilllogger.views.ColourIndicator
                     android:id="@+id/pill_list_colour"
-                    android:layout_height="15dp"
-                    android:layout_width="15dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:padding="8dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:color="@color/pill_colour1"
                     />
-            </LinearLayout>
 
             <TextView
                 android:id="@+id/pill_list_units"
                 android:textSize="16dp"
                 android:layout_alignBaseline="@id/pill_list_name"
-                android:layout_toLeftOf="@id/pill_list_colour_container"
+                android:layout_toLeftOf="@id/pill_list_colour"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/pill_units"/>
