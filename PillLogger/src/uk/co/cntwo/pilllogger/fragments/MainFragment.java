@@ -1,6 +1,7 @@
 package uk.co.cntwo.pilllogger.fragments;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +11,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.echo.holographlibrary.Line;
+import com.echo.holographlibrary.LineGraph;
+import com.echo.holographlibrary.LinePoint;
 
 import java.util.List;
 
@@ -49,6 +54,26 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
 
         if (_listView.getAdapter() != null) //Trying this to make the list refresh after adding the new consumption
             ((ConsumptionListAdapter)_listView.getAdapter()).notifyDataSetChanged();
+
+        Line l = new Line();
+        LinePoint p = new LinePoint();
+        p.setX(0);
+        p.setY(5);
+        l.addPoint(p);
+        p = new LinePoint();
+        p.setX(8);
+        p.setY(8);
+        l.addPoint(p);
+        p = new LinePoint();
+        p.setX(10);
+        p.setY(4);
+        l.addPoint(p);
+        l.setColor(Color.parseColor("#FFBB33"));
+
+        LineGraph li = (LineGraph)v.findViewById(R.id.main_graph);
+        li.addLine(l);
+        li.setRangeY(0, 10);
+        li.setLineToFill(0);
 
         return v;
     }

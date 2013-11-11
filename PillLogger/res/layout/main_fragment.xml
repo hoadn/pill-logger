@@ -8,6 +8,7 @@
     android:orientation="horizontal"
     android:background="@color/background_grey"
     >
+    <!--
     <ImageView
         android:id="@+id/main_graph"
         android:layout_width="match_parent"
@@ -16,6 +17,11 @@
         android:padding="10dp"
         android:src="@drawable/graph"
         android:background="@color/text_grey_light"/>
+        -->
+    <com.echo.holographlibrary.LineGraph
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/main_graph"/>
 
     <LinearLayout
         android:id="@+id/button_container"
