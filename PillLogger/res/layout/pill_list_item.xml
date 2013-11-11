@@ -27,19 +27,17 @@
 
             <LinearLayout
                 android:id="@+id/pill_list_colour_container"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginTop="-20dp"
-                android:layout_marginRight="-10dp"
-                android:paddingTop="15dp"
-                android:paddingLeft="7dp">
+                android:paddingLeft="15dp"
+                android:paddingRight="5dp"
+                android:gravity="center">
                 <uk.co.cntwo.pilllogger.views.ColourIndicator
                     android:id="@+id/pill_list_colour"
                     android:layout_height="15dp"
                     android:layout_width="15dp"
-                    android:layout_marginLeft="10dp"
                     android:color="@color/pill_colour1"
                     />
             </LinearLayout>
