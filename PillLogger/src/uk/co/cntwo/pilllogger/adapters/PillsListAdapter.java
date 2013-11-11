@@ -31,74 +31,19 @@ import uk.co.cntwo.pilllogger.views.ColourIndicator;
 /**
  * Created by nick on 22/10/13.
  */
-public class PillsListAdapter extends ArrayAdapter<Pill> {
+public class PillsListAdapter extends PillsListBaseAdapter {
 
-    private List<Pill> _pills;
-    private Activity _activity;
-    private Typeface _openSans;
-    private int _resouceId;
     private ActionMode _actionMode;
 
     private Pill _selectedPill;
 
     public PillsListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
         super(activity, textViewResourceId, pills);
-        _activity = activity;
-        _pills = pills;
-        _resouceId = textViewResourceId;
-        _openSans = Typeface.createFromAsset(activity.getAssets(), "fonts/OpenSans-Light.ttf");
-    }
-
-    public static class ViewHolder {
-        public Pill pill;
-        public TextView name;
-        public TextView size;
-        public TextView units;
-        public View favourite;
-        public ColourIndicator colour;
-        public ViewGroup pickerContainer;
-        public ViewGroup colourContainer;
-        public boolean open;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View v = convertView;
-        ViewHolder holder;
-        if (v == null) {
-            LayoutInflater inflater = (LayoutInflater) _activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(_resouceId, null);
-            holder = new ViewHolder();
-            if (v != null) {
-                holder.name = (TextView) v.findViewById(R.id.pill_list_name);
-                holder.size = (TextView) v.findViewById(R.id.pill_list_size);
-                holder.units = (TextView) v.findViewById(R.id.pill_list_units);
-                holder.favourite = v.findViewById(R.id.pill_list_favourite);
-                holder.colour = (ColourIndicator) v.findViewById(R.id.pill_list_colour);
-                holder.pickerContainer = (ViewGroup) v.findViewById(R.id.pill_list_colour_picker_container);
-                holder.colourContainer = (ViewGroup) v.findViewById(R.id.pill_list_colour_container);
-
-                holder.name.setTypeface(_openSans);
-                holder.size.setTypeface(_openSans);
-                holder.units.setTypeface(_openSans);
-                v.setTag(holder);
-            }
-        } else
-            holder = (ViewHolder) v.getTag();
-
-        final Pill pill = _pills.get(position);
-        if (pill != null) {
-            holder.name.setText(pill.getName());
-            holder.size.setText(String.valueOf(pill.getSize()));
-
-            int visibility = pill.isFavourite() ? View.VISIBLE : View.INVISIBLE;
-            if (holder.favourite != null)
-                holder.favourite.setVisibility(visibility);
-
-            holder.colour.setColour(pill.getColour());
-
-            holder.pill = pill;
-        }
+        View v = super.getView(position, convertView, parent);
 
         final View listItem = v;
         if (v != null) {
@@ -122,7 +67,8 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
                     return true;
                 }
             });
-
+            ViewHolder holder = (ViewHolder) v.getTag();
+            final Pill pill = _pills.get(position);
             holder.colourContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -167,33 +113,6 @@ public class PillsListAdapter extends ArrayAdapter<Pill> {
         }
 
         return v;
-    }
-
-    @Override
-    public int getCount() {
-        if (_pills != null)
-            return _pills.size();
-        return 0;
-    }
-
-    public Pill getPillAtPosition(int pos) {
-        if (_pills == null || pos > _pills.size() || pos < 0)
-            return null;
-
-        return _pills.get(pos);
-    }
-
-    public void removeAtPosition(int pos) {
-        if (_pills == null || pos > _pills.size() || pos < 0)
-            return;
-
-        _pills.remove(pos);
-        this.notifyDataSetChanged();
-    }
-
-    public void updateAdapter(List<Pill> pills) {
-        _pills = pills;
-        this.notifyDataSetChanged();
     }
 
     private ActionMode.Callback actionModeCallback = new ActionMode.Callback() {

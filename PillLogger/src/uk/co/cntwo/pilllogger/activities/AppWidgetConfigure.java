@@ -17,6 +17,7 @@ import java.util.List;
 
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.adapters.PillsListAdapter;
+import uk.co.cntwo.pilllogger.adapters.PillsListBaseAdapter;
 import uk.co.cntwo.pilllogger.animations.HeightAnimation;
 import uk.co.cntwo.pilllogger.helpers.LayoutHelper;
 import uk.co.cntwo.pilllogger.listeners.WidgetPillsClickListener;
@@ -73,7 +74,7 @@ public class AppWidgetConfigure extends Activity implements GetPillsTask.ITaskCo
     public void pillsReceived(List<Pill> pills) {
         ListView pillsList = (ListView) findViewById(R.id.widget_configure_pill_list);
         if (pillsList != null) {
-            PillsListAdapter adapter = new PillsListAdapter(this, R.layout.widget_pill_list_item, pills);
+            PillsListBaseAdapter adapter = new PillsListBaseAdapter(this, R.layout.pill_list_item, pills);
             pillsList.setAdapter(adapter);
             pillsList.setOnItemClickListener(new WidgetPillsClickListener(this));
         }
