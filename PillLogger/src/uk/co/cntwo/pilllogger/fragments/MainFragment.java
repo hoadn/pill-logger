@@ -16,9 +16,12 @@ import com.echo.holographlibrary.Line;
 import com.echo.holographlibrary.LineGraph;
 import com.echo.holographlibrary.LinePoint;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.adapters.ConsumptionListAdapter;
@@ -89,45 +92,71 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
 
             HashMap<Integer, Line> lines = new HashMap<Integer, Line>();
             int i = 0;
-            for(Consumption c : consumptions){
-                int pillId = c.get_pill_id();
+
+            DateTime aMonthAgo = new DateTime().minusMonths(1);
+            Days someDays = Days.daysBetween(aMonthAgo, new DateTime());
+            int numDays = someDays.getDays();
+            for (int j = 0; j < numDays; j++) {
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                Date date = new Date();
+                Date newDate = new Date(date.getTime() - TimeUnit.DAYS.toMillis((numDays - 1) - j));
+
+                Line l = new Line();
                 boolean newline = false;
-                Line l;
-                if(lines.containsKey(pillId))
-                    l = lines.get(pillId);
-                else{
-                    l = new Line();
-                    lines.put(pillId, l);
-                    l.setColor(Color.parseColor("#FFBB33"));
-                    newline = true;
-                }
+                boolean found = false;
+                for (Consumption c : consumptions) {
+                    Date consumptionDate = c.get_date();
+                    int pillId = c.get_pill_id();
+                    try {
+                        newDate = formatter.parse(formatter.format(newDate));
+                        consumptionDate = formatter.parse(formatter.format(consumptionDate));
+                    }
+                    catch (ParseException e) {
+                        Logger.e(TAG, "Error :" + e.getMessage());
+                        e.printStackTrace();
+                    }
+                    if (newDate.toString().equals(consumptionDate.toString())) {
+                        Logger.v(TAG, "I have found a pill");
+                        found = true;
+                        newline = false;
 
-                DateTime monthAgo = new DateTime().minusMonths(1);
-
-                Days days = Days.daysBetween(monthAgo, new DateTime(c.get_date()));
-                int x = days.getDays();
-                x-=i++;
-                Logger.d(TAG, "x: " + x);
-                if(x >= 0){
-                    List<LinePoint> points = l.getPoints();
-                    boolean found = false;
-                    for(LinePoint point : points){
-                        if(point.getX() == x){
-                            point.setY(point.getY() + 1);
-                            found = true;
-                            break;
+                        if(lines.containsKey(pillId))
+                            l = lines.get(pillId);
+                        else{
+                            lines.put(pillId, l);
+                            l.setColor(Color.parseColor("#FFBB33"));
+                            newline = true;
                         }
-                    }
-                    if(!found){
-                        LinePoint lp = new LinePoint();
-                        lp.setX(x);
-                        lp.setY(1);
 
-                        l.addPoint(lp);
+                        List<LinePoint> points = l.getPoints();
+                        boolean alreadyPoint = false;
+                        for(LinePoint point : points){
+                            if(point.getX() == j){
+                                point.setY(point.getY() + 1);
+                                alreadyPoint = true;
+                                break;
+                            }
+                        }
+                        if(!alreadyPoint){
+                            LinePoint lp = new LinePoint();
+                            lp.setX(j);
+                            lp.setY(1);
+
+                            l.addPoint(lp);
+                        }
+
                     }
-                    if(newline)
-                        li.addLine(l);
                 }
+                if(!found){
+                    Logger.d(TAG, "No comsumption today so adding a 0 to X " + j);
+                    LinePoint lp = new LinePoint();
+                    lp.setX(j);
+                    lp.setY(0);
+
+                    l.addPoint(lp);
+                }
+                for (Integer lineKey : lines.keySet())
+                    li.addLine(lines.get(lineKey));
             }
 
             li.setRangeY(0, 10);
