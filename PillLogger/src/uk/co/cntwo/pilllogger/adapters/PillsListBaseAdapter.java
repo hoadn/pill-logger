@@ -49,7 +49,6 @@ public class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
         public View favourite;
         public ColourIndicator colour;
         public ViewGroup pickerContainer;
-        public ViewGroup colourContainer;
         public boolean open;
     }
 
