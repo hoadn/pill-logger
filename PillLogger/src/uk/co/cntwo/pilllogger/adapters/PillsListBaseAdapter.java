@@ -24,18 +24,21 @@ import uk.co.cntwo.pilllogger.views.ColourIndicator;
 /**
  * Created by Nick on 11/11/13.
  */
-public class PillsListBaseAdapter extends ArrayAdapter<Pill> {
-    protected List<Pill> _pills;
-    protected Activity _activity;
+public class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
     protected Typeface _openSans;
-    protected int _resouceId;
 
-    public PillsListBaseAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
-        super(activity, textViewResourceId, pills);
-        _activity = activity;
-        _pills = pills;
-        _resouceId = textViewResourceId;
+    public PillsListBaseAdapter(Activity activity, int textViewResourceId, List<Pill> pills){
+        this(activity, textViewResourceId, 0, pills);
+    }
+
+    public PillsListBaseAdapter(Activity activity, int textViewResourceId, int menu, List<Pill> pills) {
+        super(activity, textViewResourceId, menu, pills);
         _openSans = Typeface.createFromAsset(activity.getAssets(), "fonts/OpenSans-Light.ttf");
+    }
+
+    @Override
+    protected boolean actionItemClicked(ActionMode mode, MenuItem item) {
+        return false;
     }
 
     public static class ViewHolder {
@@ -50,42 +53,49 @@ public class PillsListBaseAdapter extends ArrayAdapter<Pill> {
         public boolean open;
     }
 
+
+    @Override
+    protected void initViewHolder(View v) {
+        ViewHolder holder = new ViewHolder();
+        holder.name = (TextView) v.findViewById(R.id.pill_list_name);
+        holder.size = (TextView) v.findViewById(R.id.pill_list_size);
+        holder.units = (TextView) v.findViewById(R.id.pill_list_units);
+        holder.favourite = v.findViewById(R.id.pill_list_favourite);
+        holder.colour = (ColourIndicator) v.findViewById(R.id.pill_list_colour);
+        holder.pickerContainer = (ViewGroup) v.findViewById(R.id.pill_list_colour_picker_container);
+
+        holder.name.setTypeface(_openSans);
+        holder.size.setTypeface(_openSans);
+        holder.units.setTypeface(_openSans);
+        v.setTag(holder);
+    }
+
+    @Override
+    protected boolean onClickListenerSet(View view, Menu menu) {
+        return false;
+    }
+
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View v = convertView;
+        View v = super.getView(position, convertView, parent);
         ViewHolder holder;
-        if (v == null) {
-            LayoutInflater inflater = (LayoutInflater) _activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(_resouceId, null);
-            holder = new ViewHolder();
-            if (v != null) {
-                holder.name = (TextView) v.findViewById(R.id.pill_list_name);
-                holder.size = (TextView) v.findViewById(R.id.pill_list_size);
-                holder.units = (TextView) v.findViewById(R.id.pill_list_units);
-                holder.favourite = v.findViewById(R.id.pill_list_favourite);
-                holder.colour = (ColourIndicator) v.findViewById(R.id.pill_list_colour);
-                holder.pickerContainer = (ViewGroup) v.findViewById(R.id.pill_list_colour_picker_container);
+        if (v != null) {
+            holder = (ViewHolder)v.getTag();
 
-                holder.name.setTypeface(_openSans);
-                holder.size.setTypeface(_openSans);
-                holder.units.setTypeface(_openSans);
-                v.setTag(holder);
+            final Pill pill = _data.get(position);
+            if (pill != null) {
+                holder.name.setText(pill.getName());
+                holder.size.setText(String.valueOf(pill.getSize()));
+
+                int visibility = pill.isFavourite() ? View.VISIBLE : View.INVISIBLE;
+                if (holder.favourite != null)
+                    holder.favourite.setVisibility(visibility);
+
+                holder.colour.setColour(pill.getColour());
+
+                holder.pill = pill;
             }
-        } else
-            holder = (ViewHolder) v.getTag();
-
-        final Pill pill = _pills.get(position);
-        if (pill != null) {
-            holder.name.setText(pill.getName());
-            holder.size.setText(String.valueOf(pill.getSize()));
-
-            int visibility = pill.isFavourite() ? View.VISIBLE : View.INVISIBLE;
-            if (holder.favourite != null)
-                holder.favourite.setVisibility(visibility);
-
-            holder.colour.setColour(pill.getColour());
-
-            holder.pill = pill;
         }
 
         return v;
@@ -93,28 +103,20 @@ public class PillsListBaseAdapter extends ArrayAdapter<Pill> {
 
     @Override
     public int getCount() {
-        if (_pills != null)
-            return _pills.size();
+        if (_data != null)
+            return _data.size();
         return 0;
     }
 
     public Pill getPillAtPosition(int pos) {
-        if (_pills == null || pos > _pills.size() || pos < 0)
+        if (_data == null || pos > _data.size() || pos < 0)
             return null;
 
-        return _pills.get(pos);
-    }
-
-    public void removeAtPosition(int pos) {
-        if (_pills == null || pos > _pills.size() || pos < 0)
-            return;
-
-        _pills.remove(pos);
-        this.notifyDataSetChanged();
+        return _data.get(pos);
     }
 
     public void updateAdapter(List<Pill> pills) {
-        _pills = pills;
+        _data = pills;
         this.notifyDataSetChanged();
     }
 }

@@ -85,7 +85,7 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
     @Override
     public void consumptionsReceived(List<Consumption> consumptions) {
         if(consumptions != null && consumptions.size() > 0){
-            _listView.setAdapter(new ConsumptionListAdapter(getActivity(), R.layout.pill_list_item, consumptions));
+            _listView.setAdapter(new ConsumptionListAdapter(getActivity(), R.layout.consumption_list_item, consumptions));
 
 
             LineGraph li = (LineGraph)_mainLayout.findViewById(R.id.main_graph);

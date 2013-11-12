@@ -249,4 +249,15 @@ public class DatabaseHelper {
 
         return consumptions;
     }
+
+    public void deleteConsumption(Consumption consumption) {
+        SQLiteDatabase db = _dbCreator.getWritableDatabase();
+
+        String id = String.valueOf(consumption.get_id());
+
+        db.delete(
+                DatabaseContract.Consumptions.TABLE_NAME,
+                "_ID = ?",
+                new String[]{id});
+    }
 }
