@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
 import uk.co.cntwo.pilllogger.helpers.Logger;
@@ -58,9 +59,20 @@ public class InitTestDbTask extends AsyncTask<Void, Void, Void>{
         List<Consumption> consumptions = dbHelper.getAllConsumptions();
 
         if (consumptions.size() == 0) { //This will insert some consumptions as test data if your data doesn't have any in
+            int j = 15;
             for (int i = 0; i < 10; i ++) { //I am only doing this to see what a list of consumption would look like
                 Pill pill = dbHelper.getPill(1);
-                Consumption consumption = new Consumption(pill, new Date());
+                Date date = new Date();
+                Date newDate = new Date();
+                if (i%2 == 0) {
+                    newDate = new Date(date.getTime() - TimeUnit.DAYS.toMillis(j));
+                    j--;
+                }
+                else {
+                    newDate = new Date(date.getTime() - TimeUnit.DAYS.toMillis(j));
+                    j = j - 2;
+                }
+                Consumption consumption = new Consumption(pill, newDate);
                 dbHelper.insertConsumption(consumption);
             }
         }
