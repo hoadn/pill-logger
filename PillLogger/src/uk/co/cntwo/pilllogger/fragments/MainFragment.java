@@ -33,6 +33,7 @@ import uk.co.cntwo.pilllogger.models.Consumption;
 import uk.co.cntwo.pilllogger.models.Pill;
 import uk.co.cntwo.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.cntwo.pilllogger.tasks.GetFavouritePillsTask;
+import uk.co.cntwo.pilllogger.tasks.GetPillsTask;
 import uk.co.cntwo.pilllogger.tasks.InitTestDbTask;
 
 import org.joda.time.DateTime;
@@ -41,12 +42,13 @@ import org.joda.time.Days;
 /**
  * Created by nick on 23/10/13.
  */
-public class MainFragment extends Fragment implements InitTestDbTask.ITaskComplete, GetConsumptionsTask.ITaskComplete, GetFavouritePillsTask.ITaskComplete {
+public class MainFragment extends Fragment implements InitTestDbTask.ITaskComplete, GetConsumptionsTask.ITaskComplete, GetFavouritePillsTask.ITaskComplete, GetPillsTask.ITaskComplete {
 
     private static final String TAG = "MainFragment";
     ListView _listView;
     ViewGroup _favouriteContainer;
     View _mainLayout;
+    HashMap<Integer, Pill> _allPills = new HashMap<Integer, Pill>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,14 +75,14 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
 
     @Override
     public void initComplete() {
-        new GetConsumptionsTask(this.getActivity(), this).execute();
+        new GetPillsTask(this.getActivity(), this).execute();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        new GetConsumptionsTask(this.getActivity(), this).execute();
+        new GetPillsTask(this.getActivity(), this).execute();
         new GetFavouritePillsTask(this.getActivity(), this).execute();
     }
 
@@ -88,8 +90,6 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
     public void consumptionsReceived(List<Consumption> consumptions) {
         if(consumptions != null && consumptions.size() > 0){
             _listView.setAdapter(new ConsumptionListAdapter(getActivity(), R.layout.consumption_list_item, consumptions));
-
-            LineGraph li = (LineGraph)_mainLayout.findViewById(R.id.main_graph);
 
             HashMap<Integer, SparseIntArray> xPoints = new HashMap<Integer, SparseIntArray>();
 
@@ -115,34 +115,43 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
                 currentLineValues.put(x, value);
             }
 
+
             Days totalDays = Days.daysBetween(aMonthAgo.withTimeAtStartOfDay(), new DateTime().withTimeAtStartOfDay());
             int dayCount = totalDays.getDays();
 
-            for(int pillId : xPoints.keySet()){
-                Line line = new Line();
-                line.setColor(Color.parseColor("#FF3333"));
-                SparseIntArray points = xPoints.get(pillId);
-                for(int i = 0; i < dayCount; i++){
-                    LinePoint linePoint = new LinePoint();
-                    linePoint.setX(i);
-                    if(points.indexOfKey(i) > 0)
-                        linePoint.setY(points.get(i));
-                    else
-                        linePoint.setY(0);
-
-                    line.addPoint(linePoint);
-                }
-
-                li.addLine(line);
-            }
-
-            double maxY = li.getMaxY();
-            li.setRangeY(0, (float) Math.ceil(maxY * 1.4 ));
+            plotLineGraph(xPoints, dayCount, R.id.main_graph);
         }
     }
 
+    private void plotLineGraph(HashMap<Integer, SparseIntArray> consumptionData, int days, int graphId){
+
+        LineGraph li = (LineGraph)_mainLayout.findViewById(graphId);
+
+        for(int pillId : consumptionData.keySet()){
+            Line line = new Line();
+            Pill p = _allPills.get(pillId);
+            line.setColor(p.getColour());
+            SparseIntArray points = consumptionData.get(pillId);
+            for(int i = 0; i < days; i++){
+                LinePoint linePoint = new LinePoint();
+                linePoint.setX(i);
+                if(points.indexOfKey(i) > 0)
+                    linePoint.setY(points.get(i));
+                else
+                    linePoint.setY(0);
+
+                line.addPoint(linePoint);
+            }
+
+            li.addLine(line);
+        }
+
+        double maxY = li.getMaxY();
+        li.setRangeY(0, (float)(maxY * 1.05));
+    }
+
     @Override
-    public void pillsReceived(List<Pill> pills) {
+    public void favouritePillsReceived(List<Pill> pills) {
         if(_favouriteContainer == null)
             return;
 
@@ -167,5 +176,14 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
             _favouriteContainer.addView(v, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
+    }
+
+    @Override
+    public void pillsReceived(List<Pill> pills) {
+        for(Pill p : pills){
+            _allPills.put(p.getId(), p);
+        }
+
+        new GetConsumptionsTask(this.getActivity(), this).execute();
     }
 }

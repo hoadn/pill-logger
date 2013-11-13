@@ -30,10 +30,10 @@ public class GetFavouritePillsTask extends AsyncTask<Void, Void, List<Pill>>{
 
     @Override
     protected void onPostExecute(List<Pill> pills) {
-        _listener.pillsReceived(pills);
+        _listener.favouritePillsReceived(pills);
     }
 
     public interface ITaskComplete{
-        public void pillsReceived(List<Pill> pills);
+        public void favouritePillsReceived(List<Pill> pills);
     }
 }
