@@ -62,6 +62,10 @@ public class InitTestDbTask extends AsyncTask<Void, Void, Void>{
             int j = 15;
             for (int i = 0; i < 10; i ++) { //I am only doing this to see what a list of consumption would look like
                 Pill pill = dbHelper.getPill(1);
+                Pill pill2 = null;
+                if (i > 7 && dbHelper.getPill(2) != null) {
+                    pill2 = dbHelper.getPill(2);
+                }
                 Date date = new Date();
                 Date newDate = new Date();
                 if (i%2 == 0) {
@@ -73,7 +77,12 @@ public class InitTestDbTask extends AsyncTask<Void, Void, Void>{
                     j = j - 2;
                 }
                 Consumption consumption = new Consumption(pill, newDate);
+
                 dbHelper.insertConsumption(consumption);
+                if (pill2 != null) {
+                    Consumption consumption2 = new Consumption(pill2, newDate);
+                    dbHelper.insertConsumption(consumption2);
+                }
             }
         }
     }

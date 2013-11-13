@@ -18,6 +18,7 @@ import com.echo.holographlibrary.LinePoint;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -91,76 +92,110 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
             LineGraph li = (LineGraph)_mainLayout.findViewById(R.id.main_graph);
 
             HashMap<Integer, Line> lines = new HashMap<Integer, Line>();
-            int i = 0;
+            HashMap<Integer, HashMap<Integer, Integer>> xPoints = new HashMap<Integer, HashMap<Integer, Integer>>();
+
+            Line l = new Line();
+            boolean newLine = false;
+            boolean found = false;
 
             DateTime aMonthAgo = new DateTime().minusMonths(1);
-            Days someDays = Days.daysBetween(aMonthAgo, new DateTime());
-            int numDays = someDays.getDays();
-            for (int j = 0; j < numDays; j++) {
-                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                Date date = new Date();
-                Date newDate = new Date(date.getTime() - TimeUnit.DAYS.toMillis((numDays - 1) - j));
 
-                Line l = new Line();
-                boolean newline = false;
-                boolean found = false;
-                for (Consumption c : consumptions) {
-                    Date consumptionDate = c.get_date();
-                    int pillId = c.get_pill_id();
-                    try {
-                        newDate = formatter.parse(formatter.format(newDate));
-                        consumptionDate = formatter.parse(formatter.format(consumptionDate));
-                    }
-                    catch (ParseException e) {
-                        Logger.e(TAG, "Error :" + e.getMessage());
-                        e.printStackTrace();
-                    }
-                    if (newDate.toString().equals(consumptionDate.toString())) {
-                        Logger.v(TAG, "I have found a pill");
-                        found = true;
-                        newline = false;
 
-                        if(lines.containsKey(pillId))
-                            l = lines.get(pillId);
-                        else{
-                            lines.put(pillId, l);
-                            l.setColor(Color.parseColor("#FFBB33"));
-                            newline = true;
-                        }
+            for (Consumption c : consumptions) {
+                Date consumptionDate = c.get_date();
+                int pillId = c.get_pill_id();
+                Days days = Days.daysBetween(aMonthAgo.withTimeAtStartOfDay(), new DateTime(c.get_date()).withTimeAtStartOfDay());
+                int x = days.getDays();
+                Logger.v(TAG, "days = " + x + " date " + c.get_date());
+                newLine = false;
 
-                        List<LinePoint> points = l.getPoints();
-                        boolean alreadyPoint = false;
-                        for(LinePoint point : points){
-                            if(point.getX() == j){
-                                point.setY(point.getY() + 1);
-                                alreadyPoint = true;
-                                break;
-                            }
-                        }
-                        if(!alreadyPoint){
-                            LinePoint lp = new LinePoint();
-                            lp.setX(j);
-                            lp.setY(1);
+                if(lines.containsKey(pillId))
+                    l = lines.get(pillId);
+                else{
+                    l = new Line();
+                    lines.put(pillId, l);
+                    l.setColor(Color.parseColor("#FFBB33"));
+                    newLine = true;
+                }
 
-                            l.addPoint(lp);
-                        }
+                List<LinePoint> points = l.getPoints();
+                boolean alreadyPoint = false;
+                HashMap<Integer, Integer> xList = new HashMap<Integer, Integer>();
 
+                for(LinePoint point : points){
+                    if(point.getX() == x){
+                        point.setY(point.getY() + 1);
+                        alreadyPoint = true;
+                        xList = xPoints.get(c.get_pill_id());
+                        xList.put(x, xList.get(x) + 1);
+                        break;
                     }
                 }
-                if(!found){
-                    Logger.d(TAG, "No comsumption today so adding a 0 to X " + j);
+                if(!alreadyPoint){
                     LinePoint lp = new LinePoint();
-                    lp.setX(j);
-                    lp.setY(0);
+                    lp.setX(x);
+                    lp.setY(1);
 
                     l.addPoint(lp);
+
+                    if ((xPoints.get(c.get_pill_id())) != null) {
+                        xList = xPoints.get(c.get_pill_id());
+                        xList.put(x, 1);
+                    }
+                    else
+                        xList.put(x, 1);
+                    xPoints.put(c.get_pill_id(), xList);
                 }
-                for (Integer lineKey : lines.keySet())
-                    li.addLine(lines.get(lineKey));
+                if (newLine)
+                    li.addLine(l);
             }
 
-            li.setRangeY(0, 10);
-            li.setLineToFill(0);
+            Days totalDays = Days.daysBetween(aMonthAgo.withTimeAtStartOfDay(), new DateTime().withTimeAtStartOfDay());
+            int allXPoints = totalDays.getDays();
+            Logger.v(TAG, "totalDays: " + allXPoints + " lines: " + lines.size() + " xPoints: " + xPoints.size());
+
+            li.removeAllLines();
+            int color = 1; //this is used to give the lines a different colour until we have implemented it properly
+            int firstLine = -1;
+            int j = 0;
+            int largestY = 0; //this is used to dynamically set the y range of the graph
+            for (Integer pillId : xPoints.keySet()) {
+                HashMap<Integer, Integer> xPointsList = xPoints.get(pillId);
+                Line line = new Line();
+                if (color % 2 == 0) // TODO: make this use pill colour
+                    line.setColor(Color.parseColor("#FF3333"));
+                else
+                    line.setColor(Color.parseColor("#FFBB33"));
+                boolean started = false; //this is so the graph starts at the first value we have (so we don't have lots of 0's at the start)
+                for (int i = 0; i <= allXPoints; i++) {
+                    if (xPointsList.keySet().contains(i)) {
+                        LinePoint lp = new LinePoint();
+                        int y = xPointsList.get(i);
+                        if (y > largestY)
+                            largestY = y;
+                        lp.setX(i);
+                        lp.setY(y);
+                        line.addPoint(lp);
+                        started = true;
+                        if (firstLine == -1)
+                            firstLine = j;
+                    }
+                    else {
+                        LinePoint lp = new LinePoint();
+                        lp.setX(i);
+                        lp.setY(0);
+                        if (started)
+                            line.addPoint(lp);
+                    }
+                }
+                li.addLine(line);
+                color++;
+                j++;
+            }
+
+            li.setRangeY(0, largestY + 1);
+            if (firstLine != -1)
+                li.setLineToFill(firstLine);
         }
     }
 
