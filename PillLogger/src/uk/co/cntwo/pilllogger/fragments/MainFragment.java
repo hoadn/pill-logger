@@ -192,8 +192,11 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
                 color++;
                 j++;
             }
-
-            li.setRangeY(0, largestY + 1);
+            double yRange = largestY + (largestY * 0.4);
+            if (Math.round(yRange) == largestY)
+                yRange++;
+            Logger.d(TAG, "yRange: " + yRange + " largestY: " + largestY);
+            li.setRangeY(0, Math.round(yRange));
             if (firstLine != -1)
                 li.setLineToFill(firstLine);
         }
