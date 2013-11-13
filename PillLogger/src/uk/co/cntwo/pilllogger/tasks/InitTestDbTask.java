@@ -3,12 +3,18 @@ package uk.co.cntwo.pilllogger.tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Months;
+
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
+import uk.co.cntwo.pilllogger.helpers.DateHelper;
 import uk.co.cntwo.pilllogger.helpers.Logger;
+import uk.co.cntwo.pilllogger.helpers.NumberHelper;
 import uk.co.cntwo.pilllogger.models.Consumption;
 import uk.co.cntwo.pilllogger.models.Pill;
 
@@ -47,42 +53,33 @@ public class InitTestDbTask extends AsyncTask<Void, Void, Void>{
         List<Pill> pills = dbHelper.getAllPills();
 
         if (pills.size() == 0) { //This will insert 2 pills as test data if your database doesn't have any in
-            Pill pill1 = new Pill("Paracetamol", 400);
-            Pill pill2 = new Pill("Ibuprofen", 200);
-            dbHelper.insertPill(pill1);
-            dbHelper.insertPill(pill2);
+            dbHelper.insertPill(new Pill("Paracetamol", 500));
+            dbHelper.insertPill(new Pill("Ibuprofen", 200));
+            dbHelper.insertPill(new Pill("Paracetamol Extra", 500));
+            dbHelper.insertPill(new Pill("Ibuprofen", 400));
+            dbHelper.insertPill(new Pill("Asprin", 300));
         }
     }
 
     private void insertConsumptions(){
         DatabaseHelper dbHelper = DatabaseHelper.getSingleton(_context);
         List<Consumption> consumptions = dbHelper.getAllConsumptions();
+        List<Pill> pills = dbHelper.getAllPills();
 
         if (consumptions.size() == 0) { //This will insert some consumptions as test data if your data doesn't have any in
-            int j = 15;
-            for (int i = 0; i < 10; i ++) { //I am only doing this to see what a list of consumption would look like
-                Pill pill = dbHelper.getPill(1);
-                Pill pill2 = null;
-                if (i > 7 && dbHelper.getPill(2) != null) {
-                    pill2 = dbHelper.getPill(2);
-                }
-                Date date = new Date();
-                Date newDate = new Date();
-                if (i%2 == 0) {
-                    newDate = new Date(date.getTime() - TimeUnit.DAYS.toMillis(j));
-                    j--;
-                }
-                else {
-                    newDate = new Date(date.getTime() - TimeUnit.DAYS.toMillis(j));
-                    j = j - 2;
-                }
-                Consumption consumption = new Consumption(pill, newDate);
+            for (int i = 0; i < 60; i ++) { //I am only doing this to see what a list of consumption would look like
+                int maxDays = DateHelper.daysOfMonth();
+                int day = NumberHelper.randInt(0, maxDays -1);
+
+                DateTime consumptionDate = new DateTime().minusDays(day);
+
+                int pillIndex = NumberHelper.randInt(0, pills.size() - 1);
+
+                Pill pill = pills.get(pillIndex);
+
+                Consumption consumption = new Consumption(pill, consumptionDate.toDate());
 
                 dbHelper.insertConsumption(consumption);
-                if (pill2 != null) {
-                    Consumption consumption2 = new Consumption(pill2, newDate);
-                    dbHelper.insertConsumption(consumption2);
-                }
             }
         }
     }
