@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,117 +89,55 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
         if(consumptions != null && consumptions.size() > 0){
             _listView.setAdapter(new ConsumptionListAdapter(getActivity(), R.layout.consumption_list_item, consumptions));
 
-
             LineGraph li = (LineGraph)_mainLayout.findViewById(R.id.main_graph);
 
-            HashMap<Integer, Line> lines = new HashMap<Integer, Line>();
-            HashMap<Integer, HashMap<Integer, Integer>> xPoints = new HashMap<Integer, HashMap<Integer, Integer>>();
-
-            Line l = new Line();
-            boolean newLine = false;
-            boolean found = false;
+            HashMap<Integer, SparseIntArray> xPoints = new HashMap<Integer, SparseIntArray>();
 
             DateTime aMonthAgo = new DateTime().minusMonths(1);
 
-
             for (Consumption c : consumptions) {
-                Date consumptionDate = c.get_date();
                 int pillId = c.get_pill_id();
                 Days days = Days.daysBetween(aMonthAgo.withTimeAtStartOfDay(), new DateTime(c.get_date()).withTimeAtStartOfDay());
                 int x = days.getDays();
-                Logger.v(TAG, "days = " + x + " date " + c.get_date());
-                newLine = false;
 
-                if(lines.containsKey(pillId))
-                    l = lines.get(pillId);
+                SparseIntArray currentLineValues;
+                if(xPoints.containsKey(pillId))
+                    currentLineValues = xPoints.get(pillId);
                 else{
-                    l = new Line();
-                    lines.put(pillId, l);
-                    l.setColor(Color.parseColor("#FFBB33"));
-                    newLine = true;
+                    currentLineValues = new SparseIntArray();
+                    xPoints.put(pillId, currentLineValues);
                 }
 
-                List<LinePoint> points = l.getPoints();
-                boolean alreadyPoint = false;
-                HashMap<Integer, Integer> xList = new HashMap<Integer, Integer>();
+                int value = 1;
+                if(currentLineValues.indexOfKey(x) > 0)
+                    value += currentLineValues.get(x);
 
-                for(LinePoint point : points){
-                    if(point.getX() == x){
-                        point.setY(point.getY() + 1);
-                        alreadyPoint = true;
-                        xList = xPoints.get(c.get_pill_id());
-                        xList.put(x, xList.get(x) + 1);
-                        break;
-                    }
-                }
-                if(!alreadyPoint){
-                    LinePoint lp = new LinePoint();
-                    lp.setX(x);
-                    lp.setY(1);
-
-                    l.addPoint(lp);
-
-                    if ((xPoints.get(c.get_pill_id())) != null) {
-                        xList = xPoints.get(c.get_pill_id());
-                        xList.put(x, 1);
-                    }
-                    else
-                        xList.put(x, 1);
-                    xPoints.put(c.get_pill_id(), xList);
-                }
-                if (newLine)
-                    li.addLine(l);
+                currentLineValues.put(x, value);
             }
 
             Days totalDays = Days.daysBetween(aMonthAgo.withTimeAtStartOfDay(), new DateTime().withTimeAtStartOfDay());
-            int allXPoints = totalDays.getDays();
-            Logger.v(TAG, "totalDays: " + allXPoints + " lines: " + lines.size() + " xPoints: " + xPoints.size());
+            int dayCount = totalDays.getDays();
 
-            li.removeAllLines();
-            int color = 1; //this is used to give the lines a different colour until we have implemented it properly
-            int firstLine = -1;
-            int j = 0;
-            int largestY = 0; //this is used to dynamically set the y range of the graph
-            for (Integer pillId : xPoints.keySet()) {
-                HashMap<Integer, Integer> xPointsList = xPoints.get(pillId);
+            for(int pillId : xPoints.keySet()){
                 Line line = new Line();
-                if (color % 2 == 0) // TODO: make this use pill colour
-                    line.setColor(Color.parseColor("#FF3333"));
-                else
-                    line.setColor(Color.parseColor("#FFBB33"));
-                boolean started = false; //this is so the graph starts at the first value we have (so we don't have lots of 0's at the start)
-                for (int i = 0; i <= allXPoints; i++) {
-                    if (xPointsList.keySet().contains(i)) {
-                        LinePoint lp = new LinePoint();
-                        int y = xPointsList.get(i);
-                        if (y > largestY)
-                            largestY = y;
-                        lp.setX(i);
-                        lp.setY(y);
-                        line.addPoint(lp);
-                        started = true;
-                        if (firstLine == -1)
-                            firstLine = j;
-                    }
-                    else {
-                        LinePoint lp = new LinePoint();
-                        lp.setX(i);
-                        lp.setY(0);
-                        if (started)
-                            line.addPoint(lp);
-                    }
+                line.setColor(Color.parseColor("#FF3333"));
+                SparseIntArray points = xPoints.get(pillId);
+                for(int i = 0; i < dayCount; i++){
+                    LinePoint linePoint = new LinePoint();
+                    linePoint.setX(i);
+                    if(points.indexOfKey(i) > 0)
+                        linePoint.setY(points.get(i));
+                    else
+                        linePoint.setY(0);
+
+                    line.addPoint(linePoint);
                 }
+
                 li.addLine(line);
-                color++;
-                j++;
             }
-            double yRange = largestY + (largestY * 0.4);
-            if (Math.round(yRange) == largestY)
-                yRange++;
-            Logger.d(TAG, "yRange: " + yRange + " largestY: " + largestY);
-            li.setRangeY(0, Math.round(yRange));
-            if (firstLine != -1)
-                li.setLineToFill(firstLine);
+
+            double maxY = li.getMaxY();
+            li.setRangeY(0, (float) Math.ceil(maxY * 1.4 ));
         }
     }
 
