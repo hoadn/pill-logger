@@ -31,6 +31,8 @@ import uk.co.cntwo.pilllogger.helpers.Logger;
 import uk.co.cntwo.pilllogger.listeners.AddConsumptionClickListener;
 import uk.co.cntwo.pilllogger.models.Consumption;
 import uk.co.cntwo.pilllogger.models.Pill;
+import uk.co.cntwo.pilllogger.repositories.ConsumptionRepository;
+import uk.co.cntwo.pilllogger.repositories.PillRepository;
 import uk.co.cntwo.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.cntwo.pilllogger.tasks.GetFavouritePillsTask;
 import uk.co.cntwo.pilllogger.tasks.GetPillsTask;
@@ -89,7 +91,8 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
     @Override
     public void consumptionsReceived(List<Consumption> consumptions) {
         if(consumptions != null && consumptions.size() > 0){
-            _listView.setAdapter(new ConsumptionListAdapter(getActivity(), R.layout.consumption_list_item, consumptions));
+            List<Consumption> grouped = ConsumptionRepository.getSingleton(getActivity()).groupConsumptions(consumptions);
+            _listView.setAdapter(new ConsumptionListAdapter(getActivity(), R.layout.consumption_list_item, grouped));
 
             HashMap<Integer, SparseIntArray> xPoints = new HashMap<Integer, SparseIntArray>();
 
@@ -184,6 +187,6 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
             _allPills.put(p.getId(), p);
         }
 
-        new GetConsumptionsTask(this.getActivity(), this).execute();
+        new GetConsumptionsTask(this.getActivity(), this, false).execute();
     }
 }

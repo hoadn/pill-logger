@@ -11,12 +11,14 @@ public class Consumption {
     private Pill _pill;
     private Date _date;
     private int _id;
+    private int _quantity;
 
     public Consumption() {
-
+        _quantity = 1;
     }
 
     public Consumption(Pill pill, Date date) {
+        this();
         this._pill = pill;
         this._date = date;
     }
@@ -48,4 +50,7 @@ public class Consumption {
     public int get_pill_id() {
         return _pill.getId();
     }
+
+    public int getQuantity(){return _quantity;}
+    public void setQuantity(int quantity){_quantity = quantity;}
 }

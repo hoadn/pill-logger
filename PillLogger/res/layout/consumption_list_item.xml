@@ -6,11 +6,18 @@
     android:padding="10dp"
     android:background="?android:attr/selectableItemBackground">
 
+    <TextView android:textSize="16dp"
+              android:id="@+id/consumption_list_quantity"
+              android:layout_centerVertical="true"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content" />
+
         <TextView android:textSize="20dp"
             android:id="@+id/consumption_list_name"
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/consumption_list_quantity"/>
 
         <uk.co.cntwo.pilllogger.views.ColourIndicator
             android:id="@+id/consumption_list_colour"

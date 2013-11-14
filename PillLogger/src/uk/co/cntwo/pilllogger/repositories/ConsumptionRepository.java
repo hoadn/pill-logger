@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -154,5 +156,30 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         }
 
         return consumptions;
+    }
+
+    public List<Consumption> groupConsumptions(List<Consumption> consumptions){
+        List<Consumption> grouped = new ArrayList<Consumption>();
+
+        Consumption groupedConsumption = null;
+        for(Consumption c : consumptions){
+            DateTime groupedDate = null;
+            if (groupedConsumption != null) {
+                groupedDate = new DateTime(groupedConsumption.get_date()).withSecondOfMinute(0);
+            }
+            DateTime cDate = new DateTime(c.get_date()).withSecondOfMinute(0);
+            if(groupedConsumption == null || groupedDate.getMillis() != cDate.getMillis())
+            {
+                if(groupedConsumption != null)
+                    grouped.add(groupedConsumption);
+
+                groupedConsumption = c;
+            }
+            else{
+                groupedConsumption.setQuantity(groupedConsumption.getQuantity() + 1);
+            }
+        }
+
+        return grouped;
     }
 }

@@ -38,6 +38,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
     public static class ViewHolder {
         public TextView name;
         public TextView date;
+        public TextView quantity;
         public ColourIndicator colour;
         Consumption consumption;
     }
@@ -64,10 +65,12 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
         ViewHolder holder = new ViewHolder();
         holder.name = (TextView) v.findViewById(R.id.consumption_list_name);
         holder.date = (TextView) v.findViewById(R.id.consumption_list_date);
+        holder.quantity = (TextView) v.findViewById(R.id.consumption_list_quantity);
         holder.colour = (ColourIndicator) v.findViewById(R.id.consumption_list_colour);
         if(holder.name != null){
             holder.name.setTypeface(_openSans);
             holder.date.setTypeface(_openSans);
+            holder.quantity.setTypeface(_openSans);
         }
         v.setTag(holder);
     }
@@ -91,6 +94,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
                 holder.name.setText(consumption.get_pill().getName());
                 String date = new SimpleDateFormat("HH:mm dd/MM").format(consumption.get_date());
                 holder.date.setText(date);
+                holder.quantity.setText(consumption.getQuantity() + "x");
                 holder.consumption = consumption;
                 holder.colour.setColour(consumption.get_pill().getColour());
             }
