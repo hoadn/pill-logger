@@ -5,6 +5,8 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
@@ -123,6 +125,8 @@ public class AppWidgetConfigure extends Activity implements GetPillsTask.ITaskCo
             RemoteViews views = new RemoteViews(_context.getPackageName(),
                     R.layout.appwidget);
             views.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
+            views.setTextViewText(R.id.widget_size, String.valueOf(_chosenPill.getSize() + "mg"));
+            views.setInt(R.id.widget_size,"setBackgroundColor", _chosenPill.getColour());
             views.setTextViewText(R.id.widget_text, _chosenPill.getName().substring(0,1));
             appWidgetManager.updateAppWidget(_appWidgetId, views);
 

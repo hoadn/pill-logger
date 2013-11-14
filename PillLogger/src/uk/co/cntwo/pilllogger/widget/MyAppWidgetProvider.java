@@ -30,8 +30,8 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         final int N = appWidgetIds.length;
 
         // Perform this loop procedure for each App Widget that belongs to this provider
-//        for (int i=0; i<N; i++) {
-//            int appWidgetId = appWidgetIds[i];
+        for (int i=0; i<N; i++) {
+              int appWidgetId = appWidgetIds[i];
 //
 //            // Create an Intent to add to our button with an action so we can tell what's been pressed
 //            Intent intent = new Intent(context, MyAppWidgetProvider.class);
@@ -46,7 +46,29 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 //
 //            // Tell the AppWidgetManager to perform an update on the current app widget
 //            appWidgetManager.updateAppWidget(appWidgetId, views);
-//        }
+
+
+            Intent intent = new Intent(context, MyAppWidgetProvider.class);
+            intent.setAction(CLICK_ACTION);
+            Bundle bundle = intent.getExtras();
+            //Create a pending intent from our intent
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            appWidgetManager = AppWidgetManager.getInstance(context);
+
+            RemoteViews views = new RemoteViews(context.getPackageName(),
+                    R.layout.appwidget);
+
+            views.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
+
+            int pillId = bundle.getInt(AppWidgetConfigure.PILL_ID);
+            Pill pill = DatabaseHelper.getSingleton(context).getPill(pillId);
+            views.setTextViewText(R.id.widget_size, String.valueOf(pill.getSize() + "mg"));
+            views.setInt(R.id.widget_size,"setBackgroundColor", pill.getColour());
+            views.setTextViewText(R.id.widget_text, pill.getName().substring(0,1));
+            appWidgetManager.updateAppWidget(appWidgetId, views);
+
+        }
     }
 
     @Override
