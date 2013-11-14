@@ -20,6 +20,7 @@ import uk.co.cntwo.pilllogger.models.Consumption;
 import uk.co.cntwo.pilllogger.tasks.DeleteConsumptionTask;
 import uk.co.cntwo.pilllogger.tasks.DeletePillTask;
 import uk.co.cntwo.pilllogger.tasks.UpdatePillTask;
+import uk.co.cntwo.pilllogger.views.ColourIndicator;
 
 /**
  * Created by nick on 22/10/13.
@@ -37,6 +38,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
     public static class ViewHolder {
         public TextView name;
         public TextView date;
+        public ColourIndicator colour;
         Consumption consumption;
     }
 
@@ -62,6 +64,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
         ViewHolder holder = new ViewHolder();
         holder.name = (TextView) v.findViewById(R.id.consumption_list_name);
         holder.date = (TextView) v.findViewById(R.id.consumption_list_date);
+        holder.colour = (ColourIndicator) v.findViewById(R.id.consumption_list_colour);
         if(holder.name != null){
             holder.name.setTypeface(_openSans);
             holder.date.setTypeface(_openSans);
@@ -89,6 +92,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
                 String date = new SimpleDateFormat("HH:mm dd/MM").format(consumption.get_date());
                 holder.date.setText(date);
                 holder.consumption = consumption;
+                holder.colour.setColour(consumption.get_pill().getColour());
             }
         }
         return v;
