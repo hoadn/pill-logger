@@ -132,7 +132,7 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
             Pill p = _allPills.get(pillId);
             line.setColor(p.getColour());
             SparseIntArray points = consumptionData.get(pillId);
-            for(int i = 0; i < days; i++){
+            for(int i = 0; i <= days; i++){
                 LinePoint linePoint = new LinePoint();
                 linePoint.setX(i);
                 if(points.indexOfKey(i) > 0)
