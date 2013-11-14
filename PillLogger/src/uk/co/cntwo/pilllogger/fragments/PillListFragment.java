@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,19 +61,27 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
         _addPillSize.setTypeface(_openSans);
 
         View completed = v.findViewById(R.id.pill_fragment_add_pill_completed);
-        completed.setOnClickListener(new AddPillClickListener(this));
+        completed.setOnClickListener(new AddPillClickListener(this, this));
 
-
-//        _list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//
-//            public boolean onItemLongClick(AdapterView<?> arg0, View v,
-//                                           int pos, long id) {
-//                v.setBackgroundColor(getActivity().getResources().getColor(R.color.text_grey));
-//                View deleteLayout = v.findViewById(R.id.pill_list_delete_layout);
-//                deleteLayout.setVisibility(View.VISIBLE);
-//                return true;
-//            }
-//        });
+        _addPillSize.setOnKeyListener(new View.OnKeyListener()
+        {
+            public boolean onKey(View v, int keyCode, KeyEvent event)
+            {
+                if (event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    switch (keyCode)
+                    {
+                        case KeyEvent.KEYCODE_DPAD_CENTER:
+                        case KeyEvent.KEYCODE_ENTER:
+                            completed();
+                            return true;
+                        default:
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
         return v;
     }
 
@@ -119,26 +128,32 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
     private class AddPillClickListener implements View.OnClickListener {
 
         GetPillsTask.ITaskComplete _listener;
-        public AddPillClickListener(GetPillsTask.ITaskComplete listener) {
+        PillListFragment _fragment;
+        public AddPillClickListener(GetPillsTask.ITaskComplete listener, PillListFragment fragment) {
             _listener = listener;
+            _fragment = fragment;
         }
 
         @Override
         public void onClick(View view) {
-            Pill newPill = new Pill();
-            newPill.setName(_addPillName.getText().toString());
-            newPill.setSize(Integer.parseInt(_addPillSize.getText().toString()));
-            PillHelper.addPill(getActivity(), newPill);
-
-            new GetPillsTask(getActivity(), _listener).execute();
-            _addPillName.setText("");
-            _addPillSize.setText("");
-            _addPillSize.clearFocus();
-
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
-                    InputMethodManager.HIDE_NOT_ALWAYS);
+            _fragment.completed();
         }
+    }
+
+    public void completed() {
+        Pill newPill = new Pill();
+        newPill.setName(_addPillName.getText().toString());
+        newPill.setSize(Integer.parseInt(_addPillSize.getText().toString()));
+        PillHelper.addPill(getActivity(), newPill);
+
+        new GetPillsTask(getActivity(), this).execute();
+        _addPillName.setText("");
+        _addPillSize.setText("");
+        _addPillSize.clearFocus();
+
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
 }
