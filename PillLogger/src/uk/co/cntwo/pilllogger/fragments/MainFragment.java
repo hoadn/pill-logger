@@ -97,7 +97,7 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
 
             for (Consumption c : consumptions) {
                 int pillId = c.get_pill_id();
-                Days days = Days.daysBetween(aMonthAgo.withTimeAtStartOfDay(), new DateTime(c.get_date()).withTimeAtStartOfDay());
+                Days days = Days.daysBetween(aMonthAgo.withTimeAtStartOfDay(), new DateTime(c.get_date()).plusDays(1).withTimeAtStartOfDay());
                 int x = days.getDays();
 
                 SparseIntArray currentLineValues;
@@ -109,14 +109,14 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
                 }
 
                 int value = 1;
-                if(currentLineValues.indexOfKey(x) > 0)
+                if(currentLineValues.indexOfKey(x) >= 0)
                     value += currentLineValues.get(x);
 
                 currentLineValues.put(x, value);
             }
 
 
-            Days totalDays = Days.daysBetween(aMonthAgo.withTimeAtStartOfDay(), new DateTime().withTimeAtStartOfDay());
+            Days totalDays = Days.daysBetween(aMonthAgo.withTimeAtStartOfDay(), new DateTime().plusDays(1).withTimeAtStartOfDay());
             int dayCount = totalDays.getDays();
 
             plotLineGraph(xPoints, dayCount, R.id.main_graph);
