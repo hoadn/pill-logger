@@ -1,31 +1,22 @@
 package uk.co.cntwo.pilllogger.activities;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Date;
 import java.util.List;
 
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.adapters.AddConsumptionPillListAdapter;
-import uk.co.cntwo.pilllogger.adapters.PillsListAdapter;
-import uk.co.cntwo.pilllogger.animations.AddPillToConsumptionAnimation;
-import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
-import uk.co.cntwo.pilllogger.helpers.Logger;
 import uk.co.cntwo.pilllogger.listeners.AddConsumptionPillItemClickListener;
-import uk.co.cntwo.pilllogger.listeners.PillItemClickListener;
 import uk.co.cntwo.pilllogger.models.Consumption;
 import uk.co.cntwo.pilllogger.models.Pill;
 import uk.co.cntwo.pilllogger.state.State;

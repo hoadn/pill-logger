@@ -1,12 +1,10 @@
 package uk.co.cntwo.pilllogger.tasks;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
 import uk.co.cntwo.pilllogger.models.Consumption;
-import uk.co.cntwo.pilllogger.models.Pill;
+import uk.co.cntwo.pilllogger.repositories.ConsumptionRepository;
 
 /**
  * Created by nick on 31/10/13.
@@ -23,8 +21,7 @@ public class InsertConsumptionTask  extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        DatabaseHelper dbHelper = DatabaseHelper.getSingleton(_context);
-        dbHelper.insertConsumption(_consumption);
+        ConsumptionRepository.getSingleton(_context).insert(_consumption);
         return null;
     }
 }

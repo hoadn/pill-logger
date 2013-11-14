@@ -3,8 +3,8 @@ package uk.co.cntwo.pilllogger.tasks;
 import android.app.Activity;
 import android.os.AsyncTask;
 
-import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
 import uk.co.cntwo.pilllogger.models.Consumption;
+import uk.co.cntwo.pilllogger.repositories.ConsumptionRepository;
 
 /**
  * Created by alex on 12/11/13.
@@ -21,8 +21,7 @@ public class DeleteConsumptionTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        DatabaseHelper dbHelper = DatabaseHelper.getSingleton(_activity);
-        dbHelper.deleteConsumption(_consumption);
+        ConsumptionRepository.getSingleton(_activity).delete(_consumption);
         return null;
     }
 }

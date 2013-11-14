@@ -1,21 +1,15 @@
 package uk.co.cntwo.pilllogger.listeners;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.List;
 
-import uk.co.cntwo.pilllogger.R;
-import uk.co.cntwo.pilllogger.activities.PillDetailActivity;
-import uk.co.cntwo.pilllogger.fragments.PillDetailFragment;
-import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
 import uk.co.cntwo.pilllogger.helpers.Logger;
 import uk.co.cntwo.pilllogger.models.Pill;
+import uk.co.cntwo.pilllogger.repositories.PillRepository;
 
 /**
  * Created by nick on 23/10/13.
@@ -31,8 +25,8 @@ public class PillItemClickListener implements ListView.OnItemClickListener {
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Logger.v("AddConsumptionPillItemClickListener", "testingWidth, this is being called");
-        DatabaseHelper dbHelper = DatabaseHelper.getSingleton(_activity);
-        List<Pill> pills = dbHelper.getAllPills();
+        PillRepository dbHelper = PillRepository.getSingleton(_activity);
+        List<Pill> pills = dbHelper.getAll();
         onItemSelected(pills.get(i).getId());
     }
 

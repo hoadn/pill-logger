@@ -12,10 +12,9 @@ import java.util.List;
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.activities.PillDetailActivity;
 import uk.co.cntwo.pilllogger.activities.PillListActivity;
-import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
 import uk.co.cntwo.pilllogger.helpers.Logger;
-import uk.co.cntwo.pilllogger.helpers.PillHelper;
 import uk.co.cntwo.pilllogger.models.Pill;
+import uk.co.cntwo.pilllogger.repositories.PillRepository;
 
 /**
  * A fragment representing a single Pills detail screen. This fragment is either
@@ -49,8 +48,7 @@ public class PillDetailFragment extends Fragment {
 			// Load the dummy content specified by the fragment
 			// arguments. In a real-world scenario, use a Loader
 			// to load content from a content provider.
-            DatabaseHelper dbh = DatabaseHelper.getSingleton(getActivity());
-            List<Pill> pills = dbh.getAllPills();
+            List<Pill> pills = PillRepository.getSingleton(getActivity()).getAll();
             for (Pill pill : pills) {
                 if (pill.getId() == getArguments().getInt(ARG_ITEM_ID))
                     _item = pill;

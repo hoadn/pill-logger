@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
-import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
 import uk.co.cntwo.pilllogger.models.Consumption;
+import uk.co.cntwo.pilllogger.repositories.ConsumptionRepository;
 
 /**
  * Created by alex on 23/10/13.
@@ -22,8 +22,7 @@ public class GetConsumptionsTask extends AsyncTask<Void, Void, List<Consumption>
     }
     @Override
     protected List<Consumption> doInBackground(Void... voids) {
-        DatabaseHelper dBHelper = DatabaseHelper.getSingleton(_context);
-        return dBHelper.getAllConsumptions();
+        return ConsumptionRepository.getSingleton(_context).getAll();
     }
 
     @Override

@@ -19,13 +19,13 @@ import com.haarman.listviewanimations.itemmanipulation.contextualundo.Contextual
 
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.adapters.PillsListAdapter;
-import uk.co.cntwo.pilllogger.helpers.PillHelper;
 import uk.co.cntwo.pilllogger.models.Pill;
 import uk.co.cntwo.pilllogger.tasks.DeletePillTask;
 import uk.co.cntwo.pilllogger.tasks.GetPillsTask;
+import uk.co.cntwo.pilllogger.tasks.InsertPillTask;
 
 
-public class PillListFragment extends Fragment implements GetPillsTask.ITaskComplete, ContextualUndoAdapter.DeleteItemCallback {
+public class PillListFragment extends Fragment implements GetPillsTask.ITaskComplete, ContextualUndoAdapter.DeleteItemCallback, InsertPillTask.ITaskComplete {
     private String TAG = "PillListFragment";
     private ListView _list;
     private Typeface _openSans;
@@ -125,6 +125,18 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
         new DeletePillTask(getActivity(), p).execute();
     }
 
+    @Override
+    public void pillInserted(Pill pill) {
+        new GetPillsTask(getActivity(), this).execute();
+        _addPillName.setText("");
+        _addPillSize.setText("");
+        _addPillSize.clearFocus();
+
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
     private class AddPillClickListener implements View.OnClickListener {
 
         GetPillsTask.ITaskComplete _listener;
@@ -146,16 +158,8 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
         pillName = pillName.substring(0,1).toUpperCase() + pillName.substring(1).toLowerCase();
         newPill.setName(pillName);
         newPill.setSize(Integer.parseInt(_addPillSize.getText().toString()));
-        PillHelper.addPill(getActivity(), newPill);
 
-        new GetPillsTask(getActivity(), this).execute();
-        _addPillName.setText("");
-        _addPillSize.setText("");
-        _addPillSize.clearFocus();
-
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
-                InputMethodManager.HIDE_NOT_ALWAYS);
+        new InsertPillTask(getActivity(), newPill, this).execute();
     }
 
 }

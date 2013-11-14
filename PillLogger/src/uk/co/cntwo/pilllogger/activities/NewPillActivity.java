@@ -1,8 +1,9 @@
 package uk.co.cntwo.pilllogger.activities;
 
 import uk.co.cntwo.pilllogger.R;
-import uk.co.cntwo.pilllogger.helpers.PillHelper;
 import uk.co.cntwo.pilllogger.models.Pill;
+import uk.co.cntwo.pilllogger.tasks.InsertPillTask;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
@@ -34,8 +35,8 @@ public class NewPillActivity extends Activity {
 	    	int size = Integer.parseInt(sizeText.getText().toString());
 	    	pill.setName(name);
 	    	pill.setSize(size);
-	    	
-	    	PillHelper.addPill(getBaseContext(), pill);    
+
+            new InsertPillTask(this, pill).execute();
     	}
     }
     

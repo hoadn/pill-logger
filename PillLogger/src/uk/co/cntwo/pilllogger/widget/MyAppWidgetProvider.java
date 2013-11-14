@@ -13,10 +13,9 @@ import java.util.Date;
 
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.activities.AppWidgetConfigure;
-import uk.co.cntwo.pilllogger.activities.MainActivity;
-import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
 import uk.co.cntwo.pilllogger.models.Consumption;
 import uk.co.cntwo.pilllogger.models.Pill;
+import uk.co.cntwo.pilllogger.repositories.PillRepository;
 import uk.co.cntwo.pilllogger.tasks.InsertConsumptionTask;
 
 /**
@@ -62,7 +61,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             views.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
 
             int pillId = bundle.getInt(AppWidgetConfigure.PILL_ID);
-            Pill pill = DatabaseHelper.getSingleton(context).getPill(pillId);
+            Pill pill = PillRepository.getSingleton(context).get(pillId);
             views.setTextViewText(R.id.widget_size, String.valueOf(pill.getSize() + "mg"));
             views.setInt(R.id.widget_size,"setBackgroundColor", pill.getColour());
             views.setTextViewText(R.id.widget_text, pill.getName().substring(0,1));
@@ -79,7 +78,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         if (intent.getAction().equals(CLICK_ACTION)) {
             Bundle bundle = intent.getExtras();
             int pillId = bundle.getInt(AppWidgetConfigure.PILL_ID);
-            Pill pill = DatabaseHelper.getSingleton(context).getPill(pillId);
+            Pill pill = PillRepository.getSingleton(context).get(pillId);
             if (pill != null) {
                 Consumption consumption = new Consumption(pill, new Date());
                 new InsertConsumptionTask(context, consumption).execute();

@@ -4,19 +4,16 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.Months;
 
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
 import uk.co.cntwo.pilllogger.helpers.DateHelper;
 import uk.co.cntwo.pilllogger.helpers.Logger;
 import uk.co.cntwo.pilllogger.helpers.NumberHelper;
 import uk.co.cntwo.pilllogger.models.Consumption;
 import uk.co.cntwo.pilllogger.models.Pill;
+import uk.co.cntwo.pilllogger.repositories.ConsumptionRepository;
+import uk.co.cntwo.pilllogger.repositories.PillRepository;
 
 /**
  * Created by alex on 23/10/13.
@@ -49,22 +46,23 @@ public class InitTestDbTask extends AsyncTask<Void, Void, Void>{
     }
 
     private void insertPills(){
-        DatabaseHelper dbHelper = DatabaseHelper.getSingleton(_context);
-        List<Pill> pills = dbHelper.getAllPills();
+        PillRepository repository = PillRepository.getSingleton(_context);
+        List<Pill> pills = repository.getAll();
 
         if (pills.size() == 0) { //This will insert 2 pills as test data if your database doesn't have any in
-            dbHelper.insertPill(new Pill("Paracetamol", 500));
-            dbHelper.insertPill(new Pill("Ibuprofen", 200));
-            dbHelper.insertPill(new Pill("Paracetamol Extra", 500));
-            dbHelper.insertPill(new Pill("Ibuprofen", 400));
-            dbHelper.insertPill(new Pill("Asprin", 300));
+            repository.insert(new Pill("Paracetamol", 500));
+            repository.insert(new Pill("Ibuprofen", 200));
+            repository.insert(new Pill("Paracetamol Extra", 500));
+            repository.insert(new Pill("Ibuprofen", 400));
+            repository.insert(new Pill("Asprin", 300));
         }
     }
 
     private void insertConsumptions(){
-        DatabaseHelper dbHelper = DatabaseHelper.getSingleton(_context);
-        List<Consumption> consumptions = dbHelper.getAllConsumptions();
-        List<Pill> pills = dbHelper.getAllPills();
+        ConsumptionRepository consumptionRepository = ConsumptionRepository.getSingleton(_context);
+        PillRepository pillRepository = PillRepository.getSingleton(_context);
+        List<Consumption> consumptions = consumptionRepository.getAll();
+        List<Pill> pills = pillRepository.getAll();
 
         if (consumptions.size() == 0) { //This will insert some consumptions as test data if your data doesn't have any in
             for (int i = 0; i < 60; i ++) { //I am only doing this to see what a list of consumption would look like
@@ -79,7 +77,7 @@ public class InitTestDbTask extends AsyncTask<Void, Void, Void>{
 
                 Consumption consumption = new Consumption(pill, consumptionDate.toDate());
 
-                dbHelper.insertConsumption(consumption);
+                consumptionRepository.insert(consumption);
             }
         }
     }

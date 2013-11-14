@@ -1,14 +1,8 @@
 package uk.co.cntwo.pilllogger.activities;
 
-import java.util.List;
-import java.util.UUID;
-
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.fragments.PillDetailFragment;
 import uk.co.cntwo.pilllogger.fragments.PillListFragment;
-import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
-import uk.co.cntwo.pilllogger.helpers.Logger;
-import uk.co.cntwo.pilllogger.models.Pill;
 
 import android.content.Intent;
 import android.os.Bundle;

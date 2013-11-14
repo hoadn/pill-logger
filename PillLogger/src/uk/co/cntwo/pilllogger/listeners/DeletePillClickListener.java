@@ -3,7 +3,6 @@ package uk.co.cntwo.pilllogger.listeners;
 import android.app.Activity;
 import android.view.View;
 
-import uk.co.cntwo.pilllogger.helpers.DatabaseHelper;
 import uk.co.cntwo.pilllogger.models.Pill;
 import uk.co.cntwo.pilllogger.tasks.DeletePillTask;
 
