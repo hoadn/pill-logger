@@ -18,6 +18,7 @@ import java.util.List;
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.adapters.PillsListAdapter;
 import uk.co.cntwo.pilllogger.adapters.PillsListBaseAdapter;
+import uk.co.cntwo.pilllogger.adapters.WidgetListAdapter;
 import uk.co.cntwo.pilllogger.animations.HeightAnimation;
 import uk.co.cntwo.pilllogger.helpers.LayoutHelper;
 import uk.co.cntwo.pilllogger.listeners.WidgetPillsClickListener;
@@ -74,7 +75,7 @@ public class AppWidgetConfigure extends Activity implements GetPillsTask.ITaskCo
     public void pillsReceived(List<Pill> pills) {
         ListView pillsList = (ListView) findViewById(R.id.widget_configure_pill_list);
         if (pillsList != null) {
-            PillsListBaseAdapter adapter = new PillsListBaseAdapter(this, R.layout.pill_list_item, pills);
+            WidgetListAdapter adapter = new WidgetListAdapter(this, R.layout.pill_list_item, pills);
             pillsList.setAdapter(adapter);
             pillsList.setOnItemClickListener(new WidgetPillsClickListener(this));
         }
@@ -114,7 +115,6 @@ public class AppWidgetConfigure extends Activity implements GetPillsTask.ITaskCo
             _newIntent.setAction(CLICK_ACTION);
             Bundle bundle = _newIntent.getExtras();
             int pillId = bundle.getInt(AppWidgetConfigure.PILL_ID);
-            Toast.makeText(_context, "Id = " + pillId, Toast.LENGTH_SHORT).show();
             //Create a pending intent from our intent
             PendingIntent pendingIntent = PendingIntent.getBroadcast(_context, 0, _newIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
