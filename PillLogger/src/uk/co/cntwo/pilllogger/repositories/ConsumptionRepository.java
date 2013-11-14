@@ -168,7 +168,9 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                 groupedDate = new DateTime(groupedConsumption.get_date()).withSecondOfMinute(0);
             }
             DateTime cDate = new DateTime(c.get_date()).withSecondOfMinute(0);
-            if(groupedConsumption == null || groupedDate.getMillis() != cDate.getMillis())
+            if(groupedConsumption == null
+                    || groupedDate.getMillis() != cDate.getMillis()
+                    || groupedConsumption.get_pill_id() != c.get_pill_id())
             {
                 if(groupedConsumption != null)
                     grouped.add(groupedConsumption);
