@@ -96,8 +96,9 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
         AddConsumptionPillListAdapter adapter = (AddConsumptionPillListAdapter) _pillsList.getAdapter();
         List<Pill> consumptionPills = adapter.getPillsConsumed();
 
+        Date date = new Date();
         for (Pill pill : consumptionPills) {
-            Consumption consumption = new Consumption(pill, new Date());
+            Consumption consumption = new Consumption(pill, date);
             new InsertConsumptionTask(this, consumption).execute();
         }
         finish();
