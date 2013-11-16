@@ -1,35 +1,47 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget_layout_container"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@android:color/transparent"
+    >
+  <RelativeLayout
     android:id="@+id/widget_layout"
-    android:layout_width="75dp"
-    android:layout_height="100dp"
-    android:orientation="horizontal"
-    android:background="@drawable/widget_background"
+    android:layout_width="70dp"
+    android:layout_height="70dp"
+    android:orientation="vertical"
+    android:paddingTop="3dp"
+    android:paddingLeft="3dp"
+    android:paddingRight="3dp"
+    android:paddingBottom="3dp"
+    android:background="@drawable/container_dropshadow"
     >
 
     <TextView
         android:id="@+id/widget_text"
-        android:layout_width="75dp"
-        android:layout_height="100dp"
-        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:textColor="@color/text_grey"
-        android:textSize="50dp"
-        android:gravity="center"
+        android:textSize="11dp"
+        android:gravity="top"
         android:clickable="true"
-        android:text="P"
+        android:text="Paracetamol"
         android:background="?android:attr/selectableItemBackground"/>
+      <TextView
+      android:id="@+id/widget_size"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="3dp"
+      android:textColor="@color/text_grey"
+      android:layout_below="@id/widget_text"
+      android:layout_alignParentRight="true"
+      android:textSize="10dp"
+      android:gravity="right"
+      android:clickable="true"
+      android:text="200mg"/>
 
-    <TextView
-        android:id="@+id/widget_size"
-        android:layout_width="40dp"
-        android:layout_height="15dp"
-        android:textColor="@color/text_grey"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="72dp"
-        android:textSize="10dp"
-        android:gravity="center"
-        android:clickable="true"
-        android:text="200mg"
-        android:background="#00FF00"/>
 
     <TextView
         android:id="@+id/widget_pill_id"
@@ -38,3 +50,5 @@
         android:visibility="gone"/>
 
 </RelativeLayout>
+
+    </FrameLayout>
