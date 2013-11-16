@@ -24,6 +24,7 @@ import uk.co.cntwo.pilllogger.tasks.InsertConsumptionTask;
 public class MyAppWidgetProvider extends AppWidgetProvider {
 
     public static String CLICK_ACTION = "ClickAction";
+    public RemoteViews _views;
 
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         final int N = appWidgetIds.length;
@@ -46,27 +47,6 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 //            // Tell the AppWidgetManager to perform an update on the current app widget
 //            appWidgetManager.updateAppWidget(appWidgetId, views);
 
-
-            Intent intent = new Intent(context, MyAppWidgetProvider.class);
-            intent.setAction(CLICK_ACTION);
-            Bundle bundle = intent.getExtras();
-            //Create a pending intent from our intent
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            appWidgetManager = AppWidgetManager.getInstance(context);
-
-            RemoteViews views = new RemoteViews(context.getPackageName(),
-                    R.layout.appwidget);
-
-            views.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
-
-            int pillId = bundle.getInt(AppWidgetConfigure.PILL_ID);
-            Pill pill = PillRepository.getSingleton(context).get(pillId);
-            views.setTextViewText(R.id.widget_size, String.valueOf(pill.getSize() + "mg"));
-            views.setInt(R.id.widget_size,"setBackgroundColor", pill.getColour());
-            views.setTextViewText(R.id.widget_text, pill.getName().substring(0,1));
-            appWidgetManager.updateAppWidget(appWidgetId, views);
-
         }
     }
 
@@ -85,7 +65,38 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             }
             Toast.makeText(context, pill.getName() + " added", Toast.LENGTH_SHORT).show();
         }
+        else {
+            Toast.makeText(context,"Testing", Toast.LENGTH_LONG).show();
+            intent.setAction(CLICK_ACTION);
+            Bundle bundle = intent.getExtras();
+            //Create a pending intent from our intent
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+            if (_views == null)
+                _views = new RemoteViews(context.getPackageName(),
+                        R.layout.appwidget);
+
+            _views.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
+
+            int pillId = bundle.getInt(AppWidgetConfigure.PILL_ID);
+            Pill pill = PillRepository.getSingleton(context).get(pillId);
+            if (pill != null) {
+                _views.setTextViewText(R.id.widget_size, String.valueOf(pill.getSize() + "mg"));
+                _views.setInt(R.id.widget_size,"setBackgroundColor", pill.getColour());
+                _views.setTextViewText(R.id.widget_text, pill.getName().substring(0,1));
+            }
+            AppWidgetManager.getInstance(context).updateAppWidget(intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS), _views);
+        }
+
+
+    }
+
+    @Override
+    public void onEnabled(Context context){
+
+    }
+
+    private void setUpWidget(Context context) {
 
     }
 }
