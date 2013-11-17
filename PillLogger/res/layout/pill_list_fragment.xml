@@ -35,7 +35,9 @@
             android:textSize="22sp"
             android:layout_below="@id/pill_fragment_add_pill_title"
             android:hint="Name"
-            android:background="@null"/>
+            android:background="@null"
+            android:inputType="textCapWords"
+            android:imeOptions="actionNext"/>
 
         <View
             android:id="@+id/pill_fragment_add_pill_divider"
@@ -60,7 +62,8 @@
                 android:textSize="22sp"
                 android:hint="Size"
                 android:inputType="number"
-                android:background="@null"/>
+                android:background="@null"
+                android:imeOptions="actionDone"/>
 
             <ImageView
                 android:id="@+id/pill_fragment_add_pill_completed"

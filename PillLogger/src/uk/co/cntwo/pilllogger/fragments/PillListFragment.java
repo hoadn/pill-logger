@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -80,6 +81,17 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
                     }
                 }
                 return false;
+            }
+        });
+        _addPillSize.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    completed();
+                    handled = true;
+                }
+                return handled;
             }
         });
         return v;
@@ -155,7 +167,6 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
     public void completed() {
         Pill newPill = new Pill();
         String pillName = _addPillName.getText().toString();
-        pillName = pillName.substring(0,1).toUpperCase() + pillName.substring(1).toLowerCase();
         newPill.setName(pillName);
         newPill.setSize(Integer.parseInt(_addPillSize.getText().toString()));
 
