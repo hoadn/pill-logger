@@ -25,5 +25,8 @@
     <string name="favourite">Favourite</string>
     <string name="unfavourite">Unfavourite</string>
     <string name="delete">Delete</string>
+    <string name="create_a_pill_title">Create Pill</string>
+    <string name="create_a_pill_name_hint">Name</string>
+    <string name="create_a_pill_size_hint">Size</string>
 
 </resources>
