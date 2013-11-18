@@ -1,16 +1,22 @@
 package uk.co.cntwo.pilllogger.activities;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +35,7 @@ import uk.co.cntwo.pilllogger.tasks.InsertPillTask;
 /**
  * Created by nick on 24/10/13.
  */
-public class AddConsumptionActivity extends Activity implements GetPillsTask.ITaskComplete, InsertPillTask.ITaskComplete {
+public class AddConsumptionActivity extends Activity implements GetPillsTask.ITaskComplete, InsertPillTask.ITaskComplete, DatePickerDialog.OnDateSetListener {
 
     private static final String TAG = "AddConsumptionActivity";
     ListView _pillsList;
@@ -40,6 +46,8 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
     AddConsumptionPillListAdapter _adapter;
     View _selectPillLayout;
     View _newPillLayout;
+    String[] _dates;
+    android.text.format.DateFormat _df;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +85,29 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
 
         ImageView addPillCompleted = (ImageView) findViewById(R.id.add_consumption_add_pill_completed);
         addPillCompleted.setOnClickListener(new addNewPillClickListener());
+
+        Spinner spinner = (Spinner) findViewById(R.id.add_consumption_date);
+        Date date = new Date();
+        _df = new android.text.format.DateFormat();
+        String dateString = _df.format("E, MMM dd, yyyy", date).toString();
+        _dates = new String[]{ dateString };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, _dates );
+        spinner.setAdapter(adapter);
+        View datePickerContainer = this.findViewById(R.id.add_consumption_date_container);
+        datePickerContainer.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Date date = new Date();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(date);
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+                DatePickerDialog dateDialog = new DatePickerDialog(AddConsumptionActivity.this, (DatePickerDialog.OnDateSetListener) AddConsumptionActivity.this, year, month, day);
+                dateDialog.show();
+            }
+        });
     }
 
     @Override
@@ -114,6 +145,20 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
             State.getSingleton().addOpenPill(pill);
             _adapter.addConsumedPill(pill);
         }
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int i, int i2, int i3) {
+        Spinner spinner = (Spinner) findViewById(R.id.add_consumption_date);
+        Date date = null;
+        Calendar cal = Calendar.getInstance();
+        cal.set(i, i2, i3);
+        date = cal.getTime();
+        _df = new android.text.format.DateFormat();
+        String dateString = _df.format("E, MMM dd, yyyy", date).toString();
+        _dates = new String[]{ dateString };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, _dates );
+        spinner.setAdapter(adapter);
     }
 
     private class addNewPillClickListener implements View.OnClickListener {
