@@ -13,9 +13,13 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.echo.holographlibrary.Bar;
+import com.echo.holographlibrary.BarGraph;
 import com.echo.holographlibrary.Line;
 import com.echo.holographlibrary.LineGraph;
 import com.echo.holographlibrary.LinePoint;
+import com.echo.holographlibrary.PieGraph;
+import com.echo.holographlibrary.PieSlice;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -122,14 +126,23 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
             Days totalDays = Days.daysBetween(aMonthAgo.withTimeAtStartOfDay(), new DateTime().plusDays(1).withTimeAtStartOfDay());
             int dayCount = totalDays.getDays();
 
-            plotLineGraph(xPoints, dayCount, R.id.main_graph);
+            View view = _mainLayout.findViewById(R.id.main_graph);
+
+            if(view instanceof LineGraph)
+                plotLineGraph(xPoints, dayCount, (LineGraph)view);
+
+            if(view instanceof BarGraph)
+                plotBarGraph(xPoints, dayCount, (BarGraph)view);
+
+            if(view instanceof PieGraph)
+                plotPieChart(xPoints, dayCount, (PieGraph)view);
         }
     }
 
-    private void plotLineGraph(HashMap<Integer, SparseIntArray> consumptionData, int days, int graphId){
+    private void plotLineGraph(HashMap<Integer, SparseIntArray> consumptionData, int days, LineGraph li){
 
-        LineGraph li = (LineGraph)_mainLayout.findViewById(graphId);
-
+        li.removeAllLines();
+        
         for(int pillId : consumptionData.keySet()){
             Line line = new Line();
             Pill p = _allPills.get(pillId);
@@ -138,10 +151,15 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
             for(int i = 0; i <= days; i++){
                 LinePoint linePoint = new LinePoint();
                 linePoint.setX(i);
-                if(points.indexOfKey(i) > 0)
-                    linePoint.setY(points.get(i));
-                else
-                    linePoint.setY(0);
+                int value = 0;
+                if(points.indexOfKey(i) >= 0)
+                    value = points.get(i);
+
+                for (Line line1 : li.getLines()) {
+                    value += line1.getPoint(i).getY();
+                }
+
+                linePoint.setY(value);
 
                 line.addPoint(linePoint);
             }
@@ -151,6 +169,54 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
 
         double maxY = li.getMaxY();
         li.setRangeY(0, (float)(maxY * 1.05));
+    }
+
+    private void plotBarGraph(HashMap<Integer, SparseIntArray> consumptionData, int days, BarGraph g){
+
+        ArrayList<Bar> bars = new ArrayList<Bar>();
+
+        for(int i = 0; i <= days; i++){
+            for(int pillId : consumptionData.keySet()){
+                SparseIntArray points = consumptionData.get(pillId);
+
+                int value = 0;
+                if(points.indexOfKey(i) >= 0)
+                    value = points.get(i);
+
+                Bar b = new Bar();
+                Pill p = _allPills.get(pillId);
+                b.setColor(p.getColour());
+                b.setValue(value);
+                b.setName("");
+                bars.add(b);
+            }
+        }
+        g.setShowBarText(false);
+        g.setBars(bars);
+    }
+
+    private void plotPieChart(HashMap<Integer, SparseIntArray> consumptionData, int days, PieGraph pie){
+
+        pie.getSlices().clear();
+        for(int pillId : consumptionData.keySet()){
+            Line line = new Line();
+            Pill p = _allPills.get(pillId);
+            line.setColor(p.getColour());
+            SparseIntArray points = consumptionData.get(pillId);
+            int sliceValue = 0;
+            for(int i = 0; i <= days; i++){
+                int value = 0;
+                if(points.indexOfKey(i) >= 0)
+                    value = points.get(i);
+
+                sliceValue += value;
+            }
+
+            PieSlice ps = new PieSlice();
+            ps.setValue(sliceValue);
+            ps.setColor(p.getColour());
+            pie.addSlice(ps);
+        }
     }
 
     @Override
