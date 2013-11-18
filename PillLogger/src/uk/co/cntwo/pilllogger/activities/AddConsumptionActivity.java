@@ -16,7 +16,9 @@ import java.util.List;
 
 import uk.co.cntwo.pilllogger.R;
 import uk.co.cntwo.pilllogger.adapters.AddConsumptionPillListAdapter;
+import uk.co.cntwo.pilllogger.helpers.Logger;
 import uk.co.cntwo.pilllogger.listeners.AddConsumptionPillItemClickListener;
+import uk.co.cntwo.pilllogger.listeners.PillItemClickListener;
 import uk.co.cntwo.pilllogger.models.Consumption;
 import uk.co.cntwo.pilllogger.models.Pill;
 import uk.co.cntwo.pilllogger.state.State;
@@ -29,6 +31,7 @@ import uk.co.cntwo.pilllogger.tasks.InsertPillTask;
  */
 public class AddConsumptionActivity extends Activity implements GetPillsTask.ITaskComplete, InsertPillTask.ITaskComplete {
 
+    private static final String TAG = "AddConsumptionActivity";
     ListView _pillsList;
     Activity _activity;
     Typeface _openSans;

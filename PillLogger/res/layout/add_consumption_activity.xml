@@ -130,7 +130,6 @@
             android:layout_height="150dp"
             android:layout_width="match_parent"
             android:listSelector="@drawable/grey_selector"
-            tools:listitem="@layout/add_consumption_pill_list"
             android:visibility="visible"/>
 
         <RelativeLayout

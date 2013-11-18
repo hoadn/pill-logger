@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -35,13 +34,13 @@ public class
     private List<Pill> _consumptionPills = new ArrayList<Pill>();
     private Activity _activity;
     private Typeface _openSans;
-    private int _resouceId;
+    private int _resourceId;
 
     public AddConsumptionPillListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
         super(activity, textViewResourceId, pills);
         _activity = activity;
         _pills = pills;
-        _resouceId = textViewResourceId;
+        _resourceId = textViewResourceId;
         _openSans = Typeface.createFromAsset(activity.getAssets(), "fonts/OpenSans-Light.ttf");
     }
 
@@ -60,7 +59,7 @@ public class
         ViewHolder holder;
         if (v == null) {
             LayoutInflater inflater = (LayoutInflater)_activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(_resouceId, null);
+            v = inflater.inflate(_resourceId, null);
             holder = new ViewHolder();
             holder.name = (TextView) v.findViewById(R.id.pill_list_name);
             holder.size = (TextView) v.findViewById(R.id.pill_list_size);
