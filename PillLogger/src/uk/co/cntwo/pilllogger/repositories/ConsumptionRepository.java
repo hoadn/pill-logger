@@ -134,7 +134,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
         String[] projection = getProjection();
 
-        String sortOrder = DatabaseContract.Consumptions._ID + " DESC";
+        String sortOrder = DatabaseContract.Consumptions.COLUMN_DATE_TIME + " DESC";
         List<Consumption> consumptions = new ArrayList<Consumption>();
         if (db != null) {
             Cursor c = db.query(
