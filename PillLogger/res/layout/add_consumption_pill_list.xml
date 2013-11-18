@@ -62,23 +62,37 @@
 
     </LinearLayout>
 
-
-    <TextView
-        android:id="@+id/pill_list_units"
-        android:textSize="12dp"
-        android:layout_alignBaseline="@id/pill_list_name"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/add_consumption_right_info"
+        android:layout_width="90dp"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/add_consumption_after_click_layout"
-        android:text="@string/pill_units"/>
-    <TextView android:textSize="14dp"
-        android:id="@+id/pill_list_size"
-        android:layout_alignBaseline="@id/pill_list_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/pill_list_units"
-        tools:text="200"/>
+        android:layout_toLeftOf="@id/add_consumption_after_click_layout">
+        <uk.co.cntwo.pilllogger.views.ColourIndicator
+            android:id="@+id/add_consumption_pill_colour"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="8dp"
+            android:layout_marginLeft="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:color="@color/pill_colour1"
+            />
+        <TextView
+            android:id="@+id/pill_list_units"
+            android:textSize="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/add_consumption_pill_colour"
+            android:text="@string/pill_units"/>
+        <TextView android:textSize="14dp"
+            android:id="@+id/pill_list_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/pill_list_units"
+            tools:text="200"/>
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -22,6 +22,7 @@ import uk.co.cntwo.pilllogger.helpers.LayoutHelper;
 import uk.co.cntwo.pilllogger.helpers.Logger;
 import uk.co.cntwo.pilllogger.models.Pill;
 import uk.co.cntwo.pilllogger.state.State;
+import uk.co.cntwo.pilllogger.views.ColourIndicator;
 
 
 /**
@@ -51,6 +52,7 @@ public class
         public View buttonLayout;
         public View container;
         public TextView amount;
+        public ColourIndicator color;
     }
 
     @Override
@@ -64,6 +66,7 @@ public class
             holder.name = (TextView) v.findViewById(R.id.pill_list_name);
             holder.size = (TextView) v.findViewById(R.id.pill_list_size);
             holder.units = (TextView) v.findViewById(R.id.pill_list_units);
+            holder.color = (ColourIndicator) v.findViewById(R.id.add_consumption_pill_colour);
             holder.name.setTypeface(_openSans);
             holder.size.setTypeface(_openSans);
             holder.units.setTypeface(_openSans);
@@ -79,6 +82,7 @@ public class
         if (pill != null) {
             holder.name.setText(pill.getName());
             holder.size.setText(String.valueOf(pill.getSize()));
+            holder.color.setColour(pill.getColour());
             Map<Pill, Integer> openPills = State.getSingleton().getOpenPillsList();
             if (State.getSingleton().getOpenPillsList().containsKey(pill)) {
                 v = open(v);

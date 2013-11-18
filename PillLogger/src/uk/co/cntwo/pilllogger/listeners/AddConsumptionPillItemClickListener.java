@@ -52,6 +52,8 @@ public class AddConsumptionPillItemClickListener implements ListView.OnItemClick
         }
 
         view.setBackgroundColor(_activity.getResources().getColor(color));
+        View rightLayout = view.findViewById(R.id.add_consumption_right_info);
+        rightLayout.setBackgroundColor(_activity.getResources().getColor(color));
         animation.setDuration(150);
         addButtonLayout.startAnimation(animation);
     }
