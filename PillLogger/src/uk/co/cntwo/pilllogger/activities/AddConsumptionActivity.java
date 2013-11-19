@@ -195,10 +195,8 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
                 date = format.parse(selectedDate + selectedTime);
                 System.out.println(date);
             } catch (ParseException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            Toast.makeText(this, "Date: " + selectedDate + " Time: " + selectedTime, Toast.LENGTH_LONG).show();
         }
         for (Pill pill : consumptionPills) {
             Consumption consumption = new Consumption(pill, date);
