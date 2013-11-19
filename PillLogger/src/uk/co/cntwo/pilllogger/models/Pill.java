@@ -6,6 +6,8 @@ package uk.co.cntwo.pilllogger.models;
 import java.io.Serializable;
 import java.util.UUID;
 
+import uk.co.cntwo.pilllogger.R;
+
 /**
  * @author alex
  *
@@ -18,7 +20,7 @@ public class Pill implements Serializable {
 	private int _id;
 	private String _name = "";
 	private int _size;
-    private int _colour;
+    private int _colour = R.color.pill_default_color;
     private boolean _favourite = false;
 
     public Pill() {
