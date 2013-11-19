@@ -32,3 +32,4 @@ proguard/
 
 # Gradle generated files
 build/
+.gradle/
