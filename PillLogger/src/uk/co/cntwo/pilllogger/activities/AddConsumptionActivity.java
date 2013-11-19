@@ -6,8 +6,10 @@ import android.app.TimePickerDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -77,6 +79,34 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
         _dateSpinner = (Spinner) findViewById(R.id.add_consumption_date);
         _timeSpinner = (Spinner) findViewById(R.id.add_consumption_time);
 
+
+
+        _openSans = Typeface.createFromAsset(this.getAssets(), "fonts/OpenSans-Light.ttf");
+        _newPillName = (TextView) findViewById(R.id.add_consumption_add_pill_name);
+        _newPillSize = (TextView) findViewById(R.id.add_consumption_add_pill_size);
+        _newPillName.setTypeface(_openSans);
+        _newPillSize.setTypeface(_openSans);
+
+        ImageView addPillCompleted = (ImageView) findViewById(R.id.add_consumption_add_pill_completed);
+        addPillCompleted.setOnClickListener(new addNewPillClickListener());
+
+        _newPillSize.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    completed();
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+
+        setUpRadioGroups();
+        setUpSpinners();
+    }
+
+    private void setUpRadioGroups() {
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.add_consumption_pill_type_selection);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {
@@ -105,17 +135,6 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
                 }
             }
         });
-
-        _openSans = Typeface.createFromAsset(this.getAssets(), "fonts/OpenSans-Light.ttf");
-        _newPillName = (TextView) findViewById(R.id.add_consumption_add_pill_name);
-        _newPillSize = (TextView) findViewById(R.id.add_consumption_add_pill_size);
-        _newPillName.setTypeface(_openSans);
-        _newPillSize.setTypeface(_openSans);
-
-        ImageView addPillCompleted = (ImageView) findViewById(R.id.add_consumption_add_pill_completed);
-        addPillCompleted.setOnClickListener(new addNewPillClickListener());
-
-        setUpSpinners();
     }
 
     private void setUpSpinners() {
@@ -237,19 +256,23 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
 
         @Override
         public void onClick(View view) {
-            String name = _newPillName.getText().toString();
-            int size = Integer.parseInt(_newPillSize.getText().toString());
-            Pill pill = new Pill(name, size);
-            new InsertPillTask(_activity, pill, (InsertPillTask.ITaskComplete)_activity).execute();
-
-            _newPillName.setText("");
-            _newPillSize.setText("");
-
-            _newPillLayout.setVisibility(View.GONE);
-            _selectPillLayout.setVisibility(View.VISIBLE);
-
-            RadioButton selectPill = (RadioButton) findViewById(R.id.add_consumption_select_select_pill);
-            selectPill.setChecked(true);
+            completed();
         }
+    }
+
+    public void completed() {
+        String name = _newPillName.getText().toString();
+        int size = Integer.parseInt(_newPillSize.getText().toString());
+        Pill pill = new Pill(name, size);
+        new InsertPillTask(_activity, pill, (InsertPillTask.ITaskComplete)_activity).execute();
+
+        _newPillName.setText("");
+        _newPillSize.setText("");
+
+        _newPillLayout.setVisibility(View.GONE);
+        _selectPillLayout.setVisibility(View.VISIBLE);
+
+        RadioButton selectPill = (RadioButton) findViewById(R.id.add_consumption_select_select_pill);
+        selectPill.setChecked(true);
     }
 }
