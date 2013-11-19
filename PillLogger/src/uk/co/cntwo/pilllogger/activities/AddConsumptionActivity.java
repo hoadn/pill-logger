@@ -18,7 +18,10 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -183,6 +186,20 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
         List<Pill> consumptionPills = adapter.getPillsConsumed();
 
         Date date = new Date();
+        RadioButton dateSelectorNow = (RadioButton) findViewById(R.id.add_consumption_select_select_now);
+        if (!dateSelectorNow.isChecked()) {
+            String selectedDate = _dateSpinner.getSelectedItem().toString();
+            String selectedTime = _timeSpinner.getSelectedItem().toString();
+            SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT + TIME_FORMAT);
+            try {
+                date = format.parse(selectedDate + selectedTime);
+                System.out.println(date);
+            } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            Toast.makeText(this, "Date: " + selectedDate + " Time: " + selectedTime, Toast.LENGTH_LONG).show();
+        }
         for (Pill pill : consumptionPills) {
             Consumption consumption = new Consumption(pill, date);
             new InsertConsumptionTask(this, consumption).execute();
