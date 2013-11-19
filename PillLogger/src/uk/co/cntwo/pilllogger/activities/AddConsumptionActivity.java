@@ -2,8 +2,10 @@ package uk.co.cntwo.pilllogger.activities;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -15,6 +17,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -35,7 +38,8 @@ import uk.co.cntwo.pilllogger.tasks.InsertPillTask;
 /**
  * Created by nick on 24/10/13.
  */
-public class AddConsumptionActivity extends Activity implements GetPillsTask.ITaskComplete, InsertPillTask.ITaskComplete, DatePickerDialog.OnDateSetListener {
+public class AddConsumptionActivity extends Activity implements GetPillsTask.ITaskComplete, InsertPillTask.ITaskComplete,
+                                                            DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     private static final String TAG = "AddConsumptionActivity";
     ListView _pillsList;
@@ -47,7 +51,12 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
     View _selectPillLayout;
     View _newPillLayout;
     String[] _dates;
+    String[] _times;
     android.text.format.DateFormat _df;
+    public static String DATE_FORMAT = "E, MMM dd, yyyy";
+    public static String TIME_FORMAT = "kk:mm";
+    Spinner _timeSpinner;
+    Spinner _dateSpinner;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +70,9 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
         _activity = this;
         _selectPillLayout = _activity.findViewById(R.id.add_consumption_pill_list);
         _newPillLayout = _activity.findViewById(R.id.add_consumption_quick_create);
+
+        _dateSpinner = (Spinner) findViewById(R.id.add_consumption_date);
+        _timeSpinner = (Spinner) findViewById(R.id.add_consumption_time);
 
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.add_consumption_pill_type_selection);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
@@ -77,6 +89,20 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
             }
         });
 
+        RadioGroup dateRadioGroup = (RadioGroup) findViewById(R.id.add_consumption_time_type_selection);
+        dateRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                View datePickers = findViewById(R.id.add_consumption_date_pickers_layout);
+                if (checkedId == R.id.add_consumption_select_select_now) {
+                    datePickers.setVisibility(View.GONE);
+                }
+                else {
+                    datePickers.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         _openSans = Typeface.createFromAsset(this.getAssets(), "fonts/OpenSans-Light.ttf");
         _newPillName = (TextView) findViewById(R.id.add_consumption_add_pill_name);
         _newPillSize = (TextView) findViewById(R.id.add_consumption_add_pill_size);
@@ -86,26 +112,52 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
         ImageView addPillCompleted = (ImageView) findViewById(R.id.add_consumption_add_pill_completed);
         addPillCompleted.setOnClickListener(new addNewPillClickListener());
 
-        Spinner spinner = (Spinner) findViewById(R.id.add_consumption_date);
+        setUpSpinners();
+    }
+
+    private void setUpSpinners() {
         Date date = new Date();
         _df = new android.text.format.DateFormat();
-        String dateString = _df.format("E, MMM dd, yyyy", date).toString();
+        String dateString = _df.format(DATE_FORMAT, date).toString();
         _dates = new String[]{ dateString };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, _dates );
-        spinner.setAdapter(adapter);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, _dates );
+        _dateSpinner.setAdapter(adapter);
         View datePickerContainer = this.findViewById(R.id.add_consumption_date_container);
         datePickerContainer.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                Date date = new Date();
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(date);
-                int year = cal.get(Calendar.YEAR);
-                int month = cal.get(Calendar.MONTH);
-                int day = cal.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog dateDialog = new DatePickerDialog(AddConsumptionActivity.this, (DatePickerDialog.OnDateSetListener) AddConsumptionActivity.this, year, month, day);
-                dateDialog.show();
+                if (_dateSpinner.isEnabled()) {
+                    Date date = new Date();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(date);
+                    int year = cal.get(Calendar.YEAR);
+                    int month = cal.get(Calendar.MONTH);
+                    int day = cal.get(Calendar.DAY_OF_MONTH);
+                    DatePickerDialog dateDialog = new DatePickerDialog(AddConsumptionActivity.this, (DatePickerDialog.OnDateSetListener) AddConsumptionActivity.this, year, month, day);
+                    dateDialog.show();
+                }
+            }
+        });
+
+        String time = _df.format(TIME_FORMAT, date.getTime()).toString();
+        _times = new String[] { time };
+        ArrayAdapter<String> timeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, _times );
+        _timeSpinner.setAdapter(timeAdapter);
+        View timePickerContainer = this.findViewById(R.id.add_consumption_time_container);
+        timePickerContainer.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                if (_timeSpinner.isEnabled()) {
+                    Date date = new Date();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(date);
+                    int hour = cal.get(Calendar.HOUR_OF_DAY);
+                    int minute = cal.get(Calendar.MINUTE);
+                    TimePickerDialog timeDialog = new TimePickerDialog(AddConsumptionActivity.this, (TimePickerDialog.OnTimeSetListener) AddConsumptionActivity.this, hour, minute, true);
+                    timeDialog.show();
+                }
             }
         });
     }
@@ -148,17 +200,22 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
     }
 
     @Override
-    public void onDateSet(DatePicker datePicker, int i, int i2, int i3) {
-        Spinner spinner = (Spinner) findViewById(R.id.add_consumption_date);
-        Date date = null;
+    public void onDateSet(DatePicker datePicker, int i, int i2, int i3) {;
         Calendar cal = Calendar.getInstance();
         cal.set(i, i2, i3);
-        date = cal.getTime();
+        Date date = cal.getTime();
         _df = new android.text.format.DateFormat();
-        String dateString = _df.format("E, MMM dd, yyyy", date).toString();
+        String dateString = _df.format(DATE_FORMAT, date).toString();
         _dates = new String[]{ dateString };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, _dates );
-        spinner.setAdapter(adapter);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, _dates );
+        _dateSpinner.setAdapter(adapter);
+    }
+
+    @Override
+    public void onTimeSet(TimePicker timePicker, int i, int i2) {
+        _times = new String[]{ String.valueOf(i) + ":" + String.valueOf(i2) };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, _times );
+        _timeSpinner.setAdapter(adapter);
     }
 
     private class addNewPillClickListener implements View.OnClickListener {
