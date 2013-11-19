@@ -154,6 +154,8 @@
                 android:paddingBottom="5dp"
                 android:textSize="22sp"
                 android:hint="Name"
+                android:inputType="textCapWords"
+                android:imeOptions="actionNext"
                 android:background="@null"/>
 
             <View
@@ -179,7 +181,8 @@
                     android:textSize="22sp"
                     android:hint="Size"
                     android:inputType="number"
-                    android:background="@null"/>
+                    android:background="@null"
+                    android:imeOptions="actionDone"/>
 
                 <ImageView
                     android:id="@+id/add_consumption_add_pill_completed"

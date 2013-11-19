@@ -168,7 +168,11 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
         Pill newPill = new Pill();
         String pillName = _addPillName.getText().toString();
         newPill.setName(pillName);
-        newPill.setSize(Integer.parseInt(_addPillSize.getText().toString()));
+        int pillSize = 0;
+        if (!_addPillSize.getText().toString().matches("")) {
+            pillSize = Integer.parseInt(_addPillSize.getText().toString());
+        }
+        newPill.setSize(pillSize);
 
         new InsertPillTask(getActivity(), newPill, this).execute();
     }
