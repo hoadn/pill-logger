@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PillLogger/ext/HoloGraphLibrary/HoloGraphLibrary.iml" filepath="$PROJECT_DIR$/PillLogger/ext/HoloGraphLibrary/HoloGraphLibrary.iml" />
-      <module fileurl="file://$PROJECT_DIR$/PillLogger/ext/HoloGraphLibrary/HoloGraphLibrary.iml" filepath="$PROJECT_DIR$/PillLogger/ext/HoloGraphLibrary/HoloGraphLibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/PillLogger/PillLogger.iml" filepath="$PROJECT_DIR$/PillLogger/PillLogger.iml" />
     </modules>
   </component>
