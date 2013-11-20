@@ -1,2 +1,2 @@
-include ':Pill Logger'
+include ':app'
 include ':libraries:HoloGraphLibrary'
