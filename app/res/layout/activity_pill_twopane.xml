@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/pill_list"
-        android:name="uk.co.pilllogger.PillListFragment"
+        android:name="uk.co.pilllogger.fragments.PillListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

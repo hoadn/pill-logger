@@ -22,7 +22,7 @@ android {
     }
     buildTypes {
         release {
-            runProguard true
+            runProguard false
             proguardFile getDefaultProguardFile('proguard-android-optimize.txt')
         }
     }
@@ -38,8 +38,6 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
-
-        instrumentTest.setRoot('tests')
     }
 }
 
