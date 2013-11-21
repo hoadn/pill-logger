@@ -242,7 +242,13 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
 
     @Override
     public void onTimeSet(TimePicker timePicker, int i, int i2) {
-        _times = new String[]{ String.valueOf(i) + ":" + String.valueOf(i2) };
+        String hours = String.valueOf(i);
+        if (i < 10)
+            hours = "0" + hours;
+        String minutes = String.valueOf(i2);
+        if (i2 < 10)
+            minutes = "0" + minutes;
+        _times = new String[]{ hours + ":" + minutes };
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, _times );
         _timeSpinner.setAdapter(adapter);
     }
