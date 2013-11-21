@@ -25,6 +25,7 @@ before_install:
   - unzip build-tools_r17-linux.zip -d $ANDROID_HOME
   - mkdir -p $ANDROID_HOME/build-tools/
   - mv $ANDROID_HOME/android-4.4 $ANDROID_HOME/build-tools/19
+  - mv $ANDROID_HOME/android-4.2.2 $ANDROID_HOME/build-tools/17
 
   # Install required components.
   # For a full list, run `android list sdk -a --extended`
