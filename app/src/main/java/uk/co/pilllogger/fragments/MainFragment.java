@@ -89,7 +89,7 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
     public void consumptionsReceived(List<Consumption> consumptions) {
         if(consumptions != null && consumptions.size() > 0){
             List<Consumption> grouped = ConsumptionRepository.getSingleton(getActivity()).groupConsumptions(consumptions);
-            _listView.setAdapter(new ConsumptionListAdapter(getActivity(), R.layout.consumption_list_item, grouped));
+            _listView.setAdapter(new ConsumptionListAdapter(getActivity(), this, R.layout.consumption_list_item, grouped));
 
             HashMap<Integer, SparseIntArray> xPoints = new HashMap<Integer, SparseIntArray>();
 
@@ -120,7 +120,6 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
             int dayCount = totalDays.getDays();
 
             View view = _mainLayout.findViewById(R.id.main_graph);
-
             if(view instanceof LineGraph)
                 plotLineGraph(xPoints, dayCount, (LineGraph)view);
 

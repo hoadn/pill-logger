@@ -1,6 +1,7 @@
 package uk.co.pilllogger.adapters;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.graphics.Typeface;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -9,10 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.echo.holographlibrary.BarGraph;
+import com.echo.holographlibrary.LineGraph;
+import com.echo.holographlibrary.PieGraph;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.fragments.MainFragment;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.tasks.DeleteConsumptionTask;
 import uk.co.pilllogger.views.ColourIndicator;
@@ -24,10 +30,12 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
     private Typeface _openSans;
     private Consumption _selectedConsumption;
+    private Fragment _fragment;
 
-    public ConsumptionListAdapter(Activity activity, int textViewResourceId, List<Consumption> consumptions) {
+    public ConsumptionListAdapter(Activity activity, Fragment fragment, int textViewResourceId, List<Consumption> consumptions) {
         super(activity, textViewResourceId, R.menu.consumption_list_item_menu, consumptions);
         _openSans = Typeface.createFromAsset(activity.getAssets(), "fonts/OpenSans-Light.ttf");
+        _fragment = fragment;
     }
 
     public static class ViewHolder {
@@ -46,6 +54,18 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
                 removeAtPosition(index); //remove() doesn't like newly created pills, so remove manually
 
                 new DeleteConsumptionTask(_activity, _selectedConsumption).execute();
+                if (_fragment instanceof MainFragment) {
+                    View view = _fragment.getView().findViewById(R.id.main_graph);
+
+                    if(view instanceof LineGraph)
+                        ((LineGraph) view).refreshDrawableState();
+
+                    if(view instanceof BarGraph)
+                        ((BarGraph) view).refreshDrawableState();
+
+                    if(view instanceof PieGraph)
+                        ((PieGraph) view).refreshDrawableState();
+                }
                 notifyDataSetChanged();
                 mode.finish();
                 return true;
