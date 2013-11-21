@@ -38,4 +38,4 @@ before_install:
 before_script:
 
 script:
-  - gradle build
+  - gradle build --stacktrace
