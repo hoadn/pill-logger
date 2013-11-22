@@ -22,11 +22,13 @@ import com.echo.holographlibrary.PieSlice;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.ConsumptionListAdapter;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.listeners.AddConsumptionClickListener;
+import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
@@ -91,33 +93,11 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
             List<Consumption> grouped = ConsumptionRepository.getSingleton(getActivity()).groupConsumptions(consumptions);
             _listView.setAdapter(new ConsumptionListAdapter(getActivity(), this, R.layout.consumption_list_item, grouped));
 
-            HashMap<Integer, SparseIntArray> xPoints = new HashMap<Integer, SparseIntArray>();
-
             DateTime aMonthAgo = new DateTime().minusMonths(1);
-
-            for (Consumption c : consumptions) {
-                int pillId = c.get_pill_id();
-                Days days = Days.daysBetween(aMonthAgo.withTimeAtStartOfDay(), new DateTime(c.get_date()).plusDays(1).withTimeAtStartOfDay());
-                int x = days.getDays();
-
-                SparseIntArray currentLineValues;
-                if(xPoints.containsKey(pillId))
-                    currentLineValues = xPoints.get(pillId);
-                else{
-                    currentLineValues = new SparseIntArray();
-                    xPoints.put(pillId, currentLineValues);
-                }
-
-                int value = 1;
-                if(currentLineValues.indexOfKey(x) >= 0)
-                    value += currentLineValues.get(x);
-
-                currentLineValues.put(x, value);
-            }
-
-
             Days totalDays = Days.daysBetween(aMonthAgo.withTimeAtStartOfDay(), new DateTime().plusDays(1).withTimeAtStartOfDay());
             int dayCount = totalDays.getDays();
+
+            Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDay(consumptions, dayCount);
 
             View view = _mainLayout.findViewById(R.id.main_graph);
             if(view instanceof LineGraph)
@@ -131,15 +111,14 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
         }
     }
 
-    private void plotLineGraph(HashMap<Integer, SparseIntArray> consumptionData, int days, LineGraph li){
+    private void plotLineGraph(Map<Pill, SparseIntArray> consumptionData, int days, LineGraph li){
 
         li.removeAllLines();
         
-        for(int pillId : consumptionData.keySet()){
+        for(Pill pill : consumptionData.keySet()){
             Line line = new Line();
-            Pill p = _allPills.get(pillId);
-            line.setColor(p.getColour());
-            SparseIntArray points = consumptionData.get(pillId);
+            line.setColor(pill.getColour());
+            SparseIntArray points = consumptionData.get(pill);
             for(int i = 0; i <= days; i++){
                 LinePoint linePoint = new LinePoint();
                 linePoint.setX(i);
@@ -163,21 +142,20 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
         li.setRangeY(0, (float)(maxY * 1.05));
     }
 
-    private void plotBarGraph(HashMap<Integer, SparseIntArray> consumptionData, int days, BarGraph g){
+    private void plotBarGraph(Map<Pill, SparseIntArray> consumptionData, int days, BarGraph g){
 
         ArrayList<Bar> bars = new ArrayList<Bar>();
 
         for(int i = 0; i <= days; i++){
-            for(int pillId : consumptionData.keySet()){
-                SparseIntArray points = consumptionData.get(pillId);
+            for(Pill pill : consumptionData.keySet()){
+                SparseIntArray points = consumptionData.get(pill);
 
                 int value = 0;
                 if(points.indexOfKey(i) >= 0)
                     value = points.get(i);
 
                 Bar b = new Bar();
-                Pill p = _allPills.get(pillId);
-                b.setColor(p.getColour());
+                b.setColor(pill.getColour());
                 b.setValue(value);
                 b.setName("");
                 bars.add(b);
@@ -187,14 +165,11 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
         g.setBars(bars);
     }
 
-    private void plotPieChart(HashMap<Integer, SparseIntArray> consumptionData, int days, PieGraph pie){
+    private void plotPieChart(Map<Pill, SparseIntArray> consumptionData, int days, PieGraph pie){
 
         pie.getSlices().clear();
-        for(int pillId : consumptionData.keySet()){
-            Line line = new Line();
-            Pill p = _allPills.get(pillId);
-            line.setColor(p.getColour());
-            SparseIntArray points = consumptionData.get(pillId);
+        for(Pill pill : consumptionData.keySet()){
+            SparseIntArray points = consumptionData.get(pill);
             int sliceValue = 0;
             for(int i = 0; i <= days; i++){
                 int value = 0;
@@ -206,7 +181,7 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
 
             PieSlice ps = new PieSlice();
             ps.setValue(sliceValue);
-            ps.setColor(p.getColour());
+            ps.setColor(pill.getColour());
             pie.addSlice(ps);
         }
     }
