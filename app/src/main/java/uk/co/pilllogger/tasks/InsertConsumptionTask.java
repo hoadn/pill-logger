@@ -13,15 +13,31 @@ public class InsertConsumptionTask  extends AsyncTask<Void, Void, Void> {
 
     Context _context;
     Consumption _consumption;
+    ITaskComplete _listener;
 
     public InsertConsumptionTask(Context context, Consumption consumption) {
         _context = context;
         _consumption = consumption;
     }
 
+    public  InsertConsumptionTask(Context context, Consumption consumption, ITaskComplete listener) {
+        this(context, consumption);
+        _listener = listener;
+    }
+
     @Override
     protected Void doInBackground(Void... voids) {
         ConsumptionRepository.getSingleton(_context).insert(_consumption);
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        if (_listener != null)
+            _listener.consumptionInserted(_consumption);
+    }
+
+    public interface ITaskComplete{
+        public void consumptionInserted(Consumption consumption);
     }
 }

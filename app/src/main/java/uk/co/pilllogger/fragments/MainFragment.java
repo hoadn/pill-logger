@@ -1,5 +1,6 @@
 package uk.co.pilllogger.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.echo.holographlibrary.Bar;
 import com.echo.holographlibrary.BarGraph;
@@ -20,6 +22,7 @@ import com.echo.holographlibrary.PieGraph;
 import com.echo.holographlibrary.PieSlice;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +39,7 @@ import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetFavouritePillsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.InitTestDbTask;
+import uk.co.pilllogger.tasks.InsertConsumptionTask;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -43,7 +47,8 @@ import org.joda.time.Days;
 /**
  * Created by nick on 23/10/13.
  */
-public class MainFragment extends Fragment implements InitTestDbTask.ITaskComplete, GetConsumptionsTask.ITaskComplete, GetFavouritePillsTask.ITaskComplete, GetPillsTask.ITaskComplete {
+public class MainFragment extends Fragment implements InitTestDbTask.ITaskComplete, GetConsumptionsTask.ITaskComplete, GetFavouritePillsTask.ITaskComplete,
+                                                        GetPillsTask.ITaskComplete {
 
     private static final String TAG = "MainFragment";
     ListView _listView;
@@ -202,10 +207,22 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
         for(Pill p : pills){
             LayoutInflater layoutInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View v = layoutInflater.inflate(R.layout.favourite_pill, null);
-
+            final Pill pill = p;
+            final Activity activity = this.getActivity();
+            final Fragment fragment = this;
             if(p.getName().length() > 0){
                 TextView letter = (TextView) v.findViewById(R.id.pill_letter);
                 letter.setText(p.getName().substring(0,1));
+                letter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Logger.v("Testing", "Pill: " + pill.getName());
+                        Consumption consumption = new Consumption(pill, new Date());
+                        new InsertConsumptionTask(activity, consumption).execute();
+                        new GetConsumptionsTask(activity, (GetConsumptionsTask.ITaskComplete)fragment, true).execute();
+                        Toast.makeText(activity, "Added " + pill.getName(), Toast.LENGTH_SHORT).show();
+                    }
+                });
                 Logger.d(TAG, "Adding favourite for: " + p.getName());
             }
 

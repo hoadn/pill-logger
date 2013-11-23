@@ -21,11 +21,11 @@ android:background="@drawable/container_dropshadow">
 
 <TextView
     android:id="@+id/pill_letter"
-    android:layout_height="wrap_content"
-    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:gravity="center"
     tools:text="P"
     android:textSize="24sp"
-    android:textStyle="bold"
-    android:layout_centerInParent="true"/>
+    android:textStyle="bold"/>
 </RelativeLayout>
 </LinearLayout>
