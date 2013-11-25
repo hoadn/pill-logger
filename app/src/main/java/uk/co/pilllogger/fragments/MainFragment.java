@@ -29,6 +29,7 @@ import java.util.Map;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.ConsumptionListAdapter;
+import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.listeners.AddConsumptionClickListener;
 import uk.co.pilllogger.mappers.ConsumptionMapper;
@@ -102,92 +103,17 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
             Days totalDays = Days.daysBetween(aMonthAgo.withTimeAtStartOfDay(), new DateTime().plusDays(1).withTimeAtStartOfDay());
             int dayCount = totalDays.getDays();
 
-            Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDay(consumptions, dayCount);
+            Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(consumptions, dayCount);
 
             View view = _mainLayout.findViewById(R.id.main_graph);
             if(view instanceof LineGraph)
-                plotLineGraph(xPoints, dayCount, (LineGraph)view);
+                GraphHelper.plotLineGraph(xPoints, dayCount, (LineGraph) view);
 
             if(view instanceof BarGraph)
-                plotBarGraph(xPoints, dayCount, (BarGraph)view);
+                GraphHelper.plotBarGraph(xPoints, dayCount, (BarGraph)view);
 
             if(view instanceof PieGraph)
-                plotPieChart(xPoints, dayCount, (PieGraph)view);
-        }
-    }
-
-    private void plotLineGraph(Map<Pill, SparseIntArray> consumptionData, int days, LineGraph li){
-
-        li.removeAllLines();
-        
-        for(Pill pill : consumptionData.keySet()){
-            Line line = new Line();
-            line.setColor(pill.getColour());
-            SparseIntArray points = consumptionData.get(pill);
-            for(int i = 0; i <= days; i++){
-                LinePoint linePoint = new LinePoint();
-                linePoint.setX(i);
-                int value = 0;
-                if(points.indexOfKey(i) >= 0)
-                    value = points.get(i);
-
-                for (Line line1 : li.getLines()) {
-                    value += line1.getPoint(i).getY();
-                }
-
-                linePoint.setY(value);
-
-                line.addPoint(linePoint);
-            }
-
-            li.addLine(line);
-        }
-
-        double maxY = li.getMaxY();
-        li.setRangeY(0, (float)(maxY * 1.05));
-    }
-
-    private void plotBarGraph(Map<Pill, SparseIntArray> consumptionData, int days, BarGraph g){
-
-        ArrayList<Bar> bars = new ArrayList<Bar>();
-
-        for(int i = 0; i <= days; i++){
-            for(Pill pill : consumptionData.keySet()){
-                SparseIntArray points = consumptionData.get(pill);
-
-                int value = 0;
-                if(points.indexOfKey(i) >= 0)
-                    value = points.get(i);
-
-                Bar b = new Bar();
-                b.setColor(pill.getColour());
-                b.setValue(value);
-                b.setName("");
-                bars.add(b);
-            }
-        }
-        g.setShowBarText(false);
-        g.setBars(bars);
-    }
-
-    private void plotPieChart(Map<Pill, SparseIntArray> consumptionData, int days, PieGraph pie){
-
-        pie.getSlices().clear();
-        for(Pill pill : consumptionData.keySet()){
-            SparseIntArray points = consumptionData.get(pill);
-            int sliceValue = 0;
-            for(int i = 0; i <= days; i++){
-                int value = 0;
-                if(points.indexOfKey(i) >= 0)
-                    value = points.get(i);
-
-                sliceValue += value;
-            }
-
-            PieSlice ps = new PieSlice();
-            ps.setValue(sliceValue);
-            ps.setColor(pill.getColour());
-            pie.addSlice(ps);
+                GraphHelper.plotPieChart(xPoints, dayCount, (PieGraph)view);
         }
     }
 
@@ -219,7 +145,7 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
                         Logger.v("Testing", "Pill: " + pill.getName());
                         Consumption consumption = new Consumption(pill, new Date());
                         new InsertConsumptionTask(activity, consumption).execute();
-                        new GetConsumptionsTask(activity, (GetConsumptionsTask.ITaskComplete)fragment, true).execute();
+                        new GetConsumptionsTask(activity, (GetConsumptionsTask.ITaskComplete) fragment, true).execute();
                         Toast.makeText(activity, "Added " + pill.getName(), Toast.LENGTH_SHORT).show();
                     }
                 });

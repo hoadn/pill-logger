@@ -17,19 +17,19 @@ import uk.co.pilllogger.models.Pill;
  */
 public class ConsumptionMapper {
 
-    public static Map<Pill, SparseIntArray> mapByPillAndDay(List<Consumption> consumptions, int days){
+    public static Map<Pill, SparseIntArray> mapByPillAndDate(List<Consumption> consumptions, int days){
 
         DateTime to = new DateTime();
         DateTime from = to.minusDays(days);
 
-        return mapByPillAndDay(consumptions, from, to);
+        return mapByPillAndDate(consumptions, from, to);
     }
 
-    public static Map<Pill, SparseIntArray> mapByPillAndDay(List<Consumption> consumptions, DateTime from){
-        return mapByPillAndDay(consumptions, from, new DateTime());
+    public static Map<Pill, SparseIntArray> mapByPillAndDate(List<Consumption> consumptions, DateTime from){
+        return mapByPillAndDate(consumptions, from, new DateTime());
     }
 
-    public static Map<Pill, SparseIntArray> mapByPillAndDay(List<Consumption> consumptions, DateTime from, DateTime to){
+    public static Map<Pill, SparseIntArray> mapByPillAndDate(List<Consumption> consumptions, DateTime from, DateTime to){
         HashMap<Pill, SparseIntArray> xPoints = new HashMap<Pill, SparseIntArray>();
 
         for (Consumption c : consumptions) {
@@ -58,5 +58,34 @@ public class ConsumptionMapper {
         }
 
         return xPoints;
+    }
+
+    public static SparseIntArray mapByTotalDayOfWeek(List<Consumption> consumptions, DateTime from, DateTime to){
+        SparseIntArray data = new SparseIntArray();
+
+        data.put(1, 0); //MONDAY
+        data.put(2, 0); //TUESDAY
+        data.put(3, 0); //WEDNESDAY
+        data.put(4, 0); //THURSDAY
+        data.put(5, 0); //FRIDAY
+        data.put(6, 0); //SATURDAY
+        data.put(7, 0); //SUNDAY
+
+        for(Consumption c : consumptions){
+            DateTime consumptionDate = new DateTime(c.get_date());
+
+            if(consumptionDate.isBefore(from) || consumptionDate.isAfter(to)) break;
+
+            int dayOfWeek = consumptionDate.dayOfWeek().get();
+
+            if(data.indexOfKey(dayOfWeek) < 0)
+                data.put(dayOfWeek, 1);
+            else{
+                int current = data.get(dayOfWeek);
+                data.put(dayOfWeek, current + 1);
+            }
+        }
+
+        return data;
     }
 }
