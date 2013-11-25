@@ -1,10 +1,8 @@
 package uk.co.pilllogger.activities;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.fragments.PillDetailFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
@@ -36,27 +34,5 @@ public class PillListActivity extends FragmentActivity {
 		}
 
 		// TODO: If exposing deep links into your app, handle intents here.
-	}
-
-
-	public void onItemSelected(int id) {
-		if (mTwoPane) {
-			// In two-pane mode, show the detail view in this activity by
-			// adding or replacing the detail fragment using a
-			// fragment transaction.
-			Bundle arguments = new Bundle();
-			arguments.putInt(PillDetailFragment.ARG_ITEM_ID, id);
-			PillDetailFragment fragment = new PillDetailFragment();
-			fragment.setArguments(arguments);
-			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.pill_detail_container, fragment).commit();
-
-		} else {
-			// In single-pane mode, simply start the detail activity
-			// for the selected item ID.
-			Intent detailIntent = new Intent(this, PillDetailActivity.class);
-			detailIntent.putExtra(PillDetailFragment.ARG_ITEM_ID, id);
-			startActivity(detailIntent);
-		}
 	}
 }
