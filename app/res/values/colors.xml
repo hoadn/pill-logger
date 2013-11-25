@@ -16,5 +16,13 @@
     <color name="gold">#FFD700</color>
     <color name="green_border">#29c801</color>
 
+    <color name="monday">#336699</color>
+    <color name="tuesday">#FF9900</color>
+    <color name="wednesday">#996699</color>
+    <color name="thursday">#CC0000</color>
+    <color name="friday">#FFCC00</color>
+    <color name="saturday">#7DC71D</color>
+    <color name="sunday">#FFBAD2</color>
+
     <!-- Pill colours are in pill_colours.xml -->
 </resources>

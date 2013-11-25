@@ -1,5 +1,6 @@
 package uk.co.pilllogger.helpers;
 
+import android.content.Context;
 import android.util.SparseIntArray;
 
 import com.echo.holographlibrary.Bar;
@@ -11,9 +12,9 @@ import com.echo.holographlibrary.PieGraph;
 import com.echo.holographlibrary.PieSlice;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
+import uk.co.pilllogger.R;
 import uk.co.pilllogger.models.Pill;
 
 /**
@@ -74,20 +75,70 @@ public class GraphHelper {
         g.setBars(bars);
     }
 
-    public static void plotBarGraph(SparseIntArray consumptionData, BarGraph g){
+    public static void plotBarGraph(SparseIntArray consumptionData, BarGraph g, Context context){
         ArrayList<Bar> bars = new ArrayList<Bar>();
 
         for(int i = 0; i < consumptionData.size(); i++){
-            int value = consumptionData.keyAt(i);
-
+            int value = consumptionData.valueAt(i);
+            int day = i+1;
             Bar b = new Bar();
-            b.setColor(0);
+            b.setColor(getColourOfDay(day, context));
             b.setValue(value);
-            b.setName("");
+            b.setName(getDayOfWeek(day));
             bars.add(b);
         }
         g.setShowBarText(false);
         g.setBars(bars);
+    }
+
+    private static String getDayOfWeek(int dayOfWeek){
+        switch(dayOfWeek){
+            case 1:
+                return "Monday";
+            case 2:
+                return "Tuesday";
+            case 3:
+                return "Wednesday";
+            case 4:
+                return "Thursday";
+            case 5:
+                return "Friday";
+            case 6:
+                return "Saturday";
+            case 7:
+                return "Sunday";
+        }
+
+        return "";
+    }
+
+    private static int getColourOfDay(int dayOfWeek, Context context){
+        int resId = R.color.white;
+        switch(dayOfWeek){
+            case 1:
+                resId = R.color.monday;
+                break;
+            case 2:
+                resId = R.color.tuesday;
+                break;
+            case 3:
+                resId = R.color.wednesday;
+                break;
+            case 4:
+                resId = R.color.thursday;
+                break;
+            case 5:
+                resId = R.color.friday;
+                break;
+            case 6:
+                resId = R.color.saturday;
+                break;
+            case 7:
+                resId = R.color.sunday;
+                break;
+        }
+
+        return context.getResources().getColor(resId);
     }
 
     public static void plotPieChart(Map<Pill, SparseIntArray> consumptionData, int days, PieGraph pie){

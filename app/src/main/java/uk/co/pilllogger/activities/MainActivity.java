@@ -72,6 +72,7 @@ public class MainActivity extends Activity {
     private void setUpDrawerNavigation() {
         _navigationItems.add(this.getResources().getString(R.string.drawer_consumption));
         _navigationItems.add(this.getResources().getString(R.string.drawer_pills));
+        _navigationItems.add(getString(R.string.drawer_charts));
         _navigationItems.add(this.getResources().getString(R.string.drawer_settings));
         _drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ListView drawerList = (ListView) findViewById(R.id.left_drawer);

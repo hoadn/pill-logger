@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <com.echo.holographlibrary.BarGraph
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/graph1"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pill Consumption over the past 30 days"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"/>
+            <com.echo.holographlibrary.LineGraph
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/graph2"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pill Consumption over the past 30 days"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"/>
+            <com.echo.holographlibrary.PieGraph
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/graph3"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pill Consumption over the past 30 days"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"/>
+            <com.echo.holographlibrary.BarGraph
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/graph4"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pill Consumption by Day of The Week"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"/>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

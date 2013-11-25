@@ -60,6 +60,10 @@ public class ConsumptionMapper {
         return xPoints;
     }
 
+    public static SparseIntArray mapByTotalDayOfWeek(List<Consumption> consumptions){
+        return mapByTotalDayOfWeek(consumptions, null, null);
+    }
+
     public static SparseIntArray mapByTotalDayOfWeek(List<Consumption> consumptions, DateTime from, DateTime to){
         SparseIntArray data = new SparseIntArray();
 
@@ -74,7 +78,9 @@ public class ConsumptionMapper {
         for(Consumption c : consumptions){
             DateTime consumptionDate = new DateTime(c.get_date());
 
-            if(consumptionDate.isBefore(from) || consumptionDate.isAfter(to)) break;
+            if(from != null && to != null &&
+                    (consumptionDate.isBefore(from) || consumptionDate.isAfter(to)))
+                break;
 
             int dayOfWeek = consumptionDate.dayOfWeek().get();
 

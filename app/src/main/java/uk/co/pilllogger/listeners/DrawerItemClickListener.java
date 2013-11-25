@@ -11,6 +11,7 @@ import android.widget.ListView;
 import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.MainFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.fragments.SettingsFragment;
@@ -43,6 +44,7 @@ public class DrawerItemClickListener implements ListView.OnItemClickListener {
         String consumption = _activity.getResources().getString(R.string.drawer_consumption);
         String pills = _activity.getResources().getString(R.string.drawer_pills);
         String settings = _activity.getResources().getString(R.string.drawer_settings);
+        String charts = _activity.getString(R.string.drawer_charts);
         Logger.d(TAG, "selectItem, position: " + position);
 
         Fragment fragment = null;
@@ -60,6 +62,11 @@ public class DrawerItemClickListener implements ListView.OnItemClickListener {
         else if(selectedItem.equals(settings)){
             fragment = new SettingsFragment();
             title = settings;
+        }
+
+        if(selectedItem.equals(charts)){
+            fragment = new GraphFragment();
+            title = charts;
         }
 
         if(fragment != null){

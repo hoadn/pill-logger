@@ -51,27 +51,31 @@ public class LeftDrawerAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
-        View v = view;
 
         LayoutInflater inflater = (LayoutInflater)_activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        v = inflater.inflate(R.layout.left_drawer_list, viewGroup, false);
-        TextView drawerText = (TextView) v.findViewById(R.id.drawer_item_text);
-        ImageView drawerIcon = (ImageView) v.findViewById(R.id.drawer_item_icon);
-        drawerText.setText(_source.get(position));
-        drawerText.setTypeface(_openSans);
+        View v = inflater.inflate(R.layout.left_drawer_list, viewGroup, false);
+        if(v != null){
+            TextView drawerText = (TextView) v.findViewById(R.id.drawer_item_text);
+            ImageView drawerIcon = (ImageView) v.findViewById(R.id.drawer_item_icon);
+            drawerText.setText(_source.get(position));
+            drawerText.setTypeface(_openSans);
 
-        if(_source.get(position).equals(_activity.getString(R.string.drawer_consumption))){
-            drawerIcon.setImageDrawable(_activity.getResources().getDrawable(R.drawable.list));
+            if(_source.get(position).equals(_activity.getString(R.string.drawer_consumption))){
+                drawerIcon.setImageDrawable(_activity.getResources().getDrawable(R.drawable.list));
+            }
+
+            if (_source.get(position).equals(_activity.getString(R.string.drawer_pills))){
+                drawerIcon.setImageDrawable(_activity.getResources().getDrawable(R.drawable.medkit));
+            }
+
+            if(_source.get(position).equals(_activity.getString(R.string.drawer_charts))){
+                drawerIcon.setImageDrawable(_activity.getResources().getDrawable(R.drawable.bar_chart));
+            }
+
+            if(_source.get(position).equals(_activity.getString(R.string.drawer_settings))){
+                drawerIcon.setImageDrawable(_activity.getResources().getDrawable(R.drawable.cogs));
+            }
         }
-
-        if (_source.get(position).equals(_activity.getString(R.string.drawer_pills))){
-            drawerIcon.setImageDrawable(_activity.getResources().getDrawable(R.drawable.medkit));
-        }
-
-        if(_source.get(position).equals(_activity.getString(R.string.drawer_settings))){
-            drawerIcon.setImageDrawable(_activity.getResources().getDrawable(R.drawable.cogs));
-        }
-
 
         return v;
     }
