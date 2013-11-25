@@ -84,29 +84,29 @@ public class GraphHelper {
             Bar b = new Bar();
             b.setColor(getColourOfDay(day, context));
             b.setValue(value);
-            b.setName(getDayOfWeek(day));
+            b.setName(getDayOfWeek(day, context));
             bars.add(b);
         }
         g.setShowBarText(false);
         g.setBars(bars);
     }
 
-    private static String getDayOfWeek(int dayOfWeek){
+    private static String getDayOfWeek(int dayOfWeek, Context context){
         switch(dayOfWeek){
             case 1:
-                return "Monday";
+                return context.getString(R.string.monday);
             case 2:
-                return "Tuesday";
+                return context.getString(R.string.tuesday);
             case 3:
-                return "Wednesday";
+                return context.getString(R.string.wednesday);
             case 4:
-                return "Thursday";
+                return context.getString(R.string.thursday);
             case 5:
-                return "Friday";
+                return context.getString(R.string.friday);
             case 6:
-                return "Saturday";
+                return context.getString(R.string.saturday);
             case 7:
-                return "Sunday";
+                return context.getString(R.string.sunday);
         }
 
         return "";
