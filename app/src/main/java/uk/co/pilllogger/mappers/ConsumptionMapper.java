@@ -38,7 +38,7 @@ public class ConsumptionMapper {
 
             if(consumptionDate.isBefore(from) || consumptionDate.isAfter(to)) break;
 
-            Days days = Days.daysBetween(from.withTimeAtStartOfDay(), consumptionDate.plusDays(1).withTimeAtStartOfDay());
+            Days days = Days.daysBetween(from.withTimeAtStartOfDay(), consumptionDate.withTimeAtStartOfDay());
             int x = days.getDays();
 
             SparseIntArray currentLineValues;
