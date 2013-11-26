@@ -100,7 +100,7 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
             _listView.setAdapter(new ConsumptionListAdapter(getActivity(), this, R.layout.consumption_list_item, grouped));
 
             DateTime aMonthAgo = new DateTime().minusMonths(1);
-            Days totalDays = Days.daysBetween(aMonthAgo.withTimeAtStartOfDay(), new DateTime().plusDays(1).withTimeAtStartOfDay());
+            Days totalDays = Days.daysBetween(aMonthAgo.withTimeAtStartOfDay(), new DateTime().withTimeAtStartOfDay().plusDays(1));
             int dayCount = totalDays.getDays();
 
             Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(consumptions, dayCount);

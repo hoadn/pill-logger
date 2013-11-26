@@ -56,7 +56,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
                 new DeleteConsumptionTask(_activity, _selectedConsumption).execute();
                 if (_fragment instanceof MainFragment) {
-                    new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete)_fragment, true).execute();
+                    new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete)_fragment, false).execute();
                 }
                 notifyDataSetChanged();
                 mode.finish();
