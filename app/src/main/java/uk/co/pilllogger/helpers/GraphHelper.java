@@ -36,10 +36,6 @@ public class GraphHelper {
                 if(points.indexOfKey(i) >= 0)
                     value = points.get(i);
 
-//                for (Line line1 : li.getLines()) {
-//                    value += line1.getPoint(i).getY();
-//                }
-
                 linePoint.setY(value);
 
                 line.addPoint(linePoint);
