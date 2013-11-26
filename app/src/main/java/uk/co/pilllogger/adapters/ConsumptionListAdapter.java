@@ -21,6 +21,7 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.fragments.MainFragment;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.tasks.DeleteConsumptionTask;
+import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.views.ColourIndicator;
 
 /**
@@ -55,16 +56,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
                 new DeleteConsumptionTask(_activity, _selectedConsumption).execute();
                 if (_fragment instanceof MainFragment) {
-                    View view = _fragment.getView().findViewById(R.id.main_graph);
-
-                    if(view instanceof LineGraph)
-                        ((LineGraph) view).refreshDrawableState();
-
-                    if(view instanceof BarGraph)
-                        ((BarGraph) view).refreshDrawableState();
-
-                    if(view instanceof PieGraph)
-                        ((PieGraph) view).refreshDrawableState();
+                    new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete)_fragment, true).execute();
                 }
                 notifyDataSetChanged();
                 mode.finish();
