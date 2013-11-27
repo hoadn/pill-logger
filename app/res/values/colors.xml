@@ -7,6 +7,7 @@
     <color name="text_grey_medium">#8F8F8F</color>
     <color name="light_blue">#3CA7DE</color>
     <color name="light_green">#7DC71D</color>
+    <color name="drawer_item_background">#161617</color>
     <color name="drawer_item_grey">#222222</color>
     <color name="done_cancel_grey">#dddddd</color>
     <color name="add_green">#49d811</color>

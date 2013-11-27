@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,7 +30,11 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.adapters.ConsumptionListAdapter;
+import uk.co.pilllogger.adapters.GraphPillListAdapter;
+import uk.co.pilllogger.adapters.PillsListAdapter;
+import uk.co.pilllogger.adapters.PillsListBaseAdapter;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.listeners.AddConsumptionClickListener;
@@ -159,6 +165,13 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
 
     @Override
     public void pillsReceived(List<Pill> pills) {
+        ListView list = (ListView) getActivity().findViewById(R.id.graph_drawer);
+        if (list != null){ //we need to init the adapter
+            GraphPillListAdapter adapter = new GraphPillListAdapter(getActivity(), R.layout.graph_pill_list, pills);
+            list.setAdapter(adapter);
+            
+        }
+
         for(Pill p : pills){
             _allPills.put(p.getId(), p);
         }

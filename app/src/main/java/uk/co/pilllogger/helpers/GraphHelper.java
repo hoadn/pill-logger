@@ -12,10 +12,12 @@ import com.echo.holographlibrary.PieGraph;
 import com.echo.holographlibrary.PieSlice;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.State;
 
 /**
  * Created by alex on 25/11/2013.
@@ -23,9 +25,13 @@ import uk.co.pilllogger.models.Pill;
 public class GraphHelper {
     public static void plotLineGraph(Map<Pill, SparseIntArray> consumptionData, int days, LineGraph li){
 
+        List<Integer> graphPills = State.getSingleton().getGraphPills();
+        Boolean all = (graphPills == null) ? true : false;
         li.removeAllLines();
 
         for(Pill pill : consumptionData.keySet()){
+            if ((!all) && (!graphPills.contains(pill.getId())))
+                continue;
             Line line = new Line();
             line.setColor(pill.getColour());
             SparseIntArray points = consumptionData.get(pill);
