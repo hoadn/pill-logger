@@ -170,15 +170,13 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
     @Override
     public void pillsReceived(List<Pill> pills) {
 
-        Boolean graphsNull = false;
         List<Integer> graphPills = State.getSingleton().getGraphPills();
         if (graphPills == null) {
-            graphsNull = true;
             graphPills = new ArrayList<Integer>();
         }
         for(Pill p : pills){
             _allPills.put(p.getId(), p);
-            if (graphsNull)
+            if (!graphPills.contains(p.getId()))
                 graphPills.add(p.getId());
         }
         State.getSingleton().setGraphPills(graphPills);
