@@ -1,5 +1,7 @@
 language: java
 jdk: oraclejdk7
+notifications:
+  webhooks: https://api.kato.im/rooms/ad2b3bad1a848fde698f3199a52dcbe42c21a11148e3fbee7024118fd8b931/travis
 env:
   matrix:
     - ANDROID_SDKS=android-19,sysimg-19  ANDROID_TARGET=android-19  ANDROID_ABI=armeabi-v7a
