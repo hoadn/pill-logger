@@ -25,7 +25,7 @@
         android:id="@+id/graph_drawer_layout">
 
         <ListView android:id="@+id/graph_drawer"
-            android:layout_width="250dp"
+            android:layout_width="260dp"
             android:layout_height="match_parent"
             android:choiceMode="singleChoice"
             android:dividerHeight="1dp"

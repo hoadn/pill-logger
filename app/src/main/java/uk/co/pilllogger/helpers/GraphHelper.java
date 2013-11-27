@@ -31,7 +31,7 @@ public class GraphHelper {
         double maxY = 0;
 
         for(Pill pill : consumptionData.keySet()){
-            if ((!all) && (!graphPills.contains(pill.getId())))
+            if (pill == null || ((!all) && (!graphPills.contains(pill.getId()))))
                 continue;
             Line line = new Line();
             line.setColor(pill.getColour());
