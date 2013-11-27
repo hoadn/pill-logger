@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
+import uk.co.pilllogger.tasks.InitTestDbTask;
 import uk.co.pilllogger.views.ColourIndicator;
 
 /**
@@ -30,6 +32,7 @@ public class GraphPillListAdapter extends ArrayAdapter<Pill> {
         private Activity _activity;
         private Typeface _openSans;
         private int _resourceId;
+        private List<Integer> _graphPills;
 
         public GraphPillListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
             super(activity, textViewResourceId, pills);
@@ -37,6 +40,7 @@ public class GraphPillListAdapter extends ArrayAdapter<Pill> {
             _pills = pills;
             _resourceId = textViewResourceId;
             _openSans = Typeface.createFromAsset(activity.getAssets(), "fonts/OpenSans-Light.ttf");
+            _graphPills = State.getSingleton().getGraphPills();
         }
 
         public static class ViewHolder {
@@ -44,6 +48,7 @@ public class GraphPillListAdapter extends ArrayAdapter<Pill> {
             public TextView size;
             public TextView units;
             public View color;
+            public CheckBox checkbox;
         }
 
         @Override
@@ -58,6 +63,7 @@ public class GraphPillListAdapter extends ArrayAdapter<Pill> {
                 holder.size = (TextView) v.findViewById(R.id.pill_list_size);
                 holder.units = (TextView) v.findViewById(R.id.pill_list_units);
                 holder.color = v.findViewById(R.id.graph_list_pill_colour);
+                holder.checkbox = (CheckBox) v.findViewById(R.id.graph_list_check_box);
                 holder.name.setTypeface(_openSans);
                 holder.size.setTypeface(_openSans);
                 holder.units.setTypeface(_openSans);
@@ -71,6 +77,10 @@ public class GraphPillListAdapter extends ArrayAdapter<Pill> {
                 holder.name.setText(pill.getName());
                 holder.size.setText(String.valueOf(pill.getSize()));
                 holder.color.setBackgroundColor(pill.getColour());
+                if (_graphPills.contains(pill.getId()))
+                    holder.checkbox.setChecked(true);
+                else
+                    holder.checkbox.setChecked(false);
             }
             return v;
         }

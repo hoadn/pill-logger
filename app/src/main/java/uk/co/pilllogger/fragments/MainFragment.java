@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,6 +43,7 @@ import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
+import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetFavouritePillsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
@@ -62,6 +64,8 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
     ViewGroup _favouriteContainer;
     View _mainLayout;
     HashMap<Integer, Pill> _allPills = new HashMap<Integer, Pill>();
+    Fragment _fragment;
+    Activity _activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,6 +73,8 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.main_fragment, container, false);
         _mainLayout = v;
+        _fragment = this;
+        _activity = getActivity();
 
         Logger.v(TAG, "onCreateView Called");
         //Doing this to test - will not be needed when working fully
@@ -140,8 +146,6 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
             LayoutInflater layoutInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View v = layoutInflater.inflate(R.layout.favourite_pill, null);
             final Pill pill = p;
-            final Activity activity = this.getActivity();
-            final Fragment fragment = this;
             if(p.getName().length() > 0){
                 TextView letter = (TextView) v.findViewById(R.id.pill_letter);
                 letter.setText(p.getName().substring(0,1));
@@ -150,9 +154,9 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
                     public void onClick(View v) {
                         Logger.v("Testing", "Pill: " + pill.getName());
                         Consumption consumption = new Consumption(pill, new Date());
-                        new InsertConsumptionTask(activity, consumption).execute();
-                        new GetConsumptionsTask(activity, (GetConsumptionsTask.ITaskComplete) fragment, true).execute();
-                        Toast.makeText(activity, "Added " + pill.getName(), Toast.LENGTH_SHORT).show();
+                        new InsertConsumptionTask(_activity, consumption).execute();
+                        new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete) _fragment, true).execute();
+                        Toast.makeText(_activity, "Added " + pill.getName(), Toast.LENGTH_SHORT).show();
                     }
                 });
                 Logger.d(TAG, "Adding favourite for: " + p.getName());
@@ -165,16 +169,48 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
 
     @Override
     public void pillsReceived(List<Pill> pills) {
+
+        Boolean graphsNull = false;
+        List<Integer> graphPills = State.getSingleton().getGraphPills();
+        if (graphPills == null) {
+            graphsNull = true;
+            graphPills = new ArrayList<Integer>();
+        }
+        for(Pill p : pills){
+            _allPills.put(p.getId(), p);
+            if (graphsNull)
+                graphPills.add(p.getId());
+        }
+        State.getSingleton().setGraphPills(graphPills);
+
+        final List<Pill> pillList = pills;
         ListView list = (ListView) getActivity().findViewById(R.id.graph_drawer);
         if (list != null){ //we need to init the adapter
             GraphPillListAdapter adapter = new GraphPillListAdapter(getActivity(), R.layout.graph_pill_list, pills);
             list.setAdapter(adapter);
-            
+            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Pill pill = pillList.get(position);
+                    List<Integer> graphPills = State.getSingleton().getGraphPills();
+                    CheckBox checkbox = (CheckBox)view.findViewById(R.id.graph_list_check_box);
+                    if (checkbox.isChecked()) {
+                        checkbox.setChecked(false);
+                        if (graphPills.contains(pill.getId())) {
+                            graphPills.remove((Object)pill.getId());
+                        }
+                    }
+                    else {
+                        checkbox.setChecked(true);
+                        if (!graphPills.contains(pill.getId())) {
+                            graphPills.add(pill.getId());
+                        }
+                    }
+                    new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete) _fragment, true).execute();
+                }
+            });
         }
 
-        for(Pill p : pills){
-            _allPills.put(p.getId(), p);
-        }
 
         new GetConsumptionsTask(this.getActivity(), this, false).execute();
     }

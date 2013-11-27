@@ -23,7 +23,9 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:layout_marginLeft="3dp"
+            android:focusable="false"
             android:padding="0dp"
+            android:clickable="false"
             android:checked="true"/>
 
     </LinearLayout>
