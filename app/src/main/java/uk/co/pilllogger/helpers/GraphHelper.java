@@ -28,6 +28,7 @@ public class GraphHelper {
         List<Integer> graphPills = State.getSingleton().getGraphPills();
         Boolean all = (graphPills == null) ? true : false;
         li.removeAllLines();
+        double maxY = 0;
 
         for(Pill pill : consumptionData.keySet()){
             if ((!all) && (!graphPills.contains(pill.getId())))
@@ -43,6 +44,8 @@ public class GraphHelper {
                     value = points.get(i);
 
                 linePoint.setY(value);
+                if (value > maxY)
+                    maxY = value;
 
                 line.addPoint(linePoint);
             }
@@ -50,7 +53,6 @@ public class GraphHelper {
             li.addLine(line);
         }
 
-        double maxY = li.getMaxY();
         li.setRangeY(0, (float)(maxY * 1.05));
     }
 
