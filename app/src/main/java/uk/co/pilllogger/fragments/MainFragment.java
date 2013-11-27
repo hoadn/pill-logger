@@ -118,15 +118,32 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
             Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(consumptions, dayCount);
 
             View view = _mainLayout.findViewById(R.id.main_graph);
-            if(view instanceof LineGraph)
-                GraphHelper.plotLineGraph(xPoints, dayCount, (LineGraph) view);
-
-            if(view instanceof BarGraph)
-                GraphHelper.plotBarGraph(xPoints, dayCount, (BarGraph)view);
-
-            if(view instanceof PieGraph)
-                GraphHelper.plotPieChart(xPoints, dayCount, (PieGraph)view);
+            plotGraph(xPoints, dayCount, view);
         }
+    }
+
+    public void replotGraph(){
+        DateTime aMonthAgo = new DateTime().minusMonths(1);
+        Days totalDays = Days.daysBetween(aMonthAgo.withTimeAtStartOfDay(), new DateTime().withTimeAtStartOfDay().plusDays(1));
+        int dayCount = totalDays.getDays();
+
+        View view = _mainLayout.findViewById(R.id.main_graph);
+
+        Map<Pill, SparseIntArray> xPoints = (Map<Pill, SparseIntArray>) view.getTag();
+        plotGraph(xPoints, dayCount, view);
+    }
+
+    public void plotGraph(Map<Pill, SparseIntArray> data, int dayCount, View view){
+        if(view instanceof LineGraph)
+            GraphHelper.plotLineGraph(data, dayCount, (LineGraph) view);
+
+        if(view instanceof BarGraph)
+            GraphHelper.plotBarGraph(data, dayCount, (BarGraph)view);
+
+        if(view instanceof PieGraph)
+            GraphHelper.plotPieChart(data, dayCount, (PieGraph)view);
+
+        view.setTag(data);
     }
 
     @Override
@@ -195,7 +212,7 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
                     if (checkbox.isChecked()) {
                         checkbox.setChecked(false);
                         if (graphPills.contains(pill.getId())) {
-                            graphPills.remove((Object)pill.getId());
+                            graphPills.remove((Object) pill.getId());
                         }
                     }
                     else {
@@ -204,7 +221,8 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
                             graphPills.add(pill.getId());
                         }
                     }
-                    new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete) _fragment, true).execute();
+                    //new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete) _fragment, true).execute();
+                    replotGraph();
                 }
             });
         }
