@@ -34,6 +34,7 @@ public class GraphHelper {
             if (pill == null || ((!all) && (!graphPills.contains(pill.getId()))))
                 continue;
             Line line = new Line();
+            line.setShowingPoints(false);
             line.setColor(pill.getColour());
             SparseIntArray points = consumptionData.get(pill);
             for(int i = 0; i <= days; i++){
