@@ -38,15 +38,14 @@ public class GraphHelper {
             line.setColor(pill.getColour());
             SparseIntArray points = consumptionData.get(pill);
             for(int i = 0; i <= days; i++){
-                LinePoint linePoint = new LinePoint();
-                linePoint.setX(i);
                 int value = 0;
                 if(points.indexOfKey(i) >= 0)
                     value = points.get(i);
 
-                linePoint.setY(value);
                 if (value > maxY)
                     maxY = value;
+
+                LinePoint linePoint = new LinePoint(i, value);
 
                 line.addPoint(linePoint);
             }
