@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:padding="10dp"
     android:clickable="true"
-    android:layout_marginBottom="5dp"
+    android:layout_marginBottom="15dp"
     android:background="@drawable/container_dropshadow">
 
 
@@ -27,10 +27,11 @@
             android:color="@color/pill_colour1"
             />
 
-        <TextView android:textSize="18dip"
+        <TextView android:textSize="16dip"
             android:id="@+id/consumption_list_date"
             android:layout_below="@+id/consumption_list_name"
             android:layout_marginTop="3dp"
+            android:textColor="@color/text_grey_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -44,10 +45,11 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="8dp"/>
 
-        <TextView android:textSize="20dp"
+        <TextView android:textSize="18dp"
             android:id="@+id/consumption_list_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/consumption_list_colour"/>
 
 
