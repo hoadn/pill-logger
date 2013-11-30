@@ -104,7 +104,6 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
             if (consumption != null) {
                 holder.name.setText(consumption.get_pill().getName());
                 holder.date.setText(DateHelper.getRelativeDateTime(_fragment.getActivity(), consumption.get_date()));
-                holder.quantity.setText(consumption.getQuantity() + "x");
                 int quantity = consumption.getQuantity();
                 if (quantity > 1)
                     holder.quantity.setText(String.valueOf(consumption.getQuantity()));
