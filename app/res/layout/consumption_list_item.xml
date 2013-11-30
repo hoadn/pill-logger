@@ -2,28 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="10dp"
     android:clickable="true"
-    android:background="?android:attr/selectableItemBackground">
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/container_dropshadow">
 
-    <TextView android:textSize="16dp"
-              android:id="@+id/consumption_list_quantity"
-              android:layout_centerVertical="true"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content" />
+
 
         <TextView android:textSize="20dp"
             android:id="@+id/consumption_list_name"
-            android:layout_centerVertical="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/consumption_list_quantity"/>
+            android:layout_height="wrap_content"/>
+
 
         <uk.co.pilllogger.views.ColourIndicator
             android:id="@+id/consumption_list_colour"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:padding="8dp"
             android:layout_marginLeft="5dp"
             android:layout_alignParentRight="true"
@@ -33,9 +29,27 @@
 
         <TextView android:textSize="18dip"
             android:id="@+id/consumption_list_date"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/consumption_list_colour"
+            android:layout_below="@+id/consumption_list_name"
+            android:layout_marginTop="3dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <TextView
+            android:textSize="16dp"
+            android:id="@+id/consumption_list_quantity"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:layout_width="29dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"/>
+
+        <TextView android:textSize="20dp"
+            android:id="@+id/consumption_list_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/consumption_list_colour"/>
+
+
 
 </RelativeLayout>
