@@ -44,6 +44,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
         public TextView date;
         public TextView quantity;
         public ColourIndicator colour;
+        public TextView size;
         Consumption consumption;
     }
 
@@ -74,10 +75,12 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
         holder.date = (TextView) v.findViewById(R.id.consumption_list_date);
         holder.quantity = (TextView) v.findViewById(R.id.consumption_list_quantity);
         holder.colour = (ColourIndicator) v.findViewById(R.id.consumption_list_colour);
+        holder.size = (TextView) v.findViewById(R.id.consumption_list_size);
         if(holder.name != null){
             holder.name.setTypeface(_openSans);
             holder.date.setTypeface(_openSans);
             holder.quantity.setTypeface(_openSans);
+            holder.size.setTypeface(_openSans);
         }
         v.setTag(holder);
     }
@@ -101,9 +104,12 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
                 holder.name.setText(consumption.get_pill().getName());
                 String date = new SimpleDateFormat("HH:mm dd/MM").format(consumption.get_date());
                 holder.date.setText(date);
-                holder.quantity.setText(consumption.getQuantity() + "x");
+                int quantity = consumption.getQuantity();
+                if (quantity > 1)
+                    holder.quantity.setText(String.valueOf(consumption.getQuantity()));
                 holder.consumption = consumption;
                 holder.colour.setColour(consumption.get_pill().getColour());
+                holder.size.setText(consumption.get_pill().getSize() + consumption.get_pill().getUnits());
             }
         }
         return v;
