@@ -15,7 +15,7 @@ public class State {
     private static State _instance;
     private List<Pill> _pillsOpen = new ArrayList<Pill>();
     private Map<Pill, Integer> _pillsOpenList = new HashMap<Pill, Integer>();
-    private List<Integer> _graphPills;
+    private List<Integer> _graphExcludePills;
 
     private State() {
     }
@@ -48,11 +48,15 @@ public class State {
         _pillsOpenList = openPills;
     }
 
-    public List<Integer> getGraphPills() {
-        return _graphPills;
+    public List<Integer> getGraphExcludePills() {
+        return _graphExcludePills;
     }
 
-    public void setGraphPills(List<Integer> graphPills) {
-        this._graphPills = graphPills;
+    public void setGraphExcludePills(List<Integer> graphExcludePills) {
+        this._graphExcludePills = graphExcludePills;
+    }
+
+    public boolean IsPillExcluded(Pill pill){
+        return _graphExcludePills.contains(pill.getId());
     }
 }

@@ -10,6 +10,9 @@ import com.echo.holographlibrary.LineGraph;
 import com.echo.holographlibrary.LinePoint;
 import com.echo.holographlibrary.PieGraph;
 import com.echo.holographlibrary.PieSlice;
+import com.echo.holographlibrary.StackBar;
+import com.echo.holographlibrary.StackBarGraph;
+import com.echo.holographlibrary.StackBarSection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +28,7 @@ import uk.co.pilllogger.state.State;
 public class GraphHelper {
     public static void plotLineGraph(Map<Pill, SparseIntArray> consumptionData, int days, LineGraph li){
 
-        List<Integer> graphPills = State.getSingleton().getGraphPills();
+        List<Integer> graphPills = State.getSingleton().getGraphExcludePills();
         Boolean all = (graphPills == null) ? true : false;
         li.removeAllLines();
         double maxY = 0;
@@ -163,6 +166,36 @@ public class GraphHelper {
             ps.setValue(sliceValue);
             ps.setColor(pill.getColour());
             pie.addSlice(ps);
+        }
+    }
+
+    public static void plotStackBarGraph(Map<Pill, SparseIntArray> data, int days, StackBarGraph view) {
+
+        List<StackBar> bars = new ArrayList<StackBar>();
+
+        for(int i = 0; i <= days; i++){
+            StackBar sb = new StackBar();
+            sb.setName("");
+            for(Pill pill : data.keySet()){
+                if(State.getSingleton().IsPillExcluded(pill))
+                    continue;
+
+                SparseIntArray points = data.get(pill);
+
+                int value = 0;
+                if(points.indexOfKey(i) >= 0)
+                    value = points.get(i);
+
+                StackBarSection sbs = new StackBarSection();
+                sbs.setColor(pill.getColour());
+                sbs.setValue(value);
+
+                sb.getSections().add(sbs);
+            }
+            bars.add(sb);
+
+            view.setShowBarText(false);
+            view.setBars(bars);
         }
     }
 }
