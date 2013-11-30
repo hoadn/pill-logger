@@ -182,6 +182,9 @@ public class StackBarGraph extends View {
                         this.mPaint.setAlpha(255);
                     }
                     currentTop += (bottom-top);
+
+                    if(section.getValue() > 0)
+                        currentTop += padding;
                 }
                 count++;
             }
