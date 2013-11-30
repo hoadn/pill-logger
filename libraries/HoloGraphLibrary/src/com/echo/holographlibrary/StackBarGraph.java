@@ -105,15 +105,16 @@ public class StackBarGraph extends View {
             float padding = 1 * mContext.getResources().getDisplayMetrics().density;
             int selectPadding = (int) (4 * mContext.getResources().getDisplayMetrics().density);
             float bottomPadding = 10 * mContext.getResources().getDisplayMetrics().density;
+            float leftPadding = bottomPadding;
             
             float usableHeight;
             if (mShowBarText) {
                 this.mPaint.setTextSize(VALUE_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
                 Rect r3 = new Rect();
                 this.mPaint.getTextBounds("$", 0, 1, r3);
-                usableHeight = getHeight()-bottomPadding-Math.abs(r3.top-r3.bottom)-24 * density;
+                usableHeight = getHeight()-(bottomPadding*2)-Math.abs(r3.top-r3.bottom)-24 * density;
             } else {
-                usableHeight = getHeight()-bottomPadding;
+                usableHeight = getHeight()-(bottomPadding*2);
             }
              
             // Draw x-axis line
@@ -124,7 +125,7 @@ public class StackBarGraph extends View {
             float baseY = getHeight()-bottomPadding+10* density;
             canvas.drawLine(0, baseY, getWidth(), baseY, mPaint);
             
-            float barWidth = (getWidth() - (padding*2)*mBars.size())/mBars.size();
+            float barWidth = (getWidth() - (padding*2)*mBars.size() - leftPadding * 2)/mBars.size();
 
             // Maximum y value = sum of all values.
             for (final StackBar bar : mBars) {
@@ -140,9 +141,9 @@ public class StackBarGraph extends View {
                 float currentTop = 0;
                 for(final StackBarSection section : bar.getSections()){
                     // Set bar bounds
-                    int left = (int)((padding*2)*count + padding + barWidth*count);
+                    int left = (int)((padding*2)*count + padding + barWidth*count) + (int)leftPadding;
                     int top = (int)(getHeight() - bottomPadding - (usableHeight * (section.getValue() / maxValue)));
-                    int right = (int)((padding*2)*count + padding + barWidth*(count+1));
+                    int right = (int)((padding*2)*count + padding + barWidth*(count+1)) + (int)leftPadding;
                     int bottom = (int)(getHeight()-bottomPadding);
 
                     if(section.getValue() == 0){
@@ -205,11 +206,11 @@ public class StackBarGraph extends View {
             }
             mPaint.setColor(Color.rgb(80,80,80));
             mPaint.setStrokeWidth(padding);
-            //mPaint.setAlpha();
+            
             mPaint.setAntiAlias(true);
             if(mShouldDrawGridHorizontal){
                 float singleItemHeight = usableHeight / maxValue;
-                for(int i = 1; i <= maxValue; i++){
+                for(int i = 0; i < maxValue; i++){
                     float y = getHeight() - (bottomPadding + ((singleItemHeight) * i) + (padding * i) - density);
                     canvas.drawLine(0, y, getWidth(), y, mPaint);
                 }
