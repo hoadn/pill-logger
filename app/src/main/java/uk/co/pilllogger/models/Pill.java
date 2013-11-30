@@ -18,6 +18,7 @@ public class Pill implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int _id;
 	private String _name = "";
+    private String _units = "";
 	private int _size;
     private int _colour = R.color.pill_default_color;
     private boolean _favourite = false;
@@ -28,6 +29,13 @@ public class Pill implements Serializable {
     public Pill(String name, int size) {
         _name = name;
         _size = size;
+    }
+
+    public Pill(String name, int size, String units) {
+        _name = name;
+        _size = size;
+        _units = units;
+
     }
 
 	/**
@@ -80,6 +88,14 @@ public class Pill implements Serializable {
 
     public void setFavourite(boolean favourite) {
         _favourite = favourite;
+    }
+
+    public String getUnits() {
+        return _units;
+    }
+
+    public void setUnits(String _units) {
+        this._units = _units;
     }
 
     @Override

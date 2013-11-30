@@ -52,14 +52,12 @@ public class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
         ViewHolder holder = new ViewHolder();
         holder.name = (TextView) v.findViewById(R.id.pill_list_name);
         holder.size = (TextView) v.findViewById(R.id.pill_list_size);
-        holder.units = (TextView) v.findViewById(R.id.pill_list_units);
         holder.favourite = v.findViewById(R.id.pill_list_favourite);
         holder.colour = (ColourIndicator) v.findViewById(R.id.pill_list_colour);
         holder.pickerContainer = (ViewGroup) v.findViewById(R.id.pill_list_colour_picker_container);
 
         holder.name.setTypeface(_openSans);
         holder.size.setTypeface(_openSans);
-        holder.units.setTypeface(_openSans);
         v.setTag(holder);
     }
 

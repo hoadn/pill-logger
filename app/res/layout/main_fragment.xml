@@ -31,7 +31,7 @@
             android:dividerHeight="0dp"
             android:layout_gravity="left"
             android:background="@color/drawer_item_background"/>
-        <com.echo.holographlibrary.LineGraph
+        <com.echo.holographlibrary.BarGraph
             android:layout_width="300dp"
             android:layout_height="match_parent"
             android:paddingRight="30dp"
@@ -39,7 +39,7 @@
             android:layout_weight="1"
             android:layout_marginLeft="50dp"
             android:id="@+id/main_graph"
-            android:background="@drawable/graph_paper_background_patterns_blue"
+            android:background="@drawable/graph_paper_background_patterns_black"
         />
 
     </android.support.v4.widget.SlidingPaneLayout>

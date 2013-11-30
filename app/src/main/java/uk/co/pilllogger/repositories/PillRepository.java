@@ -38,6 +38,7 @@ public class PillRepository extends BaseRepository<Pill>{
         values.put(DatabaseContract.Pills.COLUMN_SIZE, pill.getSize());
         values.put(DatabaseContract.Pills.COLUMN_COLOUR, pill.getColour());
         values.put(DatabaseContract.Pills.COLUMN_FAVOURITE, pill.isFavourite());
+        values.put(DatabaseContract.Pills.COLUMN_UNITS, pill.getUnits());
 
         return values;
     }

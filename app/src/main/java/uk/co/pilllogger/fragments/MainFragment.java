@@ -123,8 +123,8 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
     }
 
     public void replotGraph(){
-        DateTime aMonthAgo = new DateTime().minusMonths(1);
-        Days totalDays = Days.daysBetween(aMonthAgo.withTimeAtStartOfDay(), new DateTime().withTimeAtStartOfDay().plusDays(1));
+        DateTime aWeekAgo = new DateTime().minusWeeks(1);
+        Days totalDays = Days.daysBetween(aWeekAgo.withTimeAtStartOfDay(), new DateTime().withTimeAtStartOfDay().plusDays(1));
         int dayCount = totalDays.getDays();
 
         View view = _mainLayout.findViewById(R.id.main_graph);
