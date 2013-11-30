@@ -105,6 +105,7 @@ public class StackBarGraph extends View {
             float padding = 1 * mContext.getResources().getDisplayMetrics().density;
             int selectPadding = (int) (4 * mContext.getResources().getDisplayMetrics().density);
             float bottomPadding = 10 * mContext.getResources().getDisplayMetrics().density;
+            float leftPadding = bottomPadding;
             
             float usableHeight;
             if (mShowBarText) {
@@ -124,7 +125,7 @@ public class StackBarGraph extends View {
             float baseY = getHeight()-bottomPadding+10* density;
             canvas.drawLine(0, baseY, getWidth(), baseY, mPaint);
             
-            float barWidth = (getWidth() - (padding*2)*mBars.size())/mBars.size();
+            float barWidth = (getWidth() - (padding*2)*mBars.size() - leftPadding * 2)/mBars.size();
 
             // Maximum y value = sum of all values.
             for (final StackBar bar : mBars) {
@@ -140,9 +141,9 @@ public class StackBarGraph extends View {
                 float currentTop = 0;
                 for(final StackBarSection section : bar.getSections()){
                     // Set bar bounds
-                    int left = (int)((padding*2)*count + padding + barWidth*count);
+                    int left = (int)((padding*2)*count + padding + barWidth*count) + (int)leftPadding;
                     int top = (int)(getHeight() - bottomPadding - (usableHeight * (section.getValue() / maxValue)));
-                    int right = (int)((padding*2)*count + padding + barWidth*(count+1));
+                    int right = (int)((padding*2)*count + padding + barWidth*(count+1)) + (int)leftPadding;
                     int bottom = (int)(getHeight()-bottomPadding);
 
                     if(section.getValue() == 0){
