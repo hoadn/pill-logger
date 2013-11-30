@@ -84,6 +84,7 @@ public class StackBarGraph extends View {
     public void onDraw(Canvas ca) {
     	
         if (mFullImage == null || mShouldUpdate) {
+            float density = mContext.getResources().getDisplayMetrics().density;
             mFullImage = Bitmap.createBitmap(getWidth(), getHeight(), Config.ARGB_8888);
             Canvas canvas = new Canvas(mFullImage);
             canvas.drawColor(Color.TRANSPARENT);
@@ -92,24 +93,25 @@ public class StackBarGraph extends View {
             float maxValue = 0;
             float padding = 2 * mContext.getResources().getDisplayMetrics().density;
             int selectPadding = (int) (4 * mContext.getResources().getDisplayMetrics().density);
-            float bottomPadding = 30 * mContext.getResources().getDisplayMetrics().density;
+            float bottomPadding = 10 * mContext.getResources().getDisplayMetrics().density;
             
             float usableHeight;
             if (mShowBarText) {
                 this.mPaint.setTextSize(VALUE_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
                 Rect r3 = new Rect();
                 this.mPaint.getTextBounds("$", 0, 1, r3);
-                usableHeight = getHeight()-bottomPadding-Math.abs(r3.top-r3.bottom)-24 * mContext.getResources().getDisplayMetrics().density;
+                usableHeight = getHeight()-bottomPadding-Math.abs(r3.top-r3.bottom)-24 * density;
             } else {
                 usableHeight = getHeight()-bottomPadding;
             }
              
             // Draw x-axis line
-            mPaint.setColor(Color.BLACK);
+            mPaint.setColor(Color.WHITE);
             mPaint.setStrokeWidth(2 * mContext.getResources().getDisplayMetrics().density);
             mPaint.setAlpha(50);
             mPaint.setAntiAlias(true);
-            canvas.drawLine(0, getHeight()-bottomPadding+10* mContext.getResources().getDisplayMetrics().density, getWidth(), getHeight()-bottomPadding+10* mContext.getResources().getDisplayMetrics().density, mPaint);
+            float baseY = getHeight()-bottomPadding+10* density;
+            canvas.drawLine(0, baseY, getWidth(), baseY, mPaint);
             
             float barWidth = (getWidth() - (padding*2)*mBars.size())/mBars.size();
 
@@ -118,6 +120,12 @@ public class StackBarGraph extends View {
                 if (bar.getTotalValue() > maxValue) {
                     maxValue = bar.getTotalValue();
                 }
+            }
+
+            float singleItemHeight = usableHeight / maxValue;
+            for(int i = 1; i <= maxValue; i++){
+                float y = getHeight() - (bottomPadding + ((singleItemHeight) * i) + (padding * i) - density);
+                canvas.drawLine(0, y, getWidth(), y, mPaint);
             }
             
             mRectangle = new Rect();
