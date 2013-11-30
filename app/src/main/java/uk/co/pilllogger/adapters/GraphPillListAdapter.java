@@ -73,7 +73,7 @@ public class GraphPillListAdapter extends ArrayAdapter<Pill> {
             holder.size.setText(String.valueOf(pill.getSize()));
             holder.color.setBackgroundColor(pill.getColour());
 
-            boolean included = !State.getSingleton().IsPillExcluded(pill);
+            boolean included = !State.getSingleton().isPillExcluded(pill);
             holder.checkbox.setChecked(included);
 
         }

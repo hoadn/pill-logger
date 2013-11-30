@@ -90,7 +90,7 @@ public class StackBarGraph extends View {
             NinePatchDrawable popup = (NinePatchDrawable)this.getResources().getDrawable(R.drawable.popup_black);
             
             float maxValue = 0;
-            float padding = 7 * mContext.getResources().getDisplayMetrics().density;
+            float padding = 2 * mContext.getResources().getDisplayMetrics().density;
             int selectPadding = (int) (4 * mContext.getResources().getDisplayMetrics().density);
             float bottomPadding = 30 * mContext.getResources().getDisplayMetrics().density;
             
@@ -132,8 +132,14 @@ public class StackBarGraph extends View {
                     int right = (int)((padding*2)*count + padding + barWidth*(count+1));
                     int bottom = (int)(getHeight()-bottomPadding);
 
-                    bottom += currentTop;
-                    top += currentTop;
+                    if(section.getValue() == 0){
+                        top = 0;
+                        bottom = 0;
+                    }
+                    else{
+                        bottom -= currentTop;
+                        top -= currentTop;
+                    }
 
                     mRectangle.set(left, top, right, bottom);
 
@@ -175,7 +181,7 @@ public class StackBarGraph extends View {
                         canvas.drawPath(section.getPath(), this.mPaint);
                         this.mPaint.setAlpha(255);
                     }
-                    currentTop += top;
+                    currentTop += (bottom-top);
                 }
                 count++;
             }

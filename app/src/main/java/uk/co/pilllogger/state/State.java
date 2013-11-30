@@ -56,7 +56,7 @@ public class State {
         this._graphExcludePills = graphExcludePills;
     }
 
-    public boolean IsPillExcluded(Pill pill){
+    public boolean isPillExcluded(Pill pill){
         return _graphExcludePills.contains(pill.getId());
     }
 }
