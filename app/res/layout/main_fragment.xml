@@ -31,7 +31,7 @@
             android:dividerHeight="0dp"
             android:layout_gravity="left"
             android:background="@color/drawer_item_background"/>
-        <com.echo.holographlibrary.BarGraph
+        <com.echo.holographlibrary.StackBarGraph
             android:layout_width="300dp"
             android:layout_height="match_parent"
             android:paddingRight="30dp"

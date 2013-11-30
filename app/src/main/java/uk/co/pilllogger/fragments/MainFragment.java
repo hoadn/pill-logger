@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.v4.widget.SlidingPaneLayout;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +15,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.echo.holographlibrary.Bar;
 import com.echo.holographlibrary.BarGraph;
-import com.echo.holographlibrary.Line;
 import com.echo.holographlibrary.LineGraph;
-import com.echo.holographlibrary.LinePoint;
 import com.echo.holographlibrary.PieGraph;
-import com.echo.holographlibrary.PieSlice;
+import com.echo.holographlibrary.StackBarGraph;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,11 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.adapters.ConsumptionListAdapter;
 import uk.co.pilllogger.adapters.GraphPillListAdapter;
-import uk.co.pilllogger.adapters.PillsListAdapter;
-import uk.co.pilllogger.adapters.PillsListBaseAdapter;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.listeners.AddConsumptionClickListener;
@@ -143,6 +136,9 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
         if(view instanceof PieGraph)
             GraphHelper.plotPieChart(data, dayCount, (PieGraph)view);
 
+        if(view instanceof StackBarGraph)
+            GraphHelper.plotStackBarGraph(data, dayCount, (StackBarGraph)view);
+
         view.setTag(data);
     }
 
@@ -187,7 +183,7 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
     @Override
     public void pillsReceived(List<Pill> pills) {
 
-        List<Integer> graphPills = State.getSingleton().getGraphPills();
+        List<Integer> graphPills = State.getSingleton().getGraphExcludePills();
         if (graphPills == null) {
             graphPills = new ArrayList<Integer>();
         }
@@ -196,7 +192,7 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
             if (!graphPills.contains(p.getId()))
                 graphPills.add(p.getId());
         }
-        State.getSingleton().setGraphPills(graphPills);
+        State.getSingleton().setGraphExcludePills(graphPills);
 
         final List<Pill> pillList = pills;
         ListView list = (ListView) getActivity().findViewById(R.id.graph_drawer);
@@ -207,16 +203,16 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Pill pill = pillList.get(position);
-                    List<Integer> graphPills = State.getSingleton().getGraphPills();
+                    List<Integer> graphPills = State.getSingleton().getGraphExcludePills();
                     CheckBox checkbox = (CheckBox)view.findViewById(R.id.graph_list_check_box);
-                    if (checkbox.isChecked()) {
-                        checkbox.setChecked(false);
+                    if (!checkbox.isChecked()) {
+                        checkbox.setChecked(true);
                         if (graphPills.contains(pill.getId())) {
                             graphPills.remove((Object) pill.getId());
                         }
                     }
                     else {
-                        checkbox.setChecked(true);
+                        checkbox.setChecked(false);
                         if (!graphPills.contains(pill.getId())) {
                             graphPills.add(pill.getId());
                         }

@@ -26,56 +26,36 @@ package com.echo.holographlibrary;
 import android.graphics.Path;
 import android.graphics.Region;
 
-public class LinePoint {
-	private float x = 0;
-	private float y = 0;
-	private Path path;
-	private Region region;
-	
-	public LinePoint(double x, double y){
-		this.x = (float)x;
-		this.y = (float)y;
-	}
-	public LinePoint(float x, float y){
-		this.x = x;
-		this.y = y;
-	}
-	public float getX() {
-		return x;
-	}
-	public void setX(float x) {
-		this.x = x;
-	}
-	public float getY() {
-		return y;
-	}
-	public void setY(float y) {
-		this.y = y;
-	}
-	
-	public void setX(double x){
-		this.x = (float) x;
-	}
-	
-	public void setY(double y){
-		this.y = (float) y;
-	}
-	public Region getRegion() {
-		return region;
-	}
-	public void setRegion(Region region) {
-		this.region = region;
-	}
-	public Path getPath() {
-		return path;
-	}
-	public void setPath(Path path) {
-		this.path = path;
-	}
-	
-	@Override
-	public String toString(){
-		return "x= " + x + ", y= " + y;
-	}
-	
+import java.util.ArrayList;
+import java.util.List;
+
+public class StackBar {
+    private String mName;
+    private List<StackBarSection> mSections = new ArrayList<StackBarSection>();
+
+    public List<StackBarSection> getSections() {
+        return mSections;
+    }
+
+    public void setSections(List<StackBarSection> sections) {
+        this.mSections = sections;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public void setName(String name) {
+        this.mName = name;
+    }
+
+    public int getTotalValue(){
+        int value = 0;
+
+        for(StackBarSection section : mSections){
+            value += section.getValue();
+        }
+
+        return value;
+    }
 }

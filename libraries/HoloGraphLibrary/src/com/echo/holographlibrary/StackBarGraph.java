@@ -23,8 +23,6 @@
 
 package com.echo.holographlibrary;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -41,11 +39,14 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class BarGraph extends View {
+import java.util.ArrayList;
+import java.util.List;
+
+public class StackBarGraph extends View {
 
 	private final static int VALUE_FONT_SIZE = 30, AXIS_LABEL_FONT_SIZE = 15;
-	
-    private ArrayList<Bar> mBars = new ArrayList<Bar>();
+
+    private List<StackBar> mBars = new ArrayList<StackBar>();
     private Paint mPaint = new Paint();
     private Rect mRectangle = null;
     private boolean mShowBarText = true;
@@ -53,15 +54,15 @@ public class BarGraph extends View {
     private OnBarClickedListener mListener;
     private Bitmap mFullImage;
     private boolean mShouldUpdate = false;
-    
+
     private Context mContext = null;
-    
-    public BarGraph(Context context) {
+
+    public StackBarGraph(Context context) {
         super(context);
         mContext = context;
     }
-    
-    public BarGraph(Context context, AttributeSet attrs) {
+
+    public StackBarGraph(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
     }
@@ -70,13 +71,13 @@ public class BarGraph extends View {
         mShowBarText = show;
     }
     
-    public void setBars(ArrayList<Bar> points){
+    public void setBars(List<StackBar> points){
         this.mBars = points;
         mShouldUpdate = true;
         postInvalidate();
     }
     
-    public ArrayList<Bar> getBars(){
+    public List<StackBar> getBars(){
         return this.mBars;
     }
 
@@ -89,7 +90,7 @@ public class BarGraph extends View {
             NinePatchDrawable popup = (NinePatchDrawable)this.getResources().getDrawable(R.drawable.popup_black);
             
             float maxValue = 0;
-            float padding = 7 * mContext.getResources().getDisplayMetrics().density;
+            float padding = 2 * mContext.getResources().getDisplayMetrics().density;
             int selectPadding = (int) (4 * mContext.getResources().getDisplayMetrics().density);
             float bottomPadding = 30 * mContext.getResources().getDisplayMetrics().density;
             
@@ -113,60 +114,74 @@ public class BarGraph extends View {
             float barWidth = (getWidth() - (padding*2)*mBars.size())/mBars.size();
 
             // Maximum y value = sum of all values.
-            for (final Bar bar : mBars) {
-                if (bar.getValue() > maxValue) {
-                    maxValue = bar.getValue();
+            for (final StackBar bar : mBars) {
+                if (bar.getTotalValue() > maxValue) {
+                    maxValue = bar.getTotalValue();
                 }
             }
             
             mRectangle = new Rect();
             
             int count = 0;
-            for (final Bar bar : mBars) {
-                // Set bar bounds
-                int left = (int)((padding*2)*count + padding + barWidth*count);
-                int top = (int)(getHeight()-bottomPadding-(usableHeight*(bar.getValue()/maxValue)));
-                int right = (int)((padding*2)*count + padding + barWidth*(count+1));
-                int bottom = (int)(getHeight()-bottomPadding);
-                mRectangle.set(left, top, right, bottom);
+            for (final StackBar bar : mBars) {
+                float currentTop = 0;
+                for(final StackBarSection section : bar.getSections()){
+                    // Set bar bounds
+                    int left = (int)((padding*2)*count + padding + barWidth*count);
+                    int top = (int)(getHeight() - bottomPadding - (usableHeight * (section.getValue() / maxValue)));
+                    int right = (int)((padding*2)*count + padding + barWidth*(count+1));
+                    int bottom = (int)(getHeight()-bottomPadding);
 
-                // Draw bar
-                this.mPaint.setColor(bar.getColor());
-                this.mPaint.setAlpha(255);
-                canvas.drawRect(mRectangle, this.mPaint);
+                    if(section.getValue() == 0){
+                        top = 0;
+                        bottom = 0;
+                    }
+                    else{
+                        bottom -= currentTop;
+                        top -= currentTop;
+                    }
 
-                // Create selection region
-                Path path = new Path();
-                path.addRect(new RectF(mRectangle.left-selectPadding, mRectangle.top-selectPadding, mRectangle.right+selectPadding, mRectangle.bottom+selectPadding), Path.Direction.CW);
-                bar.setPath(path);
-                bar.setRegion(new Region(mRectangle.left-selectPadding, mRectangle.top-selectPadding, mRectangle.right+selectPadding, mRectangle.bottom+selectPadding));
+                    mRectangle.set(left, top, right, bottom);
 
-                // Draw x-axis label text
-                this.mPaint.setTextSize(AXIS_LABEL_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
-                int x = (int)(((mRectangle.left+mRectangle.right)/2)-(this.mPaint.measureText(bar.getName())/2));
-                int y = (int) (getHeight()-3 * mContext.getResources().getDisplayMetrics().scaledDensity);
-                canvas.drawText(bar.getName(), x, y, this.mPaint);
-
-                // Draw value text
-                if (mShowBarText){
-                    this.mPaint.setTextSize(VALUE_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
-                    this.mPaint.setColor(Color.WHITE);
-                    Rect r2 = new Rect();
-                    this.mPaint.getTextBounds(bar.getValueString(), 0, 1, r2);
-                    
-                    int boundLeft = (int) (((mRectangle.left+mRectangle.right)/2)-(this.mPaint.measureText(bar.getValueString())/2)-10 * mContext.getResources().getDisplayMetrics().density);
-                    int boundTop = (int) (mRectangle.top+(r2.top-r2.bottom)-18 * mContext.getResources().getDisplayMetrics().density);
-                    int boundRight = (int)(((mRectangle.left+mRectangle.right)/2)+(this.mPaint.measureText(bar.getValueString())/2)+10 * mContext.getResources().getDisplayMetrics().density);
-                    popup.setBounds(boundLeft, boundTop, boundRight, mRectangle.top);
-                    popup.draw(canvas);
-                    
-                    canvas.drawText(bar.getValueString(), (int)(((mRectangle.left+mRectangle.right)/2)-(this.mPaint.measureText(bar.getValueString()))/2), mRectangle.top-(mRectangle.top - boundTop)/2f+(float)Math.abs(r2.top-r2.bottom)/2f*0.7f, this.mPaint);
-                }
-                if (mIndexSelected == count && mListener != null) {
-                    this.mPaint.setColor(Color.parseColor("#33B5E5"));
-                    this.mPaint.setAlpha(100);
-                    canvas.drawPath(bar.getPath(), this.mPaint);
+                    // Draw bar
+                    this.mPaint.setColor(section.getColor());
                     this.mPaint.setAlpha(255);
+                    canvas.drawRect(mRectangle, this.mPaint);
+
+                    // Create selection region
+                    Path path = new Path();
+                    path.addRect(new RectF(mRectangle.left-selectPadding, mRectangle.top-selectPadding, mRectangle.right+selectPadding, mRectangle.bottom+selectPadding), Path.Direction.CW);
+                    section.setPath(path);
+                    section.setRegion(new Region(mRectangle.left-selectPadding, mRectangle.top-selectPadding, mRectangle.right+selectPadding, mRectangle.bottom+selectPadding));
+
+                    // Draw x-axis label text
+                    this.mPaint.setTextSize(AXIS_LABEL_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
+                    int x = (int)(((mRectangle.left+mRectangle.right)/2)-(this.mPaint.measureText(bar.getName())/2));
+                    int y = (int) (getHeight()-3 * mContext.getResources().getDisplayMetrics().scaledDensity);
+                    canvas.drawText(bar.getName(), x, y, this.mPaint);
+
+                    // Draw value text
+                    if (mShowBarText){
+                        this.mPaint.setTextSize(VALUE_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
+                        this.mPaint.setColor(Color.WHITE);
+                        Rect r2 = new Rect();
+                        this.mPaint.getTextBounds(section.getValueString(), 0, 1, r2);
+
+                        int boundLeft = (int) (((mRectangle.left+mRectangle.right)/2)-(this.mPaint.measureText(section.getValueString())/2)-10 * mContext.getResources().getDisplayMetrics().density);
+                        int boundTop = (int) (mRectangle.top+(r2.top-r2.bottom)-18 * mContext.getResources().getDisplayMetrics().density);
+                        int boundRight = (int)(((mRectangle.left+mRectangle.right)/2)+(this.mPaint.measureText(section.getValueString())/2)+10 * mContext.getResources().getDisplayMetrics().density);
+                        popup.setBounds(boundLeft, boundTop, boundRight, mRectangle.top);
+                        popup.draw(canvas);
+
+                        canvas.drawText(section.getValueString(), (int)(((mRectangle.left+mRectangle.right)/2)-(this.mPaint.measureText(section.getValueString()))/2), mRectangle.top-(mRectangle.top - boundTop)/2f+(float)Math.abs(r2.top-r2.bottom)/2f*0.7f, this.mPaint);
+                    }
+                    if (mIndexSelected == count && mListener != null) {
+                        this.mPaint.setColor(Color.parseColor("#33B5E5"));
+                        this.mPaint.setAlpha(100);
+                        canvas.drawPath(section.getPath(), this.mPaint);
+                        this.mPaint.setAlpha(255);
+                    }
+                    currentTop += (bottom-top);
                 }
                 count++;
             }
@@ -185,21 +200,23 @@ public class BarGraph extends View {
         point.y = (int) event.getY();
         
         int count = 0;
-        for (Bar bar : mBars){
-            Region r = new Region();
-            r.setPath(bar.getPath(), bar.getRegion());
-            if (r.contains((int)point.x,(int) point.y) && event.getAction() == MotionEvent.ACTION_DOWN){
-                mIndexSelected = count;
-            } else if (event.getAction() == MotionEvent.ACTION_UP){
-                if (r.contains((int)point.x,(int) point.y) && mListener != null){
-                    if (mIndexSelected > -1) mListener.onClick(mIndexSelected);
-                    mIndexSelected = -1;
+        for (StackBar bar : mBars){
+            for(StackBarSection section : bar.getSections()){
+                Region r = new Region();
+                r.setPath(section.getPath(), section.getRegion());
+                if (r.contains((int)point.x,(int) point.y) && event.getAction() == MotionEvent.ACTION_DOWN){
+                    mIndexSelected = count;
+                } else if (event.getAction() == MotionEvent.ACTION_UP){
+                    if (r.contains((int)point.x,(int) point.y) && mListener != null){
+                        if (mIndexSelected > -1) mListener.onClick(mIndexSelected);
+                        mIndexSelected = -1;
+                    }
                 }
+                else if(event.getAction() == MotionEvent.ACTION_CANCEL)
+                    mIndexSelected = -1;
+
+                count++;
             }
-            else if(event.getAction() == MotionEvent.ACTION_CANCEL)
-            	mIndexSelected = -1;
-            
-            count++;
         }
         
         if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL){

@@ -33,7 +33,7 @@ public class GraphPillListAdapter extends ArrayAdapter<Pill> {
         _pills = pills;
         _resourceId = textViewResourceId;
         _openSans = Typeface.createFromAsset(activity.getAssets(), "fonts/OpenSans-Light.ttf");
-        _graphPills = State.getSingleton().getGraphPills();
+        _graphPills = State.getSingleton().getGraphExcludePills();
     }
 
     public static class ViewHolder {
@@ -72,10 +72,10 @@ public class GraphPillListAdapter extends ArrayAdapter<Pill> {
             holder.name.setText(pill.getName());
             holder.size.setText(String.valueOf(pill.getSize()));
             holder.color.setBackgroundColor(pill.getColour());
-            if (_graphPills.contains(pill.getId()))
-                holder.checkbox.setChecked(true);
-            else
-                holder.checkbox.setChecked(false);
+
+            boolean included = !State.getSingleton().isPillExcluded(pill);
+            holder.checkbox.setChecked(included);
+
         }
         return v;
     }
