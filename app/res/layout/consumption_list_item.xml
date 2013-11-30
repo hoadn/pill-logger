@@ -27,21 +27,23 @@
             android:color="@color/pill_colour1"
             />
 
-        <TextView android:textSize="16dip"
+        <TextView android:textSize="14dip"
             android:id="@+id/consumption_list_date"
             android:layout_below="@+id/consumption_list_name"
-            android:layout_marginTop="3dp"
             android:textColor="@color/text_grey_medium"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-5dp"/>
 
         <TextView
             android:textSize="16dp"
             android:id="@+id/consumption_list_quantity"
             android:layout_centerVertical="true"
             android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
             android:layout_width="29dp"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="8dp"/>
 
@@ -50,6 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:textColor="@color/text_grey_medium"
             android:layout_toLeftOf="@id/consumption_list_colour"/>
 
 

@@ -80,7 +80,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
         if(holder.name != null){
             holder.name.setTypeface(_openSans);
             holder.date.setTypeface(_openSans);
-            holder.quantity.setTypeface(_openSans);
+            //holder.quantity.setTypeface(_openSans);
             holder.size.setTypeface(_openSans);
         }
         v.setTag(holder);
