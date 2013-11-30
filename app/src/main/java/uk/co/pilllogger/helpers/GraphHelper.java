@@ -150,9 +150,13 @@ public class GraphHelper {
     }
 
     public static void plotPieChart(Map<Pill, SparseIntArray> consumptionData, int days, PieGraph pie){
+        List<Integer> graphPills = State.getSingleton().getGraphPills();
+        Boolean all = (graphPills == null);
 
         pie.getSlices().clear();
         for(Pill pill : consumptionData.keySet()){
+            if (pill == null || ((!all) && (!graphPills.contains(pill.getId()))))
+                continue;
             SparseIntArray points = consumptionData.get(pill);
             int sliceValue = 0;
             for(int i = 0; i <= days; i++){
