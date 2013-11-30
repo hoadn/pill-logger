@@ -197,6 +197,7 @@ public class GraphHelper {
 
             view.setShowBarText(false);
             view.setBars(bars);
+            view.setShouldDrawGrid(true);
         }
     }
 }

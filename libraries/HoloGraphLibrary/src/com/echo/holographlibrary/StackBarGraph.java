@@ -55,6 +55,17 @@ public class StackBarGraph extends View {
     private Bitmap mFullImage;
     private boolean mShouldUpdate = false;
 
+    public boolean getShouldDrawGrid() {
+        return mShouldDrawGridHorizontal;
+    }
+
+    public void setShouldDrawGrid(boolean mShouldDrawGrid) {
+        this.mShouldDrawGridHorizontal = mShouldDrawGrid;
+    }
+
+    private boolean mShouldDrawGridHorizontal = false;
+    private boolean mShouldDrawGridVertical = false;
+
     private Context mContext = null;
 
     public StackBarGraph(Context context) {
@@ -122,10 +133,12 @@ public class StackBarGraph extends View {
                 }
             }
 
-            float singleItemHeight = usableHeight / maxValue;
-            for(int i = 1; i <= maxValue; i++){
-                float y = getHeight() - (bottomPadding + ((singleItemHeight) * i) + (padding * i) - density);
-                canvas.drawLine(0, y, getWidth(), y, mPaint);
+            if(mShouldDrawGridHorizontal){
+                float singleItemHeight = usableHeight / maxValue;
+                for(int i = 1; i <= maxValue; i++){
+                    float y = getHeight() - (bottomPadding + ((singleItemHeight) * i) + (padding * i) - density);
+                    canvas.drawLine(0, y, getWidth(), y, mPaint);
+                }
             }
             
             mRectangle = new Rect();
@@ -147,6 +160,8 @@ public class StackBarGraph extends View {
                     else{
                         bottom -= currentTop;
                         top -= currentTop;
+                        if(section.getValue() > 1)
+                           top -= padding * section.getValue();
                     }
 
                     mRectangle.set(left, top, right, bottom);
