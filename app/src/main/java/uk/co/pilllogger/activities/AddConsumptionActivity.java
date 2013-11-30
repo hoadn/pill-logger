@@ -27,6 +27,7 @@ import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
+import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.listeners.AddConsumptionPillItemClickListener;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -57,6 +58,7 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
     public static String TIME_FORMAT = "kk:mm";
     Spinner _timeSpinner;
     Spinner _dateSpinner;
+    Spinner _unitSpinner;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +101,12 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
 
         setUpRadioGroups();
         setUpSpinners();
+
+        _unitSpinner = (Spinner) this.findViewById(R.id.add_consumption_units_spinner);
+        String[] units = { "mg", "ml" };
+        UnitAdapter adapter = new UnitAdapter(this, android.R.layout.simple_spinner_item, units);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        _unitSpinner.setAdapter(adapter);
     }
 
     private void setUpRadioGroups() {
@@ -265,6 +273,8 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
         String name = _newPillName.getText().toString();
         int size = Integer.parseInt(_newPillSize.getText().toString());
         Pill pill = new Pill(name, size);
+        String units = _unitSpinner.getSelectedItem().toString();
+        pill.setUnits(units);
         new InsertPillTask(_activity, pill, (InsertPillTask.ITaskComplete)_activity).execute();
 
         _newPillName.setText("");

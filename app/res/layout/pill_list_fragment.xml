@@ -39,18 +39,11 @@
             android:inputType="textCapWords"
             android:imeOptions="actionNext"/>
 
-        <View
-            android:id="@+id/pill_fragment_add_pill_divider"
-            android:layout_height="1dp"
-            android:layout_width="match_parent"
-            android:background="#cccccc"
-            android:layout_below="@id/pill_fragment_add_pill_name"/>
-
         <LinearLayout
             android:layout_height="40dp"
             android:layout_width="match_parent"
             android:orientation="horizontal"
-            android:layout_below="@id/pill_fragment_add_pill_divider">
+            android:layout_below="@id/pill_fragment_add_pill_name">
             <EditText
                 android:id="@+id/pill_fragment_add_pill_size"
                 android:layout_height="match_parent"
@@ -64,6 +57,12 @@
                 android:inputType="number"
                 android:background="@null"
                 android:imeOptions="actionDone"/>
+
+            <Spinner
+                android:id="@+id/units_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_weight="0"/>
 
             <ImageView
                 android:id="@+id/pill_fragment_add_pill_completed"

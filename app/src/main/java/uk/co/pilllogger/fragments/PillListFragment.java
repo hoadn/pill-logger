@@ -12,14 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.haarman.listviewanimations.itemmanipulation.contextualundo.ContextualUndoAdapter;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillsListAdapter;
+import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.tasks.DeletePillTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
@@ -32,6 +36,7 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
     private Typeface _openSans;
     private EditText _addPillName;
     private EditText _addPillSize;
+    private Spinner _unitSpinner;
 
 	public PillListFragment() {
 	}
@@ -94,6 +99,12 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
                 return handled;
             }
         });
+
+        _unitSpinner = (Spinner) v.findViewById(R.id.units_spinner);
+        String[] units = { "mg", "ml" };
+        UnitAdapter adapter = new UnitAdapter(getActivity(), android.R.layout.simple_spinner_item, units);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        _unitSpinner.setAdapter(adapter);
         return v;
     }
 
@@ -168,7 +179,10 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
         if (!_addPillName.getText().toString().equals("")) {
             Pill newPill = new Pill();
             String pillName = _addPillName.getText().toString();
+            String units = _unitSpinner.getSelectedItem().toString();
+            newPill.setUnits(units);
             newPill.setName(pillName);
+
             int pillSize = 0;
             if (!_addPillSize.getText().toString().matches("")) {
                 pillSize = Integer.parseInt(_addPillSize.getText().toString());

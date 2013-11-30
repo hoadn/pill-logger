@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by root on 21/10/13.
  */
 public class DatabaseCreator extends SQLiteOpenHelper{
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 6;
     public static final String DATABASE_NAME = "PillLogger.db";
 
     public DatabaseCreator(Context context) {
