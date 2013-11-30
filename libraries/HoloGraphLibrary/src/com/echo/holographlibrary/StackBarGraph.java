@@ -112,9 +112,9 @@ public class StackBarGraph extends View {
                 this.mPaint.setTextSize(VALUE_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
                 Rect r3 = new Rect();
                 this.mPaint.getTextBounds("$", 0, 1, r3);
-                usableHeight = getHeight()-bottomPadding-Math.abs(r3.top-r3.bottom)-24 * density;
+                usableHeight = getHeight()-(bottomPadding*2)-Math.abs(r3.top-r3.bottom)-24 * density;
             } else {
-                usableHeight = getHeight()-bottomPadding;
+                usableHeight = getHeight()-(bottomPadding*2);
             }
              
             // Draw x-axis line
@@ -206,11 +206,11 @@ public class StackBarGraph extends View {
             }
             mPaint.setColor(Color.rgb(80,80,80));
             mPaint.setStrokeWidth(padding);
-            //mPaint.setAlpha();
+            
             mPaint.setAntiAlias(true);
             if(mShouldDrawGridHorizontal){
                 float singleItemHeight = usableHeight / maxValue;
-                for(int i = 1; i <= maxValue; i++){
+                for(int i = 0; i < maxValue; i++){
                     float y = getHeight() - (bottomPadding + ((singleItemHeight) * i) + (padding * i) - density);
                     canvas.drawLine(0, y, getWidth(), y, mPaint);
                 }
