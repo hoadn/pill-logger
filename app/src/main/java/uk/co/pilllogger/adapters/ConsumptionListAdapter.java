@@ -19,6 +19,7 @@ import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.fragments.MainFragment;
+import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.tasks.DeleteConsumptionTask;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
@@ -99,8 +100,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
             Consumption consumption = _data.get(position);
             if (consumption != null) {
                 holder.name.setText(consumption.get_pill().getName());
-                String date = new SimpleDateFormat("HH:mm dd/MM").format(consumption.get_date());
-                holder.date.setText(date);
+                holder.date.setText(DateHelper.getRelativeDateTime(_fragment.getActivity(), consumption.get_date()));
                 holder.quantity.setText(consumption.getQuantity() + "x");
                 holder.consumption = consumption;
                 holder.colour.setColour(consumption.get_pill().getColour());
