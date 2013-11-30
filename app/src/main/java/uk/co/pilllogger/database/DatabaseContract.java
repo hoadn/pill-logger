@@ -16,6 +16,7 @@ public final class DatabaseContract {
         public static final String COLUMN_SIZE = "size";
         public static final String COLUMN_COLOUR = "colour";
         public static final String COLUMN_FAVOURITE = "favourite";
+        public static final String COLUMN_UNITS = "units";
     }
 
     public static abstract class Consumptions implements BaseColumns {
@@ -32,7 +33,8 @@ public final class DatabaseContract {
                 Pills.COLUMN_NAME + " TEXT, " +
                 Pills.COLUMN_SIZE + " INTEGER," +
                 Pills.COLUMN_COLOUR + " INTEGER, " +
-                Pills.COLUMN_FAVOURITE + " INTEGER" +
+                Pills.COLUMN_FAVOURITE + " INTEGER, " +
+                Pills.COLUMN_UNITS + " TEXT" +
                 ")";
         public static final String CREATE_CONSUMPTION_TABLE =
                 "CREATE TABLE " + Consumptions.TABLE_NAME + " (" +

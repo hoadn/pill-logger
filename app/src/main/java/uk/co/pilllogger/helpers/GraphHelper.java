@@ -28,8 +28,8 @@ import uk.co.pilllogger.state.State;
 public class GraphHelper {
     public static void plotLineGraph(Map<Pill, SparseIntArray> consumptionData, int days, LineGraph li){
 
-        List<Integer> graphPills = State.getSingleton().getGraphExcludePills();
-        Boolean all = (graphPills == null) ? true : false;
+        List<Integer> graphPills = State.getSingleton().getGraphPills();
+        Boolean all = (graphPills == null);
         li.removeAllLines();
         double maxY = 0;
 
@@ -60,11 +60,14 @@ public class GraphHelper {
     }
 
     public static void plotBarGraph(Map<Pill, SparseIntArray> consumptionData, int days, BarGraph g){
-
+        List<Integer> graphPills = State.getSingleton().getGraphPills();
+        Boolean all = (graphPills == null);
         ArrayList<Bar> bars = new ArrayList<Bar>();
 
         for(int i = 0; i <= days; i++){
             for(Pill pill : consumptionData.keySet()){
+                if (pill == null || ((!all) && (!graphPills.contains(pill.getId()))))
+                    continue;
                 SparseIntArray points = consumptionData.get(pill);
 
                 int value = 0;
@@ -149,9 +152,13 @@ public class GraphHelper {
     }
 
     public static void plotPieChart(Map<Pill, SparseIntArray> consumptionData, int days, PieGraph pie){
+        List<Integer> graphPills = State.getSingleton().getGraphPills();
+        Boolean all = (graphPills == null);
 
         pie.getSlices().clear();
         for(Pill pill : consumptionData.keySet()){
+            if (pill == null || ((!all) && (!graphPills.contains(pill.getId()))))
+                continue;
             SparseIntArray points = consumptionData.get(pill);
             int sliceValue = 0;
             for(int i = 0; i <= days; i++){

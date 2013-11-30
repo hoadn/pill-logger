@@ -39,7 +39,7 @@
             android:layout_weight="1"
             android:layout_marginLeft="50dp"
             android:id="@+id/main_graph"
-            android:background="@drawable/graph_paper_background_patterns_blue"
+            android:background="@drawable/graph_paper_background_patterns_black"
         />
 
     </android.support.v4.widget.SlidingPaneLayout>
