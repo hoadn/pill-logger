@@ -12,14 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.haarman.listviewanimations.itemmanipulation.contextualundo.ContextualUndoAdapter;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillsListAdapter;
+import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.tasks.DeletePillTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
@@ -94,6 +97,12 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
                 return handled;
             }
         });
+
+        Spinner spinner = (Spinner) v.findViewById(R.id.units_spinner);
+        String[] units = { "mg", "ml" };
+        UnitAdapter adapter = new UnitAdapter(getActivity(), android.R.layout.simple_spinner_item, units);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
         return v;
     }
 
