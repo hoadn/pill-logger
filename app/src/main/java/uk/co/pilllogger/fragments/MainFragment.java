@@ -189,8 +189,6 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
         }
         for(Pill p : pills){
             _allPills.put(p.getId(), p);
-            if (!graphPills.contains(p.getId()))
-                graphPills.add(p.getId());
         }
         State.getSingleton().setGraphExcludePills(graphPills);
 
