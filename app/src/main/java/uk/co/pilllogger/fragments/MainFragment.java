@@ -115,7 +115,7 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
 
     private int getGraphDays(){
         DateTime aWeekAgo = new DateTime().minusWeeks(1);
-        Days totalDays = Days.daysBetween(aWeekAgo.withTimeAtStartOfDay(), new DateTime().withTimeAtStartOfDay().plusDays(1));
+        Days totalDays = Days.daysBetween(aWeekAgo.withTimeAtStartOfDay(), new DateTime().withTimeAtStartOfDay());
         return totalDays.getDays();
     }
 

@@ -174,7 +174,7 @@ public class GraphHelper {
 
         List<StackBar> bars = new ArrayList<StackBar>();
 
-        for(int i = 0; i <= days; i++){
+        for(int i = 1; i <= days; i++){
             StackBar sb = new StackBar();
             sb.setName("");
             for(Pill pill : data.keySet()){
