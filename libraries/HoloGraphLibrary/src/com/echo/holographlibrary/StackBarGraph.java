@@ -102,7 +102,7 @@ public class StackBarGraph extends View {
             NinePatchDrawable popup = (NinePatchDrawable)this.getResources().getDrawable(R.drawable.popup_black);
             
             float maxValue = 0;
-            float padding = 2 * mContext.getResources().getDisplayMetrics().density;
+            float padding = 1 * mContext.getResources().getDisplayMetrics().density;
             int selectPadding = (int) (4 * mContext.getResources().getDisplayMetrics().density);
             float bottomPadding = 10 * mContext.getResources().getDisplayMetrics().density;
             
@@ -132,14 +132,6 @@ public class StackBarGraph extends View {
                     maxValue = bar.getTotalValue();
                 }
             }
-
-            if(mShouldDrawGridHorizontal){
-                float singleItemHeight = usableHeight / maxValue;
-                for(int i = 1; i <= maxValue; i++){
-                    float y = getHeight() - (bottomPadding + ((singleItemHeight) * i) + (padding * i) - density);
-                    canvas.drawLine(0, y, getWidth(), y, mPaint);
-                }
-            }
             
             mRectangle = new Rect();
             
@@ -161,7 +153,7 @@ public class StackBarGraph extends View {
                         bottom -= currentTop;
                         top -= currentTop;
                         if(section.getValue() > 1)
-                           top -= padding * section.getValue();
+                           top -= padding * (section.getValue() - 1);
                     }
 
                     mRectangle.set(left, top, right, bottom);
@@ -210,6 +202,17 @@ public class StackBarGraph extends View {
                         currentTop += padding;
                 }
                 count++;
+            }
+            mPaint.setColor(Color.rgb(80,80,80));
+            mPaint.setStrokeWidth(padding);
+            //mPaint.setAlpha();
+            mPaint.setAntiAlias(true);
+            if(mShouldDrawGridHorizontal){
+                float singleItemHeight = usableHeight / maxValue;
+                for(int i = 1; i <= maxValue; i++){
+                    float y = getHeight() - (bottomPadding + ((singleItemHeight) * i) + (padding * i) - density);
+                    canvas.drawLine(0, y, getWidth(), y, mPaint);
+                }
             }
             mShouldUpdate = false;
         }

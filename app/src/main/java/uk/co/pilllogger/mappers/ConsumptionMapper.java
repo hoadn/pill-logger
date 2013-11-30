@@ -36,7 +36,7 @@ public class ConsumptionMapper {
             Pill pill = c.get_pill();
             DateTime consumptionDate = new DateTime(c.get_date());
 
-            if(consumptionDate.isBefore(from) || consumptionDate.isAfter(to)) break;
+            if(consumptionDate.isBefore(from) || consumptionDate.isAfter(to)) continue;
 
             Days days = Days.daysBetween(from.withTimeAtStartOfDay(), consumptionDate.withTimeAtStartOfDay());
             int x = days.getDays();

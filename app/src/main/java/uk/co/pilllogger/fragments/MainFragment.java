@@ -104,9 +104,7 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
             List<Consumption> grouped = ConsumptionRepository.getSingleton(getActivity()).groupConsumptions(consumptions);
             _listView.setAdapter(new ConsumptionListAdapter(getActivity(), this, R.layout.consumption_list_item, grouped));
 
-            DateTime aMonthAgo = new DateTime().minusMonths(1);
-            Days totalDays = Days.daysBetween(aMonthAgo.withTimeAtStartOfDay(), new DateTime().withTimeAtStartOfDay().plusDays(1));
-            int dayCount = totalDays.getDays();
+            int dayCount = getGraphDays();
 
             Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(consumptions, dayCount);
 
@@ -115,10 +113,14 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
         }
     }
 
-    public void replotGraph(){
+    private int getGraphDays(){
         DateTime aWeekAgo = new DateTime().minusWeeks(1);
         Days totalDays = Days.daysBetween(aWeekAgo.withTimeAtStartOfDay(), new DateTime().withTimeAtStartOfDay().plusDays(1));
-        int dayCount = totalDays.getDays();
+        return totalDays.getDays();
+    }
+
+    public void replotGraph(){
+        int dayCount = getGraphDays();
 
         View view = _mainLayout.findViewById(R.id.main_graph);
 
