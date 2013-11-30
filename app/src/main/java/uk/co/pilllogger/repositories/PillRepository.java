@@ -50,7 +50,8 @@ public class PillRepository extends BaseRepository<Pill>{
                 DatabaseContract.Pills.COLUMN_NAME,
                 DatabaseContract.Pills.COLUMN_SIZE,
                 DatabaseContract.Pills.COLUMN_COLOUR,
-                DatabaseContract.Pills.COLUMN_FAVOURITE
+                DatabaseContract.Pills.COLUMN_FAVOURITE,
+                DatabaseContract.Pills.COLUMN_UNITS
         };
 
         return projection;
@@ -63,6 +64,7 @@ public class PillRepository extends BaseRepository<Pill>{
         pill.setName(getString(c, DatabaseContract.Pills.COLUMN_NAME));
         pill.setSize(getInt(c, DatabaseContract.Pills.COLUMN_SIZE));
         pill.setColour(getInt(c, DatabaseContract.Pills.COLUMN_COLOUR));
+        pill.setUnits(getString(c, DatabaseContract.Pills.COLUMN_UNITS));
 
         int fav = getInt(c, DatabaseContract.Pills.COLUMN_FAVOURITE);
         pill.setFavourite(fav != 0);

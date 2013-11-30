@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.haarman.listviewanimations.itemmanipulation.contextualundo.ContextualUndoAdapter;
 
@@ -35,6 +36,7 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
     private Typeface _openSans;
     private EditText _addPillName;
     private EditText _addPillSize;
+    private Spinner _unitSpinner;
 
 	public PillListFragment() {
 	}
@@ -98,11 +100,11 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
             }
         });
 
-        Spinner spinner = (Spinner) v.findViewById(R.id.units_spinner);
+        _unitSpinner = (Spinner) v.findViewById(R.id.units_spinner);
         String[] units = { "mg", "ml" };
         UnitAdapter adapter = new UnitAdapter(getActivity(), android.R.layout.simple_spinner_item, units);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        _unitSpinner.setAdapter(adapter);
         return v;
     }
 
@@ -177,7 +179,10 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
         if (!_addPillName.getText().toString().equals("")) {
             Pill newPill = new Pill();
             String pillName = _addPillName.getText().toString();
+            String units = _unitSpinner.getSelectedItem().toString();
+            newPill.setUnits(units);
             newPill.setName(pillName);
+
             int pillSize = 0;
             if (!_addPillSize.getText().toString().matches("")) {
                 pillSize = Integer.parseInt(_addPillSize.getText().toString());

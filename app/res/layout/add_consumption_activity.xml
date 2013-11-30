@@ -184,6 +184,12 @@
                     android:background="@null"
                     android:imeOptions="actionDone"/>
 
+                <Spinner
+                    android:id="@+id/add_consumption_units_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="0"/>
+
                 <ImageView
                     android:id="@+id/add_consumption_add_pill_completed"
                     android:layout_height="40dp"
