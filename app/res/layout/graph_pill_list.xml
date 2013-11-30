@@ -10,16 +10,16 @@
 
     <LinearLayout
         android:id="@+id/graph_list_pill_colour"
-        android:layout_width="49dp"
-        android:layout_height="49dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerVertical="true"
         android:orientation="horizontal"
         >
 
         <CheckBox
             android:id="@+id/graph_list_check_box"
-            android:layout_width="49dp"
-            android:layout_height="49dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginLeft="0dp"
             android:focusable="false"
             android:padding="0dp"
