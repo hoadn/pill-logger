@@ -123,16 +123,18 @@
         android:id="@+id/add_consumption_select_pill_layout"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_above="@+id/add_consumption_select_time_title"
         android:layout_below="@id/add_consumption_pill_type_selection"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:orientation="vertical">
         <ListView
             android:id="@+id/add_consumption_pill_list"
-            android:layout_height="150dp"
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:listSelector="@drawable/grey_selector"
-            android:visibility="visible"/>
+            android:visibility="visible"
+            tools:listitem="@layout/add_consumption_pill_list"/>
 
         <RelativeLayout
             android:id="@+id/add_consumption_quick_create"
@@ -207,7 +209,7 @@
 
     <TextView
         android:id="@+id/add_consumption_select_time_title"
-        android:layout_below="@id/add_consumption_select_pill_layout"
+        android:layout_above="@+id/add_consumption_select_time_title_divider"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:text="Set Time"
@@ -219,7 +221,7 @@
         android:id="@+id/add_consumption_select_time_title_divider"
         android:layout_height="1dp"
         android:layout_width="match_parent"
-        android:layout_below="@id/add_consumption_select_time_title"
+        android:layout_above="@+id/add_consumption_time_type_selection"
         android:layout_margin="5dp"
         android:background="#CCCCCC" />
 
@@ -227,7 +229,7 @@
         android:id="@+id/add_consumption_time_type_selection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/add_consumption_select_time_title_divider"
+        android:layout_above="@+id/add_consumption_date_pickers_layout"
         android:orientation="horizontal">
         <RadioButton android:id="@+id/add_consumption_select_select_now"
             android:layout_width="wrap_content"
@@ -245,11 +247,12 @@
         android:id="@+id/add_consumption_date_pickers_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/add_consumption_time_type_selection"
+        android:layout_alignParentBottom="true"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:visibility="invisible"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:id="@+id/add_consumption_date_container"

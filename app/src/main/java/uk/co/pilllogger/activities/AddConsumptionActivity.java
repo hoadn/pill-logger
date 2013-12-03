@@ -131,7 +131,7 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 View datePickers = findViewById(R.id.add_consumption_date_pickers_layout);
                 if (checkedId == R.id.add_consumption_select_select_now) {
-                    datePickers.setVisibility(View.GONE);
+                    datePickers.setVisibility(View.INVISIBLE);
                 }
                 else {
                     datePickers.setVisibility(View.VISIBLE);
