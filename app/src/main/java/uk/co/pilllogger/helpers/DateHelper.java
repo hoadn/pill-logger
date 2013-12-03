@@ -33,14 +33,21 @@ public class DateHelper {
 
         String dateString;
         if(date.plusHours(6).isAfterNow()){
+            // hours ago
             dateString = (String) DateUtils.getRelativeTimeSpanString(date.getMillis(), DateTime.now().getMillis(), DateUtils.SECOND_IN_MILLIS);
         }
         else if(date.plusDays(2).isAfterNow()){
+            // yesterday / x days ago
             dateString = (String) DateUtils.getRelativeTimeSpanString(date.getMillis(), DateTime.now().getMillis(), DateUtils.DAY_IN_MILLIS);
-            dateString += " " + DateUtils.getRelativeTimeSpanString(context, date.plusDays(1).getMillis(), true);
+
+            // at {time}
+            dateString += " " + DateUtils.getRelativeTimeSpanString(context, date.withDate(DateTime.now().year().get(), DateTime.now().monthOfYear().get(), DateTime.now().getDayOfMonth()).getMillis(), true);
         }
         else{
+            // on {date}
             dateString = (String)DateUtils.getRelativeTimeSpanString(context, date.getMillis(), true);
+
+            // at {time}
             dateString += " " + DateUtils.getRelativeTimeSpanString(context, date.withDate(DateTime.now().year().get(), DateTime.now().monthOfYear().get(), DateTime.now().getDayOfMonth()).getMillis(), true);
         }
 
