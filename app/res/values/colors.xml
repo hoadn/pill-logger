@@ -9,7 +9,7 @@
     <color name="light_green">#7DC71D</color>
     <color name="drawer_item_background">#161617</color>
     <color name="drawer_item_grey">#222222</color>
-    <color name="done_cancel_grey">#dddddd</color>
+    <color name="done_cancel_grey">#dddddddd</color>
     <color name="add_green">#49d811</color>
     <color name="minus_red">#d81b11</color>
     <color name="deleted_background_grey">#555555</color>

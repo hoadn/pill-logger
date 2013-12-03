@@ -18,8 +18,10 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.views.ColourIndicator;
@@ -49,6 +51,7 @@ public class
         public TextView name;
         public TextView size;
         public TextView units;
+        public TextView lastTaken;
         public View buttonLayout;
         public View container;
         public TextView amount;
@@ -58,28 +61,32 @@ public class
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
-        ViewHolder holder;
+        ViewHolder holder = null;
         if (v == null) {
             LayoutInflater inflater = (LayoutInflater)_activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(_resourceId, null);
-            holder = new ViewHolder();
-            holder.name = (TextView) v.findViewById(R.id.pill_list_name);
-            holder.size = (TextView) v.findViewById(R.id.pill_list_size);
-            holder.units = (TextView) v.findViewById(R.id.pill_list_units);
-            holder.color = (ColourIndicator) v.findViewById(R.id.add_consumption_pill_colour);
-            holder.name.setTypeface(_openSans);
-            holder.size.setTypeface(_openSans);
-            holder.units.setTypeface(_openSans);
-            holder.buttonLayout = v.findViewById(R.id.add_consumption_after_click_layout);
-            holder.container = v;
-            holder.amount = (TextView) v.findViewById(R.id.add_consumption_amount);
-            v.setTag(holder);
+            if(v != null){
+                holder = new ViewHolder();
+                holder.name = (TextView) v.findViewById(R.id.pill_list_name);
+                holder.size = (TextView) v.findViewById(R.id.pill_list_size);
+                holder.units = (TextView) v.findViewById(R.id.pill_list_units);
+                holder.lastTaken = (TextView) v.findViewById(R.id.pill_list_last_taken);
+                holder.color = (ColourIndicator) v.findViewById(R.id.add_consumption_pill_colour);
+                holder.name.setTypeface(_openSans);
+                holder.size.setTypeface(_openSans);
+                holder.units.setTypeface(_openSans);
+                holder.lastTaken.setTypeface(_openSans);
+                holder.buttonLayout = v.findViewById(R.id.add_consumption_after_click_layout);
+                holder.container = v;
+                holder.amount = (TextView) v.findViewById(R.id.add_consumption_amount);
+                v.setTag(holder);
+            }
         }
         else
             holder=(ViewHolder) v.getTag();
 
         Pill pill = _pills.get(position);
-        if (pill != null) {
+        if (pill != null && holder != null) {
             holder.name.setText(pill.getName());
             holder.size.setText(String.valueOf(pill.getSize()));
             holder.color.setColour(pill.getColour());
@@ -95,6 +102,16 @@ public class
                     Logger.v("PillName", "open pill " + aPill.getName() + " id: " + aPill.getId());
                 }
             }
+
+            Consumption latest = pill.getLatestConsumption();
+            if(latest != null){
+                String prefix = _activity.getString(R.string.last_taken_message_prefix);
+                String lastTaken = DateHelper.getRelativeDateTime(_activity, latest.getDate());
+                holder.lastTaken.setText(prefix + " " + lastTaken);
+            }
+            else{
+                holder.lastTaken.setText(_activity.getString(R.string.no_consumptions_message));
+            }
         }
         TextView add = (TextView)v.findViewById(R.id.add_consumption_add);
         add.setOnClickListener(new buttonClick(true, holder.amount, position, this));
@@ -104,16 +121,28 @@ public class
     }
 
     private View open(View v) {
-        v.setBackgroundColor(_activity.getResources().getColor(R.color.done_cancel_grey));
+        int backgroundColor = _activity.getResources().getColor(R.color.done_cancel_grey);
+        v.setBackgroundColor(backgroundColor);
         View view = v.findViewById(R.id.add_consumption_after_click_layout);
-        view.getLayoutParams().width = (int) LayoutHelper.dpToPx(_activity, 125);
+        if(view != null){
+            view.setBackgroundColor(backgroundColor);
+            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+            if(layoutParams != null)
+                layoutParams.width = (int) LayoutHelper.dpToPx(_activity, 125);
+        }
         return v;
     }
 
     private View close(View v) {
-        v.setBackgroundColor(_activity.getResources().getColor(android.R.color.transparent));
+        int backgroundColor = _activity.getResources().getColor(android.R.color.transparent);
+        v.setBackgroundColor(backgroundColor);
         View view = v.findViewById(R.id.add_consumption_after_click_layout);
-        view.getLayoutParams().width = (int) LayoutHelper.dpToPx(_activity, 0);
+        if(view != null){
+            view.setBackgroundColor(backgroundColor);
+            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+            if(layoutParams != null)
+                layoutParams.width = (int) LayoutHelper.dpToPx(_activity, 0);
+        }
         return v;
     }
 
