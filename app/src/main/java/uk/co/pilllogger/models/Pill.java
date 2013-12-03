@@ -20,7 +20,7 @@ public class Pill implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int _id;
 	private String _name = "";
-    private String _units = "";
+    private String _units = "mg";
 	private int _size;
     private int _colour = R.color.pill_default_color;
     private boolean _favourite = false;
