@@ -22,31 +22,31 @@ public class Consumption {
         this._date = date;
     }
 
-    public Pill get_pill() {
+    public Pill getPill() {
         return _pill;
     }
 
-    public void set_pill(Pill pill) {
+    public void setPill(Pill pill) {
         this._pill = pill;
     }
 
-    public Date get_date() {
+    public Date getDate() {
         return _date;
     }
 
-    public void set_date(Date date) {
+    public void setDate(Date date) {
         this._date = date;
     }
 
-    public int get_id() {
+    public int getId() {
         return _id;
     }
 
-    public void set_id(int _id) {
+    public void setId(int _id) {
         this._id = _id;
     }
 
-    public int get_pill_id() {
+    public int getPillId() {
         return _pill.getId();
     }
 

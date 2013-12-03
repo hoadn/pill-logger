@@ -4,6 +4,8 @@
 package uk.co.pilllogger.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import uk.co.pilllogger.R;
 
@@ -22,6 +24,8 @@ public class Pill implements Serializable {
 	private int _size;
     private int _colour = R.color.pill_default_color;
     private boolean _favourite = false;
+
+    private List<Consumption> _consumptions = new ArrayList<Consumption>();
 
     public Pill() {
     }
@@ -98,6 +102,24 @@ public class Pill implements Serializable {
         this._units = _units;
     }
 
+    public List<Consumption> getConsumptions() {
+        return _consumptions;
+    }
+
+    public Consumption getLatestConsumption(){
+
+        if(_consumptions.isEmpty())
+            return null;
+
+        Consumption latest = _consumptions.get(0);
+        for(Consumption c : _consumptions){
+            if(c.getDate().getTime() > latest.getDate().getTime())
+                latest = c;
+        }
+
+        return latest;
+    }
+
     @Override
 	public String toString(){
 		return getName() + '(' + getSize() + ')';
@@ -106,7 +128,7 @@ public class Pill implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || this.getClass() != o.getClass()) return false;
 
         Pill pill = (Pill) o;
 

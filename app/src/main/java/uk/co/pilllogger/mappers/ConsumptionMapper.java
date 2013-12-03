@@ -33,8 +33,8 @@ public class ConsumptionMapper {
         HashMap<Pill, SparseIntArray> xPoints = new HashMap<Pill, SparseIntArray>();
 
         for (Consumption c : consumptions) {
-            Pill pill = c.get_pill();
-            DateTime consumptionDate = new DateTime(c.get_date());
+            Pill pill = c.getPill();
+            DateTime consumptionDate = new DateTime(c.getDate());
 
             if(consumptionDate.isBefore(from) || consumptionDate.isAfter(to)) continue;
 
@@ -76,7 +76,7 @@ public class ConsumptionMapper {
         data.put(7, 0); //SUNDAY
 
         for(Consumption c : consumptions){
-            DateTime consumptionDate = new DateTime(c.get_date());
+            DateTime consumptionDate = new DateTime(c.getDate());
 
             if(from != null && to != null &&
                     (consumptionDate.isBefore(from) || consumptionDate.isAfter(to)))

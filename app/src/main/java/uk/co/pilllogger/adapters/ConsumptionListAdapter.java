@@ -10,11 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.echo.holographlibrary.BarGraph;
-import com.echo.holographlibrary.LineGraph;
-import com.echo.holographlibrary.PieGraph;
-
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import uk.co.pilllogger.R;
@@ -102,14 +97,14 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
             Consumption consumption = _data.get(position);
             if (consumption != null) {
-                holder.name.setText(consumption.get_pill().getName());
-                holder.date.setText(DateHelper.getRelativeDateTime(_fragment.getActivity(), consumption.get_date()));
+                holder.name.setText(consumption.getPill().getName());
+                holder.date.setText(DateHelper.getRelativeDateTime(_fragment.getActivity(), consumption.getDate()));
                 int quantity = consumption.getQuantity();
                 if (quantity > 1)
                     holder.quantity.setText(String.valueOf(consumption.getQuantity()));
                 holder.consumption = consumption;
-                holder.colour.setColour(consumption.get_pill().getColour());
-                holder.size.setText(consumption.get_pill().getSize() + consumption.get_pill().getUnits());
+                holder.colour.setColour(consumption.getPill().getColour());
+                holder.size.setText(consumption.getPill().getSize() + consumption.getPill().getUnits());
             }
         }
         return v;

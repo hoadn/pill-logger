@@ -35,8 +35,8 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     @Override
     protected ContentValues getContentValues(Consumption consumption) {
         ContentValues values = new ContentValues();
-        values.put(DatabaseContract.Consumptions.COLUMN_PILL_ID, consumption.get_pill_id());
-        values.put(DatabaseContract.Consumptions.COLUMN_DATE_TIME, consumption.get_date().getTime());
+        values.put(DatabaseContract.Consumptions.COLUMN_PILL_ID, consumption.getPillId());
+        values.put(DatabaseContract.Consumptions.COLUMN_DATE_TIME, consumption.getDate().getTime());
 
         return values;
     }
@@ -54,12 +54,19 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
     @Override
     protected Consumption getFromCursor(Cursor c) {
+        return getFromCursor(c, true);
+    }
+
+    private Consumption getFromCursor(Cursor c, boolean getPill) {
         Consumption consumption = new Consumption();
-        consumption.set_id(c.getInt(c.getColumnIndex(DatabaseContract.Consumptions._ID)));
-        consumption.set_date(new Date(c.getLong(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_DATE_TIME))));
+        consumption.setId(c.getInt(c.getColumnIndex(DatabaseContract.Consumptions._ID)));
+        consumption.setDate(new Date(c.getLong(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_DATE_TIME))));
         int pillId = c.getInt(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_PILL_ID));
-        Pill pill = PillRepository.getSingleton(_context).get(pillId);
-        consumption.set_pill(pill);
+
+        if(getPill){
+            Pill pill = PillRepository.getSingleton(_context).get(pillId);
+            consumption.setPill(pill);
+        }
 
         return consumption;
     }
@@ -89,7 +96,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     public void delete(Consumption consumption) {
         SQLiteDatabase db = _dbCreator.getWritableDatabase();
 
-        String id = String.valueOf(consumption.get_id());
+        String id = String.valueOf(consumption.getId());
 
         if (db != null) {
             db.delete(
@@ -126,6 +133,38 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
             }
         }
         return consumption;
+    }
+
+    public List<Consumption> getForPill(Pill pill) {
+        SQLiteDatabase db = _dbCreator.getReadableDatabase();
+
+        String[] projection = getProjection();
+
+        String sortOrder = DatabaseContract.Consumptions.COLUMN_DATE_TIME + " DESC";
+        String selection = pill == null ? null : DatabaseContract.Consumptions.COLUMN_PILL_ID + " =?";
+        String[] selectionArgs = pill == null ? null : new String[] { String.valueOf(pill.getId()) };
+        List<Consumption> consumptions = new ArrayList<Consumption>();
+        if (db != null) {
+            Cursor c = db.query(
+                    DatabaseContract.Consumptions.TABLE_NAME,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    sortOrder
+            );
+
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                Consumption consumption = getFromCursor(c, false); // we don't want to recursively cause ourselves trouble, we already have the pill
+                consumption.setPill(pill);
+                consumptions.add(consumption);
+                c.moveToNext();
+            }
+        }
+
+        return consumptions;
     }
 
     @Override
@@ -165,12 +204,12 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         for(Consumption c : consumptions){
             DateTime groupedDate = null;
             if (groupedConsumption != null) {
-                groupedDate = new DateTime(groupedConsumption.get_date()).withSecondOfMinute(0);
+                groupedDate = new DateTime(groupedConsumption.getDate()).withSecondOfMinute(0);
             }
-            DateTime cDate = new DateTime(c.get_date()).withSecondOfMinute(0);
+            DateTime cDate = new DateTime(c.getDate()).withSecondOfMinute(0);
             if(groupedConsumption == null
                     || groupedDate.getMillis() != cDate.getMillis()
-                    || groupedConsumption.get_pill_id() != c.get_pill_id())
+                    || groupedConsumption.getPillId() != c.getPillId())
             {
                 if(groupedConsumption != null)
                     grouped.add(groupedConsumption);

@@ -10,6 +10,7 @@ import java.util.List;
 
 import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 
 /**
@@ -68,6 +69,10 @@ public class PillRepository extends BaseRepository<Pill>{
 
         int fav = getInt(c, DatabaseContract.Pills.COLUMN_FAVOURITE);
         pill.setFavourite(fav != 0);
+
+        List<Consumption> consumptions = ConsumptionRepository.getSingleton(_context).getForPill(pill);
+        pill.getConsumptions().addAll(consumptions);
+
         return pill;
     }
 
