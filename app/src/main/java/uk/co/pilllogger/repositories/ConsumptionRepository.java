@@ -57,6 +57,11 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         return getFromCursor(c, true);
     }
 
+    @Override
+    protected String getTableName() {
+        return DatabaseContract.Consumptions.TABLE_NAME;
+    }
+
     private Consumption getFromCursor(Cursor c, boolean getPill) {
         Consumption consumption = new Consumption();
         consumption.setId(c.getInt(c.getColumnIndex(DatabaseContract.Consumptions._ID)));

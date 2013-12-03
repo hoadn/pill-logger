@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.pilllogger.database.DatabaseContract;
+import uk.co.pilllogger.helpers.ArrayHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -77,6 +78,11 @@ public class PillRepository extends BaseRepository<Pill>{
     }
 
     @Override
+    protected String getTableName() {
+        return DatabaseContract.Pills.TABLE_NAME;
+    }
+
+    @Override
     public long insert(Pill pill) {
         SQLiteDatabase db = _dbCreator.getWritableDatabase();
 
@@ -124,7 +130,7 @@ public class PillRepository extends BaseRepository<Pill>{
 
     @Override
     public Pill get(int id) {
-        String selection = DatabaseContract.Pills._ID + " =?";
+        String selection = getTableName() + "." + DatabaseContract.Pills._ID + " =?";
         String[] selectionArgs = { String.valueOf(id) };
 
         return get(selection, selectionArgs);
@@ -138,19 +144,27 @@ public class PillRepository extends BaseRepository<Pill>{
 
     private List<Pill> getList(String selection, String[] selectionArgs){
         SQLiteDatabase db = _dbCreator.getReadableDatabase();
-        String[] projection = getProjection();
-        String sortOrder = DatabaseContract.Pills._ID + " ASC";
         List<Pill> pills = new ArrayList<Pill>();
         if (db != null) {
-            Cursor c = db.query(
-                    DatabaseContract.Pills.TABLE_NAME,
-                    projection,
-                    selection,
-                    selectionArgs,
-                    null,
-                    null,
-                    sortOrder
-            );
+            StringBuilder sql = new StringBuilder();
+            sql.append("select distinct ");
+            sql.append(getSelectFromProjection());
+            sql.append(" from ");
+            sql.append(DatabaseContract.Pills.TABLE_NAME);
+            sql.append(" inner join " );
+            sql.append(DatabaseContract.Consumptions.TABLE_NAME);
+            sql.append(" on ");
+            sql.append(getTableName()).append(".").append(DatabaseContract.Pills._ID);
+            sql.append(" = ");
+            sql.append(DatabaseContract.Consumptions.COLUMN_PILL_ID);
+            if(selection != null){
+                sql.append(" where ");
+                sql.append(" ").append(selection).append(" ");
+            }
+            sql.append(" order by ");
+            sql.append(DatabaseContract.Consumptions.TABLE_NAME + "." + DatabaseContract.Consumptions.COLUMN_DATE_TIME);
+            sql.append(" desc ");
+            Cursor c = db.rawQuery(sql.toString(), selectionArgs);
 
             c.moveToFirst();
             while (!c.isAfterLast()) {
