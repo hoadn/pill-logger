@@ -204,7 +204,7 @@ public class StackBarGraph extends View {
                 }
                 count++;
             }
-            mPaint.setColor(Color.rgb(80,80,80));
+            mPaint.setColor(Color.rgb(150,150,150));
             mPaint.setStrokeWidth(padding);
             
             mPaint.setAntiAlias(true);

@@ -2,14 +2,14 @@
 <resources>
 
     <!-- Pill colours -->
-    <color name="pill_colour1">#336699</color>
-    <color name="pill_colour2">#FF9900</color>
-    <color name="pill_colour3">#996699</color>
-    <color name="pill_colour4">#CC0000</color>
-    <color name="pill_colour5">#FFCC00</color>
-    <color name="pill_colour6">#7DC71D</color>
-    <color name="pill_colour7">#CCCCCC</color>
-    <color name="pill_colour8">#FFBAD2</color>
+    <color name="pill_colour1">#99336699</color>
+    <color name="pill_colour2">#99FF9900</color>
+    <color name="pill_colour3">#99996699</color>
+    <color name="pill_colour4">#99CC0000</color>
+    <color name="pill_colour5">#99FFCC00</color>
+    <color name="pill_colour6">#997DC71D</color>
+    <color name="pill_colour7">#99CCCCCC</color>
+    <color name="pill_colour8">#99FFBAD2</color>
 
     <string name="pill_colour_name1">Blue</string>
     <string name="pill_colour_name2">Orange</string>

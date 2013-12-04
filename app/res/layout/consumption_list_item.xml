@@ -6,7 +6,7 @@
     android:padding="10dp"
     android:clickable="true"
     android:layout_marginBottom="15dp"
-    android:background="@drawable/container_dropshadow">
+    android:background="@drawable/container">
 
 
 
@@ -30,7 +30,7 @@
         <TextView android:textSize="14dip"
             android:id="@+id/consumption_list_date"
             android:layout_below="@+id/consumption_list_name"
-            android:textColor="@color/text_grey_medium"
+            android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="-5dp"/>
@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textColor="@color/text_grey_medium"
+            android:textColor="@color/white"
             android:layout_toLeftOf="@id/consumption_list_colour"/>
 
 
