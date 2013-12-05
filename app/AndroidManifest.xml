@@ -16,10 +16,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <meta-data android:name="com.google.android.backup.api_key" android:value="AEdPqrEAAAAIPN6T9VujiU3d8Os-2oEWhMkjIMFv2fvF8zYjlg" />
-        <activity
-            android:name="uk.co.pilllogger.activities.PillListActivity"
-            android:label="@string/title_pill_list" >
-        </activity>
+
         <activity
                 android:name=".activities.MainActivity"
                 android:label="Pill Logger">
