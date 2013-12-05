@@ -151,19 +151,21 @@ public class PillRepository extends BaseRepository<Pill>{
             sql.append(getSelectFromProjection());
             sql.append(" from ");
             sql.append(DatabaseContract.Pills.TABLE_NAME);
-            sql.append(" inner join " );
-            sql.append(DatabaseContract.Consumptions.TABLE_NAME);
-            sql.append(" on ");
-            sql.append(getTableName()).append(".").append(DatabaseContract.Pills._ID);
-            sql.append(" = ");
-            sql.append(DatabaseContract.Consumptions.COLUMN_PILL_ID);
+            //sql.append(" left join " );
+            //sql.append(DatabaseContract.Consumptions.TABLE_NAME);
+            //sql.append(" on ");
+            //sql.append(getTableName()).append(".").append(DatabaseContract.Pills._ID);
+            //sql.append(" = ");
+            //sql.append(DatabaseContract.Consumptions.COLUMN_PILL_ID);
             if(selection != null){
                 sql.append(" where ");
                 sql.append(" ").append(selection).append(" ");
             }
-            sql.append(" order by ");
-            sql.append(DatabaseContract.Consumptions.TABLE_NAME + "." + DatabaseContract.Consumptions.COLUMN_DATE_TIME);
-            sql.append(" desc ");
+            //sql.append(" group by ");
+            //sql.append(getTableName()).append(".").append(DatabaseContract.Pills._ID);
+            //sql.append(" order by ");
+            //sql.append(DatabaseContract.Consumptions.TABLE_NAME + "." + DatabaseContract.Consumptions.COLUMN_DATE_TIME);
+            //sql.append(" desc ");
             Cursor c = db.rawQuery(sql.toString(), selectionArgs);
 
             c.moveToFirst();
