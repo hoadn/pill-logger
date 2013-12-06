@@ -15,7 +15,16 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:actionBarStyle">@style/PartiallyTransparentActionBar</item>
     </style>
+
+    <!-- ActionBar styles -->
+    <style name="PartiallyTransparentActionBar"
+           parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:backgroundSplit">#99000000</item>
+    </style>
+
 
     <style name="flatButton" parent="@android:style/Widget.Holo.Light.Button.Borderless.Small">
         <item name="android:background">@null</item>
