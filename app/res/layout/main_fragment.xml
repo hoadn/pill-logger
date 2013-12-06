@@ -8,6 +8,11 @@
     android:orientation="horizontal"
     android:background="@drawable/back"
     >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/orange_gradient">
     <!--
     <ImageView
         android:id="@+id/main_graph"
@@ -107,4 +112,5 @@
         </RelativeLayout>
 
     </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

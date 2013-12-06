@@ -25,5 +25,8 @@
     <color name="saturday">#7DC71D</color>
     <color name="sunday">#FFBAD2</color>
 
+    <color name="selector_background">#20000000</color>
+    <color name="selector_background_pressed">#20FFFFFF</color>
+
     <!-- Pill colours are in pill_colours.xml -->
 </resources>
