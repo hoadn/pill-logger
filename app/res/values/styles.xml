@@ -17,12 +17,19 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:actionBarStyle">@style/PartiallyTransparentActionBar</item>
+        <item name="android:actionBarTabStyle">@style/PartiallyTransparentActionBarTab</item>
+        <item name="android:actionBarTabBarStyle">@style/PartiallyTransparentActionBarTab</item>
     </style>
 
     <!-- ActionBar styles -->
     <style name="PartiallyTransparentActionBar"
            parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:backgroundSplit">#99000000</item>
+        <item name="android:backgroundStacked">#00000000</item>
+    </style>
+    <style name="PartiallyTransparentActionBarTab"
+                   parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
+        <item name="android:background">#00000000</item>
     </style>
 
 
