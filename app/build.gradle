@@ -43,6 +43,7 @@ android {
 
 dependencies {
     compile 'com.android.support:support-v4:18.0.+'
-    compile fileTree(dir: 'libs', include: '*.jar')
-    compile project(":libraries:HoloGraphLibrary")
+    compile project(':libraries:HoloGraphLibrary')
+    compile files('libs/joda-time-2.3.jar')
+    compile files('libs/com.haarman.listviewanimations-2.5.1.jar')
 }

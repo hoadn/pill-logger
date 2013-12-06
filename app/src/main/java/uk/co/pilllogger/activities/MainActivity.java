@@ -14,7 +14,9 @@ import android.view.MenuItem;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.SlidePagerAdapter;
+import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.MainFragment;
+import uk.co.pilllogger.fragments.PillListFragment;
 
 /**
  * Created by nick on 22/10/13.
@@ -32,8 +34,8 @@ public class MainActivity extends Activity {
 
         if(savedInstanceState == null){
             Fragment fragment = new MainFragment();
-            Fragment fragment2 = new MainFragment();
-            Fragment fragment3 = new MainFragment();
+            Fragment fragment2 = new PillListFragment();
+            Fragment fragment3 = new GraphFragment();
 
             _fragmentPager = (ViewPager)findViewById(R.id.fragment_pager);
 
