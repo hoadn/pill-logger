@@ -98,7 +98,7 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_main, menu);
+        inflater.inflate(R.menu.activity_main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -114,6 +114,20 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        // Handle presses on the action bar items
+        //
+        // here we need to decide how we are going to launch new activities.
+        // I think we need to replace the whole fragment (view pager included), not sure how to do that atm.
+        //
+        switch (item.getItemId()) {
+            case R.id.add_consumption:
+
+                return true;
+            case R.id.action_settings:
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
