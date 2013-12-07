@@ -12,17 +12,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/orange_gradient">
-    <!--
-    <ImageView
-        android:id="@+id/main_graph"
-        android:layout_width="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_height="165dp"
-        android:padding="10dp"
-        android:src="@drawable/graph"
-        android:background="@color/text_grey_light"/>
-        -->
+        android:background="@drawable/orange_gradient"
+        android:paddingTop="@dimen/action_bar_height"
+        android:paddingBottom="@dimen/action_bar_height">
     <android.support.v4.widget.SlidingPaneLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
