@@ -3,10 +3,14 @@
     android:id="@+id/pill_list_fragment_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_grey"
-    android:paddingTop="@dimen/action_bar_height"
-    android:paddingBottom="@dimen/action_bar_height"
+    android:background="@drawable/back"
     >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/blue_gradient"
+        android:paddingTop="@dimen/action_bar_height"
+        android:paddingBottom="@dimen/action_bar_height">
     <RelativeLayout
         android:id="@+id/pill_fragment_quick_create"
         android:layout_height="wrap_content"
@@ -89,4 +93,5 @@
         android:layout_marginTop="0dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/container_dropshadow"/>
+        </RelativeLayout>
 </RelativeLayout>
