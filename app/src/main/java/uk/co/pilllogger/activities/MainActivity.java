@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -123,7 +124,8 @@ public class MainActivity extends Activity {
         //
         switch (item.getItemId()) {
             case R.id.add_consumption:
-
+                Intent intent = new Intent(this, AddConsumptionActivity.class);
+                this.startActivity(intent);
                 return true;
             case R.id.action_settings:
 

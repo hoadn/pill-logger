@@ -54,7 +54,6 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
 
     private static final String TAG = "MainFragment";
     ListView _listView;
-    ViewGroup _favouriteContainer;
     View _mainLayout;
     HashMap<Integer, Pill> _allPills = new HashMap<Integer, Pill>();
     Fragment _fragment;
@@ -74,9 +73,6 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
         new InitTestDbTask(this.getActivity(), this).execute();
 
         _listView = (ListView) (v != null ? v.findViewById(R.id.main_consumption_list) : null);
-        _favouriteContainer = (ViewGroup) (v!=null ? v.findViewById(R.id.button_container):null);
-        ImageView addConsumption = (ImageView) v.findViewById(R.id.main_add);
-        addConsumption.setOnClickListener(new AddConsumptionClickListener(getActivity()));
 
         if (_listView.getAdapter() != null) //Trying this to make the list refresh after adding the new consumption
             ((ConsumptionListAdapter)_listView.getAdapter()).notifyDataSetChanged();
@@ -146,16 +142,12 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
 
     @Override
     public void favouritePillsReceived(List<Pill> pills) {
-        if(_favouriteContainer == null)
-            return;
-
-        int children = _favouriteContainer.getChildCount();
+        int children = 0;
         int start = 1;
 
         if(pills.size() == 0) //remove customise button
             start = 2;
 
-        _favouriteContainer.removeViews(start, children -start);
 
         for(Pill p : pills){
             LayoutInflater layoutInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -177,7 +169,7 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
                 Logger.d(TAG, "Adding favourite for: " + p.getName());
             }
 
-            _favouriteContainer.addView(v, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            //_favouriteContainer.addView(v, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
     }
