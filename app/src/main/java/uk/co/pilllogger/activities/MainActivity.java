@@ -17,6 +17,7 @@ import android.view.View;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.SlidePagerAdapter;
+import uk.co.pilllogger.animations.FadeBackgroundPageTransformer;
 import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.MainFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
@@ -41,6 +42,7 @@ public class MainActivity extends Activity {
             Fragment fragment3 = new GraphFragment();
 
             _fragmentPager = (ViewPager)findViewById(R.id.fragment_pager);
+            _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(this));
 
             _fragmentPager.setOnPageChangeListener(
                     new ViewPager.SimpleOnPageChangeListener() {
