@@ -174,6 +174,7 @@ public class PillRepository extends BaseRepository<Pill>{
                 pills.add(pill);
                 c.moveToNext();
             }
+            c.close();
         }
 
         return pills;

@@ -136,6 +136,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
                 c.moveToNext();
             }
+            c.close();
         }
         return consumption;
     }
@@ -167,6 +168,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                 consumptions.add(consumption);
                 c.moveToNext();
             }
+            c.close();
         }
 
         return consumptions;
@@ -197,6 +199,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                 consumptions.add(consumption);
                 c.moveToNext();
             }
+            c.close();
         }
 
         return consumptions;
