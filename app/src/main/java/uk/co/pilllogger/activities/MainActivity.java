@@ -86,13 +86,19 @@ public class MainActivity extends Activity {
                 }
             };
 
-            // Add 3 tabs, specifying the tab's text and TabListener
-            for (int i = 0; i < 3; i++) {
-                actionBar.addTab(
-                        actionBar.newTab()
-                                .setText("Tab " + (i + 1))
-                                .setTabListener(tabListener));
-            }
+
+            actionBar.addTab(
+                    actionBar.newTab()
+                            .setIcon(R.drawable.list)
+                            .setTabListener(tabListener));
+            actionBar.addTab(
+                    actionBar.newTab()
+                            .setIcon(R.drawable.medkit)
+                            .setTabListener(tabListener));
+            actionBar.addTab(
+                    actionBar.newTab()
+                            .setIcon(R.drawable.bar_chart)
+                            .setTabListener(tabListener));
 
         }
     }
