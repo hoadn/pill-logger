@@ -6,15 +6,9 @@
     android:columnCount="5"
     android:gravity="fill"
     android:orientation="horizontal"
-    android:background="@drawable/back"
     >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/orange_gradient"
-        android:paddingTop="@dimen/action_bar_height"
-        android:paddingBottom="@dimen/action_bar_height">
+
     <android.support.v4.widget.SlidingPaneLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -55,5 +49,4 @@
         android:layout_marginTop="0dp"
         android:layout_marginBottom="5dp"
         tools:listitem="@layout/consumption_list_item"/>
-    </RelativeLayout>
 </RelativeLayout>

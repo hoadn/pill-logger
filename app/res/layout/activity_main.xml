@@ -5,8 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/back"
     >
-
+    <RelativeLayout
+        android:id="@+id/colour_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#70FFD100">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/orange_gradient"
+        android:paddingTop="@dimen/action_bar_height"
+        android:paddingBottom="@dimen/action_bar_height">
     <android.support.v4.view.ViewPager
         android:id="@+id/fragment_pager"
         android:layout_height="match_parent"
@@ -17,8 +28,8 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:background="@drawable/back">
+        android:orientation="horizontal">
     </LinearLayout>
-
+    </RelativeLayout>
+    </RelativeLayout>
 </LinearLayout>

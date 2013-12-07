@@ -3,14 +3,10 @@
     android:id="@+id/pill_list_fragment_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/back"
     >
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/blue_gradient"
-        android:paddingTop="@dimen/action_bar_height"
-        android:paddingBottom="@dimen/action_bar_height">
+        android:layout_height="match_parent">
     <RelativeLayout
         android:id="@+id/pill_fragment_quick_create"
         android:layout_height="wrap_content"

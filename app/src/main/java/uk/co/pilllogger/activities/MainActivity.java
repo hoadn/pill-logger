@@ -6,12 +6,14 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.SlidePagerAdapter;
@@ -59,6 +61,9 @@ public class MainActivity extends Activity {
             _fragmentPager.setAdapter(_fragmentPagerAdapter);
 
             setupChrome();
+
+            View colourBackground = findViewById(R.id.colour_background);
+            colourBackground.setBackgroundColor(Color.argb(120, 255, 209, 0));
         }
     }
 
