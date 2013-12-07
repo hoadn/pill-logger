@@ -24,7 +24,7 @@
     <!-- ActionBar styles -->
     <style name="PartiallyTransparentActionBar"
            parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:backgroundSplit">#99000000</item>
+        <item name="android:backgroundSplit">#60000000</item>
         <item name="android:backgroundStacked">#00000000</item>
     </style>
     <style name="PartiallyTransparentActionBarTab"
