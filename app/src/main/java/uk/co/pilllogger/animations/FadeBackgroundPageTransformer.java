@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.helpers.Logger;
@@ -14,23 +18,39 @@ import uk.co.pilllogger.helpers.Logger;
 public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer {
 
     Activity _activity;
-    int change, r, g, b;
+    int change;
+    float r = 255;
+    float g = 209;
+    float b = 0;
+    int[] colour1 = {255, 209, 0};
+    int[] colour2 = {123, 224, 255};
+    float[] _results;
 
     public FadeBackgroundPageTransformer(Activity activity) {
         _activity = activity;
+        _results = calculateColourTransition();
     }
 
     @Override
     public void transformPage(View view, float v) {
         View colourBackground = _activity.findViewById(R.id.colour_background);
-        if (v > 0 && v < 1) {
+        if (v >= 0 && v <= 1) {
             change = (int) v * 100;
-            r = (int)(255 - (v * 100));
-            g = (int)(209 - (v * 100));
-            b = (int)(0 + (v * 100));
-            colourBackground.setBackgroundColor(Color.argb(120, r, g, b));
+            r = r - _results[0];
+            g = g - _results[1];
+            b = b - _results[2];
+            colourBackground.setBackgroundColor(Color.argb(120, (int)r, (int)g, (int)b));
             Logger.v("Test", "rgb = " + r + " " + g + " " + b + "V = " + (v * 100));
         }
+    }
 
+    private float[] calculateColourTransition() {
+        float[] results = new float[3];
+        for (int i = 0 ; i < colour1.length ; i++) {
+            float diff = colour1[i] - colour2[i];
+            results[i] = diff/100;
+        }
+        Logger.v("Test", "Results: " + results[0] + " " + results[1] + " " + results[2]);
+        return results;
     }
 }
