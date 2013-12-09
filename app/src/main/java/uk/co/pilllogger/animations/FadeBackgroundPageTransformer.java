@@ -36,9 +36,9 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
         View colourBackground = _activity.findViewById(R.id.colour_background);
         if (v >= 0 && v <= 1) {
             change = (int) v * 100;
-            r = r - _results[0];
-            g = g - _results[1];
-            b = b - _results[2];
+            r = colour1[0] - ((v*100) * _results[0]);
+            g = colour1[1] - ((v*100) * _results[1]);
+            b = colour1[2] - ((v*100) * _results[2]);
             colourBackground.setBackgroundColor(Color.argb(120, (int)r, (int)g, (int)b));
             Logger.v("Test", "rgb = " + r + " " + g + " " + b + "V = " + (v * 100));
         }
