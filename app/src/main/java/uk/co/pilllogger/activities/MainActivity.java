@@ -21,6 +21,7 @@ import uk.co.pilllogger.animations.FadeBackgroundPageTransformer;
 import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.MainFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
+import uk.co.pilllogger.helpers.Logger;
 
 /**
  * Created by nick on 22/10/13.
@@ -29,16 +30,19 @@ public class MainActivity extends Activity {
 
     private ViewPager _fragmentPager;
     private PagerAdapter _fragmentPagerAdapter;
-    private int[] _colour1 = {255, 209, 0};
-    private int[] _colour2 = {123, 224, 255};
-    private int[] _colour3 = {174, 255, 0};
-    private int _pageNumber = 0;
+    private int[] _colour1 = {255, 229, 0};
+    private int[] _colour2 = {0, 233, 255};
+    private int[] _colour3 = {178, 255, 0};
+    private int[] _fadeFrom = _colour1;
+    private int[] _fadeToForward = _colour2;
+    private int[] _fadeToBackward = _colour3;
+    View _colourBackground;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.setTitle("Consumption");
-
+        _colourBackground = findViewById(R.id.colour_background);
 
         if(savedInstanceState == null){
             Fragment fragment = new MainFragment();
@@ -46,7 +50,7 @@ public class MainActivity extends Activity {
             Fragment fragment3 = new GraphFragment();
 
             _fragmentPager = (ViewPager)findViewById(R.id.fragment_pager);
-            _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(this));
+
 
             _fragmentPager.setOnPageChangeListener(
                     new ViewPager.SimpleOnPageChangeListener() {
@@ -57,19 +61,50 @@ public class MainActivity extends Activity {
                             getActionBar().setSelectedNavigationItem(position);
                             switch (position) {
                                 case 0:
-                                    _pageNumber = 0;
+                                    _fadeFrom = _colour1;
+                                    _fadeToForward = _colour2;
+                                    _fadeToBackward = _colour2;
+                                    //_colourBackground.setBackgroundColor(Color.argb(120, _colour1[0], _colour1[1], _colour1[2]));
+                                    Logger.v("Test", "COLOUR CHANGE 0");
                                     break;
                                 case 1:
-                                    _pageNumber = 1;
+                                    _fadeFrom = _colour2;
+                                    _fadeToForward = _colour3;
+                                    _fadeToBackward = _colour1;
+                                    //_colourBackground.setBackgroundColor(Color.argb(120, _colour2[0], _colour2[1], _colour2[2]));
+                                    Logger.v("Test", "COLOUR CHANGE 1");
                                     break;
                                 case 2:
-                                    _pageNumber = 2;
+                                    _fadeFrom = _colour3;
+                                    _fadeToForward = _colour3;
+                                    _fadeToBackward = _colour2;
+                                    //_colourBackground.setBackgroundColor(Color.argb(120, _colour3[0], _colour3[1], _colour3[2]));
+                                    Logger.v("Test", "COLOUR CHANGE 2");
                                     break;
+                            }
+                        }
+
+                        @Override
+                        public void onPageScrollStateChanged(int state) {
+                            super.onPageScrollStateChanged(state);
+                            if (state == ViewPager.SCROLL_STATE_IDLE) {
+                                int page = _fragmentPager.getCurrentItem();
+                                switch(page) {
+                                    case 0:
+                                        _colourBackground.setBackgroundColor(Color.argb(120, _colour1[0], _colour1[1], _colour1[2]));
+                                        break;
+                                    case 1:
+                                        _colourBackground.setBackgroundColor(Color.argb(120, _colour2[0], _colour2[1], _colour2[2]));
+                                        break;
+                                    case 2:
+                                        _colourBackground.setBackgroundColor(Color.argb(120, _colour3[0], _colour3[1], _colour3[2]));
+                                        break;
+                                }
                             }
                         }
                     });
 
-
+            _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(this));
             _fragmentPagerAdapter = new SlidePagerAdapter(getFragmentManager(),
                     fragment,
                     fragment2,
@@ -84,20 +119,16 @@ public class MainActivity extends Activity {
         }
     }
 
-    public int getPageNumber() {
-        return _pageNumber;
+    public int[] getFadeFrom() {
+        return _fadeFrom;
     }
 
-    public int[] getColour1() {
-        return _colour1;
+    public int[] getFadeToForward() {
+        return _fadeToForward;
     }
 
-    public int[] getColour2() {
-        return _colour2;
-    }
-
-    public int[] getColour3() {
-        return _colour3;
+    public int[] getFadeToBackward() {
+        return _fadeToBackward;
     }
 
     private void setupChrome(){
