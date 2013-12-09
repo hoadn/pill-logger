@@ -1,15 +1,11 @@
 package uk.co.pilllogger.animations;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.activities.MainActivity;
 import uk.co.pilllogger.helpers.Logger;
 
 /**
@@ -17,37 +13,87 @@ import uk.co.pilllogger.helpers.Logger;
  */
 public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer {
 
-    Activity _activity;
+    MainActivity _activity;
     int change;
-    float r = 255;
-    float g = 209;
-    float b = 0;
-    int[] colour1 = {255, 209, 0};
-    int[] colour2 = {123, 224, 255};
+    float r;
+    float g;
+    float b;
+    float _previousV = -1;
+    int[] _fadeFrom;
+    int[] _fadeToForward;
+    int[] _fadeToBackward;
     float[] _results;
+    View _colourBackground;
+    boolean _goingForwards = true;
 
-    public FadeBackgroundPageTransformer(Activity activity) {
+    public FadeBackgroundPageTransformer(MainActivity activity) {
         _activity = activity;
-        _results = calculateColourTransition();
+        _colourBackground = _activity.findViewById(R.id.colour_background);
+        _fadeFrom = _activity.getColour1();
+        _fadeToForward = _activity.getColour2();
+        _fadeToBackward = _activity.getColour3();
+        _results = calculateColourTransition(_fadeFrom, _fadeToForward);
     }
 
     @Override
     public void transformPage(View view, float v) {
-        View colourBackground = _activity.findViewById(R.id.colour_background);
-        if (v >= 0 && v <= 1) {
-            change = (int) v * 100;
-            r = colour1[0] - ((100-(v*100)) * _results[0]);
-            g = colour1[1] - ((100-(v*100)) * _results[1]);
-            b = colour1[2] - ((100-(v*100)) * _results[2]);
-            colourBackground.setBackgroundColor(Color.argb(120, (int)r, (int)g, (int)b));
-            Logger.v("Test", "rgb = " + r + " " + g + " " + b + "V = " + (v * 100));
+        if (_previousV == 1.0 && v == 0.0)
+            return;
+
+        if ((_previousV == -1) && (((v*100) < 5) && (v >=0 && v <= 1))) {
+            _results = calculateColourTransition(_fadeFrom, _fadeToBackward);
+            _goingForwards = false;
+            Logger.v("Test", "Going Backwards");
         }
+        else if ((_previousV == -1) && (((v*100) >= 5) && (v >=0 && v <= 1))) {
+            _results = calculateColourTransition(_fadeFrom, _fadeToForward);
+            _goingForwards = true;
+            Logger.v("Test", "Going Forwards");
+        }
+        if (v >= 0 && v <= 1) {
+            if (_goingForwards) {
+                r = _fadeFrom[0] - ((100-(v*100)) * _results[0]);
+                g = _fadeFrom[1] - ((100-(v*100)) * _results[1]);
+                b = _fadeFrom[2] - ((100-(v*100)) * _results[2]);
+            }
+            else {
+                r = _fadeFrom[0] - ((v*100) * _results[0]);
+                g = _fadeFrom[1] - ((v*100) * _results[1]);
+                b = _fadeFrom[2] - ((v*100) * _results[2]);
+            }
+            _colourBackground.setBackgroundColor(Color.argb(120, (int)r, (int)g, (int)b));
+            _previousV = v;
+            Logger.v("Test", "rgb = " + r + " " + g + " " + b + " V = " + (v * 100) + " previousV = " + _previousV + " v = " + v);
+        }
+        if (v == 0 || v == 1) {
+            switch (_activity.getPageNumber()) {
+                case 0:
+                    _fadeFrom = _activity.getColour1();
+                    _fadeToForward = _activity.getColour2();
+                    Logger.v("Test", "rgb CHANGED COLOURS TO 0");
+                    break;
+                case 1:
+                    _fadeFrom = _activity.getColour2();
+                    _fadeToForward = _activity.getColour3();
+                    _fadeToBackward = _activity.getColour1();
+                    Logger.v("Test", "rgb CHANGED COLOURS TO 1");
+                    break;
+                case 2:
+                    _fadeFrom = _activity.getColour3();
+                    _fadeToBackward = _activity.getColour2();
+                    Logger.v("Test", "rgb CHANGED COLOURS TO 2");
+                    break;
+            }
+
+            _previousV = -1;
+        }
+
     }
 
-    private float[] calculateColourTransition() {
+    private float[] calculateColourTransition(int [] fadeFrom, int[] fadeTo) {
         float[] results = new float[3];
-        for (int i = 0 ; i < colour1.length ; i++) {
-            float diff = colour1[i] - colour2[i];
+        for (int i = 0 ; i < fadeFrom.length ; i++) {
+            float diff = fadeFrom[i] - fadeTo[i];
             results[i] = diff/100;
         }
         Logger.v("Test", "Results: " + results[0] + " " + results[1] + " " + results[2]);

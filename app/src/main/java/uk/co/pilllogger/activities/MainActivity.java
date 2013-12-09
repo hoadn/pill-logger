@@ -29,6 +29,10 @@ public class MainActivity extends Activity {
 
     private ViewPager _fragmentPager;
     private PagerAdapter _fragmentPagerAdapter;
+    private int[] _colour1 = {255, 209, 0};
+    private int[] _colour2 = {123, 224, 255};
+    private int[] _colour3 = {174, 255, 0};
+    private int _pageNumber = 0;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +55,17 @@ public class MainActivity extends Activity {
                             // When swiping between pages, select the
                             // corresponding tab.
                             getActionBar().setSelectedNavigationItem(position);
+                            switch (position) {
+                                case 0:
+                                    _pageNumber = 0;
+                                    break;
+                                case 1:
+                                    _pageNumber = 1;
+                                    break;
+                                case 2:
+                                    _pageNumber = 2;
+                                    break;
+                            }
                         }
                     });
 
@@ -67,6 +82,22 @@ public class MainActivity extends Activity {
             View colourBackground = findViewById(R.id.colour_background);
             colourBackground.setBackgroundColor(Color.argb(120, 255, 209, 0));
         }
+    }
+
+    public int getPageNumber() {
+        return _pageNumber;
+    }
+
+    public int[] getColour1() {
+        return _colour1;
+    }
+
+    public int[] getColour2() {
+        return _colour2;
+    }
+
+    public int[] getColour3() {
+        return _colour3;
     }
 
     private void setupChrome(){
