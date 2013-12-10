@@ -81,7 +81,7 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
 
     @Override
     public void initComplete() {
-        new GetPillsTask(this.getActivity(), this).execute();
+        
     }
 
     @Override
