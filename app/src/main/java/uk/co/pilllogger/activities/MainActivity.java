@@ -19,8 +19,8 @@ import android.view.View;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.SlidePagerAdapter;
 import uk.co.pilllogger.animations.FadeBackgroundPageTransformer;
+import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.GraphFragment;
-import uk.co.pilllogger.fragments.MainFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.state.State;
@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
         State.getSingleton().setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/OpenSans-Light.ttf"));
 
         if(savedInstanceState == null){
-            Fragment fragment = new MainFragment();
+            Fragment fragment = new ConsumptionListFragment();
             Fragment fragment2 = new PillListFragment();
             Fragment fragment3 = new GraphFragment();
 

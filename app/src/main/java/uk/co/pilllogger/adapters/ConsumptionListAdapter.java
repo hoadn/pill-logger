@@ -2,7 +2,6 @@ package uk.co.pilllogger.adapters;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.graphics.Typeface;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,7 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.fragments.MainFragment;
+import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.state.State;
@@ -51,7 +50,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
                 removeAtPosition(index); //remove() doesn't like newly created pills, so remove manually
 
                 new DeleteConsumptionTask(_activity, _selectedConsumption).execute();
-                if (_fragment instanceof MainFragment) {
+                if (_fragment instanceof ConsumptionListFragment) {
                     new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete)_fragment, false).execute();
                 }
                 notifyDataSetChanged();

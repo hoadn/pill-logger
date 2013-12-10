@@ -47,10 +47,10 @@ import uk.co.pilllogger.tasks.InsertConsumptionTask;
 /**
  * Created by nick on 23/10/13.
  */
-public class MainFragment extends Fragment implements InitTestDbTask.ITaskComplete, GetConsumptionsTask.ITaskComplete, GetFavouritePillsTask.ITaskComplete,
+public class ConsumptionListFragment extends Fragment implements InitTestDbTask.ITaskComplete, GetConsumptionsTask.ITaskComplete, GetFavouritePillsTask.ITaskComplete,
                                                         GetPillsTask.ITaskComplete {
 
-    private static final String TAG = "MainFragment";
+    private static final String TAG = "ConsumptionListFragment";
     ListView _listView;
     View _mainLayout;
     HashMap<Integer, Pill> _allPills = new HashMap<Integer, Pill>();
@@ -81,7 +81,7 @@ public class MainFragment extends Fragment implements InitTestDbTask.ITaskComple
 
     @Override
     public void initComplete() {
-        
+
     }
 
     @Override

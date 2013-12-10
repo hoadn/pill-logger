@@ -12,7 +12,7 @@ import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.fragments.GraphFragment;
-import uk.co.pilllogger.fragments.MainFragment;
+import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.fragments.SettingsFragment;
 import uk.co.pilllogger.helpers.Logger;
@@ -51,7 +51,7 @@ public class DrawerItemClickListener implements ListView.OnItemClickListener {
         String selectedItem = _navigationItems.get(position);
 
         if (selectedItem.equals(consumption)) {
-            fragment = new MainFragment();
+            fragment = new ConsumptionListFragment();
             title = consumption;
 
         }
