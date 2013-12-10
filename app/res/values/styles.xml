@@ -18,7 +18,7 @@
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:actionBarStyle">@style/PartiallyTransparentActionBar</item>
         <item name="android:actionBarTabStyle">@style/PartiallyTransparentActionBarTab</item>
-        <item name="android:actionBarTabBarStyle">@style/PartiallyTransparentActionBarTab</item>
+        <item name="android:actionBarTabBarStyle">@android:style/Widget.Holo.ActionBar.TabBar</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.Example</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.Example</item>
     </style>

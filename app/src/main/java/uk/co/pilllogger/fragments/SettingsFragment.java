@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.WebViewActivity;
 

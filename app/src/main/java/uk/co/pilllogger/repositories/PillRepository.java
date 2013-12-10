@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.pilllogger.database.DatabaseContract;
-import uk.co.pilllogger.helpers.ArrayHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
