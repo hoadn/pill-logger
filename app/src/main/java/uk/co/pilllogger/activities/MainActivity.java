@@ -66,6 +66,9 @@ public class MainActivity extends Activity {
                                     _fadeToBackward = _colour2;
                                     //_colourBackground.setBackgroundColor(Color.argb(120, _colour1[0], _colour1[1], _colour1[2]));
                                     Logger.v("Test", "COLOUR CHANGE 0");
+                                    getActionBar().getTabAt(position).setIcon(R.drawable.list);
+                                    getActionBar().getTabAt(position + 1).setIcon(R.drawable.medkit_grey);
+                                    getActionBar().getTabAt(position + 2).setIcon(R.drawable.bar_chart_grey);
                                     break;
                                 case 1:
                                     _fadeFrom = _colour2;
@@ -73,6 +76,9 @@ public class MainActivity extends Activity {
                                     _fadeToBackward = _colour1;
                                     //_colourBackground.setBackgroundColor(Color.argb(120, _colour2[0], _colour2[1], _colour2[2]));
                                     Logger.v("Test", "COLOUR CHANGE 1");
+                                    getActionBar().getTabAt(position).setIcon(R.drawable.medkit);
+                                    getActionBar().getTabAt(position - 1).setIcon(R.drawable.list_grey);
+                                    getActionBar().getTabAt(position + 1).setIcon(R.drawable.bar_chart_grey);
                                     break;
                                 case 2:
                                     _fadeFrom = _colour3;
@@ -80,6 +86,9 @@ public class MainActivity extends Activity {
                                     _fadeToBackward = _colour2;
                                     //_colourBackground.setBackgroundColor(Color.argb(120, _colour3[0], _colour3[1], _colour3[2]));
                                     Logger.v("Test", "COLOUR CHANGE 2");
+                                    getActionBar().getTabAt(position).setIcon(R.drawable.bar_chart);
+                                    getActionBar().getTabAt(position - 1).setIcon(R.drawable.medkit_grey);
+                                    getActionBar().getTabAt(position - 2).setIcon(R.drawable.list_grey);
                                     break;
                             }
                         }
@@ -162,11 +171,11 @@ public class MainActivity extends Activity {
                             .setTabListener(tabListener));
             actionBar.addTab(
                     actionBar.newTab()
-                            .setIcon(R.drawable.medkit)
+                            .setIcon(R.drawable.medkit_grey)
                             .setTabListener(tabListener));
             actionBar.addTab(
                     actionBar.newTab()
-                            .setIcon(R.drawable.bar_chart)
+                            .setIcon(R.drawable.bar_chart_grey)
                             .setTabListener(tabListener));
 
         }
