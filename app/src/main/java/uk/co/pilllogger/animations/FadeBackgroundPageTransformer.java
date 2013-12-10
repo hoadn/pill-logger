@@ -13,6 +13,7 @@ import uk.co.pilllogger.helpers.Logger;
  */
 public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer {
 
+    private static String TAG = "FadeBackgroundPageTransformer";
     MainActivity _activity;
     int change;
     float r;
@@ -31,21 +32,21 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
 
     @Override
     public void transformPage(View view, float v) {
-
+        Logger.v(TAG, "Value = " + v);
         if (_previousV == 1.0 && v == 0.0)
             return;
 
-        if (((_previousV == -1) || (_previousV - v > 0.5)) && (((v*100) < 15) && (v >=0 && v <= 1))) {
+        if (((_previousV == -1) || (_previousV - v > 0.5)) && (((v*100) < 40) && (v >=0 && v <= 1))) {
             _fadefrom = _activity.getFadeFrom();
             _results = calculateColourTransition(_fadefrom, _activity.getFadeToBackward());
             _goingForwards = false;
-            Logger.v("Test", "Going Backwards");
+            Logger.v(TAG, "Going Backwards");
         }
-        else if (((_previousV == -1) || (v - _previousV > 0.5)) && (((v*100) >= 15) && (v >=0 && v <= 1))) {
+        else if (((_previousV == -1) || (v - _previousV > 0.5)) && (((v*100) >= 40) && (v >=0 && v <= 1))) {
             _fadefrom = _activity.getFadeFrom();
             _results = calculateColourTransition(_fadefrom, _activity.getFadeToForward());
             _goingForwards = true;
-            Logger.v("Test", "rgb Going Forwards");
+            Logger.v(TAG, "rgb Going Forwards");
         }
         if (v >= 0 && v <= 1) {
             if (_goingForwards) {
@@ -59,7 +60,7 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
                 b = _fadefrom[2] - ((v*100) * _results[2]);
             }
             _colourBackground.setBackgroundColor(Color.argb(120, (int)r, (int)g, (int)b));
-            Logger.v("Test", "rgb = " + r + " " + g + " " + b + " V = " + (v * 100) + " previousV = " + _previousV + " v = " + v);
+            Logger.v(TAG, "rgb = " + r + " " + g + " " + b + " V = " + (v * 100) + " previousV = " + _previousV + " v = " + v);
             _previousV = v;
         }
         if (v == 0 || v == 1) {
@@ -76,7 +77,7 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
         }
         if (results[0] == 0.0 && results[1] == 0.0 && results[2] == 0.0)
             results = calculateColourTransition(_activity.getFadeFrom(), _activity.getFadeToBackward());
-        Logger.v("Test", "Results: " + results[0] + " " + results[1] + " " + results[2]);
+        Logger.v(TAG, "Results: " + results[0] + " " + results[1] + " " + results[2]);
         return results;
     }
 }
