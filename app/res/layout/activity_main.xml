@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/orange_gradient"
         android:paddingTop="@dimen/action_bar_height"
-        android:paddingBottom="@dimen/action_bar_height">
+        android:paddingBottom="@dimen/action_bar_bottom_padding">
     <android.support.v4.view.ViewPager
         android:id="@+id/fragment_pager"
         android:layout_height="match_parent"
