@@ -32,7 +32,7 @@ public class UnitAdapter extends ArrayAdapter<CharSequence> {
         TextView view = (TextView) v.findViewById(android.R.id.text1);
         view.setTypeface(_openSans);
         view.setTextSize(22);
-        view.setTextColor(_activity.getResources().getColor(R.color.text_grey_medium));
+        view.setTextColor(_activity.getResources().getColor(R.color.text_grey_light));
 
         return v;
     }

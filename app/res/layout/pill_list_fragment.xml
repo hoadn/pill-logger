@@ -11,7 +11,7 @@
         android:id="@+id/pill_fragment_quick_create"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:background="@drawable/container_dropshadow"
+        android:background="#20FFFFFF"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
@@ -24,6 +24,7 @@
             android:layout_alignParentTop="true"
             android:gravity="center_horizontal"
             android:text="@string/create_a_pill_title"
+            android:textColor="@android:color/white"
             android:textSize="20sp"
             android:padding="5dp"
             android:textAllCaps="true"/>
@@ -37,6 +38,8 @@
             android:textSize="22sp"
             android:layout_below="@id/pill_fragment_add_pill_title"
             android:hint="@string/create_a_pill_name_hint"
+            android:textColorHint="@color/text_grey_light"
+            android:textColor="@android:color/white"
             android:background="@null"
             android:inputType="textCapWords"
             android:imeOptions="actionNext"/>
@@ -56,6 +59,8 @@
                 android:paddingBottom="5dp"
                 android:textSize="22sp"
                 android:hint="@string/create_a_pill_size_hint"
+                android:textColorHint="@color/text_grey_light"
+                android:textColor="@android:color/white"
                 android:inputType="number"
                 android:background="@null"
                 android:imeOptions="actionDone"/>

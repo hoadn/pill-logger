@@ -1,25 +1,21 @@
 package uk.co.pilllogger.fragments;
 
-import java.util.List;
-
 import android.app.Activity;
+import android.app.Fragment;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.haarman.listviewanimations.itemmanipulation.contextualundo.ContextualUndoAdapter;
+import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillsListAdapter;
@@ -30,7 +26,7 @@ import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.InsertPillTask;
 
 
-public class PillListFragment extends Fragment implements GetPillsTask.ITaskComplete, ContextualUndoAdapter.DeleteItemCallback, InsertPillTask.ITaskComplete {
+public class PillListFragment extends Fragment implements GetPillsTask.ITaskComplete, InsertPillTask.ITaskComplete {
     private String TAG = "PillListFragment";
     private ListView _list;
     private Typeface _openSans;
@@ -126,27 +122,27 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
         if (_list.getAdapter() == null){ //we need to init the adapter
             PillsListAdapter adapter = new PillsListAdapter(getActivity(), R.layout.pill_list_item, pills);
 
-            ContextualUndoAdapter undoAdapter = new ContextualUndoAdapter(adapter, R.layout.pill_list_item_delete, R.id.pill_list_undo);
-            undoAdapter.setAbsListView(_list);
-            _list.setAdapter(undoAdapter);
+           // ContextualUndoAdapter undoAdapter = new ContextualUndoAdapter(adapter, R.layout.pill_list_item_delete, R.id.pill_list_undo);
+            //undoAdapter.setAbsListView(_list);
+            _list.setAdapter(adapter);
 
-            undoAdapter.setDeleteItemCallback(this);
+            //undoAdapter.setDeleteItemCallback(this);
         }
         else
         {
-           ContextualUndoAdapter undoAdapter = (ContextualUndoAdapter)_list.getAdapter();
-           ((PillsListAdapter)undoAdapter.getDecoratedBaseAdapter()).updateAdapter(pills);
+            PillsListAdapter adapter = (PillsListAdapter)_list.getAdapter();
+           adapter.updateAdapter(pills);
         }
     }
 
-    @Override
-    public void deleteItem(int i) {
-        PillsListAdapter adapter = ((PillsListAdapter)((ContextualUndoAdapter)_list.getAdapter()).getDecoratedBaseAdapter());
-        Pill p = adapter.getPillAtPosition(i);
-        adapter.removeAtPosition(i);
-
-        new DeletePillTask(getActivity(), p).execute();
-    }
+//    @Override
+//    public void deleteItem(int i) {
+//        PillsListAdapter adapter = ((PillsListAdapter)((ContextualUndoAdapter)_list.getAdapter()).getDecoratedBaseAdapter());
+//        Pill p = adapter.getPillAtPosition(i);
+//        adapter.removeAtPosition(i);
+//
+//        new DeletePillTask(getActivity(), p).execute();
+//    }
 
     @Override
     public void pillInserted(Pill pill) {
