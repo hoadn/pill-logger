@@ -32,12 +32,9 @@ public class MainActivity extends Activity {
 
     private ViewPager _fragmentPager;
     private PagerAdapter _fragmentPagerAdapter;
-    private int[] _colour1 = {255, 242, 0};
-    private int[] _colour2 = {0, 233, 255};
-    private int[] _colour3 = {178, 255, 0};
-    private int[] _fadeFrom = _colour1;
-    private int[] _fadeToForward = _colour2;
-    private int[] _fadeToBackward = _colour3;
+    private int _colour1 = Color.argb(120, 255, 242, 0);
+    private int _colour2 = Color.argb(120, 0, 233, 255);
+    private int _colour3 = Color.argb(120, 178, 255, 0);
     View _colourBackground;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -65,31 +62,16 @@ public class MainActivity extends Activity {
                             getActionBar().setSelectedNavigationItem(position);
                             switch (position) {
                                 case 0:
-                                    _fadeFrom = _colour1;
-                                    _fadeToForward = _colour2;
-                                    _fadeToBackward = _colour2;
-                                    //_colourBackground.setBackgroundColor(Color.argb(120, _colour1[0], _colour1[1], _colour1[2]));
-                                    Logger.v("Test", "COLOUR CHANGE 0");
                                     getActionBar().getTabAt(position).setIcon(R.drawable.list);
                                     getActionBar().getTabAt(position + 1).setIcon(R.drawable.medkit_grey);
                                     getActionBar().getTabAt(position + 2).setIcon(R.drawable.bar_chart_grey);
                                     break;
                                 case 1:
-                                    _fadeFrom = _colour2;
-                                    _fadeToForward = _colour3;
-                                    _fadeToBackward = _colour1;
-                                    //_colourBackground.setBackgroundColor(Color.argb(120, _colour2[0], _colour2[1], _colour2[2]));
-                                    Logger.v("Test", "COLOUR CHANGE 1");
                                     getActionBar().getTabAt(position).setIcon(R.drawable.medkit);
                                     getActionBar().getTabAt(position - 1).setIcon(R.drawable.list_grey);
                                     getActionBar().getTabAt(position + 1).setIcon(R.drawable.bar_chart_grey);
                                     break;
                                 case 2:
-                                    _fadeFrom = _colour3;
-                                    _fadeToForward = _colour3;
-                                    _fadeToBackward = _colour2;
-                                    //_colourBackground.setBackgroundColor(Color.argb(120, _colour3[0], _colour3[1], _colour3[2]));
-                                    Logger.v("Test", "COLOUR CHANGE 2");
                                     getActionBar().getTabAt(position).setIcon(R.drawable.bar_chart);
                                     getActionBar().getTabAt(position - 1).setIcon(R.drawable.medkit_grey);
                                     getActionBar().getTabAt(position - 2).setIcon(R.drawable.list_grey);
@@ -104,20 +86,20 @@ public class MainActivity extends Activity {
                                 int page = _fragmentPager.getCurrentItem();
                                 switch(page) {
                                     case 0:
-                                        _colourBackground.setBackgroundColor(Color.argb(120, _colour1[0], _colour1[1], _colour1[2]));
+                                        _colourBackground.setBackgroundColor(_colour1);
                                         break;
                                     case 1:
-                                        _colourBackground.setBackgroundColor(Color.argb(120, _colour2[0], _colour2[1], _colour2[2]));
+                                        _colourBackground.setBackgroundColor(_colour2);
                                         break;
                                     case 2:
-                                        _colourBackground.setBackgroundColor(Color.argb(120, _colour3[0], _colour3[1], _colour3[2]));
+                                        _colourBackground.setBackgroundColor(_colour3);
                                         break;
                                 }
                             }
                         }
                     });
 
-            _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(this));
+            _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_colourBackground, _fragmentPager, new int[]{_colour1, _colour2, _colour3}));
             _fragmentPagerAdapter = new SlidePagerAdapter(getFragmentManager(),
                     fragment,
                     fragment2,
@@ -130,18 +112,6 @@ public class MainActivity extends Activity {
             View colourBackground = findViewById(R.id.colour_background);
             colourBackground.setBackgroundColor(Color.argb(120, 255, 209, 0));
         }
-    }
-
-    public int[] getFadeFrom() {
-        return _fadeFrom;
-    }
-
-    public int[] getFadeToForward() {
-        return _fadeToForward;
-    }
-
-    public int[] getFadeToBackward() {
-        return _fadeToBackward;
     }
 
     private void setupChrome(){
