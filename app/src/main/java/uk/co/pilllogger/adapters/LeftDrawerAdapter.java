@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.state.State;
 
 /**
  * Created by nick on 23/10/13.
@@ -21,12 +22,10 @@ public class LeftDrawerAdapter extends BaseAdapter{
 
     Activity _activity;
     List<String> _source;
-    Typeface _openSans;
 
     public LeftDrawerAdapter(Activity activity, List<String> source) {
         _activity = activity;
         _source = source;
-        _openSans = Typeface.createFromAsset(activity.getAssets(), "fonts/OpenSans-Light.ttf");
     }
 
 
@@ -58,7 +57,7 @@ public class LeftDrawerAdapter extends BaseAdapter{
             TextView drawerText = (TextView) v.findViewById(R.id.drawer_item_text);
             ImageView drawerIcon = (ImageView) v.findViewById(R.id.drawer_item_icon);
             drawerText.setText(_source.get(position));
-            drawerText.setTypeface(_openSans);
+            drawerText.setTypeface(State.getSingleton().getTypeface());
 
             if(_source.get(position).equals(_activity.getString(R.string.drawer_consumption))){
                 drawerIcon.setImageDrawable(_activity.getResources().getDrawable(R.drawable.list));

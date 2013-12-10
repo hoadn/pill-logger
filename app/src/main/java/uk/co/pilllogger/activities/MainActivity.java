@@ -7,6 +7,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -22,6 +23,7 @@ import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.MainFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.state.State;
 
 /**
  * Created by nick on 22/10/13.
@@ -43,6 +45,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         this.setTitle("Consumption");
         _colourBackground = findViewById(R.id.colour_background);
+
+        State.getSingleton().setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/OpenSans-Light.ttf"));
 
         if(savedInstanceState == null){
             Fragment fragment = new MainFragment();

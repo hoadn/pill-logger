@@ -16,6 +16,7 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.fragments.MainFragment;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.models.Consumption;
+import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.DeleteConsumptionTask;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.views.ColourIndicator;
@@ -25,13 +26,11 @@ import uk.co.pilllogger.views.ColourIndicator;
  */
 public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
-    private Typeface _openSans;
     private Consumption _selectedConsumption;
     private Fragment _fragment;
 
     public ConsumptionListAdapter(Activity activity, Fragment fragment, int textViewResourceId, List<Consumption> consumptions) {
         super(activity, textViewResourceId, R.menu.consumption_list_item_menu, consumptions);
-        _openSans = Typeface.createFromAsset(activity.getAssets(), "fonts/OpenSans-Light.ttf");
         _fragment = fragment;
     }
 
@@ -73,10 +72,10 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
         holder.colour = (ColourIndicator) v.findViewById(R.id.consumption_list_colour);
         holder.size = (TextView) v.findViewById(R.id.consumption_list_size);
         if(holder.name != null){
-            holder.name.setTypeface(_openSans);
-            holder.date.setTypeface(_openSans);
-            //holder.quantity.setTypeface(_openSans);
-            holder.size.setTypeface(_openSans);
+            holder.name.setTypeface(State.getSingleton().getTypeface());
+            holder.date.setTypeface(State.getSingleton().getTypeface());
+            //holder.quantity.setTypeface(State.getSingleton().getTypeface());
+            holder.size.setTypeface(State.getSingleton().getTypeface());
         }
         v.setTag(holder);
     }

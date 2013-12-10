@@ -23,7 +23,6 @@ public class GraphPillListAdapter extends ArrayAdapter<Pill> {
 
     private List<Pill> _pills;
     private Activity _activity;
-    private Typeface _openSans;
     private int _resourceId;
     private List<Integer> _graphPills;
 
@@ -32,7 +31,6 @@ public class GraphPillListAdapter extends ArrayAdapter<Pill> {
         _activity = activity;
         _pills = pills;
         _resourceId = textViewResourceId;
-        _openSans = Typeface.createFromAsset(activity.getAssets(), "fonts/OpenSans-Light.ttf");
         _graphPills = State.getSingleton().getGraphExcludePills();
     }
 
@@ -58,9 +56,9 @@ public class GraphPillListAdapter extends ArrayAdapter<Pill> {
                 holder.units = (TextView) v.findViewById(R.id.pill_list_units);
                 holder.color = v.findViewById(R.id.graph_list_pill_colour);
                 holder.checkbox = (CheckBox) v.findViewById(R.id.graph_list_check_box);
-                holder.name.setTypeface(_openSans);
-                holder.size.setTypeface(_openSans);
-                holder.units.setTypeface(_openSans);
+                holder.name.setTypeface(State.getSingleton().getTypeface());
+                holder.size.setTypeface(State.getSingleton().getTypeface());
+                holder.units.setTypeface(State.getSingleton().getTypeface());
                 v.setTag(holder);
             }
         }

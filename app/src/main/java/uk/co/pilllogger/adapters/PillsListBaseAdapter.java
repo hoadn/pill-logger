@@ -13,21 +13,16 @@ import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.views.ColourIndicator;
 
 /**
  * Created by Nick on 11/11/13.
  */
 public class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
-    protected Typeface _openSans;
-
-    public PillsListBaseAdapter(Activity activity, int textViewResourceId, List<Pill> pills){
-        this(activity, textViewResourceId, 0, pills);
-    }
 
     public PillsListBaseAdapter(Activity activity, int textViewResourceId, int menu, List<Pill> pills) {
         super(activity, textViewResourceId, menu, pills);
-        _openSans = Typeface.createFromAsset(activity.getAssets(), "fonts/OpenSans-Light.ttf");
     }
 
     @Override
@@ -56,8 +51,8 @@ public class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
         holder.colour = (ColourIndicator) v.findViewById(R.id.pill_list_colour);
         holder.pickerContainer = (ViewGroup) v.findViewById(R.id.pill_list_colour_picker_container);
 
-        holder.name.setTypeface(_openSans);
-        holder.size.setTypeface(_openSans);
+        holder.name.setTypeface(State.getSingleton().getTypeface());
+        holder.size.setTypeface(State.getSingleton().getTypeface());
         v.setTag(holder);
     }
 

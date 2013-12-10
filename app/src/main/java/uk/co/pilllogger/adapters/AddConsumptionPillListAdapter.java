@@ -36,7 +36,6 @@ public class
     private List<Pill> _pills;
     private List<Pill> _consumptionPills = new ArrayList<Pill>();
     private Activity _activity;
-    private Typeface _openSans;
     private int _resourceId;
 
     public AddConsumptionPillListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
@@ -44,7 +43,6 @@ public class
         _activity = activity;
         _pills = pills;
         _resourceId = textViewResourceId;
-        _openSans = Typeface.createFromAsset(activity.getAssets(), "fonts/OpenSans-Light.ttf");
     }
 
     public static class ViewHolder {
@@ -72,10 +70,10 @@ public class
                 holder.units = (TextView) v.findViewById(R.id.pill_list_units);
                 holder.lastTaken = (TextView) v.findViewById(R.id.pill_list_last_taken);
                 holder.color = (ColourIndicator) v.findViewById(R.id.add_consumption_pill_colour);
-                holder.name.setTypeface(_openSans);
-                holder.size.setTypeface(_openSans);
-                holder.units.setTypeface(_openSans);
-                holder.lastTaken.setTypeface(_openSans);
+                holder.name.setTypeface(State.getSingleton().getTypeface());
+                holder.size.setTypeface(State.getSingleton().getTypeface());
+                holder.units.setTypeface(State.getSingleton().getTypeface());
+                holder.lastTaken.setTypeface(State.getSingleton().getTypeface());
                 holder.buttonLayout = v.findViewById(R.id.add_consumption_after_click_layout);
                 holder.container = v;
                 holder.amount = (TextView) v.findViewById(R.id.add_consumption_amount);

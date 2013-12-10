@@ -1,5 +1,7 @@
 package uk.co.pilllogger.state;
 
+import android.graphics.Typeface;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +17,16 @@ public class State {
     private static State _instance;
     private Map<Pill, Integer> _pillsOpenList = new HashMap<Pill, Integer>();
     private List<Integer> _graphExcludePills;
+
+    public Typeface getTypeface() {
+        return _typeface;
+    }
+
+    public void setTypeface(Typeface typeface) {
+        _typeface = typeface;
+    }
+
+    private Typeface _typeface;
 
     private State() {
     }

@@ -14,13 +14,13 @@ import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.views.ColourIndicator;
 
 /**
  * Created by Nick on 14/11/13.
  */
 public class WidgetListAdapter extends ArrayAdapter{
-    protected Typeface _openSans;
     private List<Pill> _data = new ArrayList<Pill>();
     private Activity _activity;
     private int _resourceId;
@@ -28,7 +28,6 @@ public class WidgetListAdapter extends ArrayAdapter{
     public WidgetListAdapter(Activity activity, int textViewResourceId, List<Pill> pills){
         super(activity, textViewResourceId, pills);
         _activity = activity;
-        _openSans = Typeface.createFromAsset(activity.getAssets(), "fonts/OpenSans-Light.ttf");
         _resourceId = textViewResourceId;
         _data = pills;
     }
@@ -53,9 +52,9 @@ public class WidgetListAdapter extends ArrayAdapter{
         holder.colour = (ColourIndicator) v.findViewById(R.id.pill_list_colour);
         holder.pickerContainer = (ViewGroup) v.findViewById(R.id.pill_list_colour_picker_container);
 
-        holder.name.setTypeface(_openSans);
-        holder.size.setTypeface(_openSans);
-        holder.units.setTypeface(_openSans);
+        holder.name.setTypeface(State.getSingleton().getTypeface());
+        holder.size.setTypeface(State.getSingleton().getTypeface());
+        holder.units.setTypeface(State.getSingleton().getTypeface());
         v.setTag(holder);
     }
 
