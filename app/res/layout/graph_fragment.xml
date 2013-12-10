@@ -19,7 +19,6 @@
                 android:background="@color/selector_background"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
                 android:orientation="vertical">

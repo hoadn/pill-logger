@@ -11,11 +11,10 @@
         android:id="@+id/pill_fragment_quick_create"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:background="#20FFFFFF"
+        android:background="@color/translucent_white"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="15dp">
 
         <TextView
             android:id="@+id/pill_fragment_add_pill_title"
