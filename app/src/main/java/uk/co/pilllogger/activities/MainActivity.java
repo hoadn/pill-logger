@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.SlidePagerAdapter;
@@ -30,7 +31,7 @@ public class MainActivity extends Activity {
 
     private ViewPager _fragmentPager;
     private PagerAdapter _fragmentPagerAdapter;
-    private int[] _colour1 = {255, 229, 0};
+    private int[] _colour1 = {255, 242, 0};
     private int[] _colour2 = {0, 233, 255};
     private int[] _colour3 = {178, 255, 0};
     private int[] _fadeFrom = _colour1;

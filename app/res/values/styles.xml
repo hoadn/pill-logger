@@ -13,12 +13,14 @@
     </style>
 
     <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
+    <style name="AppTheme" parent="@android:style/Theme.Holo">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:actionBarStyle">@style/PartiallyTransparentActionBar</item>
         <item name="android:actionBarTabStyle">@style/PartiallyTransparentActionBarTab</item>
         <item name="android:actionBarTabBarStyle">@style/PartiallyTransparentActionBarTab</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.Example</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu.Example</item>
     </style>
 
     <!-- ActionBar styles -->
@@ -37,6 +39,14 @@
         <item name="android:background">@null</item>
         <item name="android:layout_width">35dp</item>
         <item name="android:layout_height">35dp</item>
+    </style>
+
+    <style name="PopupMenu.Example" parent="@android:style/Widget.Holo.Light.ListPopupWindow">
+        <item name="android:popupBackground">@color/popup_menu</item>
+    </style>
+
+    <style name="DropDownNav.Example" parent="@android:style/Widget.Holo.Light.Spinner">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_example</item>
     </style>
 
 </resources>
