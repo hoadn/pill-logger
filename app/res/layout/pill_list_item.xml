@@ -10,7 +10,7 @@
             android:layout_height="@dimen/pill_list_item_height"
             android:layout_width="5dp"
             android:layout_alignParentLeft="true"
-            android:background="@color/gold"
+            android:background="@color/dark_blue"
             android:visibility="invisible"/>
 
         <RelativeLayout
