@@ -32,6 +32,9 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         return _instance;
     }
 
+    private List<Consumption> _cachedConsumptions = new ArrayList<Consumption>();
+    private boolean _invalidateCache = false;
+
     @Override
     protected ContentValues getContentValues(Consumption consumption) {
         ContentValues values = new ContentValues();
@@ -88,6 +91,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                     null,
                     values);
         }
+        _invalidateCache = true;
         return newRowId;
     }
 
@@ -95,6 +99,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     public void update(Consumption data) {
         //Not needed yet
         throw new UnsupportedOperationException();
+//        _invalidateCache = true;
     }
 
     @Override
@@ -109,6 +114,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                     "_ID = ?",
                     new String[]{id});
         }
+        _invalidateCache = true;
     }
 
     @Override
@@ -176,6 +182,9 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
     @Override
     public List<Consumption> getAll() {
+        if(!_invalidateCache && _cachedConsumptions != null && _cachedConsumptions.size() > 0)
+            return _cachedConsumptions;
+
         SQLiteDatabase db = _dbCreator.getReadableDatabase();
 
         String[] projection = getProjection();
@@ -202,6 +211,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
             c.close();
         }
 
+        _cachedConsumptions = consumptions;
         return consumptions;
     }
 
