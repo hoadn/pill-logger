@@ -21,55 +21,60 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
     float _previousV = 0;
     int[] _colours;
     boolean _goingForwards = true;
+    int pagePosition = 0;
+    float[] transitionModifiers = new float[3];
+    int fadeFrom;
 
     public FadeBackgroundPageTransformer(View background, ViewPager pager, int[] colours) {
         _background = background;
         _pager = pager;
         _colours = colours;
+        fadeFrom = colours[0];
     }
 
     @Override
     public void transformPage(View view, float v) {
-        Logger.v(TAG, "Value = " + v);
-        if (_previousV == 1.0 && v == 0.0)
-            return;
 
-        int pagePosition = _pager.getCurrentItem();
-        Fragment fragment = ((SlidePagerAdapter)_pager.getAdapter()).getItem(pagePosition);
-        boolean correctPage = _pager.getAdapter().isViewFromObject(view, fragment);
-
-        if(pagePosition < 0 || !correctPage)
-            return;
-
-        int fadeFrom = _colours[pagePosition];
-
-        float[] transitionModifiers = new float[3];
-
-        if (v > _previousV && pagePosition > 0) {
-            int fadeToPrevious = _colours[pagePosition - 1];
-            transitionModifiers = calculateColourTransition(fadeFrom, fadeToPrevious);
-            _goingForwards = false;
-            Logger.v(TAG, "Going Backwards");
+        if (v == 1 || v == 0) {
+            pagePosition = _pager.getCurrentItem();
+            fadeFrom = _colours[pagePosition];
         }
-        else if (v <=_previousV && (pagePosition < _colours.length - 1)) {
-            int fadeToNext = _colours[pagePosition + 1];
-            transitionModifiers = calculateColourTransition(fadeFrom, fadeToNext);
-            _goingForwards = true;
-            Logger.v(TAG, "rgb Going Forwards");
-        }
-        if (v >= 0 && v <= 1) {
+        if (v > 0 && v < 1) {
+            Fragment fragment = ((SlidePagerAdapter)_pager.getAdapter()).getItem(pagePosition);
+            boolean correctPage = _pager.getAdapter().isViewFromObject(view, fragment);
+            Logger.v(TAG, "correctPage = " + correctPage + " v = " + v);
+    //        if(pagePosition < 0 || !correctPage)
+    //            return;
 
+
+            Logger.v(TAG, "pagePosition = " + pagePosition);
+
+
+            if (v > _previousV && pagePosition > 0 && v < 0.3) {
+                int fadeToPrevious = _colours[pagePosition - 1];
+                transitionModifiers = calculateColourTransition(fadeFrom, fadeToPrevious);
+                _goingForwards = false;
+                Logger.v(TAG, "rgb Going Backwards");
+            }
+            else if (v <=_previousV && (pagePosition < _colours.length - 1) && v > 0.3) {
+                int fadeToNext = _colours[pagePosition + 1];
+                transitionModifiers = calculateColourTransition(fadeFrom, fadeToNext);
+                _goingForwards = true;
+                Logger.v(TAG, "rgb Going Forwards");
+            }
+            Logger.v(TAG, "Value before = " + v);
+
+            Logger.v(TAG, "Value = " + v);
             float modifier = _goingForwards ? (100 - (v * 100)) : (v * 100);
-
+            Logger.v(TAG, "modifier = " + modifier + " " + _goingForwards + " V = " + v*100);
             float r = Color.red(fadeFrom) - (modifier * transitionModifiers[0]);
             float g = Color.green(fadeFrom) - (modifier * transitionModifiers[1]);
             float b = Color.blue(fadeFrom) - (modifier * transitionModifiers[2]);
 
             _background.setBackgroundColor(Color.argb(120, (int)r, (int)g, (int)b));
-            Logger.v(TAG, "rgb = " + r + " " + g + " " + b + " V = " + (v * 100) + " previousV = " + _previousV + " v = " + v);
+            Logger.v(TAG, "rgb = " + r + " " + g + " " + b + " Modifier = " + modifier + " previousV = " + _previousV + " v = " + v);
             _previousV = v;
         }
-        _previousV = v;
 
     }
 
@@ -83,7 +88,7 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
             results[i] = diff/100;
         }
         if (results[0] == 0.0 && results[1] == 0.0 && results[2] == 0.0)
-            results = calculateColourTransition(to, from); // TODO: HACK!!
+            results = calculateColourTransition(from, to); // TODO: HACK!!
         Logger.v(TAG, "Results: " + results[0] + " " + results[1] + " " + results[2]);
         return results;
     }
