@@ -2,6 +2,7 @@ package uk.co.pilllogger.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -46,6 +47,7 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.pill_list_fragment, container, false);
+        v.setTag(Color.argb(120, 0, 233, 255));
 
         _list = (ListView) v.findViewById(R.id.pill_list);
         //_list.setOnItemClickListener(new PillItemClickListener(getActivity()));

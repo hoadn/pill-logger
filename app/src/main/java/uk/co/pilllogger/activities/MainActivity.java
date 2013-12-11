@@ -85,6 +85,7 @@ public class MainActivity extends Activity {
                             super.onPageScrollStateChanged(state);
                             if (state == ViewPager.SCROLL_STATE_IDLE) {
                                 int page = _fragmentPager.getCurrentItem();
+                                // TODO: This code will break when colours change in fragments, needs to be updated
                                 switch(page) {
                                     case 0:
                                         _colourBackground.setBackgroundColor(_colour1);
@@ -100,7 +101,7 @@ public class MainActivity extends Activity {
                         }
                     });
 
-            _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_colourBackground, _fragmentPager, new int[]{_colour1, _colour2, _colour3}));
+            _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_colourBackground));
             _fragmentPagerAdapter = new SlidePagerAdapter(getFragmentManager(),
                     fragment,
                     fragment2,

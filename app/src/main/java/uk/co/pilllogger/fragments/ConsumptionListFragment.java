@@ -3,6 +3,7 @@ package uk.co.pilllogger.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -62,6 +63,7 @@ public class ConsumptionListFragment extends Fragment implements InitTestDbTask.
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.main_fragment, container, false);
+        v.setTag(Color.argb(120, 255, 242, 0));
         _mainLayout = v;
         _fragment = this;
         _activity = getActivity();

@@ -5,8 +5,6 @@ import android.graphics.Color;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
-import uk.co.pilllogger.R;
-import uk.co.pilllogger.activities.MainActivity;
 import uk.co.pilllogger.adapters.SlidePagerAdapter;
 import uk.co.pilllogger.helpers.Logger;
 
@@ -17,65 +15,38 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
 
     private static String TAG = "FadeBackgroundPageTransformer";
     private final View _background;
-    private final ViewPager _pager;
-    float _previousV = 0;
-    int[] _colours;
-    boolean _goingForwards = true;
-    int pagePosition = 0;
-    float[] transitionModifiers = new float[3];
-    int fadeFrom;
+    float[] _transitionModifiers = new float[3];
+    int _fadeFrom;
+    int _fadeTo;
 
-    public FadeBackgroundPageTransformer(View background, ViewPager pager, int[] colours) {
+    public FadeBackgroundPageTransformer(View background) {
         _background = background;
-        _pager = pager;
-        _colours = colours;
-        fadeFrom = colours[0];
     }
 
     @Override
-    public void transformPage(View view, float v) {
+    public void transformPage(View view, float position) {
 
-        if (v == 1 || v == 0) {
-            pagePosition = _pager.getCurrentItem();
-            fadeFrom = _colours[pagePosition];
+        if(position <= 1 && position > -1){ // page is visible
+            int colour = (Integer)view.getTag();
+            if(position < 0)
+                _fadeTo = colour;
+            else
+                _fadeFrom = colour;
+
+            if(position == 0) // if page takes up full screen, both colours are equal
+                _fadeTo = colour;
+
+            _transitionModifiers = calculateColourTransition(_fadeFrom, _fadeTo);
+
+            float modifier = position * 100;
+
+            float r = Color.red(_fadeFrom) - (modifier * _transitionModifiers[0]);
+            float g = Color.green(_fadeFrom) - (modifier * _transitionModifiers[1]);
+            float b = Color.blue(_fadeFrom) - (modifier * _transitionModifiers[2]);
+
+            if(position > 0)
+                _background.setBackgroundColor(Color.argb(120, (int)r, (int)g, (int)b));
         }
-        if (v > 0 && v < 1) {
-            Fragment fragment = ((SlidePagerAdapter)_pager.getAdapter()).getItem(pagePosition);
-            boolean correctPage = _pager.getAdapter().isViewFromObject(view, fragment);
-            Logger.v(TAG, "correctPage = " + correctPage + " v = " + v);
-    //        if(pagePosition < 0 || !correctPage)
-    //            return;
-
-
-            Logger.v(TAG, "pagePosition = " + pagePosition);
-
-
-            if (v > _previousV && pagePosition > 0 && v < 0.3) {
-                int fadeToPrevious = _colours[pagePosition - 1];
-                transitionModifiers = calculateColourTransition(fadeFrom, fadeToPrevious);
-                _goingForwards = false;
-                Logger.v(TAG, "rgb Going Backwards");
-            }
-            else if (v <=_previousV && (pagePosition < _colours.length - 1) && v > 0.3) {
-                int fadeToNext = _colours[pagePosition + 1];
-                transitionModifiers = calculateColourTransition(fadeFrom, fadeToNext);
-                _goingForwards = true;
-                Logger.v(TAG, "rgb Going Forwards");
-            }
-            Logger.v(TAG, "Value before = " + v);
-
-            Logger.v(TAG, "Value = " + v);
-            float modifier = _goingForwards ? (100 - (v * 100)) : (v * 100);
-            Logger.v(TAG, "modifier = " + modifier + " " + _goingForwards + " V = " + v*100);
-            float r = Color.red(fadeFrom) - (modifier * transitionModifiers[0]);
-            float g = Color.green(fadeFrom) - (modifier * transitionModifiers[1]);
-            float b = Color.blue(fadeFrom) - (modifier * transitionModifiers[2]);
-
-            _background.setBackgroundColor(Color.argb(120, (int)r, (int)g, (int)b));
-            Logger.v(TAG, "rgb = " + r + " " + g + " " + b + " Modifier = " + modifier + " previousV = " + _previousV + " v = " + v);
-            _previousV = v;
-        }
-
     }
 
     private float[] calculateColourTransition(int from, int to) {
@@ -85,11 +56,8 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
 
         for (int i = 0 ; i < fadeFrom.length ; i++) {
             float diff = fadeFrom[i] - fadeTo[i];
-            results[i] = diff/100;
+            results[i] = diff/100.0f;
         }
-        if (results[0] == 0.0 && results[1] == 0.0 && results[2] == 0.0)
-            results = calculateColourTransition(from, to); // TODO: HACK!!
-        Logger.v(TAG, "Results: " + results[0] + " " + results[1] + " " + results[2]);
         return results;
     }
 }

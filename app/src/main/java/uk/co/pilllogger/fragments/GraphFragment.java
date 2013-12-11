@@ -1,6 +1,7 @@
 package uk.co.pilllogger.fragments;
 
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ public class GraphFragment extends Fragment implements GetConsumptionsTask.ITask
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         _layout = inflater.inflate(R.layout.graph_fragment, container, false);
 
+        _layout.setTag(Color.argb(120, 178, 255, 0));
         new GetConsumptionsTask(getActivity(), this, false).execute();
 
         return _layout;
