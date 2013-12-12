@@ -240,6 +240,8 @@ public class StackBarGraph extends View {
         int count = 0;
         for (StackBar bar : mBars){
             for(StackBarSection section : bar.getSections()){
+                if(section.getValue() == 0) continue;
+                
                 Region r = new Region();
                 r.setPath(section.getPath(), section.getRegion());
                 if (r.contains((int)point.x,(int) point.y) && event.getAction() == MotionEvent.ACTION_DOWN){
