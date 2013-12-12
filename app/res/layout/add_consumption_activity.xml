@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true">
-
+    android:focusableInTouchMode="true"
+    android:background="@drawable/back">
     <LinearLayout
         android:id="@+id/add_consumption_top_buttons"
         android:layout_height="50dp"
@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:gravity="center_vertical"
-                android:src="@drawable/cancel"/>
+                android:src="@drawable/cross_light"/>
 
             <TextView
                 android:id="@+id/add_consumption_cancel_text"
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:gravity="center_vertical"
-                android:src="@drawable/tick"/>
+                android:src="@drawable/tick_light"/>
 
             <TextView
                 android:id="@+id/add_consumption_done_text"
@@ -289,6 +289,5 @@
 
 
     </LinearLayout>
-
 
 </RelativeLayout>
