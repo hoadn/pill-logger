@@ -98,8 +98,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
                 holder.name.setText(consumption.getPill().getName());
                 holder.date.setText(DateHelper.getRelativeDateTime(_fragment.getActivity(), consumption.getDate()));
                 int quantity = consumption.getQuantity();
-                if (quantity > 0) // some debate over whether or not we want to show single quantity or not
-                    holder.quantity.setText(String.valueOf(consumption.getQuantity()));
+                holder.quantity.setText(String.valueOf(consumption.getQuantity()));
                 holder.consumption = consumption;
                 holder.colour.setColour(consumption.getPill().getColour());
                 holder.size.setText(consumption.getPill().getSize() + consumption.getPill().getUnits());
