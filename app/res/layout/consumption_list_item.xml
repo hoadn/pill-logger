@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -20,8 +21,8 @@
 
         <uk.co.pilllogger.views.ColourIndicator
             android:id="@+id/consumption_list_colour"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
             android:padding="8dp"
             android:layout_marginLeft="5dp"
             android:layout_alignParentRight="true"
@@ -42,12 +43,13 @@
             android:id="@+id/consumption_list_quantity"
             android:layout_centerVertical="true"
             android:gravity="center"
-            android:textColor="#80CCCCCC"
+            android:textColor="#aaffffff"
             android:textStyle="bold"
             android:layout_width="29dp"
             android:layout_height="45dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="8dp"/>
+            android:layout_marginRight="8dp"
+            tools:text="1"/>
 
         <TextView android:textSize="18dp"
             android:id="@+id/consumption_list_size"
