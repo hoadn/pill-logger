@@ -33,8 +33,8 @@ public class MainActivity extends Activity {
 
     private ViewPager _fragmentPager;
     private PagerAdapter _fragmentPagerAdapter;
-    private int _colour1 = Color.argb(120, 255, 242, 0);
-    private int _colour2 = Color.argb(120, 0, 233, 255);
+    private int _colour1 = Color.argb(120, 0, 233, 255);
+    private int _colour2 = Color.argb(120, 161, 72, 173);
     private int _colour3 = Color.argb(120, 178, 255, 0);
     View _colourBackground;
 
@@ -110,8 +110,6 @@ public class MainActivity extends Activity {
             _fragmentPager.setAdapter(_fragmentPagerAdapter);
 
             setupChrome();
-
-            _colourBackground.setBackgroundColor(_colour1);
         }
     }
 
