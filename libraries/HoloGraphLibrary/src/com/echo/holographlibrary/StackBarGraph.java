@@ -147,8 +147,7 @@ public class StackBarGraph extends View {
                     int bottom = (int)(getHeight()-bottomPadding);
 
                     if(section.getValue() == 0){
-                        top = 0;
-                        bottom = 0;
+                        continue;
                     }
                     else{
                         bottom -= currentTop;
@@ -157,11 +156,20 @@ public class StackBarGraph extends View {
                            top -= padding * (section.getValue() - 1);
                     }
 
-                    mRectangle.set(left, top, right, bottom);
+                    int stroke = (int)padding * 3;
 
-                    // Draw bar
+                    mRectangle.set(left + stroke / 2, top + stroke / 2, right - stroke / 2, bottom - stroke / 2);
+
+                    // Draw bar stroke
                     this.mPaint.setColor(section.getColor());
-                    this.mPaint.setAlpha(255);
+                    this.mPaint.setStrokeWidth(stroke);
+                    this.mPaint.setStyle(Paint.Style.STROKE);
+                    //this.mPaint.setAlpha(255);
+                    canvas.drawRect(mRectangle, this.mPaint);
+
+                    this.mPaint.setAlpha(50);
+                    this.mPaint.setStyle(Paint.Style.FILL);
+                    mRectangle.set(left + stroke, top + stroke, right - stroke, bottom - stroke);
                     canvas.drawRect(mRectangle, this.mPaint);
 
                     // Create selection region
@@ -204,7 +212,7 @@ public class StackBarGraph extends View {
                 }
                 count++;
             }
-            mPaint.setColor(Color.rgb(150,150,150));
+            mPaint.setColor(Color.argb(50, 255, 255, 255));
             mPaint.setStrokeWidth(padding);
             
             mPaint.setAntiAlias(true);
