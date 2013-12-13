@@ -32,7 +32,8 @@ public class GraphFragment extends Fragment implements GetConsumptionsTask.ITask
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         _layout = inflater.inflate(R.layout.graph_fragment, container, false);
 
-        _layout.setTag(Color.argb(120, 178, 255, 0));
+        _layout.setTag(R.id.tag_page_colour, Color.argb(120, 178, 255, 0));
+        _layout.setTag(R.id.tag_tab_icon_position, 2);
         new GetConsumptionsTask(getActivity(), this, false).execute();
 
         return _layout;

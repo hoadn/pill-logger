@@ -63,7 +63,8 @@ public class ConsumptionListFragment extends Fragment implements InitTestDbTask.
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.main_fragment, container, false);
-        v.setTag(Color.argb(120, 0, 233, 255));
+        v.setTag(R.id.tag_tab_icon_position, 0);
+        v.setTag(R.id.tag_page_colour ,Color.argb(120, 0, 233, 255));
         _mainLayout = v;
         _fragment = this;
         _activity = getActivity();

@@ -63,19 +63,19 @@ public class MainActivity extends Activity {
                             getActionBar().setSelectedNavigationItem(position);
                             switch (position) {
                                 case 0:
-                                    getActionBar().getTabAt(position).setIcon(R.drawable.list);
-                                    getActionBar().getTabAt(position + 1).setIcon(R.drawable.medkit_grey);
-                                    getActionBar().getTabAt(position + 2).setIcon(R.drawable.bar_chart_grey);
+//                                    getActionBar().getTabAt(position).setIcon(R.drawable.list);
+//                                    getActionBar().getTabAt(position + 1).setIcon(R.drawable.medkit_grey);
+//                                    getActionBar().getTabAt(position + 2).setIcon(R.drawable.bar_chart_grey);
                                     break;
                                 case 1:
-                                    getActionBar().getTabAt(position).setIcon(R.drawable.medkit);
-                                    getActionBar().getTabAt(position - 1).setIcon(R.drawable.list_grey);
-                                    getActionBar().getTabAt(position + 1).setIcon(R.drawable.bar_chart_grey);
+//                                    getActionBar().getTabAt(position).setIcon(R.drawable.medkit);
+//                                    getActionBar().getTabAt(position - 1).setIcon(R.drawable.list_grey);
+//                                    getActionBar().getTabAt(position + 1).setIcon(R.drawable.bar_chart_grey);
                                     break;
                                 case 2:
-                                    getActionBar().getTabAt(position).setIcon(R.drawable.bar_chart);
-                                    getActionBar().getTabAt(position - 1).setIcon(R.drawable.medkit_grey);
-                                    getActionBar().getTabAt(position - 2).setIcon(R.drawable.list_grey);
+//                                    getActionBar().getTabAt(position).setIcon(R.drawable.bar_chart);
+//                                    getActionBar().getTabAt(position - 1).setIcon(R.drawable.medkit_grey);
+//                                    getActionBar().getTabAt(position - 2).setIcon(R.drawable.list_grey);
                                     break;
                             }
                         }
@@ -101,7 +101,7 @@ public class MainActivity extends Activity {
                         }
                     });
 
-            _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_colourBackground));
+            _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_colourBackground, this));
             _fragmentPagerAdapter = new SlidePagerAdapter(getFragmentManager(),
                     fragment,
                     fragment2,
@@ -140,15 +140,15 @@ public class MainActivity extends Activity {
 
             actionBar.addTab(
                     actionBar.newTab()
-                            .setIcon(R.drawable.list)
+                            .setCustomView(R.layout.tab_icon_consumptions)
                             .setTabListener(tabListener));
             actionBar.addTab(
                     actionBar.newTab()
-                            .setIcon(R.drawable.medkit_grey)
+                            .setCustomView(R.layout.tab_icon_pills)
                             .setTabListener(tabListener));
             actionBar.addTab(
                     actionBar.newTab()
-                            .setIcon(R.drawable.bar_chart_grey)
+                            .setCustomView(R.layout.tab_icon_charts)
                             .setTabListener(tabListener));
 
         }
