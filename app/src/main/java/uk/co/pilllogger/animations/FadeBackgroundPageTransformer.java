@@ -61,7 +61,7 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
 
             // transition tab bar icons
             if(_actionBar != null){
-                float tabAlpha = ((1 - Math.abs(position)) / 2) + 0.5f;
+                float tabAlpha = 1 - (Math.abs(position) * 0.75f);
                 ActionBar.Tab tab = _actionBar.getTabAt(tabPosition);
                 View tabCustomView = tab.getCustomView();
                 View tabImage = tabCustomView.findViewById(R.id.tab_icon_image);
