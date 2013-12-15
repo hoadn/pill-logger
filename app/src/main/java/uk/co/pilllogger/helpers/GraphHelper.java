@@ -14,6 +14,8 @@ import com.echo.holographlibrary.StackBar;
 import com.echo.holographlibrary.StackBarGraph;
 import com.echo.holographlibrary.StackBarSection;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -176,7 +178,9 @@ public class GraphHelper {
 
         for(int i = 1; i <= days; i++){
             StackBar sb = new StackBar();
-            sb.setName("");
+            DateTime dateTime = new DateTime().plusDays((7-i) * -1);
+            sb.setName(dateTime.dayOfWeek().getAsShortText());
+
             for(Pill pill : data.keySet()){
                 if(State.getSingleton().isPillExcluded(pill))
                     continue;

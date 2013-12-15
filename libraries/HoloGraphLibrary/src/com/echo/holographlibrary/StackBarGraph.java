@@ -104,7 +104,7 @@ public class StackBarGraph extends View {
             float maxValue = 0;
             float padding = 1 * mContext.getResources().getDisplayMetrics().density;
             int selectPadding = (int) (4 * mContext.getResources().getDisplayMetrics().density);
-            float bottomPadding = 10 * mContext.getResources().getDisplayMetrics().density;
+            float bottomPadding = 20 * mContext.getResources().getDisplayMetrics().density;
             float leftPadding = bottomPadding;
             
             float usableHeight;
@@ -116,14 +116,6 @@ public class StackBarGraph extends View {
             } else {
                 usableHeight = getHeight()-(bottomPadding*2);
             }
-             
-            // Draw x-axis line
-            mPaint.setColor(Color.WHITE);
-            mPaint.setStrokeWidth(2 * mContext.getResources().getDisplayMetrics().density);
-            mPaint.setAlpha(50);
-            mPaint.setAntiAlias(true);
-            float baseY = getHeight()-bottomPadding+10* density;
-            canvas.drawLine(0, baseY, getWidth(), baseY, mPaint);
             
             float barWidth = (getWidth() - (padding*2)*mBars.size() - leftPadding * 2)/mBars.size();
 
@@ -146,10 +138,7 @@ public class StackBarGraph extends View {
                     int right = (int)((padding*2)*count + padding + barWidth*(count+1)) + (int)leftPadding;
                     int bottom = (int)(getHeight()-bottomPadding);
 
-                    if(section.getValue() == 0){
-                        continue;
-                    }
-                    else{
+                    if(section.getValue() > 0){
                         bottom -= currentTop;
                         top -= currentTop;
                         if(section.getValue() > 1)
@@ -160,28 +149,31 @@ public class StackBarGraph extends View {
 
                     mRectangle.set(left + stroke / 2, top + stroke / 2, right - stroke / 2, bottom - stroke / 2);
 
-                    // Draw bar stroke
-                    this.mPaint.setColor(section.getColor());
-                    this.mPaint.setStrokeWidth(stroke);
-                    this.mPaint.setStyle(Paint.Style.STROKE);
-                    //this.mPaint.setAlpha(255);
-                    canvas.drawRect(mRectangle, this.mPaint);
+                    if(section.getValue() > 0){
+                        // Draw bar stroke
+                        this.mPaint.setColor(section.getColor());
+                        this.mPaint.setStrokeWidth(stroke);
+                        this.mPaint.setStyle(Paint.Style.STROKE);
+                        //this.mPaint.setAlpha(255);
+                        canvas.drawRect(mRectangle, this.mPaint);
 
-                    this.mPaint.setAlpha(50);
-                    this.mPaint.setStyle(Paint.Style.FILL);
-                    mRectangle.set(left + stroke, top + stroke, right - stroke, bottom - stroke);
-                    canvas.drawRect(mRectangle, this.mPaint);
+                        this.mPaint.setAlpha(50);
+                        this.mPaint.setStyle(Paint.Style.FILL);
+                        mRectangle.set(left + stroke, top + stroke, right - stroke, bottom - stroke);
+                        canvas.drawRect(mRectangle, this.mPaint);
 
-                    // Create selection region
-                    Path path = new Path();
-                    path.addRect(new RectF(mRectangle.left-selectPadding, mRectangle.top-selectPadding, mRectangle.right+selectPadding, mRectangle.bottom+selectPadding), Path.Direction.CW);
-                    section.setPath(path);
-                    section.setRegion(new Region(mRectangle.left-selectPadding, mRectangle.top-selectPadding, mRectangle.right+selectPadding, mRectangle.bottom+selectPadding));
+                        // Create selection region
+                        Path path = new Path();
+                        path.addRect(new RectF(mRectangle.left-selectPadding, mRectangle.top-selectPadding, mRectangle.right+selectPadding, mRectangle.bottom+selectPadding), Path.Direction.CW);
+                        section.setPath(path);
+                        section.setRegion(new Region(mRectangle.left-selectPadding, mRectangle.top-selectPadding, mRectangle.right+selectPadding, mRectangle.bottom+selectPadding));
+                    }
 
                     // Draw x-axis label text
+                    mPaint.setColor(Color.argb(100, 255, 255, 255));
                     this.mPaint.setTextSize(AXIS_LABEL_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
                     int x = (int)(((mRectangle.left+mRectangle.right)/2)-(this.mPaint.measureText(bar.getName())/2));
-                    int y = (int) (getHeight()-3 * mContext.getResources().getDisplayMetrics().scaledDensity);
+                    int y = (int) (getHeight()-6 * mContext.getResources().getDisplayMetrics().scaledDensity);
                     canvas.drawText(bar.getName(), x, y, this.mPaint);
 
                     // Draw value text
@@ -202,7 +194,7 @@ public class StackBarGraph extends View {
                     if (mIndexSelected == count && mListener != null) {
                         this.mPaint.setColor(Color.parseColor("#33B5E5"));
                         this.mPaint.setAlpha(100);
-                        canvas.drawPath(section.getPath(), this.mPaint);
+                        //canvas.drawPath(section.getPath(), this.mPaint);
                         this.mPaint.setAlpha(255);
                     }
                     currentTop += (bottom-top);
@@ -244,10 +236,10 @@ public class StackBarGraph extends View {
 
                 Region r = new Region();
                 r.setPath(section.getPath(), section.getRegion());
-                if (r.contains((int)point.x,(int) point.y) && event.getAction() == MotionEvent.ACTION_DOWN){
+                if (r.contains(point.x, point.y) && event.getAction() == MotionEvent.ACTION_DOWN){
                     mIndexSelected = count;
                 } else if (event.getAction() == MotionEvent.ACTION_UP){
-                    if (r.contains((int)point.x,(int) point.y) && mListener != null){
+                    if (r.contains(point.x,point.y) && mListener != null){
                         if (mIndexSelected > -1) mListener.onClick(mIndexSelected);
                         mIndexSelected = -1;
                     }
