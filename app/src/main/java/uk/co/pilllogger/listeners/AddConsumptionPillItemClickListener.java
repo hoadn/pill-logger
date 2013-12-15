@@ -40,7 +40,7 @@ public class AddConsumptionPillItemClickListener implements ListView.OnItemClick
             animation = new AddPillToConsumptionAnimation(addButtonLayout, width, false, _activity);
             color = android.R.color.transparent;
             _adapter.removeAllInstancesOfPill(i);
-            State.getSingleton().removeOpenPill(pill);
+            _adapter.removeOpenPill(pill);
         }
         else {
             animation = new AddPillToConsumptionAnimation(addButtonLayout, (int) LayoutHelper.dpToPx(_activity, 125), true, _activity);
@@ -48,7 +48,7 @@ public class AddConsumptionPillItemClickListener implements ListView.OnItemClick
             _adapter.addConsumedPillAtStart(i);
             TextView amount = (TextView) view.findViewById(R.id.add_consumption_amount);
             amount.setText("1");
-            State.getSingleton().addOpenPill(pill);
+            _adapter.addOpenPill(pill);
         }
 
         view.setBackgroundColor(_activity.getResources().getColor(color));

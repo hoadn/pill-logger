@@ -15,7 +15,6 @@ import uk.co.pilllogger.models.Pill;
 public class State {
 
     private static State _instance;
-    private Map<Pill, Integer> _pillsOpenList = new HashMap<Pill, Integer>();
     private List<Integer> _graphExcludePills;
 
     public Typeface getTypeface() {
@@ -35,28 +34,6 @@ public class State {
         if (_instance == null)
             _instance = new State();
         return _instance;
-    }
-
-    public void addOpenPill(Pill pill) {
-        if (!(_pillsOpenList.containsKey(pill)))
-            _pillsOpenList.put(pill, 1);
-    }
-
-    public void removeOpenPill(Pill pill) {
-        if (_pillsOpenList.containsKey(pill))
-            _pillsOpenList.remove(pill);
-    }
-
-    public void clearOpenPillsList() {
-        _pillsOpenList.clear();
-    }
-
-    public Map<Pill, Integer> getOpenPillsList() {
-        return _pillsOpenList;
-    }
-
-    public void setOpenPillsList(Map<Pill, Integer> openPills) {
-        _pillsOpenList = openPills;
     }
 
     public List<Integer> getGraphExcludePills() {

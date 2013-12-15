@@ -211,12 +211,12 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
     }
 
     public void cancel(View view) {
-        State.getSingleton().clearOpenPillsList();
+        _adapter.clearOpenPillsList();
         finish();
     }
 
     public void done(View view) {
-        State.getSingleton().clearOpenPillsList();
+        _adapter.clearOpenPillsList();
         AddConsumptionPillListAdapter adapter = (AddConsumptionPillListAdapter) _pillsList.getAdapter();
         List<Pill> consumptionPills = adapter.getPillsConsumed();
 
@@ -246,7 +246,7 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
     public void pillInserted(Pill pill) {
         if (_adapter != null) {
             new GetPillsTask(_activity, (GetPillsTask.ITaskComplete)_activity).execute();
-            State.getSingleton().addOpenPill(pill);
+            _adapter.addOpenPill(pill);
             _adapter.addConsumedPill(pill);
         }
     }

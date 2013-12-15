@@ -6,7 +6,6 @@ package uk.co.pilllogger.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +37,23 @@ public class
     private List<Pill> _consumptionPills = new ArrayList<Pill>();
     private Activity _activity;
     private int _resourceId;
+
+    Map<Pill, Integer> _openPills = new HashMap<Pill, Integer>();
+
+
+    public void addOpenPill(Pill pill) {
+        if (!(_openPills.containsKey(pill)))
+            _openPills.put(pill, 1);
+    }
+
+    public void removeOpenPill(Pill pill) {
+        if (_openPills.containsKey(pill))
+            _openPills.remove(pill);
+    }
+
+    public void clearOpenPillsList() {
+        _openPills.clear();
+    }
 
     public AddConsumptionPillListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
         super(activity, textViewResourceId, pills);
@@ -88,15 +105,14 @@ public class
             holder.name.setText(pill.getName());
             holder.size.setText(String.valueOf(pill.getSize()));
             holder.color.setColour(pill.getColour());
-            Map<Pill, Integer> openPills = State.getSingleton().getOpenPillsList();
-            if (State.getSingleton().getOpenPillsList().containsKey(pill)) {
+            if (_openPills.containsKey(pill)) {
                 v = open(v);
-                holder.amount.setText(openPills.get(pill).toString());
+                holder.amount.setText(_openPills.get(pill).toString());
             }
             else {
                 Logger.v("PillName", "pill: " + pill.getName() + " pill id: " + pill.getId());
                 v = close(v);
-                for (Pill aPill : openPills.keySet()) {
+                for (Pill aPill : _openPills.keySet()) {
                     Logger.v("PillName", "open pill " + aPill.getName() + " id: " + aPill.getId());
                 }
             }
@@ -211,22 +227,20 @@ public class
         @Override
         public void onClick(View view) {
             Pill pill = _pills.get(_position);
-            Map<Pill, Integer> openPills = State.getSingleton().getOpenPillsList();
             if (_add) {
                 int amount = Integer.parseInt(_amount.getText().toString()) + 1;
-                openPills.put(pill, openPills.get(pill) + 1);
+                _openPills.put(pill, _openPills.get(pill) + 1);
                 _amount.setText(String.valueOf(amount));
                 _adapter.addConsumedPill(pill);
             }
             else {
                 int amount = Integer.parseInt(_amount.getText().toString()) - 1;
                 if (amount >= 0) {
-                    openPills.put(pill, openPills.get(pill) - 1);
+                    _openPills.put(pill, _openPills.get(pill) - 1);
                     _amount.setText(String.valueOf(amount));
                     _adapter.removeConsumedPill(pill);
                 }
             }
-            State.getSingleton().setOpenPillsList(openPills);
         }
     }
 }
