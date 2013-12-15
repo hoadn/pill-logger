@@ -3,6 +3,7 @@ package uk.co.pilllogger.activities;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -10,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ImageView;
@@ -57,6 +59,9 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
     Spinner _timeSpinner;
     Spinner _dateSpinner;
     Spinner _unitSpinner;
+
+    RadioGroup _choosePillRadioGroup;
+    RadioGroup _dateRadioGroup;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,34 +111,40 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
     }
 
     private void setUpRadioGroups() {
-        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.add_consumption_pill_type_selection);
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
+        _choosePillRadioGroup = (RadioGroup) findViewById(R.id.add_consumption_pill_type_selection);
+        _choosePillRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.add_consumption_select_select_pill) {
-                    _newPillLayout.setVisibility(View.GONE);
-                    _selectPillLayout.setVisibility(View.VISIBLE);
-                }
-                else {
-                    _selectPillLayout.setVisibility(View.GONE);
-                    _newPillLayout.setVisibility(View.VISIBLE);
+                    showSelectPillOptions();
+                } else {
+                    showNewPillOptions();
                 }
             }
         });
 
-        RadioGroup dateRadioGroup = (RadioGroup) findViewById(R.id.add_consumption_time_type_selection);
-        dateRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
+        _dateRadioGroup = (RadioGroup) findViewById(R.id.add_consumption_time_type_selection);
+        _dateRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 View datePickers = findViewById(R.id.add_consumption_date_pickers_layout);
                 if (checkedId == R.id.add_consumption_select_select_now) {
                     datePickers.setVisibility(View.INVISIBLE);
-                }
-                else {
+                } else {
                     datePickers.setVisibility(View.VISIBLE);
                 }
             }
         });
+    }
+
+    private void showNewPillOptions(){
+        _selectPillLayout.setVisibility(View.GONE);
+        _newPillLayout.setVisibility(View.VISIBLE);
+        _choosePillRadioGroup.check(R.id.add_consumption_select_new_pill);
+    }
+
+    private void showSelectPillOptions(){
+        _newPillLayout.setVisibility(View.GONE);
+        _selectPillLayout.setVisibility(View.VISIBLE);
+        _choosePillRadioGroup.check(R.id.add_consumption_select_select_pill);
     }
 
     private void setUpSpinners() {
@@ -184,6 +195,13 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
 
     @Override
     public void pillsReceived(List<Pill> pills) {
+        if(pills.size() == 0){
+            showNewPillOptions();
+        }
+        else{
+            showSelectPillOptions();
+        }
+
         if (_adapter == null) {
             _adapter = new AddConsumptionPillListAdapter(this, R.layout.add_consumption_pill_list, pills);
             _pillsList.setAdapter(_adapter);

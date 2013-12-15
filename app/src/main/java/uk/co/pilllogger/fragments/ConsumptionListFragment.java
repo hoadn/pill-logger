@@ -71,7 +71,7 @@ public class ConsumptionListFragment extends Fragment implements InitTestDbTask.
 
         Logger.v(TAG, "onCreateView Called");
         //Doing this to test - will not be needed when working fully
-        new InitTestDbTask(this.getActivity(), this).execute();
+        //new InitTestDbTask(this.getActivity(), this).execute();
 
         _listView = (ListView) (v != null ? v.findViewById(R.id.main_consumption_list) : null);
 

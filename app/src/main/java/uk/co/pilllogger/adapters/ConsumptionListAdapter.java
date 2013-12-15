@@ -94,7 +94,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
             ViewHolder holder = (ViewHolder) v.getTag();
 
             Consumption consumption = _data.get(position);
-            if (consumption != null) {
+            if (consumption != null && consumption.getPill() != null) {
                 holder.name.setText(consumption.getPill().getName());
                 holder.date.setText(DateHelper.getRelativeDateTime(_fragment.getActivity(), consumption.getDate()));
                 int quantity = consumption.getQuantity();
