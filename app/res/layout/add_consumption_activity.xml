@@ -88,7 +88,7 @@
         android:layout_below="@id/add_consumption_top_buttons"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:text="Choose Your Pill"
+        android:text="@string/add_consumption_title"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
         android:textAllCaps="true"
@@ -111,12 +111,12 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:checked="true"
-            android:text="Select Pill"/>
+            android:text="@string/add_consumption_existing_pill_label"/>
         <RadioButton android:id="@+id/add_consumption_select_new_pill"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="New Pill"/>
+            android:text="@string/new_pill_label"/>
     </RadioGroup>
 
     <LinearLayout
@@ -140,7 +140,6 @@
             android:id="@+id/add_consumption_quick_create"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_below="@id/add_consumption_pill_type_selection"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
@@ -155,23 +154,16 @@
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:textSize="22sp"
-                android:hint="Name"
+                android:hint="@string/new_pill_name_hint"
                 android:inputType="textCapWords"
                 android:imeOptions="actionNext"
                 android:background="@null"/>
-
-            <View
-                android:id="@+id/add_consumption_add_pill_divider"
-                android:layout_height="1dp"
-                android:layout_width="match_parent"
-                android:background="#cccccc"
-                android:layout_below="@id/add_consumption_add_pill_name"/>
 
             <LinearLayout
                 android:layout_height="40dp"
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
-                android:layout_below="@id/add_consumption_add_pill_divider">
+                android:layout_below="@id/add_consumption_add_pill_name">
                 <EditText
                     android:id="@+id/add_consumption_add_pill_size"
                     android:layout_height="match_parent"
@@ -181,7 +173,7 @@
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
                     android:textSize="22sp"
-                    android:hint="Size"
+                    android:hint="@string/new_pill_size_hint"
                     android:inputType="number"
                     android:background="@null"
                     android:imeOptions="actionDone"/>
@@ -196,11 +188,12 @@
                     android:id="@+id/add_consumption_add_pill_completed"
                     android:layout_height="40dp"
                     android:layout_width="40dp"
-                    android:src="@drawable/tick"
+                    android:src="@drawable/tick_light"
                     android:layout_weight="0"
                     android:padding="5dp"
                     android:clickable="true"
-                    android:background="?android:attr/selectableItemBackground"/>
+                    android:background="?android:attr/selectableItemBackground"
+                    android:contentDescription="@string/complete_action_content_description"/>
             </LinearLayout>
 
         </RelativeLayout>
@@ -212,7 +205,7 @@
         android:layout_above="@+id/add_consumption_select_time_title_divider"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:text="Set Time"
+        android:text="@string/add_consumption_time_title"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
         android:textAllCaps="true"
@@ -236,12 +229,12 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:checked="true"
-            android:text="Now"/>
+            android:text="@string/now"/>
         <RadioButton android:id="@+id/add_consumption_select_select_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="Select Date and Time"/>
+            android:text="@string/add_consumption_time_select_date_label"/>
     </RadioGroup>
     <LinearLayout
         android:id="@+id/add_consumption_date_pickers_layout"
