@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.List;
+
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.SlidePagerAdapter;
 import uk.co.pilllogger.animations.FadeBackgroundPageTransformer;
@@ -24,12 +26,14 @@ import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
+import uk.co.pilllogger.tasks.GetPillsTask;
 
 /**
  * Created by nick on 22/10/13.
  */
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements GetPillsTask.ITaskComplete {
 
     private ViewPager _fragmentPager;
     private PagerAdapter _fragmentPagerAdapter;
@@ -110,6 +114,8 @@ public class MainActivity extends Activity {
             _fragmentPager.setAdapter(_fragmentPagerAdapter);
 
             setupChrome();
+
+            new GetPillsTask(this, this).execute();
         }
     }
 
@@ -181,14 +187,26 @@ public class MainActivity extends Activity {
         //
         switch (item.getItemId()) {
             case R.id.add_consumption:
-                Intent intent = new Intent(this, AddConsumptionActivity.class);
-                this.startActivity(intent);
+                startAddConsumptionActivity();
                 return true;
             case R.id.action_settings:
 
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void startAddConsumptionActivity(){
+        Intent intent = new Intent(this, AddConsumptionActivity.class);
+        this.startActivity(intent);
+    }
+
+    @Override
+    public void pillsReceived(List<Pill> pills) {
+        if(pills.size() == 0)
+        {
+            startAddConsumptionActivity();
         }
     }
 }
