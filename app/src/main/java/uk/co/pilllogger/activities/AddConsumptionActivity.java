@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -43,19 +44,16 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
                                                             DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     private static final String TAG = "AddConsumptionActivity";
+    public static String DATE_FORMAT = "E, MMM dd, yyyy";
+    public static String TIME_FORMAT = "kk:mm";
+
     ListView _pillsList;
     Activity _activity;
-    Typeface _openSans;
     TextView _newPillName;
     TextView _newPillSize;
     AddConsumptionPillListAdapter _adapter;
     View _selectPillLayout;
     View _newPillLayout;
-    String[] _dates;
-    String[] _times;
-    android.text.format.DateFormat _df;
-    public static String DATE_FORMAT = "E, MMM dd, yyyy";
-    public static String TIME_FORMAT = "kk:mm";
     Spinner _timeSpinner;
     Spinner _dateSpinner;
     Spinner _unitSpinner;
@@ -76,13 +74,11 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
         _dateSpinner = (Spinner) findViewById(R.id.add_consumption_date);
         _timeSpinner = (Spinner) findViewById(R.id.add_consumption_time);
 
-
-
-        _openSans = Typeface.createFromAsset(this.getAssets(), "fonts/OpenSans-Light.ttf");
+        Typeface typeface = State.getSingleton().getTypeface();
         _newPillName = (TextView) findViewById(R.id.add_consumption_add_pill_name);
         _newPillSize = (TextView) findViewById(R.id.add_consumption_add_pill_size);
-        _newPillName.setTypeface(_openSans);
-        _newPillSize.setTypeface(_openSans);
+        _newPillName.setTypeface(typeface);
+        _newPillSize.setTypeface(typeface);
 
         ImageView addPillCompleted = (ImageView) findViewById(R.id.add_consumption_add_pill_completed);
         addPillCompleted.setOnClickListener(new addNewPillClickListener());
@@ -142,10 +138,9 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
 
     private void setUpSpinners() {
         Date date = new Date();
-        _df = new android.text.format.DateFormat();
-        String dateString = _df.format(DATE_FORMAT, date).toString();
-        _dates = new String[]{ dateString };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, _dates );
+        String dateString = DateFormat.format(DATE_FORMAT, date).toString();
+        String[] dates = new String[]{dateString};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, dates );
         _dateSpinner.setAdapter(adapter);
         View datePickerContainer = this.findViewById(R.id.add_consumption_date_container);
         datePickerContainer.setOnClickListener(new View.OnClickListener() {
@@ -159,15 +154,15 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
                     int year = cal.get(Calendar.YEAR);
                     int month = cal.get(Calendar.MONTH);
                     int day = cal.get(Calendar.DAY_OF_MONTH);
-                    DatePickerDialog dateDialog = new DatePickerDialog(AddConsumptionActivity.this, (DatePickerDialog.OnDateSetListener) AddConsumptionActivity.this, year, month, day);
+                    DatePickerDialog dateDialog = new DatePickerDialog(AddConsumptionActivity.this, AddConsumptionActivity.this, year, month, day);
                     dateDialog.show();
                 }
             }
         });
 
-        String time = _df.format(TIME_FORMAT, date.getTime()).toString();
-        _times = new String[] { time };
-        ArrayAdapter<String> timeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, _times );
+        String time = DateFormat.format(TIME_FORMAT, date.getTime()).toString();
+        String[] times = new String[]{time};
+        ArrayAdapter<String> timeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, times );
         _timeSpinner.setAdapter(timeAdapter);
         View timePickerContainer = this.findViewById(R.id.add_consumption_time_container);
         timePickerContainer.setOnClickListener(new View.OnClickListener() {
@@ -180,7 +175,7 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
                     cal.setTime(date);
                     int hour = cal.get(Calendar.HOUR_OF_DAY);
                     int minute = cal.get(Calendar.MINUTE);
-                    TimePickerDialog timeDialog = new TimePickerDialog(AddConsumptionActivity.this, (TimePickerDialog.OnTimeSetListener) AddConsumptionActivity.this, hour, minute, true);
+                    TimePickerDialog timeDialog = new TimePickerDialog(AddConsumptionActivity.this, AddConsumptionActivity.this, hour, minute, true);
                     timeDialog.show();
                 }
             }
@@ -209,7 +204,9 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
 
         Date date = new Date();
         RadioButton dateSelectorNow = (RadioButton) findViewById(R.id.add_consumption_select_select_now);
-        if (!dateSelectorNow.isChecked()) {
+        if (!dateSelectorNow.isChecked()
+                && _dateSpinner.getSelectedItem() != null
+                && _timeSpinner.getSelectedItem() != null) {
             String selectedDate = _dateSpinner.getSelectedItem().toString();
             String selectedTime = _timeSpinner.getSelectedItem().toString();
             SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT + TIME_FORMAT);
@@ -237,14 +234,13 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
     }
 
     @Override
-    public void onDateSet(DatePicker datePicker, int i, int i2, int i3) {;
+    public void onDateSet(DatePicker datePicker, int i, int i2, int i3) {
         Calendar cal = Calendar.getInstance();
         cal.set(i, i2, i3);
         Date date = cal.getTime();
-        _df = new android.text.format.DateFormat();
-        String dateString = _df.format(DATE_FORMAT, date).toString();
-        _dates = new String[]{ dateString };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, _dates );
+        String dateString = DateFormat.format(DATE_FORMAT, date).toString();
+        String[] dates = new String[]{dateString};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, dates );
         _dateSpinner.setAdapter(adapter);
     }
 
@@ -256,8 +252,8 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
         String minutes = String.valueOf(i2);
         if (i2 < 10)
             minutes = "0" + minutes;
-        _times = new String[]{ hours + ":" + minutes };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, _times );
+        String[] times = new String[]{hours + ":" + minutes};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, times );
         _timeSpinner.setAdapter(adapter);
     }
 
@@ -270,10 +266,10 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
     }
 
     public void completed() {
-        String name = _newPillName.getText().toString();
-        int size = Integer.parseInt(_newPillSize.getText().toString());
+        CharSequence name = _newPillName.getText();
+        int size = Integer.parseInt(String.valueOf(_newPillSize.getText()));
         Pill pill = new Pill(name, size);
-        String units = _unitSpinner.getSelectedItem().toString();
+        String units = String.valueOf(_unitSpinner.getSelectedItem());
         pill.setUnits(units);
         new InsertPillTask(_activity, pill, (InsertPillTask.ITaskComplete)_activity).execute();
 

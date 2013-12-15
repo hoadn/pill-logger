@@ -30,8 +30,8 @@ public class Pill implements Serializable {
     public Pill() {
     }
 
-    public Pill(String name, int size) {
-        _name = name;
+    public Pill(CharSequence name, int size) {
+        _name = String.valueOf(name);
         _size = size;
     }
 
