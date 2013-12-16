@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="0dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginLeft="5dp"
+       android:layout_marginTop="7dp"
+       android:layout_gravity="left"
+       tools:text="Tuesday 17th December"
+       android:id="@+id/day_text"/>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
     android:padding="10dp"
-    android:layout_marginBottom="15dp"
-    android:background="@drawable/list_selector">
+    android:layout_marginBottom="0dp"
+    android:background="@drawable/list_selector"
+    android:id="@+id/consumption_list_item_container">
 
 
 
@@ -62,3 +77,4 @@
 
 
 </RelativeLayout>
+    </FrameLayout>

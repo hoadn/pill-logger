@@ -10,6 +10,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -137,6 +140,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
             if(v != null){
                 ViewHolder holder = (ViewHolder) v.getTag();
                 Consumption consumption = _data.get(position);
+
                 if (consumption != null) {
                     if(consumption.getPill() != null){
                         holder.name.setText(consumption.getPill().getName());
@@ -146,6 +150,34 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
                     holder.date.setText(DateHelper.getRelativeDateTime(_fragment.getActivity(), consumption.getDate()));
                     holder.quantity.setText(String.valueOf(consumption.getQuantity()));
                     holder.consumption = consumption;
+
+                    RelativeLayout container = (RelativeLayout) v.findViewById(R.id.consumption_list_item_container);
+                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) container.getLayoutParams();
+                    TextView dayText = (TextView) v.findViewById(R.id.day_text);
+                    DateTime currentDate = new DateTime(consumption.getDate());
+
+                    dayText.setText("");
+
+                    if(params != null){
+                        params.topMargin = 0;
+                        if(position > 0)
+                        {
+                            Consumption previousConsumption = _data.get(position - 1);
+                            DateTime prevDate = new DateTime(previousConsumption.getDate());
+
+                            if(prevDate.getYear() != currentDate.getYear() ||
+                                    prevDate.getDayOfYear() != currentDate.getDayOfYear()){
+
+                                params.topMargin += 75;
+
+                                dayText.setText(currentDate.toString("EEEE dd MMMM"));
+                            }
+                        }
+                        else{
+                            params.topMargin += 75;
+                            dayText.setText(currentDate.toString("EEEE dd MMMM"));
+                        }
+                    }
                 }
             }
         }
