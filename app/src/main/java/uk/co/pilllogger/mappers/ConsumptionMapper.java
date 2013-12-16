@@ -50,7 +50,7 @@ public class ConsumptionMapper {
                 xPoints.put(pill, currentLineValues);
             }
 
-            int value = 1;
+            int value = c.getQuantity();
             if(currentLineValues.indexOfKey(x) >= 0)
                 value += currentLineValues.get(x);
 
