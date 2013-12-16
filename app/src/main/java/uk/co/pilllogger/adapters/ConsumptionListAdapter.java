@@ -137,13 +137,15 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
             if(v != null){
                 ViewHolder holder = (ViewHolder) v.getTag();
                 Consumption consumption = _data.get(position);
-                if (consumption != null && consumption.getPill() != null) {
-                    holder.name.setText(consumption.getPill().getName());
+                if (consumption != null) {
+                    if(consumption.getPill() != null){
+                        holder.name.setText(consumption.getPill().getName());
+                        holder.size.setText(consumption.getPill().getSize() + consumption.getPill().getUnits());
+                        holder.colour.setColour(consumption.getPill().getColour());
+                    }
                     holder.date.setText(DateHelper.getRelativeDateTime(_fragment.getActivity(), consumption.getDate()));
                     holder.quantity.setText(String.valueOf(consumption.getQuantity()));
                     holder.consumption = consumption;
-                    holder.colour.setColour(consumption.getPill().getColour());
-                    holder.size.setText(consumption.getPill().getSize() + consumption.getPill().getUnits());
                 }
             }
         }

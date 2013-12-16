@@ -45,6 +45,6 @@ public class State {
     }
 
     public boolean isPillExcluded(Pill pill){
-        return _graphExcludePills.contains(pill.getId());
+        return pill == null || _graphExcludePills.contains(pill.getId());
     }
 }
