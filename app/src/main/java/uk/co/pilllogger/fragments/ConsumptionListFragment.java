@@ -106,12 +106,12 @@ public class ConsumptionListFragment extends Fragment implements InitTestDbTask.
             List<Consumption> grouped = ConsumptionRepository.getSingleton(getActivity()).groupConsumptions(consumptions);
             _listView.setAdapter(new ConsumptionListAdapter(getActivity(), this, R.layout.consumption_list_item, grouped));
 
-            int dayCount = getGraphDays();
-
-            Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(consumptions, dayCount);
-
-            View view = _mainLayout.findViewById(R.id.main_graph);
-            plotGraph(xPoints, dayCount, view);
+//            int dayCount = getGraphDays();
+//
+//            Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(consumptions, dayCount);
+//
+//            View view = _mainLayout.findViewById(R.id.main_graph);
+//            plotGraph(xPoints, dayCount, view);
         }
     }
 

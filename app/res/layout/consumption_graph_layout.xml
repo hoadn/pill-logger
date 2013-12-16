@@ -5,4 +5,33 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <android.support.v4.widget.SlidingPaneLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/graph_drawer_layout"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/container">
+
+    <ListView android:id="@+id/graph_drawer"
+              android:layout_width="260dp"
+              android:layout_height="match_parent"
+              android:choiceMode="singleChoice"
+              android:dividerHeight="0dp"
+              android:layout_gravity="left"
+              android:background="@color/drawer_item_background"/>
+    <com.echo.holographlibrary.StackBarGraph
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:paddingRight="30dp"
+        android:layout_gravity="right"
+        android:layout_weight="1"
+        android:layout_marginLeft="0dp"
+        android:id="@+id/main_graph"
+        android:clickable="true"
+        />
+    </android.support.v4.widget.SlidingPaneLayout>
+
 </LinearLayout>

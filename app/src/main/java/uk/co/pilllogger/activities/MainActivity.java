@@ -56,6 +56,7 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
             Fragment fragment3 = new GraphFragment();
 
             _fragmentPager = (ViewPager)findViewById(R.id.fragment_pager);
+            _fragmentPager.requestDisallowInterceptTouchEvent(true);
 
 
             _fragmentPager.setOnPageChangeListener(
