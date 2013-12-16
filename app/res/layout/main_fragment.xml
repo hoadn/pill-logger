@@ -10,7 +10,6 @@
 
     <ListView
         android:id="@+id/main_consumption_list"
-        android:layout_below="@+id/graph_drawer_layout"
         android:layout_width="match_parent"
         android:divider="@android:color/transparent"
         android:dividerHeight="@dimen/list_divider_height"
