@@ -243,7 +243,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         return grouped;
     }
 
-    private void notifyUpdated(){
-        _invalidateCache = false;
+    void notifyUpdated(){
+        _invalidateCache = true;
     }
 }

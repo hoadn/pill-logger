@@ -201,7 +201,8 @@ public class PillRepository extends BaseRepository<Pill>{
     }
 
     private void notifyUpdated(){
-        _invalidateCache = false;
+        _invalidateCache = true;
+        ConsumptionRepository.getSingleton(_context).notifyUpdated();
         Observer.getSingleton().notifyPillsUpdated();
     }
 }
