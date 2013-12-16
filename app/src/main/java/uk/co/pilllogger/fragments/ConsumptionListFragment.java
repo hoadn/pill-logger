@@ -38,6 +38,7 @@ import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
+import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetFavouritePillsTask;
@@ -48,8 +49,12 @@ import uk.co.pilllogger.tasks.InsertConsumptionTask;
 /**
  * Created by nick on 23/10/13.
  */
-public class ConsumptionListFragment extends Fragment implements InitTestDbTask.ITaskComplete, GetConsumptionsTask.ITaskComplete, GetFavouritePillsTask.ITaskComplete,
-                                                        GetPillsTask.ITaskComplete {
+public class ConsumptionListFragment extends Fragment implements
+        InitTestDbTask.ITaskComplete,
+        GetConsumptionsTask.ITaskComplete,
+        GetFavouritePillsTask.ITaskComplete,
+        GetPillsTask.ITaskComplete,
+        Observer.IPillsUpdated{
 
     private static final String TAG = "ConsumptionListFragment";
     ListView _listView;
@@ -84,12 +89,13 @@ public class ConsumptionListFragment extends Fragment implements InitTestDbTask.
 
     @Override
     public void initComplete() {
-
     }
 
     @Override
     public void onStart(){
         super.onStart();
+
+        Observer.getSingleton().registerPillsUpdatedObserver(this);
     }
 
     @Override
@@ -223,5 +229,10 @@ public class ConsumptionListFragment extends Fragment implements InitTestDbTask.
 
 
         new GetConsumptionsTask(this.getActivity(), this, false).execute();
+    }
+
+    @Override
+    public void pillsUpdated() {
+        new GetPillsTask(this.getActivity(), this).execute();
     }
 }

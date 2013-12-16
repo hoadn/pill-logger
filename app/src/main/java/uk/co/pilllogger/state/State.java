@@ -16,15 +16,6 @@ public class State {
 
     private static State _instance;
     private List<Integer> _graphExcludePills;
-
-    public Typeface getTypeface() {
-        return _typeface;
-    }
-
-    public void setTypeface(Typeface typeface) {
-        _typeface = typeface;
-    }
-
     private Typeface _typeface;
 
     private State() {
@@ -34,6 +25,14 @@ public class State {
         if (_instance == null)
             _instance = new State();
         return _instance;
+    }
+
+    public Typeface getTypeface() {
+        return _typeface;
+    }
+
+    public void setTypeface(Typeface typeface) {
+        _typeface = typeface;
     }
 
     public List<Integer> getGraphExcludePills() {
@@ -47,4 +46,5 @@ public class State {
     public boolean isPillExcluded(Pill pill){
         return _graphExcludePills.contains(pill.getId());
     }
+
 }

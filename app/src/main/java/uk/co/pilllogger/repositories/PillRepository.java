@@ -12,14 +12,16 @@ import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.Observer;
 
 /**
  * Created by alex on 14/11/2013.
  */
 public class PillRepository extends BaseRepository<Pill>{
     private static final String TAG = "PillRepository";
-
     private static PillRepository _instance;
+    private boolean _invalidateCache;
+    private List<Pill> _cache = new ArrayList<Pill>();
 
     private PillRepository(Context context){
         super(context);
@@ -93,6 +95,7 @@ public class PillRepository extends BaseRepository<Pill>{
                     null,
                     values);
         }
+        notifyUpdated();
         return newRowId;
     }
 
@@ -111,6 +114,7 @@ public class PillRepository extends BaseRepository<Pill>{
 
             Logger.d(TAG, "Pill updated. Favourite: " + pill.isFavourite());
         }
+        notifyUpdated();
     }
 
     @Override
@@ -125,6 +129,7 @@ public class PillRepository extends BaseRepository<Pill>{
                     "_ID = ?",
                     new String[]{id});
         }
+        notifyUpdated();
     }
 
     @Override
@@ -188,6 +193,15 @@ public class PillRepository extends BaseRepository<Pill>{
 
     @Override
     public List<Pill> getAll() {
-        return getList(null, null);
+        if(!_invalidateCache && _cache != null && _cache.size() > 0)
+            return _cache;
+
+        _cache = getList(null, null);
+        return _cache;
+    }
+
+    private void notifyUpdated(){
+        _invalidateCache = false;
+        Observer.getSingleton().notifyPillsUpdated();
     }
 }

@@ -14,12 +14,15 @@ import java.util.List;
 import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.Observer;
 
 /**
  * Created by alex on 14/11/2013.
  */
 public class ConsumptionRepository extends BaseRepository<Consumption>{
     private static ConsumptionRepository _instance;
+    private List<Consumption> _cache = new ArrayList<Consumption>();
+    private boolean _invalidateCache = false;
 
     private ConsumptionRepository(Context context) {
         super(context);
@@ -31,9 +34,6 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         }
         return _instance;
     }
-
-    private List<Consumption> _cachedConsumptions = new ArrayList<Consumption>();
-    private boolean _invalidateCache = false;
 
     @Override
     protected ContentValues getContentValues(Consumption consumption) {
@@ -91,7 +91,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                     null,
                     values);
         }
-        _invalidateCache = true;
+        notifyUpdated();
         return newRowId;
     }
 
@@ -99,7 +99,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     public void update(Consumption data) {
         //Not needed yet
         throw new UnsupportedOperationException();
-//        _invalidateCache = true;
+//        notifyUpdated();
     }
 
     @Override
@@ -114,7 +114,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                     "_ID = ?",
                     new String[]{id});
         }
-        _invalidateCache = true;
+        notifyUpdated();
     }
 
     @Override
@@ -182,8 +182,8 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
     @Override
     public List<Consumption> getAll() {
-        if(!_invalidateCache && _cachedConsumptions != null && _cachedConsumptions.size() > 0)
-            return _cachedConsumptions;
+        if(!_invalidateCache && _cache != null && _cache.size() > 0)
+            return _cache;
 
         SQLiteDatabase db = _dbCreator.getReadableDatabase();
 
@@ -211,7 +211,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
             c.close();
         }
 
-        _cachedConsumptions = consumptions;
+        _cache = consumptions;
         return consumptions;
     }
 
@@ -241,5 +241,9 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         }
 
         return grouped;
+    }
+
+    private void notifyUpdated(){
+        _invalidateCache = false;
     }
 }
