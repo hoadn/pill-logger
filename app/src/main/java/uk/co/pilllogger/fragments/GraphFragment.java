@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.echo.holographlibrary.BarGraph;
 import com.echo.holographlibrary.LineGraph;
 import com.echo.holographlibrary.PieGraph;
+import com.echo.holographlibrary.StackBarGraph;
 
 import java.util.List;
 import java.util.Map;
@@ -41,15 +42,15 @@ public class GraphFragment extends Fragment implements GetConsumptionsTask.ITask
 
     @Override
     public void consumptionsReceived(List<Consumption> consumptions) {
-        BarGraph g1 = (BarGraph)_layout.findViewById(R.id.graph1);
+        StackBarGraph g1 = (StackBarGraph)_layout.findViewById(R.id.graph1);
         LineGraph g2 = (LineGraph)_layout.findViewById(R.id.graph2);
         PieGraph g3 = (PieGraph)_layout.findViewById(R.id.graph3);
         BarGraph g4 = (BarGraph)_layout.findViewById(R.id.graph4);
 
-        int days = 30;
+        int days = 7;
         Map<Pill, SparseIntArray> lastMonthOfConsumptions = ConsumptionMapper.mapByPillAndDate(consumptions, days);
 
-        GraphHelper.plotBarGraph(lastMonthOfConsumptions, days, g1);
+        GraphHelper.plotStackBarGraph(lastMonthOfConsumptions, days, g1);
         GraphHelper.plotLineGraph(lastMonthOfConsumptions, days, g2);
         GraphHelper.plotPieChart(lastMonthOfConsumptions, days, g3);
 

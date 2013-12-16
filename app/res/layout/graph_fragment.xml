@@ -22,7 +22,7 @@
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
                 android:orientation="vertical">
-                <com.echo.holographlibrary.BarGraph
+                <com.echo.holographlibrary.StackBarGraph
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:id="@+id/graph1"/>
