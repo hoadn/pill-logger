@@ -129,8 +129,14 @@ public class PillRepository extends BaseRepository<Pill>{
                     "_ID = ?",
                     new String[]{id});
         }
+
+        List<Consumption> pillConsumptions = ConsumptionRepository.getSingleton(_context).getForPill(pill);
+        for (Consumption consumption : pillConsumptions) {
+            ConsumptionRepository.getSingleton(_context).delete(consumption);
+        }
         notifyUpdated();
     }
+
 
     @Override
     public Pill get(int id) {

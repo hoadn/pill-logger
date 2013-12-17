@@ -7,6 +7,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -29,13 +30,14 @@ import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
+import uk.co.pilllogger.views.MyViewPager;
 
 /**
  * Created by nick on 22/10/13.
  */
 public class MainActivity extends Activity implements GetPillsTask.ITaskComplete {
 
-    private ViewPager _fragmentPager;
+    private MyViewPager _fragmentPager;
     private PagerAdapter _fragmentPagerAdapter;
     private int _colour1 = Color.argb(120, 0, 233, 255);
     private int _colour2 = Color.argb(120, 161, 72, 173);
@@ -55,8 +57,7 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
             Fragment fragment2 = new PillListFragment();
             Fragment fragment3 = new GraphFragment();
 
-            _fragmentPager = (ViewPager)findViewById(R.id.fragment_pager);
-            _fragmentPager.requestDisallowInterceptTouchEvent(true);
+            _fragmentPager = (MyViewPager)findViewById(R.id.fragment_pager);
 
 
             _fragmentPager.setOnPageChangeListener(

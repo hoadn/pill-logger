@@ -3,7 +3,6 @@ package uk.co.pilllogger.activities;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -11,8 +10,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -21,6 +20,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -62,6 +62,11 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
 
     RadioGroup _choosePillRadioGroup;
     RadioGroup _dateRadioGroup;
+
+    private DatePickerDialog _startDateDialog;
+    private DatePickerDialog _endDateDialog;
+    DatePickerDialog.OnDateSetListener _endDateListener;
+    DatePickerDialog.OnDateSetListener _startDateListener;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +114,7 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _unitSpinner.setAdapter(adapter);
     }
+
 
     private void setUpRadioGroups() {
         _choosePillRadioGroup = (RadioGroup) findViewById(R.id.add_consumption_pill_type_selection);

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.activities.MainActivity;
 import uk.co.pilllogger.adapters.ConsumptionListAdapter;
 import uk.co.pilllogger.adapters.GraphPillListAdapter;
 import uk.co.pilllogger.helpers.GraphHelper;
@@ -83,6 +85,7 @@ public class ConsumptionListFragment extends Fragment implements
         if (_listView.getAdapter() != null) //Trying this to make the list refresh after adding the new consumption
             ((ConsumptionListAdapter)_listView.getAdapter()).notifyDataSetChanged();
 
+
         return v;
     }
 
@@ -111,7 +114,7 @@ public class ConsumptionListFragment extends Fragment implements
         if(consumptions != null && consumptions.size() > 0){
             List<Consumption> grouped = ConsumptionRepository.getSingleton(getActivity()).groupConsumptions(consumptions);
             _listView.setAdapter(new ConsumptionListAdapter(getActivity(), this, R.layout.consumption_list_item, grouped));
-
+            _listView.requestDisallowInterceptTouchEvent(true);
 //            int dayCount = getGraphDays();
 //
 //            Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(consumptions, dayCount);
