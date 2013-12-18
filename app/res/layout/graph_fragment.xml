@@ -32,9 +32,9 @@
                     android:gravity="center"
                     android:text="Pill Consumption over the past 30 days"/>
             </LinearLayout>
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="240dp"
                 android:background="@color/selector_background"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="10dp"
@@ -49,11 +49,37 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center"
+                    android:layout_below="@id/graph2"
                     android:text="Pill Consumption over the past 30 days"/>
-            </LinearLayout>
-            <LinearLayout
+                <RelativeLayout
+                    android:id="@+id/line_graph_lock"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#DD000000" >
+
+                    <ImageView
+                        android:id="@+id/line_graph_lock_img"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="65dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/lock"/>
+
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/line_graph_lock_img"
+                        android:textColor="@android:color/white"
+                        android:gravity="center"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/pro_lock"/>
+
+
+                </RelativeLayout>
+            </RelativeLayout>
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="240dp"
                 android:background="@color/selector_background"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="10dp"
@@ -68,11 +94,37 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center"
+                    android:layout_below="@id/graph3"
                     android:text="Pill Consumption over the past 30 days"/>
-            </LinearLayout>
-            <LinearLayout
+                <RelativeLayout
+                    android:id="@+id/pie_graph_lock"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#DD000000" >
+
+                    <ImageView
+                        android:id="@+id/pie_graph_lock_img"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="65dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/lock"/>
+
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/pie_graph_lock_img"
+                        android:textColor="@android:color/white"
+                        android:gravity="center"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/pro_lock"/>
+
+
+                </RelativeLayout>
+            </RelativeLayout>
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="240dp"
                 android:background="@color/selector_background"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="10dp"
@@ -87,8 +139,35 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center"
+                    android:layout_below="@id/graph4"
                     android:text="Pill Consumption by Day of The Week"/>
-            </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/week_graph_lock"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#DD000000" >
+
+                    <ImageView
+                        android:id="@+id/week_graph_lock_img"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="65dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/lock"/>
+
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/week_graph_lock_img"
+                        android:textColor="@android:color/white"
+                        android:gravity="center"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/pro_lock"/>
+
+
+                </RelativeLayout>
+            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
 
