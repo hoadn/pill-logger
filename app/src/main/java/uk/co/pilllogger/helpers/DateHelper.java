@@ -25,6 +25,14 @@ public class DateHelper {
         return dateTime.dayOfMonth().getMaximumValue();
     }
 
+    public static String getRelativeDate(Context context, Date date){
+        return getRelativeDate(context, new DateTime(date));
+    }
+
+    public static String getRelativeDate(Context context, DateTime date){
+        return String.valueOf(DateUtils.getRelativeTimeSpanString(DateTime.now().getMillis(), date.getMillis(), DateUtils.DAY_IN_MILLIS));
+    }
+
     public static String getRelativeDateTime(Context context, Date date){
         return getRelativeDateTime(context, new DateTime(date));
     }

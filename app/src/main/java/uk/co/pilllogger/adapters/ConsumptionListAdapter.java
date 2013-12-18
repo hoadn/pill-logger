@@ -170,12 +170,12 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
                                 params.topMargin += 75;
 
-                                dayText.setText(currentDate.toString("EEEE dd MMMM"));
+                                dayText.setText(DateHelper.getRelativeDateTime(getContext(), currentDate));
                             }
                         }
                         else{
                             params.topMargin += 75;
-                            dayText.setText(currentDate.toString("EEEE dd MMMM"));
+                            dayText.setText(DateHelper.getRelativeDateTime(getContext(), currentDate));
                         }
                     }
                 }

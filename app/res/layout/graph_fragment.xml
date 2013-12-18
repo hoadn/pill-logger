@@ -50,15 +50,26 @@
                     android:layout_height="40dp"
                     android:gravity="center"
                     android:layout_below="@id/graph2"
+                    android:id="@+id/graph2_description"
                     android:text="Pill Consumption over the past 30 days"/>
                 <RelativeLayout
                     android:id="@+id/line_graph_lock"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#DD000000" >
+                    android:layout_above="@id/graph2_description"
+                    android:background="#DD000000">
 
                     <ImageView
-                        android:id="@+id/line_graph_lock_img"
+                        android:id="@+id/graph2_overlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="65dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/lock"
+                        android:alpha="1"/>
+
+                    <ImageView
+                        android:id="@+id/graph2_lock_img"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:layout_marginTop="65dp"
@@ -68,7 +79,7 @@
                     <TextView
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/line_graph_lock_img"
+                        android:layout_below="@id/graph2_lock_img"
                         android:textColor="@android:color/white"
                         android:gravity="center"
                         android:layout_centerHorizontal="true"
