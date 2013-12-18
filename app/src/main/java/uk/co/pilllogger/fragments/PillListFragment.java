@@ -47,7 +47,7 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.pill_list_fragment, container, false);
-        v.setTag(R.id.tag_page_colour, Color.argb(120, 161, 72, 173));
+        v.setTag(R.id.tag_page_colour, Color.argb(120, 204, 51, 153));
         v.setTag(R.id.tag_tab_icon_position, 1);
 
         _list = (ListView) v.findViewById(R.id.pill_list);

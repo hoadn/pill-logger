@@ -10,12 +10,19 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.Toast;
 
 import java.util.List;
@@ -40,8 +47,8 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
     private MyViewPager _fragmentPager;
     private PagerAdapter _fragmentPagerAdapter;
     private int _colour1 = Color.argb(120, 0, 233, 255);
-    private int _colour2 = Color.argb(120, 161, 72, 173);
-    private int _colour3 = Color.argb(120, 178, 255, 0);
+    private int _colour2 = Color.argb(120, 204, 51, 153);
+    private int _colour3 = Color.argb(120, 0, 106, 255);
     View _colourBackground;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +65,6 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
             Fragment fragment3 = new GraphFragment();
 
             _fragmentPager = (MyViewPager)findViewById(R.id.fragment_pager);
-
 
             _fragmentPager.setOnPageChangeListener(
                     new ViewPager.SimpleOnPageChangeListener() {
