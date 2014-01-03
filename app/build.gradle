@@ -7,6 +7,7 @@ buildscript {
     }
 }
 apply plugin: 'android'
+apply from: '../deployment/pilllogger.gradle';
 
 repositories {
     mavenCentral()
@@ -21,18 +22,6 @@ android {
         targetSdkVersion 19
     }
 
-    signingConfigs {
-        debug {
-            storeFile file("debug.keystore")
-        }
-
-        releaseConfig {
-            storeFile file("dev.jks")
-            storePassword System.console().readLine("\n\$ Enter keystore password: ")
-            keyAlias "pill logger"
-            keyPassword System.console().readLine("\n\$ Enter keystore password: ")
-        }
-    }
 
     buildTypes {
         release{
@@ -40,7 +29,7 @@ android {
             proguardFile getDefaultProguardFile('proguard-android-optimize.txt')
         }
         publish {
-            signingConfig signingConfigs.releaseConfig
+            signingConfig signingConfigs.release
         }
     }
     productFlavors {

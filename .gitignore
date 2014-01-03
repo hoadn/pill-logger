@@ -33,3 +33,6 @@ proguard/
 # Gradle generated files
 build/
 .gradle/
+
+# Pill Logger specific
+deployment/pilllogger.gradle
