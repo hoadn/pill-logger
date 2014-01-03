@@ -47,4 +47,4 @@ before_install:
   # Setup deployment dummy file
   - cp deployment/pilllogger.gradle.example deployment/pilllogger.gradle
 
-install: ./gradle assembleDebug
+install: ./gradlew assembleDebug
