@@ -8,6 +8,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.activities.AddConsumptionActivity;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.animations.AddPillToConsumptionAnimation;
 import uk.co.pilllogger.helpers.LayoutHelper;
@@ -20,10 +21,10 @@ import uk.co.pilllogger.state.State;
  */
 public class AddConsumptionPillItemClickListener implements ListView.OnItemClickListener {
 
-    Activity _activity;
+    AddConsumptionActivity _activity;
     AddConsumptionPillListAdapter _adapter;
 
-    public AddConsumptionPillItemClickListener(Activity activity, AddConsumptionPillListAdapter adapter) {
+    public AddConsumptionPillItemClickListener(AddConsumptionActivity activity, AddConsumptionPillListAdapter adapter) {
         _activity = activity;
         _adapter = adapter;
     }

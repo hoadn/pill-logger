@@ -24,13 +24,17 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.listeners.AddConsumptionPillItemClickListener;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -113,6 +117,8 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
         UnitAdapter adapter = new UnitAdapter(this, android.R.layout.simple_spinner_item, units);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _unitSpinner.setAdapter(adapter);
+        if (!(State.getSingleton().getOpenPills().size() > 0))
+            setDoneEnabled(false);
     }
 
 
@@ -208,11 +214,10 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
             showSelectPillOptions();
         }
 
-        if (_adapter == null) {
-            _adapter = new AddConsumptionPillListAdapter(this, R.layout.add_consumption_pill_list, pills);
-            _pillsList.setAdapter(_adapter);
-            _pillsList.setOnItemClickListener(new AddConsumptionPillItemClickListener(this, (AddConsumptionPillListAdapter)_pillsList.getAdapter()));
-        }
+        _adapter = new AddConsumptionPillListAdapter(this, R.layout.add_consumption_pill_list, pills);
+         _pillsList.setAdapter(_adapter);
+        _pillsList.setOnItemClickListener(new AddConsumptionPillItemClickListener(this, (AddConsumptionPillListAdapter)_pillsList.getAdapter()));
+
         _adapter.updateAdapter(pills);
     }
 
@@ -245,6 +250,7 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
             Consumption consumption = new Consumption(pill, date);
             new InsertConsumptionTask(this, consumption).execute();
         }
+        _adapter.clearConsumedPills();
         finish();
     }
 
@@ -306,4 +312,22 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
         RadioButton selectPill = (RadioButton) findViewById(R.id.add_consumption_select_select_pill);
         selectPill.setChecked(true);
     }
+
+    public void setDoneEnabled(boolean enabled) {
+        View doneText = findViewById(R.id.add_consumption_done_text);
+        View doneIcon = findViewById(R.id.add_consumption_done_icon);
+        View doneLayout = findViewById(R.id.add_consumption_done_layout);
+        if (!enabled) {
+            doneText.setAlpha(0.25f);
+            doneIcon.setAlpha(0.25f);
+            doneLayout.setClickable(false);
+        }
+        else {
+            doneText.setAlpha(1);
+            doneIcon.setAlpha(1);
+            doneLayout.setClickable(true);
+        }
+    }
+
+
 }
