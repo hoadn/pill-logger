@@ -214,11 +214,10 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
             showSelectPillOptions();
         }
 
-        if (_adapter == null) {
-            _adapter = new AddConsumptionPillListAdapter(this, R.layout.add_consumption_pill_list, pills);
-            _pillsList.setAdapter(_adapter);
-            _pillsList.setOnItemClickListener(new AddConsumptionPillItemClickListener(this, (AddConsumptionPillListAdapter)_pillsList.getAdapter()));
-        }
+        _adapter = new AddConsumptionPillListAdapter(this, R.layout.add_consumption_pill_list, pills);
+         _pillsList.setAdapter(_adapter);
+        _pillsList.setOnItemClickListener(new AddConsumptionPillItemClickListener(this, (AddConsumptionPillListAdapter)_pillsList.getAdapter()));
+
         _adapter.updateAdapter(pills);
     }
 

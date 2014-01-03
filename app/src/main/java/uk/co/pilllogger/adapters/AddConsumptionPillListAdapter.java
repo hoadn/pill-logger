@@ -99,7 +99,6 @@ public class
         }
         else
             holder=(ViewHolder) v.getTag();
-
         Pill pill = _pills.get(position);
         if (pill != null && holder != null) {
             holder.name.setText(pill.getName());
