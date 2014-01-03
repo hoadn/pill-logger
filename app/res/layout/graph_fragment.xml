@@ -60,19 +60,10 @@
                     android:background="#DD000000">
 
                     <ImageView
-                        android:id="@+id/graph2_overlay"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="65dp"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/lock"
-                        android:alpha="1"/>
-
-                    <ImageView
                         android:id="@+id/graph2_lock_img"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:layout_marginTop="65dp"
+                        android:layout_marginTop="45dp"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/lock"/>
 
@@ -102,6 +93,7 @@
                     android:layout_height="200dp"
                     android:id="@+id/graph3"/>
                 <TextView
+                    android:id="@+id/graph3_description"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center"
@@ -111,13 +103,14 @@
                     android:id="@+id/pie_graph_lock"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_above="@id/graph3_description"
                     android:background="#DD000000" >
 
                     <ImageView
                         android:id="@+id/pie_graph_lock_img"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:layout_marginTop="65dp"
+                        android:layout_marginTop="45dp"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/lock"/>
 
@@ -147,6 +140,7 @@
                     android:layout_height="200dp"
                     android:id="@+id/graph4"/>
                 <TextView
+                    android:id="@+id/graph4_description"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center"
@@ -157,13 +151,14 @@
                     android:id="@+id/week_graph_lock"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_above="@id/graph4_description"
                     android:background="#DD000000" >
 
                     <ImageView
                         android:id="@+id/week_graph_lock_img"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:layout_marginTop="65dp"
+                        android:layout_marginTop="45dp"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/lock"/>
 
