@@ -41,14 +41,18 @@ public class
 
     public void addOpenPill(Pill pill) {
         State.getSingleton().addOpenPill(pill);
+        _activity.setDoneEnabled(true);
     }
 
     public void removeOpenPill(Pill pill) {
         State.getSingleton().removeOpenPill(pill);
+        if (!(State.getSingleton().getOpenPills().size() > 0))
+            _activity.setDoneEnabled(false);
     }
 
     public void clearOpenPillsList() {
         State.getSingleton().clearOpenPillsList();
+        _activity.setDoneEnabled(false);
     }
 
     public AddConsumptionPillListAdapter(AddConsumptionActivity activity, int textViewResourceId, List<Pill> pills) {

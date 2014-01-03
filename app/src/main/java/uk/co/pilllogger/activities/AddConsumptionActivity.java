@@ -117,6 +117,8 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
         UnitAdapter adapter = new UnitAdapter(this, android.R.layout.simple_spinner_item, units);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _unitSpinner.setAdapter(adapter);
+        if (!(State.getSingleton().getOpenPills().size() > 0))
+            setDoneEnabled(false);
     }
 
 
@@ -310,6 +312,22 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
 
         RadioButton selectPill = (RadioButton) findViewById(R.id.add_consumption_select_select_pill);
         selectPill.setChecked(true);
+    }
+
+    public void setDoneEnabled(boolean enabled) {
+        View doneText = findViewById(R.id.add_consumption_done_text);
+        View doneIcon = findViewById(R.id.add_consumption_done_icon);
+        View doneLayout = findViewById(R.id.add_consumption_done_layout);
+        if (!enabled) {
+            doneText.setAlpha(0.25f);
+            doneIcon.setAlpha(0.25f);
+            doneLayout.setClickable(false);
+        }
+        else {
+            doneText.setAlpha(1);
+            doneIcon.setAlpha(1);
+            doneLayout.setClickable(true);
+        }
     }
 
 
