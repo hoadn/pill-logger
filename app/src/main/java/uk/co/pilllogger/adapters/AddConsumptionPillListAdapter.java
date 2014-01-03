@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.activities.AddConsumptionActivity;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.Logger;
@@ -34,28 +35,23 @@ public class
         AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
 
     private List<Pill> _pills;
-    private List<Pill> _consumptionPills = new ArrayList<Pill>();
-    private Activity _activity;
+    private AddConsumptionActivity _activity;
     private int _resourceId;
-
-    Map<Pill, Integer> _openPills = new HashMap<Pill, Integer>();
 
 
     public void addOpenPill(Pill pill) {
-        if (!(_openPills.containsKey(pill)))
-            _openPills.put(pill, 1);
+        State.getSingleton().addOpenPill(pill);
     }
 
     public void removeOpenPill(Pill pill) {
-        if (_openPills.containsKey(pill))
-            _openPills.remove(pill);
+        State.getSingleton().removeOpenPill(pill);
     }
 
     public void clearOpenPillsList() {
-        _openPills.clear();
+        State.getSingleton().clearOpenPillsList();
     }
 
-    public AddConsumptionPillListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
+    public AddConsumptionPillListAdapter(AddConsumptionActivity activity, int textViewResourceId, List<Pill> pills) {
         super(activity, textViewResourceId, pills);
         _activity = activity;
         _pills = pills;
@@ -105,14 +101,14 @@ public class
             holder.name.setText(pill.getName());
             holder.size.setText(String.valueOf(pill.getSize()));
             holder.color.setColour(pill.getColour());
-            if (_openPills.containsKey(pill)) {
+            if (State.getSingleton().getOpenPills().containsKey(pill)) {
                 v = open(v);
-                holder.amount.setText(_openPills.get(pill).toString());
+                holder.amount.setText(State.getSingleton().getOpenPills().get(pill).toString());
             }
             else {
-                Logger.v("PillName", "pill: " + pill.getName() + " pill id: " + pill.getId());
+                Logger.v("PillName", "pill: " + pill.getName() + " pill id: " + pill.getId() + " size of open pills: " + State.getSingleton().getOpenPills().size());
                 v = close(v);
-                for (Pill aPill : _openPills.keySet()) {
+                for (Pill aPill : State.getSingleton().getOpenPills().keySet()) {
                     Logger.v("PillName", "open pill " + aPill.getName() + " id: " + aPill.getId());
                 }
             }
@@ -140,6 +136,8 @@ public class
         View view = v.findViewById(R.id.add_consumption_after_click_layout);
         if(view != null){
             view.setBackgroundColor(backgroundColor);
+            View rightLayout = v.findViewById(R.id.add_consumption_right_info);
+            rightLayout.setBackgroundColor(backgroundColor);
             ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
             if(layoutParams != null)
                 layoutParams.width = (int) LayoutHelper.dpToPx(_activity, 125);
@@ -153,6 +151,8 @@ public class
         View view = v.findViewById(R.id.add_consumption_after_click_layout);
         if(view != null){
             view.setBackgroundColor(backgroundColor);
+            View rightLayout = v.findViewById(R.id.add_consumption_right_info);
+            rightLayout.setBackgroundColor(backgroundColor);
             ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
             if(layoutParams != null)
                 layoutParams.width = (int) LayoutHelper.dpToPx(_activity, 0);
@@ -172,13 +172,15 @@ public class
         this.notifyDataSetChanged();
     }
 
+    public void clearConsumedPills() {
+        State.getSingleton().clearConsumpedPills();
+    }
     public void addConsumedPill(Pill pill) {
-        _consumptionPills.add(pill);
+        State.getSingleton().addConsumedPill(pill);
     }
 
     public void removeConsumedPill(Pill pill) {
-        if (_consumptionPills.contains(pill))
-            _consumptionPills.remove(pill);
+        State.getSingleton().removeConsumedPill(pill);
     }
 
     /*
@@ -187,8 +189,7 @@ public class
      */
     public void addConsumedPillAtStart(int position) {
         Pill pill = _pills.get(position);
-        if (!_consumptionPills.contains(pill))
-        _consumptionPills.add(pill);
+        State.getSingleton().addConsumedPillAtStart(pill);
     }
 
     /*
@@ -196,18 +197,11 @@ public class
      */
     public void removeAllInstancesOfPill(int position) {
         Pill removePill = _pills.get(position);
-        List<Pill> pillsToRemove = new ArrayList<Pill>();
-        for(Pill pill : _consumptionPills) {
-            if (pill.getId() == removePill.getId())
-                pillsToRemove.add(pill);
-        }
-        for (Pill pill : pillsToRemove) {
-            _consumptionPills.remove(pill);
-        }
+        State.getSingleton().removeAllInstancesOfPill(removePill);
     }
 
     public List<Pill> getPillsConsumed() {
-        return _consumptionPills;
+        return State.getSingleton().getConsumptionPills();
     }
 
     private class buttonClick implements View.OnClickListener {
@@ -229,14 +223,14 @@ public class
             Pill pill = _pills.get(_position);
             if (_add) {
                 int amount = Integer.parseInt(_amount.getText().toString()) + 1;
-                _openPills.put(pill, _openPills.get(pill) + 1);
+                State.getSingleton().getOpenPills().put(pill, State.getSingleton().getOpenPills().get(pill) + 1);
                 _amount.setText(String.valueOf(amount));
                 _adapter.addConsumedPill(pill);
             }
             else {
                 int amount = Integer.parseInt(_amount.getText().toString()) - 1;
                 if (amount >= 0) {
-                    _openPills.put(pill, _openPills.get(pill) - 1);
+                    State.getSingleton().getOpenPills().put(pill, State.getSingleton().getOpenPills().get(pill) - 1);
                     _amount.setText(String.valueOf(amount));
                     _adapter.removeConsumedPill(pill);
                 }

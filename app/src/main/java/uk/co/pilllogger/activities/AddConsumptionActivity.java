@@ -24,13 +24,17 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.listeners.AddConsumptionPillItemClickListener;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -245,6 +249,7 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
             Consumption consumption = new Consumption(pill, date);
             new InsertConsumptionTask(this, consumption).execute();
         }
+        _adapter.clearConsumedPills();
         finish();
     }
 
@@ -306,4 +311,6 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
         RadioButton selectPill = (RadioButton) findViewById(R.id.add_consumption_select_select_pill);
         selectPill.setChecked(true);
     }
+
+
 }
