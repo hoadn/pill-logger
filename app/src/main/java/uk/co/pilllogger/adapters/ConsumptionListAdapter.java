@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -160,22 +159,28 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
                     if(params != null){
                         params.topMargin = 0;
-                        if(position > 0)
+                        int marginWithTextHeight = 75;
+
+                        boolean setText = false;
+
+                        if(position == 0)
                         {
+                            setText = true;
+                        }
+                        else{
                             Consumption previousConsumption = _data.get(position - 1);
                             DateTime prevDate = new DateTime(previousConsumption.getDate());
 
                             if(prevDate.getYear() != currentDate.getYear() ||
                                     prevDate.getDayOfYear() != currentDate.getDayOfYear()){
 
-                                params.topMargin += 75;
-
-                                dayText.setText(DateHelper.getRelativeDateTime(getContext(), currentDate));
+                                setText = true;
                             }
                         }
-                        else{
-                            params.topMargin += 75;
-                            dayText.setText(DateHelper.getRelativeDateTime(getContext(), currentDate));
+
+                        if(setText){
+                            params.topMargin = marginWithTextHeight;
+                            dayText.setText(DateHelper.getPrettyDayOfMonth(currentDate));
                         }
                     }
                 }

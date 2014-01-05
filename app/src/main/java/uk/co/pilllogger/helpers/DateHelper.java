@@ -11,6 +11,20 @@ import java.util.Date;
  * Created by alex on 13/11/2013.
  */
 public class DateHelper {
+
+    public static String getPrettyDayOfMonth(DateTime dateTime){
+        String dayOfMonth = dateTime.dayOfMonth().getAsText();
+
+        String suffix = "";
+        if(dayOfMonth.endsWith("1")) suffix = "st";
+        if(dayOfMonth.endsWith("2")) suffix = "nd";
+        if(dayOfMonth.endsWith("3")) suffix= "rd";
+        if(dayOfMonth.endsWith("0") || dayOfMonth.endsWith("4") || dayOfMonth.endsWith("5") || dayOfMonth.endsWith("6")
+                || dayOfMonth.endsWith("7") || dayOfMonth.endsWith("8") || dayOfMonth.endsWith("9")) suffix = "th";
+
+        return dateTime.toString("EEEE") + " " + dayOfMonth + suffix + " " + dateTime.toString("MMMM");
+    }
+
     public static int daysOfMonth(int year, int month, int day) {
         DateTime dateTime = new DateTime(year, month, day, 12, 0, 0, 000);
         return daysOfMonth(dateTime);
