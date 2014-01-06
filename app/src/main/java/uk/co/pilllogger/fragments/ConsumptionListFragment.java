@@ -111,6 +111,7 @@ public class ConsumptionListFragment extends Fragment implements
 
     @Override
     public void consumptionsReceived(List<Consumption> consumptions) {
+        Logger.v(TAG, "Consumptions size: " + consumptions.size());
         if(consumptions != null && consumptions.size() > 0){
             List<Consumption> grouped = ConsumptionRepository.getSingleton(getActivity()).groupConsumptions(consumptions);
             _listView.setAdapter(new ConsumptionListAdapter(getActivity(), this, R.layout.consumption_list_item, grouped));
