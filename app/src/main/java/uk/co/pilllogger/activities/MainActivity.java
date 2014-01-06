@@ -59,7 +59,7 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
 
         State.getSingleton().setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/OpenSans-Light.ttf"));
 
-        if(savedInstanceState == null){
+        //if(savedInstanceState == null){
             Fragment fragment = new ConsumptionListFragment();
             Fragment fragment2 = new PillListFragment();
             Fragment fragment3 = new GraphFragment();
@@ -68,30 +68,6 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
 
             _fragmentPager.setOnPageChangeListener(
                     new ViewPager.SimpleOnPageChangeListener() {
-                        @Override
-                        public void onPageSelected(int position) {
-                            // When swiping between pages, select the
-                            // corresponding tab.
-                            getActionBar().setSelectedNavigationItem(position);
-                            switch (position) {
-                                case 0:
-//                                    getActionBar().getTabAt(position).setIcon(R.drawable.list);
-//                                    getActionBar().getTabAt(position + 1).setIcon(R.drawable.medkit_grey);
-//                                    getActionBar().getTabAt(position + 2).setIcon(R.drawable.bar_chart_grey);
-                                    break;
-                                case 1:
-//                                    getActionBar().getTabAt(position).setIcon(R.drawable.medkit);
-//                                    getActionBar().getTabAt(position - 1).setIcon(R.drawable.list_grey);
-//                                    getActionBar().getTabAt(position + 1).setIcon(R.drawable.bar_chart_grey);
-                                    break;
-                                case 2:
-//                                    getActionBar().getTabAt(position).setIcon(R.drawable.bar_chart);
-//                                    getActionBar().getTabAt(position - 1).setIcon(R.drawable.medkit_grey);
-//                                    getActionBar().getTabAt(position - 2).setIcon(R.drawable.list_grey);
-                                    break;
-                            }
-                        }
-
                         @Override
                         public void onPageScrollStateChanged(int state) {
                             super.onPageScrollStateChanged(state);
@@ -124,7 +100,7 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
             setupChrome();
 
             new GetPillsTask(this, this).execute();
-        }
+        //}
     }
 
     private void setupChrome(){
