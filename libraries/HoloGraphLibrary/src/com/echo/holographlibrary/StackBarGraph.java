@@ -44,10 +44,11 @@ import java.util.List;
 
 public class StackBarGraph extends View {
 
-	private final static int VALUE_FONT_SIZE = 30, AXIS_LABEL_FONT_SIZE = 15;
+	private final static int VALUE_FONT_SIZE = 15, AXIS_LABEL_FONT_SIZE = 15;
 
     private List<StackBar> mBars = new ArrayList<StackBar>();
     private Paint mPaint = new Paint();
+    private Paint mTextPaint = new Paint();
     private Rect mRectangle = null;
     private boolean mShowBarText = true;
     private int mIndexSelected = -1;
@@ -170,26 +171,30 @@ public class StackBarGraph extends View {
                     }
 
                     // Draw x-axis label text
-                    mPaint.setColor(Color.argb(100, 255, 255, 255));
-                    this.mPaint.setTextSize(AXIS_LABEL_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
-                    int x = (int)(((mRectangle.left+mRectangle.right)/2)-(this.mPaint.measureText(bar.getName())/2));
+                    mTextPaint.setColor(Color.argb(100, 255, 255, 255));
+                    this.mTextPaint.setTextSize(AXIS_LABEL_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
+                    int x = (int)(((mRectangle.left+mRectangle.right)/2)-(this.mTextPaint.measureText(bar.getName())/2));
                     int y = (int) (getHeight()-6 * mContext.getResources().getDisplayMetrics().scaledDensity);
-                    canvas.drawText(bar.getName(), x, y, this.mPaint);
+                    canvas.drawText(bar.getName(), x, y, this.mTextPaint);
 
                     // Draw value text
-                    if (mShowBarText){
-                        this.mPaint.setTextSize(VALUE_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
-                        this.mPaint.setColor(Color.WHITE);
+                    if (mShowBarText && section.getValue() > 0){
+                        this.mTextPaint.setTextSize(VALUE_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
+                        this.mTextPaint.setColor(Color.WHITE);
                         Rect r2 = new Rect();
-                        this.mPaint.getTextBounds(section.getValueString(), 0, 1, r2);
+                        this.mTextPaint.getTextBounds(section.getValueString(), 0, 1, r2);
 
-                        int boundLeft = (int) (((mRectangle.left+mRectangle.right)/2)-(this.mPaint.measureText(section.getValueString())/2)-10 * mContext.getResources().getDisplayMetrics().density);
+                        int boundLeft = (int) (((mRectangle.left+mRectangle.right)/2)-(this.mTextPaint.measureText(section.getValueString())/2)-10 * mContext.getResources().getDisplayMetrics().density);
                         int boundTop = (int) (mRectangle.top+(r2.top-r2.bottom)-18 * mContext.getResources().getDisplayMetrics().density);
-                        int boundRight = (int)(((mRectangle.left+mRectangle.right)/2)+(this.mPaint.measureText(section.getValueString())/2)+10 * mContext.getResources().getDisplayMetrics().density);
-                        popup.setBounds(boundLeft, boundTop, boundRight, mRectangle.top);
+                        int boundRight = (int)(((mRectangle.left+mRectangle.right)/2)+(this.mTextPaint.measureText(section.getValueString())/2)+10 * mContext.getResources().getDisplayMetrics().density);
+                        popup.setBounds(boundLeft, boundTop, boundRight, mRectangle.top-stroke);
                         popup.draw(canvas);
 
-                        canvas.drawText(section.getValueString(), (int)(((mRectangle.left+mRectangle.right)/2)-(this.mPaint.measureText(section.getValueString()))/2), mRectangle.top-(mRectangle.top - boundTop)/2f+(float)Math.abs(r2.top-r2.bottom)/2f*0.7f, this.mPaint);
+                        canvas.drawText(
+                                section.getValueString(),
+                                (int)(((mRectangle.left+mRectangle.right)/2)-(this.mTextPaint.measureText(section.getValueString()))/2),
+                                mRectangle.top-(mRectangle.top - boundTop)/2f+(float)Math.abs(r2.top-r2.bottom)/2f*0.5f,
+                                this.mTextPaint);
                     }
                     if (mIndexSelected == count && mListener != null) {
                         this.mPaint.setColor(Color.parseColor("#33B5E5"));
@@ -208,11 +213,21 @@ public class StackBarGraph extends View {
             mPaint.setStrokeWidth(padding);
             
             mPaint.setAntiAlias(true);
+            mTextPaint.setColor(Color.argb(150, 255, 255, 255));
             if(mShouldDrawGridHorizontal){
                 float singleItemHeight = usableHeight / maxValue;
-                for(int i = 0; i < maxValue; i++){
+                for(int i = 0; i <= maxValue; i++){
                     float y = getHeight() - (bottomPadding + ((singleItemHeight) * i) + (padding * i) - density);
-                    canvas.drawLine(0, y, getWidth(), y, mPaint);
+                    canvas.drawLine(50, y, getWidth(), y, mPaint);
+
+                    Rect textBounds = new Rect();
+                    String value = String.valueOf(i);
+                    mTextPaint.getTextBounds(value, 0, 1, textBounds);
+
+                    canvas.drawText(String.valueOf(i),
+                            50/2 - textBounds.width()/2f,
+                            y + textBounds.height()/2f,
+                            mTextPaint);
                 }
             }
             mShouldUpdate = false;

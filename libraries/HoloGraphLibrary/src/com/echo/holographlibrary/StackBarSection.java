@@ -32,7 +32,7 @@ public class StackBarSection {
         if (mValueString != null) {
             return mValueString;
         } else {
-            return String.valueOf(mValue);
+            return String.valueOf((int)mValue);
         }
     }
 
