@@ -114,7 +114,6 @@ public class ConsumptionListFragment extends Fragment implements
         if(consumptions != null && consumptions.size() > 0){
             List<Consumption> grouped = ConsumptionRepository.getSingleton(getActivity()).groupConsumptions(consumptions);
             _listView.setAdapter(new ConsumptionListAdapter(getActivity(), this, R.layout.consumption_list_item, grouped));
-            _listView.requestDisallowInterceptTouchEvent(true);
 //            int dayCount = getGraphDays();
 //
 //            Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(consumptions, dayCount);
