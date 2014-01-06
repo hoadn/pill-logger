@@ -20,6 +20,7 @@
         <activity
                 android:uiOptions="splitActionBarWhenNarrow"
                 android:name=".activities.MainActivity"
+                android:configChanges="orientation|keyboardHidden"
                 android:label="Pill Logger">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

@@ -112,7 +112,6 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
-        Logger.v(TAG, "Get view called " + position + " Count: " + getCount() + " Data size: " + _data.size());
         if (getItemViewType(position) == 0) {
             if (v == null) {
                 LayoutInflater inflater = (LayoutInflater) _activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
