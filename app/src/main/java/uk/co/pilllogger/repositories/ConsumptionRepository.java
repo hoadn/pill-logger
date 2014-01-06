@@ -229,15 +229,16 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                     || groupedDate.getMillis() != cDate.getMillis()
                     || groupedConsumption.getPillId() != c.getPillId())
             {
-                if(groupedConsumption != null)
+                if(groupedConsumption != null) {
+                    groupedConsumption = c;
+                    groupedConsumption.setQuantity(1);
                     grouped.add(groupedConsumption);
+                }
                 else {
                     groupedConsumption = c;
                     groupedConsumption.setQuantity(1);
                     grouped.add(groupedConsumption);
                 }
-                groupedConsumption = c;
-                groupedConsumption.setQuantity(1);
             }
             else{
                 groupedConsumption.setQuantity(groupedConsumption.getQuantity() + 1);
