@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,6 +45,7 @@ import uk.co.pilllogger.views.MyViewPager;
  */
 public class MainActivity extends Activity implements GetPillsTask.ITaskComplete {
 
+    private static final String TAG = "MainActivity";
     private MyViewPager _fragmentPager;
     private PagerAdapter _fragmentPagerAdapter;
     private int _colour1 = Color.argb(120, 0, 233, 255);
@@ -59,48 +61,57 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
 
         State.getSingleton().setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/OpenSans-Light.ttf"));
 
-        //if(savedInstanceState == null){
-            Fragment fragment = new ConsumptionListFragment();
-            Fragment fragment2 = new PillListFragment();
-            Fragment fragment3 = new GraphFragment();
+        Fragment fragment = new ConsumptionListFragment();
+        Fragment fragment2 = new PillListFragment();
+        Fragment fragment3 = new GraphFragment();
 
-            _fragmentPager = (MyViewPager)findViewById(R.id.fragment_pager);
+        _fragmentPager = (MyViewPager)findViewById(R.id.fragment_pager);
 
-            _fragmentPager.setOnPageChangeListener(
-                    new ViewPager.SimpleOnPageChangeListener() {
-                        @Override
-                        public void onPageScrollStateChanged(int state) {
-                            super.onPageScrollStateChanged(state);
-                            if (state == ViewPager.SCROLL_STATE_IDLE) {
-                                int page = _fragmentPager.getCurrentItem();
-                                // TODO: This code will break when colours change in fragments, needs to be updated
-                                switch(page) {
-                                    case 0:
-                                        _colourBackground.setBackgroundColor(_colour1);
-                                        break;
-                                    case 1:
-                                        _colourBackground.setBackgroundColor(_colour2);
-                                        break;
-                                    case 2:
-                                        _colourBackground.setBackgroundColor(_colour3);
-                                        break;
-                                }
-                            }
+        _fragmentPager.setOnPageChangeListener(
+                new ViewPager.SimpleOnPageChangeListener() {
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+                        super.onPageScrollStateChanged(state);
+                        if (state == ViewPager.SCROLL_STATE_IDLE) {
+                            setBackgroundColour();
                         }
-                    });
+                    }
+                });
 
-            _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_colourBackground, this));
-            _fragmentPagerAdapter = new SlidePagerAdapter(getFragmentManager(),
-                    fragment,
-                    fragment2,
-                    fragment3);
+        _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_colourBackground, this));
+        _fragmentPagerAdapter = new SlidePagerAdapter(getFragmentManager(),
+                fragment,
+                fragment2,
+                fragment3);
 
-            _fragmentPager.setAdapter(_fragmentPagerAdapter);
+        _fragmentPager.setAdapter(_fragmentPagerAdapter);
 
-            setupChrome();
+        if(savedInstanceState != null) {
+            _fragmentPager.setCurrentItem(savedInstanceState.getInt("item"));
+        }
 
-            new GetPillsTask(this, this).execute();
-        //}
+        setupChrome();
+
+        setBackgroundColour();
+
+        new GetPillsTask(this, this).execute();
+    }
+
+    private void setBackgroundColour(){
+        int page = _fragmentPager.getCurrentItem();
+
+        // TODO: This code will break when colours change in fragments, needs to be updated
+        switch(page) {
+            case 0:
+                _colourBackground.setBackgroundColor(_colour1);
+                break;
+            case 1:
+                _colourBackground.setBackgroundColor(_colour2);
+                break;
+            case 2:
+                _colourBackground.setBackgroundColor(_colour3);
+                break;
+        }
     }
 
     private void setupChrome(){
@@ -160,6 +171,12 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("item", _fragmentPager.getCurrentItem());
     }
 
     @Override
