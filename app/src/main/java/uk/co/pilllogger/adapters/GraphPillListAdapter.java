@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 
@@ -25,6 +26,7 @@ public class GraphPillListAdapter extends ArrayAdapter<Pill> {
     private Activity _activity;
     private int _resourceId;
     private List<Integer> _graphPills;
+    private static String TAG = "GraphPillsListAdapter";
 
     public GraphPillListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
         super(activity, textViewResourceId, pills);
@@ -32,6 +34,7 @@ public class GraphPillListAdapter extends ArrayAdapter<Pill> {
         _pills = pills;
         _resourceId = textViewResourceId;
         _graphPills = State.getSingleton().getGraphExcludePills();
+        Logger.v(TAG, "data size is: " + pills.size());
     }
 
     public static class ViewHolder {
@@ -45,6 +48,7 @@ public class GraphPillListAdapter extends ArrayAdapter<Pill> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
+        Logger.v(TAG, "is this showing");
         ViewHolder holder = null;
         if (v == null) {
             LayoutInflater inflater = (LayoutInflater)_activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -74,6 +78,9 @@ public class GraphPillListAdapter extends ArrayAdapter<Pill> {
             boolean included = !State.getSingleton().isPillExcluded(pill);
             holder.checkbox.setChecked(included);
 
+        }
+        else {
+            Logger.v(TAG, "pill or holder is null");
         }
         return v;
     }
