@@ -3,6 +3,7 @@ package uk.co.pilllogger.adapters;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.util.SparseIntArray;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -122,14 +124,25 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
                 Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(_consumptions, dayCount);
 
                 View view = v.findViewById(R.id.main_graph);
+                final SlidingPaneLayout slidingView = (SlidingPaneLayout)v.findViewById(R.id.graph_drawer_layout);
 
-                v.setOnClickListener(new View.OnClickListener() {
+                ImageView graphSettings  = (ImageView) v.findViewById(R.id.graph_settings);
+                graphSettings.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(_activity, "Graph has been clicked", Toast.LENGTH_SHORT).show();
-                        Logger.v(TAG, "Graph has been clicked");
+
+                        if (slidingView.isOpen()) {
+                            slidingView.closePane();
+                            ((ImageView) v).setImageDrawable(_activity.getResources().getDrawable(R.drawable.next));
+                        }
+                        else {
+                            slidingView.openPane();
+                            ((ImageView) v).setImageDrawable(_activity.getResources().getDrawable(R.drawable.previous));
+                        }
+
                     }
                 });
+
                 plotGraph(xPoints, dayCount, view);
             }
         }
