@@ -125,19 +125,50 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
                 View view = v.findViewById(R.id.main_graph);
                 final SlidingPaneLayout slidingView = (SlidingPaneLayout)v.findViewById(R.id.graph_drawer_layout);
+                slidingView.setSliderFadeColor(_activity.getResources().getColor(android.R.color.transparent));
+                final ImageView graphSettings  = (ImageView) v.findViewById(R.id.graph_settings);
+                slidingView.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
 
-                ImageView graphSettings  = (ImageView) v.findViewById(R.id.graph_settings);
+                    boolean moving = false;
+                    @Override
+                    public void onPanelSlide(View view, float v) {
+                        Logger.v(TAG, "moving = " + moving + " V = " + v);
+                        if (moving == false) {
+                            if (v < 0.5) {
+                                Logger.v(TAG, "V = Setting to previous");
+                                graphSettings.setImageDrawable(_activity.getResources().getDrawable(R.drawable.previous));
+                                moving = true;
+                            }
+                            else {
+                                Logger.v(TAG, "V = Setting to next");
+                                graphSettings.setImageDrawable(_activity.getResources().getDrawable(R.drawable.next));
+                                moving = true;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onPanelOpened(View view) {
+                        Logger.v(TAG, "V = Panel opened");
+                        moving = false;
+                    }
+
+                    @Override
+                    public void onPanelClosed(View view) {
+                        Logger.v(TAG, "V = Panel closed");
+                        moving = false;
+                    }
+                });
+
                 graphSettings.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                         if (slidingView.isOpen()) {
                             slidingView.closePane();
-                            ((ImageView) v).setImageDrawable(_activity.getResources().getDrawable(R.drawable.next));
                         }
                         else {
                             slidingView.openPane();
-                            ((ImageView) v).setImageDrawable(_activity.getResources().getDrawable(R.drawable.previous));
                         }
 
                     }

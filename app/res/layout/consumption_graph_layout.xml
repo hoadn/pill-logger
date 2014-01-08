@@ -18,27 +18,33 @@
               android:choiceMode="singleChoice"
               android:dividerHeight="0dp"
               android:layout_gravity="left"
-              android:background="@color/drawer_item_background"/>
+              android:background="#40000000"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <com.echo.holographlibrary.StackBarGraph
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingRight="30dp"
         android:layout_gravity="right"
         android:layout_weight="1"
         android:layout_marginLeft="0dp"
         android:id="@+id/main_graph"
         android:clickable="true"
         />
-    </android.support.v4.widget.SlidingPaneLayout>
 
     <ImageView
-        android:id="@+id/graph_settings"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/next"
-        android:padding="5dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="2dp"
-        android:background="@color/selector_background"/>
+            android:id="@+id/graph_settings"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/next"
+            android:padding="5dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/selector_background"/>
+    </RelativeLayout>
+    </android.support.v4.widget.SlidingPaneLayout>
+
+
 
 </RelativeLayout>
