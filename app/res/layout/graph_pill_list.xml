@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingRight="5dp"
     tools:layout_height="50dp"
-    android:background="@color/drawer_item_grey">
+    android:background="@drawable/list_selector">
 
     <LinearLayout
         android:id="@+id/graph_list_pill_colour"
