@@ -22,11 +22,12 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillsListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.InsertPillTask;
 
 
-public class PillListFragment extends Fragment implements GetPillsTask.ITaskComplete, InsertPillTask.ITaskComplete {
+public class PillListFragment extends Fragment implements GetPillsTask.ITaskComplete, InsertPillTask.ITaskComplete, Observer.IPillsUpdated {
     private String TAG = "PillListFragment";
     private ListView _list;
     private Typeface _openSans;
@@ -41,6 +42,13 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
+
+    @Override
+    public void onStart(){
+        super.onStart();
+
+        Observer.getSingleton().registerPillsUpdatedObserver(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -156,6 +164,11 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
                 InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    @Override
+    public void pillsUpdated() {
+        new GetPillsTask(this.getActivity(), this).execute();
     }
 
     private class AddPillClickListener implements View.OnClickListener {
