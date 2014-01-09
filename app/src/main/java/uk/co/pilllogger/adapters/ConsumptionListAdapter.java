@@ -272,13 +272,13 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
             @Override
             public void onPanelOpened(View view) {
-                Logger.v(TAG, "V = Panel opened");
+                graphSettings.setImageDrawable(_activity.getResources().getDrawable(R.drawable.previous));
                 moving = false;
             }
 
             @Override
             public void onPanelClosed(View view) {
-                Logger.v(TAG, "V = Panel closed");
+                graphSettings.setImageDrawable(_activity.getResources().getDrawable(R.drawable.next));
                 moving = false;
             }
         });
