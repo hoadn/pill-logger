@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -122,6 +123,15 @@ public class ConsumptionListFragment extends Fragment implements
                 adapter = new ConsumptionListAdapter(getActivity(), this, R.layout.consumption_list_item, grouped);
             }
             _listView.setAdapter(adapter);
+            _listView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    View view = v.findViewById(R.id.graph_layout);
+                    if (view != null)
+                        view.getParent().requestDisallowInterceptTouchEvent(false);
+                    return false;
+                }
+            });
 //            int dayCount = getGraphDays();
 //
 //            Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(consumptions, dayCount);

@@ -9,6 +9,7 @@ import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -230,6 +231,15 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
                         }
                         //new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete) _fragment, true).execute();
                         ((ConsumptionListFragment)_fragment).replotGraph();
+                    }
+                });
+
+                list.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        return false;
                     }
                 });
             }
