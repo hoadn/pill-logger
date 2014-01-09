@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/orange_gradient"
-            android:paddingTop="@dimen/action_bar_height">
+            android:paddingTop="@dimen/horizontal_action_bar_height">
             <uk.co.pilllogger.views.MyViewPager
                 android:id="@+id/fragment_pager"
                 android:layout_height="match_parent"
