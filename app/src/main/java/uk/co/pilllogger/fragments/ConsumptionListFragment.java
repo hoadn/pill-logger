@@ -64,6 +64,7 @@ public class ConsumptionListFragment extends Fragment implements
     HashMap<Integer, Pill> _allPills = new HashMap<Integer, Pill>();
     Fragment _fragment;
     Activity _activity;
+    private List<Pill> _pills;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -113,7 +114,14 @@ public class ConsumptionListFragment extends Fragment implements
     public void consumptionsReceived(List<Consumption> consumptions) {
         if(consumptions != null && consumptions.size() > 0){
             List<Consumption> grouped = ConsumptionRepository.getSingleton(getActivity()).groupConsumptions(consumptions);
-            _listView.setAdapter(new ConsumptionListAdapter(getActivity(), this, R.layout.consumption_list_item, grouped));
+            ConsumptionListAdapter adapter;
+            if (_pills != null) {
+                adapter = new ConsumptionListAdapter(getActivity(), this, R.layout.consumption_list_item, grouped, _pills);
+            }
+            else {
+                adapter = new ConsumptionListAdapter(getActivity(), this, R.layout.consumption_list_item, grouped);
+            }
+            _listView.setAdapter(adapter);
 //            int dayCount = getGraphDays();
 //
 //            Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(consumptions, dayCount);
@@ -190,6 +198,7 @@ public class ConsumptionListFragment extends Fragment implements
 
     @Override
     public void pillsReceived(List<Pill> pills) {
+        _pills = pills;
         Logger.v(TAG, "Pills have been recieved");
         List<Integer> graphPills = State.getSingleton().getGraphExcludePills();
         if (graphPills == null) {

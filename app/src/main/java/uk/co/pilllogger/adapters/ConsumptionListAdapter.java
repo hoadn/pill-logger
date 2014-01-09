@@ -11,8 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +25,7 @@ import com.echo.holographlibrary.LineGraph;
 import com.echo.holographlibrary.PieGraph;
 import com.echo.holographlibrary.StackBarGraph;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -50,11 +54,17 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
     private Consumption _selectedConsumption;
     private List<Consumption> _consumptions;
     private Fragment _fragment;
+    private List<Pill> _pills;
 
     public ConsumptionListAdapter(Activity activity, Fragment fragment, int textViewResourceId, List<Consumption> consumptions) {
         super(activity, textViewResourceId, R.menu.consumption_list_item_menu, consumptions);
         _fragment = fragment;
         _consumptions = consumptions;
+    }
+
+    public ConsumptionListAdapter(Activity activity, Fragment fragment, int textViewResourceId, List<Consumption> consumptions, List<Pill> pills) {
+        this(activity, fragment, textViewResourceId, consumptions);
+        _pills = pills;
     }
 
     public static class ViewHolder {
@@ -124,55 +134,9 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
                 Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(_consumptions, dayCount);
 
                 View view = v.findViewById(R.id.main_graph);
-                final SlidingPaneLayout slidingView = (SlidingPaneLayout)v.findViewById(R.id.graph_drawer_layout);
-                slidingView.setSliderFadeColor(_activity.getResources().getColor(android.R.color.transparent));
-                final ImageView graphSettings  = (ImageView) v.findViewById(R.id.graph_settings);
-                slidingView.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
+                setUpSlidingPane(v);
+                setUpGraphPillsList(v);
 
-                    boolean moving = false;
-                    @Override
-                    public void onPanelSlide(View view, float v) {
-                        Logger.v(TAG, "moving = " + moving + " V = " + v);
-                        if (moving == false) {
-                            if (v < 0.5) {
-                                Logger.v(TAG, "V = Setting to previous");
-                                graphSettings.setImageDrawable(_activity.getResources().getDrawable(R.drawable.previous));
-                                moving = true;
-                            }
-                            else {
-                                Logger.v(TAG, "V = Setting to next");
-                                graphSettings.setImageDrawable(_activity.getResources().getDrawable(R.drawable.next));
-                                moving = true;
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onPanelOpened(View view) {
-                        Logger.v(TAG, "V = Panel opened");
-                        moving = false;
-                    }
-
-                    @Override
-                    public void onPanelClosed(View view) {
-                        Logger.v(TAG, "V = Panel closed");
-                        moving = false;
-                    }
-                });
-
-                graphSettings.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        if (slidingView.isOpen()) {
-                            slidingView.closePane();
-                        }
-                        else {
-                            slidingView.openPane();
-                        }
-
-                    }
-                });
 
                 plotGraph(xPoints, dayCount, view);
             }
@@ -231,6 +195,97 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
             }
         }
         return v;
+    }
+
+    private void setUpGraphPillsList(View v) {
+        List<Integer> graphPills = State.getSingleton().getGraphExcludePills();
+        if (graphPills == null) {
+            graphPills = new ArrayList<Integer>();
+        }
+        State.getSingleton().setGraphExcludePills(graphPills);
+
+        ListView list = (ListView) v.findViewById(R.id.graph_drawer);
+        if (list != null){ //we need to init the adapter
+            Logger.v(TAG, "Pills have been recieved and the list is not null");
+            if (_pills != null) {
+                GraphPillListAdapter adapter = new GraphPillListAdapter(_activity, R.layout.graph_pill_list, _pills);
+                list.setAdapter(adapter);
+                list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Pill pill = _pills.get(position);
+                        List<Integer> graphPills = State.getSingleton().getGraphExcludePills();
+                        CheckBox checkbox = (CheckBox)view.findViewById(R.id.graph_list_check_box);
+                        if (!checkbox.isChecked()) {
+                            checkbox.setChecked(true);
+                            if (graphPills.contains(pill.getId())) {
+                                graphPills.remove((Object) pill.getId());
+                            }
+                        }
+                        else {
+                            checkbox.setChecked(false);
+                            if (!graphPills.contains(pill.getId())) {
+                                graphPills.add(pill.getId());
+                            }
+                        }
+                        //new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete) _fragment, true).execute();
+                        ((ConsumptionListFragment)_fragment).replotGraph();
+                    }
+                });
+            }
+        }
+    }
+
+    private void setUpSlidingPane(View v) {
+        final SlidingPaneLayout slidingView = (SlidingPaneLayout)v.findViewById(R.id.graph_drawer_layout);
+        slidingView.setSliderFadeColor(_activity.getResources().getColor(android.R.color.transparent));
+        final ImageView graphSettings  = (ImageView) v.findViewById(R.id.graph_settings);
+        slidingView.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
+
+            boolean moving = false;
+            @Override
+            public void onPanelSlide(View view, float v) {
+                Logger.v(TAG, "moving = " + moving + " V = " + v);
+                if (moving == false) {
+                    if (v < 0.5) {
+                        Logger.v(TAG, "V = Setting to previous");
+                        graphSettings.setImageDrawable(_activity.getResources().getDrawable(R.drawable.previous));
+                        moving = true;
+                    }
+                    else {
+                        Logger.v(TAG, "V = Setting to next");
+                        graphSettings.setImageDrawable(_activity.getResources().getDrawable(R.drawable.next));
+                        moving = true;
+                    }
+                }
+            }
+
+            @Override
+            public void onPanelOpened(View view) {
+                Logger.v(TAG, "V = Panel opened");
+                moving = false;
+            }
+
+            @Override
+            public void onPanelClosed(View view) {
+                Logger.v(TAG, "V = Panel closed");
+                moving = false;
+            }
+        });
+
+        graphSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (slidingView.isOpen()) {
+                    slidingView.closePane();
+                }
+                else {
+                    slidingView.openPane();
+                }
+
+            }
+        });
     }
 
     private int getGraphDays(){
