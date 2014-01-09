@@ -25,24 +25,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     <com.echo.holographlibrary.StackBarGraph
-        android:layout_width="380dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="right"
         android:layout_weight="1"
-        android:layout_marginLeft="0dp"
+        android:layout_marginLeft="24dp"
         android:id="@+id/main_graph"
         android:clickable="true"
         />
 
     <ImageView
             android:id="@+id/graph_settings"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
             android:src="@drawable/next"
-            android:padding="5dp"
-            android:layout_marginLeft="2dp"
-            android:layout_marginTop="2dp"
-            android:background="@color/selector_background"/>
+            android:padding="2dp"
+            android:layout_margin="2dp"
+            android:background="#30000000"/>
     </RelativeLayout>
     </android.support.v4.widget.SlidingPaneLayout>
 
