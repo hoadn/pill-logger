@@ -218,14 +218,14 @@ public class StackBarGraph extends View {
                 float singleItemHeight = usableHeight / maxValue;
                 for(int i = 0; i <= maxValue; i++){
                     float y = getHeight() - (bottomPadding + ((singleItemHeight) * i) + (padding * i) - density);
-                    canvas.drawLine(50, y, getWidth(), y, mPaint);
+                    canvas.drawLine(0, y, getWidth() - 50, y, mPaint);
 
                     Rect textBounds = new Rect();
                     String value = String.valueOf(i);
                     mTextPaint.getTextBounds(value, 0, 1, textBounds);
 
                     canvas.drawText(String.valueOf(i),
-                            50/2 - textBounds.width()/2f,
+                            (getWidth() - 50) + (50/2 - textBounds.width()/2f),
                             y + textBounds.height()/2f,
                             mTextPaint);
                 }
