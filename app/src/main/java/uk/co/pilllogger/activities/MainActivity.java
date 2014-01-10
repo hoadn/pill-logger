@@ -227,7 +227,8 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
         for (Pill pill : favouritePills) {
             if (_menu != null) {
                 if (_menu.findItem(pill.getId()) == null) {
-                    MenuItem item = _menu.add(Menu.NONE, pill.getId(), Menu.NONE, pill.getName().substring(0,1));
+                    MenuItem item = _menu.add(Menu.NONE, pill.getId(), Menu.NONE, pill.getName());
+                    item.setTitleCondensed(pill.getName().substring(0,1));
                     item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
                     final Pill p = pill;
                     item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
