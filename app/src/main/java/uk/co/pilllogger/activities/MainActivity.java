@@ -26,6 +26,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
 
+import java.util.Date;
 import java.util.List;
 
 import uk.co.pilllogger.R;
@@ -35,9 +36,12 @@ import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
+import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
+import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.views.MyViewPager;
 
 /**
@@ -52,6 +56,8 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
     private int _colour2 = Color.argb(120, 204, 51, 153);
     private int _colour3 = Color.argb(120, 0, 106, 255);
     View _colourBackground;
+    private Menu _menu;
+    Fragment _consumptionFragment;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +67,7 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
 
         State.getSingleton().setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/OpenSans-Light.ttf"));
 
-        Fragment fragment = new ConsumptionListFragment();
+        _consumptionFragment = new ConsumptionListFragment();
         Fragment fragment2 = new PillListFragment();
         Fragment fragment3 = new GraphFragment();
 
@@ -80,7 +86,7 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
 
         _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_colourBackground, this));
         _fragmentPagerAdapter = new SlidePagerAdapter(getFragmentManager(),
-                fragment,
+                _consumptionFragment,
                 fragment2,
                 fragment3);
 
@@ -160,6 +166,7 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main_menu, menu);
+        _menu = menu;
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -213,6 +220,28 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
         if(pills.size() == 0)
         {
             startAddConsumptionActivity();
+        }
+    }
+
+    public void updateMenuWithFavouritePills(List<Pill> favouritePills) {
+        for (Pill pill : favouritePills) {
+            if (_menu != null) {
+                if (_menu.findItem(pill.getId()) == null) {
+                    MenuItem item = _menu.add(Menu.NONE, pill.getId(), Menu.NONE, pill.getName().substring(0,1));
+                    item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    final Pill p = pill;
+                    item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            Consumption consumption = new Consumption(p, new Date());
+                            new InsertConsumptionTask(MainActivity.this, consumption).execute();
+                            new GetConsumptionsTask(MainActivity.this, (GetConsumptionsTask.ITaskComplete)_consumptionFragment, true).execute();
+                            Toast.makeText(MainActivity.this, "Added consumption of " + p.getName(), Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
+                    });
+                }
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -174,35 +175,36 @@ public class ConsumptionListFragment extends Fragment implements
 
     @Override
     public void favouritePillsReceived(List<Pill> pills) {
-        int children = 0;
-        int start = 1;
+        ((MainActivity)_activity).updateMenuWithFavouritePills(pills);
+//        int children = 0;
+//        int start = 1;
+//
+//        if(pills.size() == 0) //remove customise button
+//            start = 2;
 
-        if(pills.size() == 0) //remove customise button
-            start = 2;
 
-
-        for(Pill p : pills){
-            LayoutInflater layoutInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View v = layoutInflater.inflate(R.layout.favourite_pill, null);
-            final Pill pill = p;
-            if(p.getName().length() > 0){
-                TextView letter = (TextView) v.findViewById(R.id.pill_letter);
-                letter.setText(p.getName().substring(0,1));
-                letter.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Logger.v("Testing", "Pill: " + pill.getName());
-                        Consumption consumption = new Consumption(pill, new Date());
-                        new InsertConsumptionTask(_activity, consumption).execute();
-                        new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete) _fragment, true).execute();
-                        Toast.makeText(_activity, "Added " + pill.getName(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-                Logger.d(TAG, "Adding favourite for: " + p.getName());
-            }
+//        for(Pill p : pills){
+//            LayoutInflater layoutInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//            View v = layoutInflater.inflate(R.layout.favourite_pill, null);
+//            final Pill pill = p;
+//            if(p.getName().length() > 0){
+//                TextView letter = (TextView) v.findViewById(R.id.pill_letter);
+//                letter.setText(p.getName().substring(0,1));
+//                letter.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Logger.v("Testing", "Pill: " + pill.getName());
+//                        Consumption consumption = new Consumption(pill, new Date());
+//                        new InsertConsumptionTask(_activity, consumption).execute();
+//                        new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete) _fragment, true).execute();
+//                        Toast.makeText(_activity, "Added " + pill.getName(), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//                Logger.d(TAG, "Adding favourite for: " + p.getName());
+//            }
 
             //_favouriteContainer.addView(v, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        }
+//       }
 
     }
 
