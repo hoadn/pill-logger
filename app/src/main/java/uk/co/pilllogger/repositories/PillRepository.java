@@ -95,7 +95,8 @@ public class PillRepository extends BaseRepository<Pill>{
                     null,
                     values);
         }
-        notifyUpdated();
+        pill.setId((int)newRowId);
+        notifyUpdated(pill);
         return newRowId;
     }
 
@@ -114,7 +115,7 @@ public class PillRepository extends BaseRepository<Pill>{
 
             Logger.d(TAG, "Pill updated. Favourite: " + pill.isFavourite());
         }
-        notifyUpdated();
+        notifyUpdated(pill);
     }
 
     @Override
@@ -134,7 +135,7 @@ public class PillRepository extends BaseRepository<Pill>{
         for (Consumption consumption : pillConsumptions) {
             ConsumptionRepository.getSingleton(_context).delete(consumption);
         }
-        notifyUpdated();
+        notifyUpdated(pill);
     }
 
 
@@ -206,9 +207,9 @@ public class PillRepository extends BaseRepository<Pill>{
         return _cache;
     }
 
-    private void notifyUpdated(){
+    private void notifyUpdated(Pill pill){
         _invalidateCache = true;
         ConsumptionRepository.getSingleton(_context).notifyUpdated();
-        Observer.getSingleton().notifyPillsUpdated();
+        Observer.getSingleton().notifyPillsUpdated(pill);
     }
 }

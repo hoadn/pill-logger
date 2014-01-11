@@ -3,6 +3,8 @@ package uk.co.pilllogger.state;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.pilllogger.models.Pill;
+
 /**
  * Created by alex on 15/12/2013.
  */
@@ -18,10 +20,10 @@ public class Observer {
         return _instance;
     }
 
-    public void notifyPillsUpdated(){
+    public void notifyPillsUpdated(Pill pill){
         for(IPillsUpdated observer : _pillsUpdatedArrayList){
             if(observer != null)
-                observer.pillsUpdated();
+                observer.pillsUpdated(pill);
         }
     }
 
@@ -30,6 +32,6 @@ public class Observer {
     }
 
     public interface IPillsUpdated{
-        void pillsUpdated();
+        void pillsUpdated(Pill pill);
     }
 }

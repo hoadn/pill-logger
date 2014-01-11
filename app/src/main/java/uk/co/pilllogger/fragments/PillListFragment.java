@@ -167,7 +167,7 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
     }
 
     @Override
-    public void pillsUpdated() {
+    public void pillsUpdated(Pill pill) {
         new GetPillsTask(this.getActivity(), this).execute();
     }
 

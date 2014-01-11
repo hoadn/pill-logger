@@ -259,7 +259,7 @@ public class ConsumptionListFragment extends Fragment implements
     }
 
     @Override
-    public void pillsUpdated() {
+    public void pillsUpdated(Pill pill) {
         new GetPillsTask(this.getActivity(), this).execute();
     }
 }

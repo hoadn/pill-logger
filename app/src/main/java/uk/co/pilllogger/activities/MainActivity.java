@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -15,6 +16,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,6 +26,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Date;
@@ -38,6 +41,7 @@ import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
@@ -47,7 +51,7 @@ import uk.co.pilllogger.views.MyViewPager;
 /**
  * Created by nick on 22/10/13.
  */
-public class MainActivity extends Activity implements GetPillsTask.ITaskComplete {
+public class MainActivity extends Activity implements GetPillsTask.ITaskComplete, Observer.IPillsUpdated {
 
     private static final String TAG = "MainActivity";
     private MyViewPager _fragmentPager;
@@ -99,6 +103,8 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
         setupChrome();
 
         setBackgroundColour();
+
+        Observer.getSingleton().registerPillsUpdatedObserver(this);
 
         new GetPillsTask(this, this).execute();
     }
@@ -224,25 +230,74 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
     }
 
     public void updateMenuWithFavouritePills(List<Pill> favouritePills) {
+        if(_menu == null)
+            return;
+
         for (Pill pill : favouritePills) {
-            if (_menu != null) {
-                if (_menu.findItem(pill.getId()) == null) {
-                    MenuItem item = _menu.add(Menu.NONE, pill.getId(), Menu.NONE, pill.getName());
-                    item.setTitleCondensed(pill.getName().substring(0,1));
-                    item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-                    final Pill p = pill;
-                    item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            Consumption consumption = new Consumption(p, new Date());
-                            new InsertConsumptionTask(MainActivity.this, consumption).execute();
-                            new GetConsumptionsTask(MainActivity.this, (GetConsumptionsTask.ITaskComplete)_consumptionFragment, true).execute();
-                            Toast.makeText(MainActivity.this, "Added consumption of " + p.getName(), Toast.LENGTH_SHORT).show();
-                            return false;
-                        }
-                    });
-                }
+            if (_menu.findItem(pill.getId()) == null) {
+                addPillToMenu(pill);
             }
         }
+    }
+
+    private void addPillToMenu(Pill pill){
+        MenuItem item = _menu.add(Menu.NONE, pill.getId(), Menu.NONE, pill.getName());
+
+        item.setTitleCondensed(pill.getName().substring(0,1));
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+        LayoutInflater layoutInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = layoutInflater.inflate(R.layout.favourite_pill, null);
+
+        if(pill.getName().length() > 0){
+            TextView letter = (TextView) v.findViewById(R.id.pill_letter);
+            letter.setText(pill.getName().substring(0,1));
+
+            item.setActionView(letter);
+
+            final Pill p = pill;
+            letter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View item) {
+                    addConsumption(p);
+                }
+            });
+            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    addConsumption(p);
+                    return false;
+                }
+            });
+
+        }
+    }
+
+    private void addConsumption(Pill pill){
+        Consumption consumption = new Consumption(pill, new Date());
+        new InsertConsumptionTask(MainActivity.this, consumption).execute();
+        new GetConsumptionsTask(MainActivity.this, (GetConsumptionsTask.ITaskComplete)_consumptionFragment, true).execute();
+        Toast.makeText(MainActivity.this, "Added consumption of " + pill.getName(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void pillsUpdated(final Pill pill) {
+        if(_menu == null || pill == null)
+            return;
+
+        runOnUiThread(new Runnable(){
+            public void run(){
+                if(pill.isFavourite()){
+                    if(_menu.findItem(pill.getId()) == null){
+                        addPillToMenu(pill);
+                    }
+                }
+                else{
+                    _menu.removeItem(pill.getId());
+                }
+            }
+        });
+
+
     }
 }
