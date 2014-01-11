@@ -46,6 +46,7 @@ import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
+import uk.co.pilllogger.views.ColourIndicator;
 import uk.co.pilllogger.views.MyViewPager;
 
 /**
@@ -241,19 +242,23 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
     }
 
     private void addPillToMenu(Pill pill){
-        MenuItem item = _menu.add(Menu.NONE, pill.getId(), Menu.NONE, pill.getName());
+        MenuItem item = _menu.findItem(pill.getId());
+        if(item == null)
+            item = _menu.add(Menu.NONE, pill.getId(), Menu.NONE, pill.getName());
 
         item.setTitleCondensed(pill.getName().substring(0,1));
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
         LayoutInflater layoutInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = layoutInflater.inflate(R.layout.favourite_pill, null);
+        View v = item.getActionView();
+        if(v == null)
+            v = layoutInflater.inflate(R.layout.favourite_pill, null);
 
         if(pill.getName().length() > 0){
-            TextView letter = (TextView) v.findViewById(R.id.pill_letter);
-            letter.setText(pill.getName().substring(0,1));
+            ColourIndicator letter = (ColourIndicator) v.findViewById(R.id.colour);
+            letter.setColour(pill.getColour());
 
-            item.setActionView(letter);
+            item.setActionView(v);
 
             final Pill p = pill;
             letter.setOnClickListener(new View.OnClickListener() {
@@ -288,9 +293,7 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
         runOnUiThread(new Runnable(){
             public void run(){
                 if(pill.isFavourite()){
-                    if(_menu.findItem(pill.getId()) == null){
-                        addPillToMenu(pill);
-                    }
+                    addPillToMenu(pill);
                 }
                 else{
                     _menu.removeItem(pill.getId());

@@ -8,24 +8,34 @@
 
 <RelativeLayout
 android:id="@+id/main_top_images_layout"
-android:layout_height="50dp"
-android:layout_width="50dp"
+android:layout_height="@dimen/action_bar_height"
+android:layout_width="@dimen/action_bar_height"
 android:orientation="vertical"
-android:layout_margin="5dp"
-android:layout_marginBottom="5dp"
+android:layout_margin="0dp"
+android:layout_marginBottom="0dp"
 android:paddingTop="0dp"
 android:paddingLeft="0dp"
 android:paddingRight="0dp"
-android:paddingBottom="3dp"
-android:background="@drawable/container_dropshadow">
+android:paddingBottom="0dp">
 
-<TextView
-    android:id="@+id/pill_letter"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:gravity="center"
-    tools:text="P"
-    android:textSize="24sp"
-    android:textStyle="bold"/>
+<!--<TextView-->
+    <!--android:id="@+id/pill_letter"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:gravity="center"-->
+    <!--tools:text="P"-->
+    <!--android:textSize="24sp"-->
+    <!--android:textStyle="bold"/>-->
+    <uk.co.pilllogger.views.ColourIndicator
+        android:id="@+id/colour"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="-2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="-2dp"
+        android:layout_marginBottom="2dp"
+        android:padding="12dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:color="@color/pill_colour1"/>
 </RelativeLayout>
 </LinearLayout>
