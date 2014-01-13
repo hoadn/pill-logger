@@ -44,6 +44,7 @@ import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
+import uk.co.pilllogger.tasks.GetFavouritePillsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.views.ColourIndicator;
@@ -52,7 +53,7 @@ import uk.co.pilllogger.views.MyViewPager;
 /**
  * Created by nick on 22/10/13.
  */
-public class MainActivity extends Activity implements GetPillsTask.ITaskComplete, Observer.IPillsUpdated {
+public class MainActivity extends Activity implements GetPillsTask.ITaskComplete, Observer.IPillsUpdated, GetFavouritePillsTask.ITaskComplete {
 
     private static final String TAG = "MainActivity";
     private MyViewPager _fragmentPager;
@@ -109,6 +110,7 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
 
         new GetPillsTask(this, this).execute();
     }
+
 
     private void setBackgroundColour(){
         int page = _fragmentPager.getCurrentItem();
@@ -174,6 +176,7 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main_menu, menu);
         _menu = menu;
+        new GetFavouritePillsTask(this, this).execute();
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -231,14 +234,7 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
     }
 
     public void updateMenuWithFavouritePills(List<Pill> favouritePills) {
-        if(_menu == null)
-            return;
 
-        for (Pill pill : favouritePills) {
-            if (_menu.findItem(pill.getId()) == null) {
-                addPillToMenu(pill);
-            }
-        }
     }
 
     private void addPillToMenu(Pill pill){
@@ -302,5 +298,17 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
         });
 
 
+    }
+
+    @Override
+    public void favouritePillsReceived(List<Pill> pills) {
+        if(_menu == null)
+            return;
+
+        for (Pill pill : pills) {
+            if (_menu.findItem(pill.getId()) == null) {
+                addPillToMenu(pill);
+            }
+        }
     }
 }
