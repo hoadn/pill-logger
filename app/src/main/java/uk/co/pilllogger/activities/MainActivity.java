@@ -277,7 +277,8 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
     private void addConsumption(Pill pill){
         Consumption consumption = new Consumption(pill, new Date());
         new InsertConsumptionTask(MainActivity.this, consumption).execute();
-        new GetConsumptionsTask(MainActivity.this, (GetConsumptionsTask.ITaskComplete)_consumptionFragment, true).execute();
+        if (_fragmentPager.getCurrentItem() < 2)
+            new GetConsumptionsTask(MainActivity.this, (GetConsumptionsTask.ITaskComplete)_consumptionFragment, true).execute();
         Toast.makeText(MainActivity.this, "Added consumption of " + pill.getName(), Toast.LENGTH_SHORT).show();
     }
 
