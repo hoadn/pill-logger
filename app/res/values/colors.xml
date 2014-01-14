@@ -31,6 +31,7 @@
     <color name="translucent_white">#20FFFFFF</color>
     <color name="selector_background_pressed">#20FFFFFF</color>
     <color name="popup_menu">#60000000</color>
+    <color name="pill_favourite">#80FFFFFF</color>
 
     <!-- Pill colours are in pill_colours.xml -->
 </resources>
