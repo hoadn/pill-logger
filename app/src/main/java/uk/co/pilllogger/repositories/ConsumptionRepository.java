@@ -233,7 +233,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                     grouped.add(groupedConsumption);
                 }
 
-                groupedConsumption = c;
+                groupedConsumption = new Consumption(c);
             }
             else{
                 groupedConsumption.setQuantity(groupedConsumption.getQuantity() + 1);

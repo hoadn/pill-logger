@@ -22,6 +22,14 @@ public class Consumption {
         this._date = date;
     }
 
+    /// copy ctor
+    public Consumption(Consumption consumption){
+        setDate(consumption.getDate());
+        setQuantity(consumption.getQuantity());
+        setPill(consumption.getPill());
+        setId(consumption.getId());
+    }
+
     public Pill getPill() {
         return _pill;
     }
