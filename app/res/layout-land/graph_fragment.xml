@@ -29,13 +29,14 @@
                     android:layout_weight="1"
                     android:id="@+id/graph1"/>
                 <TextView
+                    android:id="@+id/graph1_description"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center"
                     android:text="Pill Consumption over the past 30 days"/>
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/selector_background"
                 android:layout_marginRight="5dp"
@@ -45,16 +46,43 @@
                 android:orientation="vertical">
                 <com.echo.holographlibrary.LineGraph
                     android:layout_width="500dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="match_parent"
                     android:id="@+id/graph2"/>
                 <TextView
+                    android:id="@+id/graph2_description"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center"
+                    android:layout_below="@id/graph2"
                     android:text="Pill Consumption over the past 30 days"/>
-            </LinearLayout>
-            <LinearLayout
+                <RelativeLayout
+                    android:id="@+id/line_graph_lock"
+                    android:layout_width="500dp"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/graph2_description"
+                    android:background="#000000">
+
+                    <ImageView
+                        android:id="@+id/graph2_lock_img"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="45dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/lock"/>
+
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/graph2_lock_img"
+                        android:textColor="@android:color/white"
+                        android:gravity="center"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/pro_lock"/>
+
+
+                </RelativeLayout>
+            </RelativeLayout>
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/selector_background"
@@ -65,16 +93,41 @@
                 android:orientation="vertical">
                 <com.echo.holographlibrary.PieGraph
                     android:layout_width="500dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="match_parent"
                     android:id="@+id/graph3"/>
                 <TextView
+                    android:id="@+id/graph3_description"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center"
+                    android:layout_below="@id/graph3"
                     android:text="Pill Consumption over the past 30 days"/>
-            </LinearLayout>
-            <LinearLayout
+                <RelativeLayout
+                    android:id="@+id/pie_graph_lock"
+                    android:layout_width="500dp"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/graph3_description"
+                    android:background="#000000">
+
+                    <ImageView
+                        android:id="@+id/graph3_lock_img"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="45dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/lock"/>
+
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/graph3_lock_img"
+                        android:textColor="@android:color/white"
+                        android:gravity="center"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/pro_lock"/>
+                </RelativeLayout>
+            </RelativeLayout>
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/selector_background"
@@ -85,15 +138,40 @@
                 android:orientation="vertical">
                 <com.echo.holographlibrary.BarGraph
                     android:layout_width="500dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="match_parent"
                     android:id="@+id/graph4"/>
                 <TextView
+                    android:id="@+id/graph4_description"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center"
+                    android:layout_below="@id/graph4"
                     android:text="Pill Consumption by Day of The Week"/>
-            </LinearLayout>
+                <RelativeLayout
+                    android:id="@+id/pie_graph_lock"
+                    android:layout_width="500dp"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/graph4_description"
+                    android:background="#000000">
+
+                    <ImageView
+                        android:id="@+id/graph4_lock_img"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="45dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/lock"/>
+
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/graph4_lock_img"
+                        android:textColor="@android:color/white"
+                        android:gravity="center"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/pro_lock"/>
+                </RelativeLayout>
+            </RelativeLayout>
         </LinearLayout>
     </HorizontalScrollView>
 
