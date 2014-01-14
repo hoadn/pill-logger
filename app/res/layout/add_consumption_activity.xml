@@ -184,16 +184,29 @@
                     android:layout_height="40dp"
                     android:layout_weight="0"/>
 
-                <ImageView
+                <LinearLayout
                     android:id="@+id/add_consumption_add_pill_completed"
-                    android:layout_height="40dp"
-                    android:layout_width="40dp"
-                    android:src="@drawable/tick_light"
-                    android:layout_weight="0"
-                    android:padding="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="0dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="15dp"
                     android:clickable="true"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:contentDescription="@string/complete_action_content_description"/>
+                    android:background="?android:attr/selectableItemBackground">
+                    <ImageView
+                        android:layout_height="40dp"
+                        android:layout_width="40dp"
+                        android:src="@drawable/tick_light"
+                        android:padding="5dp"
+                        android:layout_weight="0"
+                        android:contentDescription="@string/tick_description"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="@string/finish_create_pill"
+                        android:gravity="center_vertical"/>
+                </LinearLayout>
             </LinearLayout>
 
         </RelativeLayout>

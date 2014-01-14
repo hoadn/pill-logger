@@ -94,7 +94,7 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
         _newPillName.setTypeface(typeface);
         _newPillSize.setTypeface(typeface);
 
-        ImageView addPillCompleted = (ImageView) findViewById(R.id.add_consumption_add_pill_completed);
+        View addPillCompleted = findViewById(R.id.add_consumption_add_pill_completed);
         addPillCompleted.setOnClickListener(new addNewPillClickListener());
 
         _newPillSize.setOnEditorActionListener(new TextView.OnEditorActionListener(){
