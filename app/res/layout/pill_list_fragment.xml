@@ -70,6 +70,13 @@
                 android:layout_height="40dp"
                 android:layout_weight="0"/>
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:clickable="true"
+                android:background="?android:attr/selectableItemBackground">
             <ImageView
                 android:id="@+id/pill_fragment_add_pill_completed"
                 android:layout_height="40dp"
@@ -77,8 +84,13 @@
                 android:src="@drawable/tick_light"
                 android:layout_weight="0"
                 android:padding="5dp"
-                android:clickable="true"
-                android:background="?android:attr/selectableItemBackground"/>
+                android:contentDescription="@string/tick_description"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="@string/finish_create_pill"
+                    android:gravity="center_vertical"/>
+            </LinearLayout>
         </LinearLayout>
 
     </RelativeLayout>
