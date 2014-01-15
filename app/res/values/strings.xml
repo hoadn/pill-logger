@@ -52,5 +52,6 @@
     <string name="tick_description">Tick</string>
     <string name="finish_create_pill">Create</string>
     <string name="graph_title">Pill Consumption over the past 7 days</string>
+    <string name="no_consumptions_text">You\'re consumptions will be visible here when you have some! \n\n Use the add button in the bottom left to begin now</string>
 
 </resources>
