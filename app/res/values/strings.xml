@@ -51,5 +51,6 @@
     <string name="pro_lock">Coming soon in our Pro version</string>
     <string name="tick_description">Tick</string>
     <string name="finish_create_pill">Create</string>
+    <string name="graph_title">Pill Consumption over the past 7 days</string>
 
 </resources>
