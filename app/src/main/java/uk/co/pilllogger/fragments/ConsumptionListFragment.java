@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -87,7 +88,10 @@ public class ConsumptionListFragment extends Fragment implements
         if (_listView.getAdapter() != null) //Trying this to make the list refresh after adding the new consumption
             ((ConsumptionListAdapter)_listView.getAdapter()).notifyDataSetChanged();
 
-
+        TextView noConsumptions = (TextView) v.findViewById(R.id.no_consumption_text);
+        Typeface typeface = State.getSingleton().getTypeface();
+        if (typeface != null)
+            noConsumptions.setTypeface(typeface);
         return v;
     }
 
@@ -112,7 +116,16 @@ public class ConsumptionListFragment extends Fragment implements
 
     @Override
     public void consumptionsReceived(List<Consumption> consumptions) {
-        if(consumptions != null && consumptions.size() > 0){
+        TextView noConsumption = (TextView)_activity.findViewById(R.id.no_consumption_text);
+        if (consumptions.size() == 0) {
+            noConsumption.setVisibility(View.VISIBLE);
+            _listView.setVisibility(View.GONE);
+        }
+        else if(consumptions != null && consumptions.size() > 0){
+            if (_listView.getVisibility() == View.GONE) {
+                _listView.setVisibility(View.VISIBLE);
+                noConsumption.setVisibility(View.GONE);
+            }
             List<Consumption> grouped = ConsumptionRepository.getSingleton(getActivity()).groupConsumptions(consumptions);
             ConsumptionListAdapter adapter;
             if (_pills != null) {
