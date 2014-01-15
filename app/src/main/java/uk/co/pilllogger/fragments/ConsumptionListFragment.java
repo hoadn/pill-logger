@@ -198,40 +198,43 @@ public class ConsumptionListFragment extends Fragment implements
         State.getSingleton().setGraphExcludePills(graphPills);
 
         final List<Pill> pillList = pills;
-        ListView list = (ListView) getActivity().findViewById(R.id.graph_drawer);
-        if (list != null){ //we need to init the adapter
-            Logger.v(TAG, "Pills have been recieved and the list is not null");
-            GraphPillListAdapter adapter = new GraphPillListAdapter(getActivity(), R.layout.graph_pill_list, pills);
-            list.setAdapter(adapter);
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Pill pill = pillList.get(position);
-                    List<Integer> graphPills = State.getSingleton().getGraphExcludePills();
-                    CheckBox checkbox = (CheckBox)view.findViewById(R.id.graph_list_check_box);
-                    if (!checkbox.isChecked()) {
-                        checkbox.setChecked(true);
-                        if (graphPills.contains(pill.getId())) {
-                            graphPills.remove((Object) pill.getId());
+        Activity activity = getActivity();
+        if (activity != null) {
+            ListView list = (ListView) activity.findViewById(R.id.graph_drawer);
+            if (list != null){ //we need to init the adapter
+                Logger.v(TAG, "Pills have been recieved and the list is not null");
+                GraphPillListAdapter adapter = new GraphPillListAdapter(getActivity(), R.layout.graph_pill_list, pills);
+                list.setAdapter(adapter);
+                list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Pill pill = pillList.get(position);
+                        List<Integer> graphPills = State.getSingleton().getGraphExcludePills();
+                        CheckBox checkbox = (CheckBox)view.findViewById(R.id.graph_list_check_box);
+                        if (!checkbox.isChecked()) {
+                            checkbox.setChecked(true);
+                            if (graphPills.contains(pill.getId())) {
+                                graphPills.remove((Object) pill.getId());
+                            }
                         }
-                    }
-                    else {
-                        checkbox.setChecked(false);
-                        if (!graphPills.contains(pill.getId())) {
-                            graphPills.add(pill.getId());
+                        else {
+                            checkbox.setChecked(false);
+                            if (!graphPills.contains(pill.getId())) {
+                                graphPills.add(pill.getId());
+                            }
                         }
+                        //new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete) _fragment, true).execute();
+                        replotGraph();
                     }
-                    //new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete) _fragment, true).execute();
-                    replotGraph();
-                }
-            });
-        }
-        else {
-            Logger.v(TAG, "Pills have been recieved and the list IS null");
-        }
+                });
+            }
+            else {
+                Logger.v(TAG, "Pills have been recieved and the list IS null");
+            }
 
 
-        new GetConsumptionsTask(this.getActivity(), this, false).execute();
+            new GetConsumptionsTask(this.getActivity(), this, false).execute();
+        }
     }
 
     @Override
