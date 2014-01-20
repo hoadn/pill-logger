@@ -2,7 +2,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_height="200dp"
               android:paddingLeft="10dp"
               android:paddingRight="10dp"
               android:id="@+id/graph_layout">
@@ -17,7 +17,7 @@
 
     <ListView android:id="@+id/graph_drawer"
               android:layout_width="260dp"
-              android:layout_height="match_parent"
+              android:layout_height="200dp"
               android:choiceMode="singleChoice"
               android:dividerHeight="0dp"
               android:layout_gravity="left"
