@@ -3,9 +3,11 @@ package uk.co.pilllogger.adapters;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Point;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.util.SparseIntArray;
 import android.view.ActionMode;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -248,6 +250,15 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
     private void setUpSlidingPane(View v) {
         final SlidingPaneLayout slidingView = (SlidingPaneLayout)v.findViewById(R.id.graph_drawer_layout);
+        
+        Display display = _activity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)slidingView.getLayoutParams();
+        params.width = width;
+
         slidingView.setSliderFadeColor(_activity.getResources().getColor(android.R.color.transparent));
         final ImageView graphSettings  = (ImageView) v.findViewById(R.id.graph_settings);
         slidingView.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
