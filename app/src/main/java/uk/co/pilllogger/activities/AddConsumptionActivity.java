@@ -40,14 +40,20 @@ import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
+import uk.co.pilllogger.tasks.GetTutorialSeenTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.tasks.InsertPillTask;
+import uk.co.pilllogger.tasks.SetTutorialSeenTask;
 
 /**
  * Created by nick on 24/10/13.
  */
-public class AddConsumptionActivity extends Activity implements GetPillsTask.ITaskComplete, InsertPillTask.ITaskComplete,
-                                                            DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class AddConsumptionActivity extends Activity implements
+        GetPillsTask.ITaskComplete,
+        InsertPillTask.ITaskComplete,
+        DatePickerDialog.OnDateSetListener,
+        TimePickerDialog.OnTimeSetListener,
+        GetTutorialSeenTask.ITaskComplete {
 
     private static final String TAG = "AddConsumptionActivity";
     public static String DATE_FORMAT = "E, MMM dd, yyyy";
@@ -119,6 +125,8 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
         _unitSpinner.setAdapter(adapter);
         if (!(State.getSingleton().getOpenPills().size() > 0))
             setDoneEnabled(false);
+
+        new GetTutorialSeenTask(this, TAG, this).execute();
     }
 
 
@@ -285,6 +293,14 @@ public class AddConsumptionActivity extends Activity implements GetPillsTask.ITa
         String[] times = new String[]{hours + ":" + minutes};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, times );
         _timeSpinner.setAdapter(adapter);
+    }
+
+    @Override
+    public void isTutorialSeen(Boolean seen) {
+        if(!seen) {
+            Toast.makeText(this, "Need to show tutorial for add consumption activity", Toast.LENGTH_LONG).show();
+            new SetTutorialSeenTask(this, TAG).execute();
+        }
     }
 
     private class addNewPillClickListener implements View.OnClickListener {

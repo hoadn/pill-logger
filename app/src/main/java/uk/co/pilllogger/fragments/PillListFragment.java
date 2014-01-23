@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -24,10 +25,17 @@ import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.tasks.GetPillsTask;
+import uk.co.pilllogger.tasks.GetTutorialSeenTask;
 import uk.co.pilllogger.tasks.InsertPillTask;
+import uk.co.pilllogger.tasks.SetTutorialSeenTask;
 
 
-public class PillListFragment extends Fragment implements GetPillsTask.ITaskComplete, InsertPillTask.ITaskComplete, Observer.IPillsUpdated {
+public class PillListFragment extends Fragment implements
+        GetPillsTask.ITaskComplete,
+        InsertPillTask.ITaskComplete,
+        Observer.IPillsUpdated,
+        GetTutorialSeenTask.ITaskComplete{
+
     private String TAG = "PillListFragment";
     private ListView _list;
     private Typeface _openSans;
@@ -111,6 +119,8 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
         UnitAdapter adapter = new UnitAdapter(getActivity(), android.R.layout.simple_spinner_item, units);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _unitSpinner.setAdapter(adapter);
+
+        new GetTutorialSeenTask(getActivity(), TAG, this).execute();
         return v;
     }
 
@@ -169,6 +179,14 @@ public class PillListFragment extends Fragment implements GetPillsTask.ITaskComp
     @Override
     public void pillsUpdated(Pill pill) {
         new GetPillsTask(this.getActivity(), this).execute();
+    }
+
+    @Override
+    public void isTutorialSeen(Boolean seen) {
+        if(!seen) {
+            Toast.makeText(getActivity(), "Need to show tutorial for pills fragment", Toast.LENGTH_LONG).show();
+            new SetTutorialSeenTask(getActivity(), TAG).execute();
+        }
     }
 
     private class AddPillClickListener implements View.OnClickListener {
