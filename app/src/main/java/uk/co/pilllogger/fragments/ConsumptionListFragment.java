@@ -43,13 +43,16 @@ import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
+import uk.co.pilllogger.repositories.TutorialRepository;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetFavouritePillsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
+import uk.co.pilllogger.tasks.GetTutorialSeenTask;
 import uk.co.pilllogger.tasks.InitTestDbTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
+import uk.co.pilllogger.tasks.SetTutorialSeenTask;
 
 /**
  * Created by nick on 23/10/13.
@@ -58,7 +61,8 @@ public class ConsumptionListFragment extends Fragment implements
         InitTestDbTask.ITaskComplete,
         GetConsumptionsTask.ITaskComplete,
         GetPillsTask.ITaskComplete,
-        Observer.IPillsUpdated{
+        Observer.IPillsUpdated,
+        GetTutorialSeenTask.ITaskComplete{
 
     private static final String TAG = "ConsumptionListFragment";
     ListView _listView;
@@ -92,6 +96,8 @@ public class ConsumptionListFragment extends Fragment implements
         Typeface typeface = State.getSingleton().getTypeface();
         if (typeface != null)
             noConsumptions.setTypeface(typeface);
+
+        new GetTutorialSeenTask(_activity, TAG, this).execute();
         return v;
     }
 
@@ -233,5 +239,13 @@ public class ConsumptionListFragment extends Fragment implements
     @Override
     public void pillsUpdated(Pill pill) {
         new GetPillsTask(this.getActivity(), this).execute();
+    }
+
+    @Override
+    public void isTutorialSeen(Boolean seen) {
+        if(!seen) {
+            Toast.makeText(_activity, "Need to show tutorial", Toast.LENGTH_LONG).show();
+            new SetTutorialSeenTask(_activity, TAG).execute();
+        }
     }
 }

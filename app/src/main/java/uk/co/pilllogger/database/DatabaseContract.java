@@ -28,7 +28,6 @@ public final class DatabaseContract {
     public static abstract class Tutorials implements BaseColumns {
         public static final String TABLE_NAME = "tutorials";
         public static final String COLUMN_TAG = "pill_id";
-        public static final String COLUMN_TUTORIAL_SEEN = "tutorial_seen";
     }
 
     public static abstract class CreateTables implements  BaseColumns {
@@ -51,8 +50,7 @@ public final class DatabaseContract {
         public static final String CREATE_TUTORIAL_TABLE =
                 "CREATE TABLE " + Tutorials.TABLE_NAME + " (" +
                         Tutorials._ID + " INTEGER PRIMARY KEY," +
-                        Tutorials.COLUMN_TAG + " TEXT, " +
-                        Tutorials.COLUMN_TUTORIAL_SEEN + " INTEGER)";
+                        Tutorials.COLUMN_TAG + " TEXT)";
     }
 
     public static abstract class DeleteTables implements BaseColumns {
