@@ -8,24 +8,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +29,6 @@ import uk.co.pilllogger.animations.FadeBackgroundPageTransformer;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Observer;
@@ -46,6 +36,7 @@ import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetFavouritePillsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
+import uk.co.pilllogger.tasks.GetTutorialSeenTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.views.ColourIndicator;
 import uk.co.pilllogger.views.MyViewPager;
@@ -74,8 +65,8 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
         State.getSingleton().setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/OpenSans-Light.ttf"));
 
         _consumptionFragment = new ConsumptionListFragment();
-        Fragment fragment2 = new PillListFragment();
-        Fragment fragment3 = new GraphFragment();
+        final Fragment fragment2 = new PillListFragment();
+        final Fragment fragment3 = new GraphFragment();
 
         _fragmentPager = (MyViewPager)findViewById(R.id.fragment_pager);
 
@@ -86,6 +77,19 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
                         super.onPageScrollStateChanged(state);
                         if (state == ViewPager.SCROLL_STATE_IDLE) {
                             setBackgroundColour();
+                        }
+                    }
+
+                    @Override
+                    public void onPageSelected(int position) {
+                        super.onPageSelected(position);
+                        switch (position) {
+                            case 0:
+                                new GetTutorialSeenTask(MainActivity.this, ConsumptionListFragment.TAG, (GetTutorialSeenTask.ITaskComplete)_consumptionFragment).execute();
+                                break;
+                            case 1:
+                                new GetTutorialSeenTask(MainActivity.this, PillListFragment.TAG, (GetTutorialSeenTask.ITaskComplete)fragment2).execute();
+                                break;
                         }
                     }
                 });
@@ -315,5 +319,18 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
                 addPillToMenu(pill);
             }
         }
+    }
+
+    public void startTutorial(String tag) {
+        View tutorialLayout = findViewById(R.id.tutorial_layout);
+        TextView tutorialText = (TextView)findViewById(R.id.tutorial_text);
+        if (tag.equals(ConsumptionListFragment.TAG)) {
+            startConsumptionListTutorial(tutorialLayout, tutorialText);
+        }
+    }
+
+    private void startConsumptionListTutorial(View tutorialLayout, TextView tutorialText) {
+        tutorialLayout.setVisibility(View.VISIBLE);
+        tutorialText.setTypeface(State.getSingleton().getTypeface());
     }
 }

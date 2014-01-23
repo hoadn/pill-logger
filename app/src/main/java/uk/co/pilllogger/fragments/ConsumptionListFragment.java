@@ -64,7 +64,7 @@ public class ConsumptionListFragment extends Fragment implements
         Observer.IPillsUpdated,
         GetTutorialSeenTask.ITaskComplete{
 
-    private static final String TAG = "ConsumptionListFragment";
+    public static final String TAG = "ConsumptionListFragment";
     ListView _listView;
     View _mainLayout;
     HashMap<Integer, Pill> _allPills = new HashMap<Integer, Pill>();
@@ -97,7 +97,6 @@ public class ConsumptionListFragment extends Fragment implements
         if (typeface != null)
             noConsumptions.setTypeface(typeface);
 
-        new GetTutorialSeenTask(_activity, TAG, this).execute();
         return v;
     }
 
@@ -244,8 +243,10 @@ public class ConsumptionListFragment extends Fragment implements
     @Override
     public void isTutorialSeen(Boolean seen) {
         if(!seen) {
-            Toast.makeText(_activity, "Need to show tutorial", Toast.LENGTH_LONG).show();
+            ((MainActivity) getActivity()).startTutorial(TAG);
             new SetTutorialSeenTask(_activity, TAG).execute();
         }
     }
+
+
 }

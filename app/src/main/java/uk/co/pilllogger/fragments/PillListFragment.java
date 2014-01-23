@@ -36,7 +36,7 @@ public class PillListFragment extends Fragment implements
         Observer.IPillsUpdated,
         GetTutorialSeenTask.ITaskComplete{
 
-    private String TAG = "PillListFragment";
+    public static String TAG = "PillListFragment";
     private ListView _list;
     private Typeface _openSans;
     private EditText _addPillName;
@@ -120,7 +120,6 @@ public class PillListFragment extends Fragment implements
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _unitSpinner.setAdapter(adapter);
 
-        new GetTutorialSeenTask(getActivity(), TAG, this).execute();
         return v;
     }
 
