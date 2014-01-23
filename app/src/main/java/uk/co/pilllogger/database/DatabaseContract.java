@@ -25,6 +25,12 @@ public final class DatabaseContract {
         public static final String COLUMN_DATE_TIME = "date_time";
     }
 
+    public static abstract class Tutorials implements BaseColumns {
+        public static final String TABLE_NAME = "tutorials";
+        public static final String COLUMN_TAG = "pill_id";
+        public static final String COLUMN_TUTORIAL_SEEN = "tutorial_seen";
+    }
+
     public static abstract class CreateTables implements  BaseColumns {
 
         public static final String CREATE_PILL_TABLE =
@@ -42,10 +48,16 @@ public final class DatabaseContract {
                 Consumptions.COLUMN_PILL_ID + " INTEGER, " +
                 Consumptions.COLUMN_DATE_TIME + " LONG)";
 
+        public static final String CREATE_TUTORIAL_TABLE =
+                "CREATE TABLE " + Tutorials.TABLE_NAME + " (" +
+                        Tutorials._ID + " INTEGER PRIMARY KEY," +
+                        Tutorials.COLUMN_TAG + " TEXT, " +
+                        Tutorials.COLUMN_TUTORIAL_SEEN + " INTEGER)";
     }
 
     public static abstract class DeleteTables implements BaseColumns {
         public static final String DELETE_PILL_TABLE = "DROP TABLE IF EXISTS " + Pills.TABLE_NAME;
         public static final String DELETE_CONSUMPTION_TABLE = "DROP TABLE IF EXISTS " + Consumptions.TABLE_NAME;
+        public static final String DELETE_TUTORIALS_TABLE = "DROP TABLE IF EXISTS " + Tutorials.TABLE_NAME;
     }
 }

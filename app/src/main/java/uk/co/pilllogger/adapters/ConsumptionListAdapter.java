@@ -250,7 +250,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
     private void setUpSlidingPane(View v) {
         final SlidingPaneLayout slidingView = (SlidingPaneLayout)v.findViewById(R.id.graph_drawer_layout);
-        
+
         Display display = _activity.getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);

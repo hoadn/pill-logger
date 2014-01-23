@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by root on 21/10/13.
  */
 public class DatabaseCreator extends SQLiteOpenHelper{
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 7;
     public static final String DATABASE_NAME = "PillLogger.db";
 
     public DatabaseCreator(Context context) {
@@ -18,11 +18,13 @@ public class DatabaseCreator extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(DatabaseContract.CreateTables.CREATE_PILL_TABLE);
         db.execSQL(DatabaseContract.CreateTables.CREATE_CONSUMPTION_TABLE);
+        db.execSQL(DatabaseContract.CreateTables.CREATE_TUTORIAL_TABLE);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(DatabaseContract.DeleteTables.DELETE_PILL_TABLE);
         db.execSQL(DatabaseContract.DeleteTables.DELETE_CONSUMPTION_TABLE);
+        db.execSQL(DatabaseContract.DeleteTables.DELETE_TUTORIALS_TABLE);
         onCreate(db);
     }
 
