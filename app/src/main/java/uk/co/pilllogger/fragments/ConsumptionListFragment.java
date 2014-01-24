@@ -244,7 +244,7 @@ public class ConsumptionListFragment extends Fragment implements
     public void isTutorialSeen(Boolean seen) {
         if(!seen) {
             ((MainActivity) getActivity()).startTutorial(TAG);
-            new SetTutorialSeenTask(_activity, TAG).execute();
+            //new SetTutorialSeenTask(_activity, TAG).execute();
         }
     }
 

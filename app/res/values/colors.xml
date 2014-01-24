@@ -33,7 +33,7 @@
     <color name="popup_menu">#60000000</color>
     <color name="pill_favourite">#80FFFFFF</color>
 
-    <color name="tutorial_white">#A0FFFFFF</color>
+    <color name="tutorial_white">#FFFFFF</color>
 
     <!-- Pill colours are in pill_colours.xml -->
 </resources>

@@ -184,7 +184,7 @@ public class PillListFragment extends Fragment implements
     public void isTutorialSeen(Boolean seen) {
         if(!seen) {
             Toast.makeText(getActivity(), "Need to show tutorial for pills fragment", Toast.LENGTH_LONG).show();
-            new SetTutorialSeenTask(getActivity(), TAG).execute();
+            //new SetTutorialSeenTask(getActivity(), TAG).execute();
         }
     }
 

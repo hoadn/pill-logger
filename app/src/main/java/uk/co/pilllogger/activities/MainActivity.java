@@ -17,6 +17,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +33,8 @@ import uk.co.pilllogger.animations.FadeBackgroundPageTransformer;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
+import uk.co.pilllogger.helpers.LayoutHelper;
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Observer;
@@ -55,6 +61,7 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
     View _colourBackground;
     private Menu _menu;
     Fragment _consumptionFragment;
+    private int _consumptionTutorialCount = 0;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -332,5 +339,55 @@ public class MainActivity extends Activity implements GetPillsTask.ITaskComplete
     private void startConsumptionListTutorial(View tutorialLayout, TextView tutorialText) {
         tutorialLayout.setVisibility(View.VISIBLE);
         tutorialText.setTypeface(State.getSingleton().getTypeface());
+        tutorialLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                runConsumptionListTutorial(v);
+            }
+        });
+    }
+
+    protected void runConsumptionListTutorial(View v) {
+        Logger.v("Testing", "Consumption Tutorial count = " + _consumptionTutorialCount);
+        _consumptionTutorialCount++;
+        if (_consumptionTutorialCount > 1) {
+            v.setVisibility(View.GONE);
+            _consumptionTutorialCount = 0;
+            return;
+        }
+        final TextView tutText = (TextView)v.findViewById(R.id.tutorial_text);
+        tutText.setText("Use the + button to add a new consumption");
+        final View view = v;
+        ViewTreeObserver vto = tutText.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+
+                int bottom = view.getHeight();
+                int textTop = tutText.getTop();
+                int actionBarHeight = (int)LayoutHelper.dpToPx(MainActivity.this, 48);
+                int move = bottom - textTop - tutText.getHeight() - actionBarHeight - 40;
+                ImageView tutArrow = (ImageView)view.findViewById(R.id.tutorial_arrow);
+                MainActivity.this.moveTutorialTextView(0, 0, 0, move, tutText, tutArrow, tutText.getHeight());
+                tutText.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+            }
+        });
+    }
+
+    protected void moveTutorialTextView(int startX, int finishX, int startY, int finishY, TextView textView, ImageView arrow, int tutorialTextHeight) {
+        Logger.v("Testing", "move = " + tutorialTextHeight);
+        arrow.setRotation(180);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) arrow.getLayoutParams();
+        params.setMargins((int)LayoutHelper.dpToPx(MainActivity.this, 11), (int)LayoutHelper.dpToPx(MainActivity.this, 60), 0, 0);
+        arrow.setLayoutParams(params);
+        TranslateAnimation animText = new TranslateAnimation(0, 0, 0, finishY);
+        TranslateAnimation animArrow = new TranslateAnimation(0, 0, 0, (finishY + tutorialTextHeight - (int)LayoutHelper.dpToPx(MainActivity.this, 10)));
+        animText.setFillAfter(true);
+        animText.setDuration(350);
+        animArrow.setFillAfter(true);
+        animArrow.setDuration(350);
+
+        textView.startAnimation(animText);
+        arrow.startAnimation(animArrow);
     }
 }
