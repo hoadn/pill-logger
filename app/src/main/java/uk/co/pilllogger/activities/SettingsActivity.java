@@ -9,7 +9,7 @@ import uk.co.pilllogger.R;
 /**
  * Created by alex on 30/10/2013.
  */
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends PillLoggerActivityBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);

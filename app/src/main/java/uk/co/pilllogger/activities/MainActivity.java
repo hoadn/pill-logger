@@ -50,7 +50,7 @@ import uk.co.pilllogger.views.MyViewPager;
 /**
  * Created by nick on 22/10/13.
  */
-public class MainActivity extends Activity implements GetPillsTask.ITaskComplete, Observer.IPillsUpdated, GetFavouritePillsTask.ITaskComplete {
+public class MainActivity extends PillLoggerActivityBase implements GetPillsTask.ITaskComplete, Observer.IPillsUpdated, GetFavouritePillsTask.ITaskComplete {
 
     private static final String TAG = "MainActivity";
     private MyViewPager _fragmentPager;

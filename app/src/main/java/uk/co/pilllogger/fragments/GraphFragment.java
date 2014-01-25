@@ -26,7 +26,7 @@ import uk.co.pilllogger.tasks.GetConsumptionsTask;
 /**
  * Created by alex on 25/11/2013.
  */
-public class GraphFragment extends Fragment implements GetConsumptionsTask.ITaskComplete {
+public class GraphFragment extends PillLoggerFragmentBase implements GetConsumptionsTask.ITaskComplete {
     View _layout;
 
     StackBarGraph _graph1;
