@@ -107,10 +107,13 @@ public class MainActivity extends PillLoggerActivityBase implements GetPillsTask
         setBackgroundColour();
 
         Observer.getSingleton().registerPillsUpdatedObserver(this);
-
-        new GetPillsTask(this, this).execute();
     }
 
+    @Override
+    protected void onPostResume() {
+        new GetPillsTask(this, this).execute();
+        super.onPostResume();
+    }
 
     private void setBackgroundColour(){
         int page = _fragmentPager.getCurrentItem();

@@ -187,7 +187,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     @Override
     public void pillsReceived(List<Pill> pills) {
         _pills = pills;
-        Logger.v(TAG, "Pills have been recieved");
         List<Integer> graphPills = State.getSingleton().getGraphExcludePills();
         if (graphPills == null) {
             graphPills = new ArrayList<Integer>();
@@ -202,7 +201,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         if (activity != null) {
             ListView list = (ListView) activity.findViewById(R.id.graph_drawer);
             if (list != null){ //we need to init the adapter
-                Logger.v(TAG, "Pills have been recieved and the list is not null");
                 GraphPillListAdapter adapter = new GraphPillListAdapter(getActivity(), R.layout.graph_pill_list, pills);
                 list.setAdapter(adapter);
                 list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -228,11 +226,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                     }
                 });
             }
-            else {
-                Logger.v(TAG, "Pills have been recieved and the list IS null");
-            }
-
-
             new GetConsumptionsTask(this.getActivity(), this, false).execute();
         }
     }
