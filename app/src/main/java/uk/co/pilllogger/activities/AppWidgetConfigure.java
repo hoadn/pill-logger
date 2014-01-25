@@ -24,7 +24,7 @@ import uk.co.pilllogger.widget.MyAppWidgetProvider;
 /**
  * Created by nick on 01/11/13.
  */
-public class AppWidgetConfigure extends Activity implements GetPillsTask.ITaskComplete {
+public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPillsTask.ITaskComplete {
 
     public static String CLICK_ACTION = "ClickAction";
     public static String PILL_ID = "uk.co.pilllogger.activities.AppWidgetConfigure.PILL_ID";

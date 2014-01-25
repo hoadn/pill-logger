@@ -54,7 +54,7 @@ import uk.co.pilllogger.tasks.InsertConsumptionTask;
 /**
  * Created by nick on 23/10/13.
  */
-public class ConsumptionListFragment extends Fragment implements
+public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         InitTestDbTask.ITaskComplete,
         GetConsumptionsTask.ITaskComplete,
         GetPillsTask.ITaskComplete,

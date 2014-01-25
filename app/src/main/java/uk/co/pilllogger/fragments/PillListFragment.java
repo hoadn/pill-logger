@@ -27,7 +27,7 @@ import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.InsertPillTask;
 
 
-public class PillListFragment extends Fragment implements GetPillsTask.ITaskComplete, InsertPillTask.ITaskComplete, Observer.IPillsUpdated {
+public class PillListFragment extends PillLoggerFragmentBase implements GetPillsTask.ITaskComplete, InsertPillTask.ITaskComplete, Observer.IPillsUpdated {
     private String TAG = "PillListFragment";
     private ListView _list;
     private Typeface _openSans;
