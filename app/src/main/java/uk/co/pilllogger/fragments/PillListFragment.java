@@ -30,13 +30,12 @@ import uk.co.pilllogger.tasks.InsertPillTask;
 import uk.co.pilllogger.tasks.SetTutorialSeenTask;
 
 
-public class PillListFragment extends Fragment implements
+public class PillListFragment extends PillLoggerFragmentBase implements
         GetPillsTask.ITaskComplete,
         InsertPillTask.ITaskComplete,
-        Observer.IPillsUpdated,
-        GetTutorialSeenTask.ITaskComplete{
+        Observer.IPillsUpdated{
 
-    public static String TAG = "PillListFragment";
+    public static final String TAG = "PillListFragment";
     private ListView _list;
     private Typeface _openSans;
     private EditText _addPillName;
@@ -178,14 +177,6 @@ public class PillListFragment extends Fragment implements
     @Override
     public void pillsUpdated(Pill pill) {
         new GetPillsTask(this.getActivity(), this).execute();
-    }
-
-    @Override
-    public void isTutorialSeen(Boolean seen) {
-        if(!seen) {
-            Toast.makeText(getActivity(), "Need to show tutorial for pills fragment", Toast.LENGTH_LONG).show();
-            //new SetTutorialSeenTask(getActivity(), TAG).execute();
-        }
     }
 
     private class AddPillClickListener implements View.OnClickListener {

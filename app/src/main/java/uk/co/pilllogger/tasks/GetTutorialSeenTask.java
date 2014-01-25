@@ -35,11 +35,11 @@ public class GetTutorialSeenTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean seen) {
         if (_listener != null)
-            _listener.isTutorialSeen(seen);
+            _listener.isTutorialSeen(seen, _tag);
         super.onPostExecute(seen);
     }
 
     public interface ITaskComplete {
-        public void isTutorialSeen(Boolean seen);
+        public void isTutorialSeen(Boolean seen, String tag);
     }
 }

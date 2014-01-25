@@ -1,7 +1,6 @@
 package uk.co.pilllogger.activities;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -25,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import uk.co.pilllogger.R;
@@ -44,13 +44,21 @@ import uk.co.pilllogger.tasks.GetFavouritePillsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.GetTutorialSeenTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
+import uk.co.pilllogger.tasks.SetTutorialSeenTask;
+import uk.co.pilllogger.tutorial.ConsumptionListTutorialPage;
+import uk.co.pilllogger.tutorial.TutorialPage;
+import uk.co.pilllogger.tutorial.TutorialService;
 import uk.co.pilllogger.views.ColourIndicator;
 import uk.co.pilllogger.views.MyViewPager;
 
 /**
  * Created by nick on 22/10/13.
  */
-public class MainActivity extends PillLoggerActivityBase implements GetPillsTask.ITaskComplete, Observer.IPillsUpdated, GetFavouritePillsTask.ITaskComplete {
+public class MainActivity extends PillLoggerActivityBase implements
+        GetPillsTask.ITaskComplete,
+        Observer.IPillsUpdated,
+        GetFavouritePillsTask.ITaskComplete,
+        GetTutorialSeenTask.ITaskComplete{
 
     private static final String TAG = "MainActivity";
     private MyViewPager _fragmentPager;
@@ -61,7 +69,7 @@ public class MainActivity extends PillLoggerActivityBase implements GetPillsTask
     View _colourBackground;
     private Menu _menu;
     Fragment _consumptionFragment;
-    private int _consumptionTutorialCount = 0;
+    private TutorialService _tutorialService;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +85,8 @@ public class MainActivity extends PillLoggerActivityBase implements GetPillsTask
 
         _fragmentPager = (MyViewPager)findViewById(R.id.fragment_pager);
 
+        final MainActivity activity = this;
+
         _fragmentPager.setOnPageChangeListener(
                 new ViewPager.SimpleOnPageChangeListener() {
                     @Override
@@ -90,14 +100,18 @@ public class MainActivity extends PillLoggerActivityBase implements GetPillsTask
                     @Override
                     public void onPageSelected(int position) {
                         super.onPageSelected(position);
+
+                        String fragment = "";
                         switch (position) {
                             case 0:
-                                new GetTutorialSeenTask(MainActivity.this, ConsumptionListFragment.TAG, (GetTutorialSeenTask.ITaskComplete)_consumptionFragment).execute();
-                                break;
+                                fragment = ConsumptionListFragment.TAG;
+                            break;
                             case 1:
-                                new GetTutorialSeenTask(MainActivity.this, PillListFragment.TAG, (GetTutorialSeenTask.ITaskComplete)fragment2).execute();
+                                fragment = PillListFragment.TAG;
                                 break;
                         }
+
+                        new GetTutorialSeenTask(MainActivity.this, fragment, activity).execute();
                     }
                 });
 
@@ -112,6 +126,8 @@ public class MainActivity extends PillLoggerActivityBase implements GetPillsTask
         if(savedInstanceState != null) {
             _fragmentPager.setCurrentItem(savedInstanceState.getInt("item"));
         }
+
+        SetupTutorial();
 
         setupChrome();
 
@@ -182,6 +198,18 @@ public class MainActivity extends PillLoggerActivityBase implements GetPillsTask
                             .setTabListener(tabListener));
 
         }
+    }
+
+    private void SetupTutorial(){
+        HashMap<String, TutorialPage> pages = new HashMap<String, TutorialPage>();
+
+        TutorialPage consumptionTutorial = new ConsumptionListTutorialPage(this);
+
+        pages.put(ConsumptionListFragment.TAG, consumptionTutorial);
+
+        _tutorialService = new TutorialService(pages);
+
+        new GetTutorialSeenTask(MainActivity.this, ConsumptionListFragment.TAG, this).execute();
     }
 
     @Override
@@ -312,8 +340,6 @@ public class MainActivity extends PillLoggerActivityBase implements GetPillsTask
                 }
             }
         });
-
-
     }
 
     @Override
@@ -329,65 +355,37 @@ public class MainActivity extends PillLoggerActivityBase implements GetPillsTask
     }
 
     public void startTutorial(String tag) {
+
+        final TutorialPage page = _tutorialService.getTutorialPage(tag);
+        if(page == null) {
+            Toast.makeText(this, "DEBUG: No tutorial setup for this page", Toast.LENGTH_LONG).show();
+            return; // no tutorial available for this page
+        }
+
+        if(!page.hasHintsToShow()) {
+            Toast.makeText(this, "DEBUG: Tutorial finished for this page", Toast.LENGTH_LONG).show();
+            return; // tutorial already finished for this page
+        }
+
         View tutorialLayout = findViewById(R.id.tutorial_layout);
         TextView tutorialText = (TextView)findViewById(R.id.tutorial_text);
-        if (tag.equals(ConsumptionListFragment.TAG)) {
-            startConsumptionListTutorial(tutorialLayout, tutorialText);
-        }
-    }
 
-    private void startConsumptionListTutorial(View tutorialLayout, TextView tutorialText) {
+        if(tutorialLayout == null || tutorialText == null) return; // we can't be tutorialling if the views aren't there!
+
         tutorialLayout.setVisibility(View.VISIBLE);
         tutorialText.setTypeface(State.getSingleton().getTypeface());
+
         tutorialLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                runConsumptionListTutorial(v);
+                page.nextHint(v);
             }
         });
     }
 
-    protected void runConsumptionListTutorial(View v) {
-        Logger.v("Testing", "Consumption Tutorial count = " + _consumptionTutorialCount);
-        _consumptionTutorialCount++;
-        if (_consumptionTutorialCount > 1) {
-            v.setVisibility(View.GONE);
-            _consumptionTutorialCount = 0;
-            return;
-        }
-        final TextView tutText = (TextView)v.findViewById(R.id.tutorial_text);
-        tutText.setText("Use the + button to add a new consumption");
-        final View view = v;
-        ViewTreeObserver vto = tutText.getViewTreeObserver();
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-
-                int bottom = view.getHeight();
-                int textTop = tutText.getTop();
-                int actionBarHeight = (int)LayoutHelper.dpToPx(MainActivity.this, 48);
-                int move = bottom - textTop - tutText.getHeight() - actionBarHeight - 40;
-                ImageView tutArrow = (ImageView)view.findViewById(R.id.tutorial_arrow);
-                MainActivity.this.moveTutorialTextView(0, 0, 0, move, tutText, tutArrow, tutText.getHeight());
-                tutText.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-            }
-        });
-    }
-
-    protected void moveTutorialTextView(int startX, int finishX, int startY, int finishY, TextView textView, ImageView arrow, int tutorialTextHeight) {
-        Logger.v("Testing", "move = " + tutorialTextHeight);
-        arrow.setRotation(180);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) arrow.getLayoutParams();
-        params.setMargins((int)LayoutHelper.dpToPx(MainActivity.this, 11), (int)LayoutHelper.dpToPx(MainActivity.this, 60), 0, 0);
-        arrow.setLayoutParams(params);
-        TranslateAnimation animText = new TranslateAnimation(0, 0, 0, finishY);
-        TranslateAnimation animArrow = new TranslateAnimation(0, 0, 0, (finishY + tutorialTextHeight - (int)LayoutHelper.dpToPx(MainActivity.this, 10)));
-        animText.setFillAfter(true);
-        animText.setDuration(350);
-        animArrow.setFillAfter(true);
-        animArrow.setDuration(350);
-
-        textView.startAnimation(animText);
-        arrow.startAnimation(animArrow);
+    @Override
+    public void isTutorialSeen(Boolean seen, String tag) {
+        if(!seen)
+            startTutorial(tag);
     }
 }

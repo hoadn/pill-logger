@@ -296,7 +296,7 @@ public class AddConsumptionActivity extends Activity implements
     }
 
     @Override
-    public void isTutorialSeen(Boolean seen) {
+    public void isTutorialSeen(Boolean seen, String tag) {
         if(!seen) {
             Toast.makeText(this, "Need to show tutorial for add consumption activity", Toast.LENGTH_LONG).show();
             new SetTutorialSeenTask(this, TAG).execute();

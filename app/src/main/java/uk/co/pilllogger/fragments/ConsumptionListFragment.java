@@ -61,8 +61,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         InitTestDbTask.ITaskComplete,
         GetConsumptionsTask.ITaskComplete,
         GetPillsTask.ITaskComplete,
-        Observer.IPillsUpdated,
-        GetTutorialSeenTask.ITaskComplete{
+        Observer.IPillsUpdated{
 
     public static final String TAG = "ConsumptionListFragment";
     ListView _listView;
@@ -239,14 +238,4 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     public void pillsUpdated(Pill pill) {
         new GetPillsTask(this.getActivity(), this).execute();
     }
-
-    @Override
-    public void isTutorialSeen(Boolean seen) {
-        if(!seen) {
-            ((MainActivity) getActivity()).startTutorial(TAG);
-            //new SetTutorialSeenTask(_activity, TAG).execute();
-        }
-    }
-
-
 }
