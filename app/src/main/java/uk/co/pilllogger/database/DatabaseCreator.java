@@ -22,13 +22,20 @@ public class DatabaseCreator extends SQLiteOpenHelper{
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(DatabaseContract.DeleteTables.DELETE_PILL_TABLE);
-        db.execSQL(DatabaseContract.DeleteTables.DELETE_CONSUMPTION_TABLE);
-        db.execSQL(DatabaseContract.DeleteTables.DELETE_TUTORIALS_TABLE);
-        onCreate(db);
+        switch(oldVersion){
+            case 6:
+                db.execSQL(DatabaseContract.CreateTables.CREATE_TUTORIAL_TABLE);
+            case 7:
+                // add alter SQL statement here
+        }
     }
 
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        onUpgrade(db, oldVersion, newVersion);
+        switch(newVersion){
+            case 7:
+                db.execSQL(DatabaseContract.DeleteTables.DELETE_TUTORIALS_TABLE);
+            case 6:
+                // olden days
+        }
     }
 }
