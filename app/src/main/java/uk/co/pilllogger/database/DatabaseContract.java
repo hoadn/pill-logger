@@ -31,9 +31,10 @@ public final class DatabaseContract {
     }
 
     public static abstract class CreateTables implements  BaseColumns {
+        static String createTableSql = "create table if not exists ";
 
         public static final String CREATE_PILL_TABLE =
-                "CREATE TABLE " + Pills.TABLE_NAME + " (" +
+                createTableSql + Pills.TABLE_NAME + " (" +
                 Pills._ID + " INTEGER PRIMARY KEY," +
                 Pills.COLUMN_NAME + " TEXT, " +
                 Pills.COLUMN_SIZE + " INTEGER," +
@@ -42,13 +43,13 @@ public final class DatabaseContract {
                 Pills.COLUMN_UNITS + " TEXT" +
                 ")";
         public static final String CREATE_CONSUMPTION_TABLE =
-                "CREATE TABLE " + Consumptions.TABLE_NAME + " (" +
+                createTableSql + Consumptions.TABLE_NAME + " (" +
                 Consumptions._ID + " INTEGER PRIMARY KEY," +
                 Consumptions.COLUMN_PILL_ID + " INTEGER, " +
                 Consumptions.COLUMN_DATE_TIME + " LONG)";
 
         public static final String CREATE_TUTORIAL_TABLE =
-                "CREATE TABLE " + Tutorials.TABLE_NAME + " (" +
+                createTableSql + Tutorials.TABLE_NAME + " (" +
                         Tutorials._ID + " INTEGER PRIMARY KEY," +
                         Tutorials.COLUMN_TAG + " TEXT)";
     }
