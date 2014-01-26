@@ -25,7 +25,7 @@
     <string name="favourite">Favourite</string>
     <string name="unfavourite">Unfavourite</string>
     <string name="delete">Delete</string>
-    <string name="create_a_pill_title">Create Pill</string>
+    <string name="create_a_pill_title">Add new Medicine</string>
     <string name="create_a_pill_name_hint">Name</string>
     <string name="create_a_pill_size_hint">Size</string>
     <string name="drawer_charts">Charts</string>
@@ -53,5 +53,8 @@
     <string name="finish_create_pill">Create</string>
     <string name="graph_title">Pill Consumption over the past 7 days</string>
     <string name="no_consumptions_text">You\'re consumptions will be visible here when you have some! \n\n Use the add button in the bottom left to begin now</string>
+    <string name="pill_fragment_title">Your Medicine</string>
+    <string name="consumption_fragment_title">Your Consumption History</string>
+    <string name="graph_fragment_title">Charts</string>
 
 </resources>

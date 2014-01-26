@@ -23,6 +23,7 @@ import uk.co.pilllogger.adapters.PillsListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Observer;
+import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.InsertPillTask;
 
@@ -30,7 +31,6 @@ import uk.co.pilllogger.tasks.InsertPillTask;
 public class PillListFragment extends PillLoggerFragmentBase implements GetPillsTask.ITaskComplete, InsertPillTask.ITaskComplete, Observer.IPillsUpdated {
     private String TAG = "PillListFragment";
     private ListView _list;
-    private Typeface _openSans;
     private EditText _addPillName;
     private EditText _addPillSize;
     private Spinner _unitSpinner;
@@ -61,16 +61,19 @@ public class PillListFragment extends PillLoggerFragmentBase implements GetPills
         _list = (ListView) v.findViewById(R.id.pill_list);
         //_list.setOnItemClickListener(new PillItemClickListener(getActivity()));
 
-        _openSans = Typeface.createFromAsset(getActivity().getAssets(), "fonts/OpenSans-Light.ttf");
-
         new GetPillsTask(getActivity(), this).execute();
+
+        Typeface typeface = State.getSingleton().getTypeface();
 
         TextView addPillTitle = (TextView) v.findViewById(R.id.pill_fragment_add_pill_title);
         _addPillName = (EditText) v.findViewById(R.id.pill_fragment_add_pill_name);
         _addPillSize = (EditText) v.findViewById(R.id.pill_fragment_add_pill_size);
-        addPillTitle.setTypeface(_openSans);
-        _addPillName.setTypeface(_openSans);
-        _addPillSize.setTypeface(_openSans);
+
+        TextView title = (TextView)v.findViewById(R.id.pill_fragment_title);
+        addPillTitle.setTypeface(typeface);
+        _addPillName.setTypeface(typeface);
+        _addPillSize.setTypeface(typeface);
+        title.setTypeface(typeface);
 
         View completed = v.findViewById(R.id.pill_fragment_add_pill_completed);
         completed.setOnClickListener(new AddPillClickListener(this, this));
