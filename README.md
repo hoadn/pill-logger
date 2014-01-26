@@ -1,4 +1,4 @@
-Pill Logger [![Build Status](https://travis-ci.org/cntwo/pill-logger.png?branch=master)](https://travis-ci.org/cntwo/pill-logger)
+Pill Logger [![Build Status](https://travis-ci.org/allendevco/pill-logger.png?branch=tutorial)](https://travis-ci.org/allendevco/pill-logger)
 ===========
 
 An app for Android that helps you track the pills you take.
