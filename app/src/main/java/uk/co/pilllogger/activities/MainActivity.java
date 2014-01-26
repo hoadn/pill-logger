@@ -71,7 +71,10 @@ public class MainActivity extends PillLoggerActivityBase implements GetPillsTask
         this.setTitle("Consumption");
         _colourBackground = findViewById(R.id.colour_background);
 
-        State.getSingleton().setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/OpenSans-Light.ttf"));
+        // Typeface ttf = Typeface.createFromAsset(this.getAssets(), "fonts/OpenSans-Light.ttf");
+        Typeface ttf = Typeface.create("sans-serif-condensed", Typeface.NORMAL);
+
+        State.getSingleton().setTypeface(ttf);
 
         _consumptionFragment = new ConsumptionListFragment();
         Fragment fragment2 = new PillListFragment();
