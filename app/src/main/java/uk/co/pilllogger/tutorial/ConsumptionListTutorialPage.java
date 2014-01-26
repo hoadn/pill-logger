@@ -47,7 +47,7 @@ public class ConsumptionListTutorialPage extends TutorialPage {
 
                     moveTutorialTextView(0, 0, 0, move, tutText, tutArrow, tutText.getHeight());
 
-                    tutText.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    tutText.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 }
             });
         }
