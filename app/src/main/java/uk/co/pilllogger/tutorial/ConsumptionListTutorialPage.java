@@ -1,14 +1,10 @@
 package uk.co.pilllogger.tutorial;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
-import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.tasks.SetTutorialSeenTask;
 
 /**
@@ -16,40 +12,48 @@ import uk.co.pilllogger.tasks.SetTutorialSeenTask;
  */
 public class ConsumptionListTutorialPage extends TutorialPage {
 
-    public ConsumptionListTutorialPage(Context context) {
-        super(context);
-
-        _totalHints = 2;
+    public ConsumptionListTutorialPage(Activity activity, View layout) {
+        super(activity, layout);
     }
 
     @Override
-    public void nextHint(View layout) {
+    public void nextHint() {
         _shownHints++;
-        if (_shownHints > 1) {
-            layout.setVisibility(View.GONE);
-            new SetTutorialSeenTask(_context, ConsumptionListFragment.TAG).execute();
-            return;
+
+        int textTop = _tutorialText.getTop();
+        int bottom = _layout.getHeight();
+        int textTopTo;
+        int textLeftTo;
+        int arrowLeftTo;
+        int textResId;
+        ArrowDirection arrowDirection;
+
+        switch(_shownHints){ // next hint ( 0 based index )
+            case 1:
+                textTopTo = bottom - textTop - _tutorialText.getHeight() - _actionBarHeight - 40;
+                textLeftTo = 0;
+                arrowLeftTo = 0;
+
+                textResId = R.string.consumptionlist_tut_2;
+                arrowDirection = ArrowDirection.Down;
+                break;
+
+            case 2:
+                textTopTo = bottom - textTop - _tutorialText.getHeight() - _actionBarHeight - 40;
+                textLeftTo = 200;
+                arrowLeftTo = 420;
+
+                textResId = R.string.consumptionlist_tut_3;
+                arrowDirection = ArrowDirection.Down;
+                break;
+
+            default:
+                _layout.setVisibility(View.GONE);
+                new SetTutorialSeenTask(_activity, ConsumptionListFragment.TAG).execute();
+                _isFinished = true;
+                return;
         }
-        final TextView tutText = (TextView)layout.findViewById(R.id.tutorial_text);
-        tutText.setText(_context.getString(R.string.consumptionlist_tut_2));
-        final View view = layout;
-        ViewTreeObserver vto = tutText.getViewTreeObserver();
-        if (vto != null) {
-            vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
 
-                    int bottom = view.getHeight();
-                    int textTop = tutText.getTop();
-                    int actionBarHeight = (int) LayoutHelper.dpToPx(_context, 48);
-                    int move = bottom - textTop - tutText.getHeight() - actionBarHeight - 40;
-                    ImageView tutArrow = (ImageView)view.findViewById(R.id.tutorial_arrow);
-
-                    moveTutorialTextView(0, 0, 0, move, tutText, tutArrow, tutText.getHeight());
-
-                    tutText.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                }
-            });
-        }
+        moveTutorialTextView(textResId, textTopTo, textLeftTo, arrowLeftTo, arrowDirection);
     }
 }

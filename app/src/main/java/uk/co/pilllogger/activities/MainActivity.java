@@ -130,7 +130,6 @@ public class MainActivity extends PillLoggerActivityBase implements
             _fragmentPager.setCurrentItem(savedInstanceState.getInt("item"));
         }
 
-        SetupTutorial();
 
         setupChrome();
 
@@ -142,6 +141,7 @@ public class MainActivity extends PillLoggerActivityBase implements
     @Override
     protected void onPostResume() {
         new GetPillsTask(this, this).execute();
+        SetupTutorial();
         super.onPostResume();
     }
 
@@ -205,8 +205,9 @@ public class MainActivity extends PillLoggerActivityBase implements
 
     private void SetupTutorial(){
         HashMap<String, TutorialPage> pages = new HashMap<String, TutorialPage>();
+        View tutorialLayout = findViewById(R.id.tutorial_layout);
 
-        TutorialPage consumptionTutorial = new ConsumptionListTutorialPage(this);
+        TutorialPage consumptionTutorial = new ConsumptionListTutorialPage(this, tutorialLayout);
 
         pages.put(ConsumptionListFragment.TAG, consumptionTutorial);
 
@@ -365,30 +366,26 @@ public class MainActivity extends PillLoggerActivityBase implements
             return; // no tutorial available for this page
         }
 
-        if(!page.hasHintsToShow()) {
+        if(page.getLayout() == null || page.getTutorialText() == null) return; // we can't be tutorialling if the views aren't there!
+
+        if(page.isFinished()){
             Toast.makeText(this, "DEBUG: Tutorial finished for this page", Toast.LENGTH_LONG).show();
-            return; // tutorial already finished for this page
+            return;
         }
 
-        View tutorialLayout = findViewById(R.id.tutorial_layout);
-        TextView tutorialText = (TextView)findViewById(R.id.tutorial_text);
+        page.getLayout().setVisibility(View.VISIBLE);
 
-        if(tutorialLayout == null || tutorialText == null) return; // we can't be tutorialling if the views aren't there!
-
-        tutorialLayout.setVisibility(View.VISIBLE);
-        tutorialText.setTypeface(State.getSingleton().getTypeface());
-
-        tutorialLayout.setOnClickListener(new View.OnClickListener() {
+        page.getLayout().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                page.nextHint(v);
+                page.nextHint();
             }
         });
     }
 
     @Override
     public void isTutorialSeen(Boolean seen, String tag) {
-        if(!seen)
+        //if(!seen) // comment this line out to force tutorial
             startTutorial(tag);
     }
 }
