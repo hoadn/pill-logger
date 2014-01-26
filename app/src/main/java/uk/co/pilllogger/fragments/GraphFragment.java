@@ -7,6 +7,7 @@ import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.echo.holographlibrary.BarGraph;
 import com.echo.holographlibrary.LineGraph;
@@ -21,6 +22,7 @@ import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 
 /**
@@ -46,6 +48,9 @@ public class GraphFragment extends PillLoggerFragmentBase implements GetConsumpt
         _graph2 = (LineGraph)_layout.findViewById(R.id.graph2);
         _graph3 = (PieGraph)_layout.findViewById(R.id.graph3);
         _graph4 = (BarGraph)_layout.findViewById(R.id.graph4);
+
+        TextView title = (TextView)_layout.findViewById(R.id.graph_fragment_title);
+        title.setTypeface(State.getSingleton().getTypeface());
 
         return _layout;
     }

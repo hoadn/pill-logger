@@ -9,6 +9,19 @@
     >
 
     <TextView
+        android:id="@+id/consumption_fragment_title"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:textStyle="bold"
+        android:text="@string/consumption_fragment_title"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:padding="5dp"
+        android:textAllCaps="true"/>
+
+    <TextView
         android:id="@+id/no_consumption_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,6 +39,7 @@
         android:dividerHeight="@dimen/list_divider_height"
         android:layout_height="match_parent"
         android:layout_marginTop="0dp"
+        android:layout_below="@id/consumption_fragment_title"
         tools:listitem="@layout/consumption_list_item"/>
 
 
