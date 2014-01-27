@@ -8,7 +8,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.helpers.LayoutHelper;
@@ -27,6 +26,11 @@ public abstract class TutorialPage {
     int _leftMargin = 0;
     int _topMargin = 0;
     boolean _isFinished = false;
+
+    int _lastTextLeft = 0;
+    int _lastTextTop = 0;
+    int _lastArrowLeft = 0;
+    int _lastArrowTop = 0;
 
     public View getLayout() {
         return _layout;
@@ -89,7 +93,6 @@ public abstract class TutorialPage {
 
         final ImageView arrow = _arrow;
 
-        _tutorialText.setText(newText);
 
         ViewTreeObserver vto = _tutorialText.getViewTreeObserver();
         if (vto != null) {
@@ -102,12 +105,12 @@ public abstract class TutorialPage {
 
                     RelativeLayout.LayoutParams textParams = (RelativeLayout.LayoutParams) _tutorialText.getLayoutParams();
 
-                    int tutTextHeight = _tutorialText.getHeight();
-                    float tutorialTextX = _tutorialText.getX();
-                    final float tutorialTextY = _tutorialText.getY();
+                    final int tutTextHeight = _tutorialText.getHeight();
+                    float tutorialTextX = _tutorialText.getLeft();
+                    final float tutorialTextY = _tutorialText.getTop();
 
-                    float arrowX = arrow.getX();
-                    float arrowY = arrow.getY();
+                    float arrowX = arrow.getLeft();
+                    float arrowY = arrow.getTop();
 
                     Logger.v("Testing", "move = " + tutTextHeight);
 
@@ -118,51 +121,32 @@ public abstract class TutorialPage {
                         params.setMargins(_leftMargin, _topMargin, 0, 0);
                     }
                     arrow.setLayoutParams(params);
-                    TranslateAnimation animText = new TranslateAnimation(tutorialTextX, textLeft, tutorialTextY, textTop);
+                    TranslateAnimation animText = new TranslateAnimation(_lastTextLeft, textLeft, _lastTextTop, textTop);
 
                     // TODO: unknown height modifier... what is that 10dp? Arrow height?
-                    int modifier = (int)LayoutHelper.dpToPx(_activity, 10);
+                    final int modifier = (int)LayoutHelper.dpToPx(_activity, 10);
 
-                    int bottomOfText = (textTop + tutTextHeight - modifier);
+                    final int bottomOfText = (textTop + tutTextHeight - modifier);
                     final int arrowTop = arrowDirection == ArrowDirection.Down ? bottomOfText : textTop - (arrow.getHeight() + modifier);
 
-                    TranslateAnimation animArrow = new TranslateAnimation(arrowX, arrowLeft, arrowY, arrowTop);
+                    TranslateAnimation animArrow = new TranslateAnimation(_lastArrowLeft, arrowLeft, _lastArrowTop, arrowTop);
                     animText.setFillAfter(true);
                     animText.setDuration(350);
                     animArrow.setFillAfter(true);
                     animArrow.setDuration(350);
 
-                    animText.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            RelativeLayout.LayoutParams textParams = (RelativeLayout.LayoutParams)_tutorialText.getLayoutParams();
-                            textParams.topMargin = textTop;
-                            textParams.leftMargin = textLeft;
-                            _tutorialText.setLayoutParams(textParams);
-
-                            RelativeLayout.LayoutParams arrowParams = (RelativeLayout.LayoutParams) arrow.getLayoutParams();
-                            arrowParams.topMargin = arrowTop;
-                            arrowParams.leftMargin = arrowLeft;
-                            arrow.setLayoutParams(arrowParams);
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-
                     _tutorialText.startAnimation(animText);
                     arrow.startAnimation(animArrow);
+
+                    _lastTextLeft = textLeft;
+                    _lastTextTop = textTop;
+                    _lastArrowLeft = arrowLeft;
+                    _lastArrowTop = arrowTop;
                 }
             });
-
         }
+
+        _tutorialText.setText(newText);
     }
 
     private int getRotationFromDirection(ArrowDirection direction){
