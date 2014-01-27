@@ -3,10 +3,12 @@ package uk.co.pilllogger.tutorial;
 import android.app.Activity;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.helpers.LayoutHelper;
@@ -102,7 +104,7 @@ public abstract class TutorialPage {
 
                     int tutTextHeight = _tutorialText.getHeight();
                     float tutorialTextX = _tutorialText.getX();
-                    float tutorialTextY = _tutorialText.getY();
+                    final float tutorialTextY = _tutorialText.getY();
 
                     float arrowX = arrow.getX();
                     float arrowY = arrow.getY();
@@ -122,13 +124,38 @@ public abstract class TutorialPage {
                     int modifier = (int)LayoutHelper.dpToPx(_activity, 10);
 
                     int bottomOfText = (textTop + tutTextHeight - modifier);
-                    int arrowTop = arrowDirection == ArrowDirection.Down ? bottomOfText : textTop - (arrow.getHeight() + modifier);
+                    final int arrowTop = arrowDirection == ArrowDirection.Down ? bottomOfText : textTop - (arrow.getHeight() + modifier);
 
                     TranslateAnimation animArrow = new TranslateAnimation(arrowX, arrowLeft, arrowY, arrowTop);
                     animText.setFillAfter(true);
                     animText.setDuration(350);
                     animArrow.setFillAfter(true);
                     animArrow.setDuration(350);
+
+                    animText.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            RelativeLayout.LayoutParams textParams = (RelativeLayout.LayoutParams)_tutorialText.getLayoutParams();
+                            textParams.topMargin = textTop;
+                            textParams.leftMargin = textLeft;
+                            _tutorialText.setLayoutParams(textParams);
+
+                            RelativeLayout.LayoutParams arrowParams = (RelativeLayout.LayoutParams) arrow.getLayoutParams();
+                            arrowParams.topMargin = arrowTop;
+                            arrowParams.leftMargin = arrowLeft;
+                            arrow.setLayoutParams(arrowParams);git 
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
 
                     _tutorialText.startAnimation(animText);
                     arrow.startAnimation(animArrow);
