@@ -148,7 +148,7 @@ public abstract class TutorialPage {
                             RelativeLayout.LayoutParams arrowParams = (RelativeLayout.LayoutParams) arrow.getLayoutParams();
                             arrowParams.topMargin = arrowTop;
                             arrowParams.leftMargin = arrowLeft;
-                            arrow.setLayoutParams(arrowParams);git 
+                            arrow.setLayoutParams(arrowParams);
                         }
 
                         @Override
