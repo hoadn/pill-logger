@@ -20,31 +20,23 @@ public class ConsumptionListTutorialPage extends TutorialPage {
     public void nextHint() {
         _shownHints++;
 
-        int textTop = _tutorialText.getTop();
-        int bottom = _layout.getHeight();
-        int textTopTo;
-        int textLeftTo;
-        int arrowLeftTo;
-        int textResId;
-        ArrowDirection arrowDirection;
+        TutorialDisplay display = new TutorialDisplay(_tutorialText, _layout, _activity);
 
         switch(_shownHints){ // next hint ( 0 based index )
             case 1:
-                textTopTo = bottom - textTop - _tutorialText.getHeight() - _actionBarHeight - 40;
-                textLeftTo = 0;
-                arrowLeftTo = 0;
-
-                textResId = R.string.consumptionlist_tut_2;
-                arrowDirection = ArrowDirection.Down;
+                display.setText(_activity, R.string.consumptionlist_tut_2);
+                display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Bottom);
+                display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Left);
+                display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Left);
+                display.setArrowDirection(TutorialDisplay.ArrowDirection.Down);
                 break;
 
             case 2:
-                textTopTo = bottom - textTop - _tutorialText.getHeight() - _actionBarHeight - 40;
-                textLeftTo = 200;
-                arrowLeftTo = 420;
-
-                textResId = R.string.consumptionlist_tut_3;
-                arrowDirection = ArrowDirection.Down;
+                display.setText(_activity, R.string.consumptionlist_tut_3);
+                display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Bottom);
+                display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Middle);
+                display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Middle);
+                display.setArrowDirection(TutorialDisplay.ArrowDirection.Down);
                 break;
 
             default:
@@ -54,6 +46,6 @@ public class ConsumptionListTutorialPage extends TutorialPage {
                 return;
         }
 
-        moveTutorialTextView(textResId, textTopTo, textLeftTo, arrowLeftTo, arrowDirection);
+        moveTutorialTextView(display);
     }
 }

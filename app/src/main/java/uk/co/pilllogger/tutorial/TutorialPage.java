@@ -1,6 +1,7 @@
 package uk.co.pilllogger.tutorial;
 
 import android.app.Activity;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
@@ -26,11 +27,9 @@ public abstract class TutorialPage {
     int _leftMargin = 0;
     int _topMargin = 0;
     boolean _isFinished = false;
+    int _animationDuration = 0;
 
-    int _lastTextLeft = 0;
-    int _lastTextTop = 0;
-    int _lastArrowLeft = 0;
-    int _lastArrowTop = 0;
+    TutorialDisplay _lastDisplay;
 
     public View getLayout() {
         return _layout;
@@ -79,20 +78,17 @@ public abstract class TutorialPage {
         _leftMargin = _activity.getResources().getDimensionPixelSize(R.dimen.tutorial_text_left_margin);
         _topMargin = _activity.getResources().getDimensionPixelSize(R.dimen.tutorial_text_top_margin);
         _actionBarHeight = _activity.getResources().getDimensionPixelSize(R.dimen.action_bar_height);
+
+        _animationDuration = _activity.getResources().getInteger(R.integer.tutorial_animation_duration);
+
+        _lastDisplay = new TutorialDisplay(_tutorialText, _layout, _activity);
     }
 
     public abstract void nextHint();
 
-    protected void moveTutorialTextView(int newTextId, int top, int left, int arrowLeft, ArrowDirection arrowDirection){
-        if(_activity == null)
-            return;
-        moveTutorialTextView(_activity.getString(newTextId), top, left, arrowLeft, arrowDirection);
-    }
-
-    protected void moveTutorialTextView(String newText, final int textTop, final int textLeft, final int arrowLeft, final ArrowDirection arrowDirection) {
+    protected void moveTutorialTextView(final TutorialDisplay display) {
 
         final ImageView arrow = _arrow;
-
 
         ViewTreeObserver vto = _tutorialText.getViewTreeObserver();
         if (vto != null) {
@@ -103,79 +99,36 @@ public abstract class TutorialPage {
 
                     _tutorialText.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
-                    RelativeLayout.LayoutParams textParams = (RelativeLayout.LayoutParams) _tutorialText.getLayoutParams();
+                    arrow.setRotation(display.getArrowRotation());
+                    setArrowParams(arrow);
 
-                    final int tutTextHeight = _tutorialText.getHeight();
-                    float tutorialTextX = _tutorialText.getLeft();
-                    final float tutorialTextY = _tutorialText.getTop();
+                    startAnimation(display);
 
-                    float arrowX = arrow.getLeft();
-                    float arrowY = arrow.getTop();
+                    _lastDisplay = display.createCopy();
+                }
 
-                    Logger.v("Testing", "move = " + tutTextHeight);
-
-                    int rotation = getRotationFromDirection(arrowDirection);
-                    arrow.setRotation(rotation);
+                private void setArrowParams(final ImageView arrow){
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) arrow.getLayoutParams();
                     if (params != null) {
                         params.setMargins(_leftMargin, _topMargin, 0, 0);
                     }
                     arrow.setLayoutParams(params);
-                    TranslateAnimation animText = new TranslateAnimation(_lastTextLeft, textLeft, _lastTextTop, textTop);
+                }
 
-                    // TODO: unknown height modifier... what is that 10dp? Arrow height?
-                    final int modifier = (int)LayoutHelper.dpToPx(_activity, 10);
-
-                    final int bottomOfText = (textTop + tutTextHeight - modifier);
-                    final int arrowTop = arrowDirection == ArrowDirection.Down ? bottomOfText : textTop - (arrow.getHeight() + modifier);
-
-                    TranslateAnimation animArrow = new TranslateAnimation(_lastArrowLeft, arrowLeft, _lastArrowTop, arrowTop);
+                private void startAnimation(TutorialDisplay display){
+                    TranslateAnimation animText = new TranslateAnimation(_lastDisplay.getTextLeftPosition(), display.getTextLeftPosition(), _lastDisplay.getTextTopPosition(), display.getTextTopPosition());
+                    TranslateAnimation animArrow = new TranslateAnimation(_lastDisplay.getArrowLeftPosition(), display.getArrowLeftPosition(), _lastDisplay.getArrowTopPosition(), display.getArrowTopPosition());
                     animText.setFillAfter(true);
-                    animText.setDuration(350);
+                    animText.setDuration(_animationDuration);
                     animArrow.setFillAfter(true);
-                    animArrow.setDuration(350);
+                    animArrow.setDuration(_animationDuration);
 
                     _tutorialText.startAnimation(animText);
                     arrow.startAnimation(animArrow);
-
-                    _lastTextLeft = textLeft;
-                    _lastTextTop = textTop;
-                    _lastArrowLeft = arrowLeft;
-                    _lastArrowTop = arrowTop;
                 }
             });
         }
 
-        _tutorialText.setText(newText);
-    }
-
-    private int getRotationFromDirection(ArrowDirection direction){
-        int rotation = 0;
-        switch(direction){
-            case Up:
-                rotation = 0;
-                break;
-
-            case Right:
-                rotation = 90;
-                break;
-
-            case Down:
-                rotation = 180;
-                break;
-
-            case Left:
-                rotation = 270;
-                break;
-        }
-
-        return rotation;
-    }
-
-    protected enum ArrowDirection{
-        Up,
-        Right,
-        Down,
-        Left
+        _tutorialText.setText(display.getText());
     }
 }
