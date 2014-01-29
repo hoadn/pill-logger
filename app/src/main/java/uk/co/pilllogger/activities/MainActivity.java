@@ -46,6 +46,7 @@ import uk.co.pilllogger.tasks.GetTutorialSeenTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.tasks.SetTutorialSeenTask;
 import uk.co.pilllogger.tutorial.ConsumptionListTutorialPage;
+import uk.co.pilllogger.tutorial.PillsListTutorialPage;
 import uk.co.pilllogger.tutorial.TutorialPage;
 import uk.co.pilllogger.tutorial.TutorialService;
 import uk.co.pilllogger.views.ColourIndicator;
@@ -208,8 +209,10 @@ public class MainActivity extends PillLoggerActivityBase implements
         View tutorialLayout = findViewById(R.id.tutorial_layout);
 
         TutorialPage consumptionTutorial = new ConsumptionListTutorialPage(this, tutorialLayout);
+        TutorialPage pillsTutorial = new PillsListTutorialPage(this, tutorialLayout);
 
         pages.put(ConsumptionListFragment.TAG, consumptionTutorial);
+        pages.put(PillListFragment.TAG, pillsTutorial);
 
         _tutorialService = new TutorialService(pages);
 
