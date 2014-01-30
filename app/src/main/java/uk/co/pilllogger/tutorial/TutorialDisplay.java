@@ -24,7 +24,7 @@ public class TutorialDisplay {
     private VerticalPosition _verticalTextPosition = VerticalPosition.Custom;
     private HorizontalPosition _horizontalTextPosition = HorizontalPosition.Custom;
     private HorizontalPosition _horizontalArrowPosition = HorizontalPosition.Custom;
-    private ArrowDirection _arrowDirection = ArrowDirection.Down;
+    private ArrowDirection _arrowDirection = ArrowDirection.None;
 
     final int _modifier;
 
@@ -146,21 +146,26 @@ public class TutorialDisplay {
     public int getTextTopPosition(){
         int layoutHeight = _container.getHeight() - _actionBarHeight;
 
+        int position = _actionBarHeight;
+
         switch(getVerticalTextPosition()){
             case Custom:
-                return getTextTop();
+                position += getTextTop();
+                break;
 
             case Top:
-                return 0;
+                break;
 
             case Middle:
-                return layoutHeight / 2 - (_view.getMeasuredHeight() / 2);
+                position = layoutHeight / 2 - (_view.getMeasuredHeight() / 2);
+                break;
 
             case Bottom:
-                return layoutHeight - _view.getTop() - _view.getMeasuredHeight() - _modifier;
+                position = layoutHeight - _view.getTop() - _view.getMeasuredHeight() - _modifier;
+                break;
         }
 
-        return 0;
+        return position;
     }
 
     public int getTextLeftPosition(){
@@ -204,13 +209,13 @@ public class TutorialDisplay {
     public int getArrowTopPosition(){
         switch (getArrowDirection()) {
             case Up:
-                return getTextTopPosition() - _view.getMeasuredHeight() - _modifier;
+                return getTextTopPosition() - _view.getMeasuredHeight();
 
             case Right:
                 break;
 
             case Down:
-                return getTextTopPosition() + _view.getMeasuredHeight() - _modifier;
+                return getTextTopPosition() + _view.getMeasuredHeight();
 
             case Left:
                 break;
@@ -253,7 +258,8 @@ public class TutorialDisplay {
         Up,
         Right,
         Down,
-        Left
+        Left,
+        None
     }
 }
 

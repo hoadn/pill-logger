@@ -55,6 +55,8 @@ public class ConsumptionListTutorialPage extends TutorialPage {
         _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Left);
         _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Left);
         _display.setArrowDirection(TutorialDisplay.ArrowDirection.Up);
+
+        _lastDisplay = new TutorialDisplay(_tutorialText, _layout, _activity);
         moveTutorialTextView(_display, false);
     }
 }

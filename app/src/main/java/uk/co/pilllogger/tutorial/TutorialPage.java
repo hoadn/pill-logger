@@ -3,6 +3,7 @@ package uk.co.pilllogger.tutorial;
 import android.app.Activity;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -78,7 +79,7 @@ public abstract class TutorialPage {
         _tutorialText.setTypeface(State.getSingleton().getTypeface());
 
         _leftMargin = _activity.getResources().getDimensionPixelSize(R.dimen.tutorial_text_left_margin);
-        _topMargin = _activity.getResources().getDimensionPixelSize(R.dimen.tutorial_text_top_margin);
+        _topMargin = 0;// _activity.getResources().getDimensionPixelSize(R.dimen.tutorial_text_top_margin);
         _actionBarHeight = _activity.getResources().getDimensionPixelSize(R.dimen.action_bar_height);
 
         _lastDisplay = new TutorialDisplay(_tutorialText, _layout, _activity);
@@ -110,6 +111,26 @@ public abstract class TutorialPage {
                 public void onGlobalLayout() {
 
                     _tutorialText.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+
+                    if(display.getArrowDirection() != _lastDisplay.getArrowDirection()){
+                        switch(_lastDisplay.getArrowDirection()){
+
+                            case Up:
+                                //arrow.setY(arrow.getY() + arrow.getMeasuredHeight());
+                                //_lastDisplay.setArrowTop(_lastDisplay.getArrowTop() + arrow.getMeasuredHeight());
+                                break;
+                            case Right:
+                                //arrow.setX(arrow.getX() - arrow.getMeasuredWidth());
+                                break;
+                            case Down:
+                                //arrow.setY(arrow.getY() - (arrow.getMeasuredHeight()/3));
+                                //_lastDisplay.setArrowTop(_lastDisplay.getArrowTop() - arrow.getMeasuredHeight());
+                                break;
+                            case Left:
+                                //arrow.setX(arrow.getX() + arrow.getMeasuredWidth());
+                                break;
+                        }
+                    }
 
                     arrow.setRotation(display.getArrowRotation());
                     setArrowParams(arrow);
