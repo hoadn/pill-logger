@@ -5,6 +5,7 @@ import android.view.View;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.tasks.SetTutorialSeenTask;
 
 /**
@@ -20,23 +21,21 @@ public class ConsumptionListTutorialPage extends TutorialPage {
     public void nextHint() {
         _shownHints++;
 
-        TutorialDisplay display = new TutorialDisplay(_tutorialText, _layout, _activity);
-
         switch(_shownHints){ // next hint ( 0 based index )
             case 1:
-                display.setText(_activity, R.string.consumptionlist_tut_2);
-                display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Bottom);
-                display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Left);
-                display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Left);
-                display.setArrowDirection(TutorialDisplay.ArrowDirection.Down);
+                _display.setText(_activity, R.string.consumptionlist_tut_2);
+                _display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Bottom);
+                _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Left);
+                _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Left);
+                _display.setArrowDirection(TutorialDisplay.ArrowDirection.Down);
                 break;
 
             case 2:
-                display.setText(_activity, R.string.consumptionlist_tut_3);
-                display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Bottom);
-                display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Middle);
-                display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Middle);
-                display.setArrowDirection(TutorialDisplay.ArrowDirection.Down);
+                _display.setText(_activity, R.string.consumptionlist_tut_3);
+                _display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Bottom);
+                _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Middle);
+                _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Middle);
+                _display.setArrowDirection(TutorialDisplay.ArrowDirection.Down);
                 break;
 
             default:
@@ -46,6 +45,16 @@ public class ConsumptionListTutorialPage extends TutorialPage {
                 return;
         }
 
-        moveTutorialTextView(display);
+        moveTutorialTextView(_display, true);
+    }
+
+    @Override
+    public void resetPage() {
+        _display.setText(_activity, R.string.consumptionlist_tut_1);
+        _display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Top);
+        _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Left);
+        _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Left);
+        _display.setArrowDirection(TutorialDisplay.ArrowDirection.Up);
+        moveTutorialTextView(_display, false);
     }
 }

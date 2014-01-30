@@ -21,7 +21,7 @@
         android:textAllCaps="true"/>
     <RelativeLayout
         android:id="@+id/pill_fragment_quick_create"
-        android:layout_height="wrap_content"
+        android:layout_height="125dp"
         android:layout_width="match_parent"
         android:background="@color/translucent_white"
         android:layout_marginLeft="10dp"

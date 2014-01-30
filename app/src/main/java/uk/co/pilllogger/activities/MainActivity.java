@@ -375,6 +375,7 @@ public class MainActivity extends PillLoggerActivityBase implements
             Toast.makeText(this, "DEBUG: Tutorial finished for this page", Toast.LENGTH_LONG).show();
             return;
         }
+        page.resetPage();
 
         page.getLayout().setVisibility(View.VISIBLE);
 
