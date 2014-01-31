@@ -30,9 +30,10 @@ public abstract class TutorialPage {
     boolean _isFinished = false;
     int _animationDuration = 0;
     boolean _animate = true;
-
     TutorialDisplay _lastDisplay;
     TutorialDisplay _display;
+    int _arrowFromY = 0;
+    int _arrowToY = 0;
 
     public View getLayout() {
         return _layout;
@@ -111,23 +112,25 @@ public abstract class TutorialPage {
                 public void onGlobalLayout() {
 
                     _tutorialText.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-
+                    _arrowToY = display.getArrowTopPosition();
                     if(display.getArrowDirection() != _lastDisplay.getArrowDirection()){
                         switch(_lastDisplay.getArrowDirection()){
 
                             case Up:
-                                //arrow.setY(arrow.getY() + arrow.getMeasuredHeight());
-                                //_lastDisplay.setArrowTop(_lastDisplay.getArrowTop() + arrow.getMeasuredHeight());
+                                arrow.setY(arrow.getY() + arrow.getMeasuredHeight());
+                                _lastDisplay.setArrowTop(_lastDisplay.getArrowTop() + arrow.getMeasuredHeight());
+                                //_arrowFromY = _lastDisplay.getArrowTopPosition() + (int)(arrow.getMeasuredHeight()*0.72);
                                 break;
                             case Right:
-                                //arrow.setX(arrow.getX() - arrow.getMeasuredWidth());
+                                arrow.setX(arrow.getX() - arrow.getMeasuredWidth());
                                 break;
                             case Down:
-                                //arrow.setY(arrow.getY() - (arrow.getMeasuredHeight()/3));
-                                //_lastDisplay.setArrowTop(_lastDisplay.getArrowTop() - arrow.getMeasuredHeight());
+                                arrow.setY(arrow.getY() - (arrow.getMeasuredHeight()/3));
+                                _lastDisplay.setArrowTop(_lastDisplay.getArrowTop() - arrow.getMeasuredHeight());
+                                //_arrowFromY = _lastDisplay.getArrowTopPosition();
                                 break;
                             case Left:
-                                //arrow.setX(arrow.getX() + arrow.getMeasuredWidth());
+                                arrow.setX(arrow.getX() + arrow.getMeasuredWidth());
                                 break;
                         }
                     }
@@ -150,7 +153,7 @@ public abstract class TutorialPage {
 
                 private void startAnimation(TutorialDisplay display){
                     TranslateAnimation animText = new TranslateAnimation(_lastDisplay.getTextLeftPosition(), display.getTextLeftPosition(), _lastDisplay.getTextTopPosition(), display.getTextTopPosition());
-                    TranslateAnimation animArrow = new TranslateAnimation(_lastDisplay.getArrowLeftPosition(), display.getArrowLeftPosition(), _lastDisplay.getArrowTopPosition(), display.getArrowTopPosition());
+                    TranslateAnimation animArrow = new TranslateAnimation(_lastDisplay.getArrowLeftPosition(), display.getArrowLeftPosition(), _lastDisplay.getArrowTopPosition(), display.getArrowTopPosition() - _lastDisplay.getArrowTopPosition());
                     animText.setFillAfter(true);
                     animText.setDuration(_animationDuration);
                     animArrow.setFillAfter(true);
