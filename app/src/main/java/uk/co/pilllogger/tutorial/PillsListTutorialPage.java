@@ -54,13 +54,22 @@ public class PillsListTutorialPage extends TutorialPage {
 
     @Override
     public void resetPage() {
+        _display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Custom);
+        _display.setTextTop(0);
+        _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Custom);
+        _display.setTextLeft(0);
+        _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Custom);
+        _display.setArrowLeft(0);
+        _lastDisplay = _display.createCopy();
+        moveTutorialTextView(_display, false);
+
         _display.setText(_activity, R.string.pillslist_tut_0);
         _display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Top);
         _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Middle);
         _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Middle);
         _display.setArrowDirection(TutorialDisplay.ArrowDirection.Up);
 
-        _lastDisplay = new TutorialDisplay(_tutorialText, _layout, _activity);
+        //_lastDisplay = _display.createCopy();
         moveTutorialTextView(_display, false);
     }
 }

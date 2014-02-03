@@ -1,6 +1,7 @@
 package uk.co.pilllogger.tutorial;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import uk.co.pilllogger.R;
@@ -30,6 +31,7 @@ public class TutorialDisplay {
 
     public TutorialDisplay(View view, View container, Context context) {
         _view = view;
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         _container = container;
         _context = context;
 
@@ -209,7 +211,7 @@ public class TutorialDisplay {
     public int getArrowTopPosition(){
         switch (getArrowDirection()) {
             case Up:
-                return getTextTopPosition() - _view.getMeasuredHeight();
+                return getTextTopPosition() - (int)LayoutHelper.dpToPx(_context, 10);
 
             case Right:
                 break;
