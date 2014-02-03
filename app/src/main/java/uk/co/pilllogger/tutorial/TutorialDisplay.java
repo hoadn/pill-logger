@@ -183,7 +183,7 @@ public class TutorialDisplay {
                 return (_container.getMeasuredWidth() / 2) - (_view.getMeasuredWidth() / 2) - _leftMargin;
 
             case Right:
-                return _container.getWidth();
+                return _container.getWidth() - _view.getMeasuredWidth() - (_leftMargin * 2);
         }
 
         return 0;

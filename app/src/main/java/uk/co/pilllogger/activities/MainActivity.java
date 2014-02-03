@@ -292,10 +292,10 @@ public class MainActivity extends PillLoggerActivityBase implements
     private void addPillToMenu(Pill pill){
         MenuItem item = _menu.findItem(pill.getId());
         if(item == null)
-            item = _menu.add(Menu.NONE, pill.getId(), Menu.NONE, pill.getName());
+            item = _menu.add(Menu.NONE, pill.getId(), Menu.NONE, "Take " + pill.getName());
 
         item.setTitleCondensed(pill.getName().substring(0,1));
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         LayoutInflater layoutInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = item.getActionView();

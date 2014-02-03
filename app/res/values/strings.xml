@@ -58,7 +58,7 @@
     <string name="graph_fragment_title">Charts</string>
     <string name="consumptionlist_tut_1">This page shows all of your consumptions so far</string>
     <string name="consumptionlist_tut_2">Use this button to add a new consumption</string>
-    <string name="consumptionlist_tut_3">Favourite pills will be shown here</string>
+    <string name="consumptionlist_tut_3">Favourite pills will be shown in this menu</string>
     <string name="pillslist_tut_0">This page is shows all your medication</string>
     <string name="pillslist_tut_1">Use this box to add new medicine</string>
     <string name="pillslist_tut_2">Your medicine will appear here. Long press it for more options like favourite</string>

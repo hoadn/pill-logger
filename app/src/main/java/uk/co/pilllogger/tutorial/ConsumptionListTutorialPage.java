@@ -34,8 +34,8 @@ public class ConsumptionListTutorialPage extends TutorialPage {
             case 2:
                 _display.setText(_activity, R.string.consumptionlist_tut_3);
                 _display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Bottom);
-                _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Middle);
-                _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Middle);
+                _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Right);
+                _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Right);
                 _display.setArrowDirection(TutorialDisplay.ArrowDirection.Down);
                 break;
 
