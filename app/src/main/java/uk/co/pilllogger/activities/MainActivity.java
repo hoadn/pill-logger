@@ -17,6 +17,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -376,8 +379,12 @@ public class MainActivity extends PillLoggerActivityBase implements
             return;
         }
         page.resetPage();
-
+        page.getLayout().setAlpha(0f);
         page.getLayout().setVisibility(View.VISIBLE);
+        page.getLayout().animate()
+                .alpha(1f)
+                .setDuration(500)
+                .setListener(null);
 
         page.getLayout().setOnClickListener(new View.OnClickListener() {
             @Override

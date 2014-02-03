@@ -1,5 +1,6 @@
 package uk.co.pilllogger.tutorial;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.view.View;
 
@@ -42,7 +43,31 @@ public class PillsListTutorialPage extends TutorialPage {
                 break;
 
             default:
-                _layout.setVisibility(View.GONE);
+                _layout.animate()
+                        .alpha(0f)
+                        .setDuration(350)
+                        .setListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                _layout.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+
+                            }
+                        });
+
                 new SetTutorialSeenTask(_activity, ConsumptionListFragment.TAG).execute();
                 _isFinished = true;
                 return;
