@@ -38,8 +38,8 @@ public class TutorialDisplay {
         _actionBarHeight = (int)context.getResources().getDimension(R.dimen.action_bar_height);
         _modifier = (int) LayoutHelper.dpToPx(_context, 10);
 
-        _leftMargin = _context.getResources().getDimensionPixelSize(R.dimen.tutorial_text_left_margin);
-        _topMargin = _context.getResources().getDimensionPixelSize(R.dimen.tutorial_text_top_margin);
+        _leftMargin = (int)_context.getResources().getDimension(R.dimen.tutorial_text_left_margin);
+        _topMargin = (int)_context.getResources().getDimension(R.dimen.tutorial_text_top_margin);
     }
     public TutorialDisplay(View view, View container, Context context, int textResourceId){
         this(view, container, context);
@@ -180,7 +180,7 @@ public class TutorialDisplay {
                 return 0;
 
             case Middle:
-                return _container.getWidth() / 2 - (_view.getMeasuredWidth() / 2) - (_leftMargin / 2);
+                return (_container.getMeasuredWidth() / 2) - (_view.getMeasuredWidth() / 2) - _leftMargin;
 
             case Right:
                 return _container.getWidth();
@@ -199,7 +199,8 @@ public class TutorialDisplay {
                 return 0;
 
             case Middle:
-                return (int)LayoutHelper.dpToPx(_context, _view.getLeft()) + (_view.getMeasuredWidth() / 2) + (int)(_leftMargin * 1.5f);
+                //return (int)LayoutHelper.dpToPx(_context, _view.getLeft()) + (_view.getMeasuredWidth() / 2) + (int)(_leftMargin * 1.5f);
+                return getTextLeftPosition() + (_view.getMeasuredWidth()/2) - (int)(_context.getResources().getDimension(R.dimen.tutorial_arrow_width)/2);
 
             case Right:
                 return _container.getWidth();
@@ -211,7 +212,7 @@ public class TutorialDisplay {
     public int getArrowTopPosition(){
         switch (getArrowDirection()) {
             case Up:
-                return getTextTopPosition() - (int)LayoutHelper.dpToPx(_context, 10);
+                return getTextTopPosition() - (int)_context.getResources().getDimension(R.dimen.tutorial_arrow_height);
 
             case Right:
                 break;

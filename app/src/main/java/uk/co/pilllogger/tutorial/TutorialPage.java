@@ -129,10 +129,9 @@ public abstract class TutorialPage {
                         @Override
                         public void onAnimationStart(Animation animation) {
                             final Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
+                            handler.postDelayed(new Runnable() { //Half way through animation rotate arrow - keeps rotation hidden from user
                                 @Override
                                 public void run() {
-                                    // Do something after 5s = 5000ms
                                     _arrow.setRotation(display1.getArrowRotation());
 
                                 }

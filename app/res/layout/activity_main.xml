@@ -40,8 +40,8 @@
 
         <ImageView
             android:id="@+id/tutorial_arrow"
-            android:layout_width="30dp"
-            android:layout_height="10dp"
+            android:layout_width="@dimen/tutorial_arrow_width"
+            android:layout_height="@dimen/tutorial_arrow_height"
             android:layout_marginTop="0dp"
             android:layout_marginLeft="40dp"
             android:src="@drawable/arrow"/>
