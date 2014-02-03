@@ -196,14 +196,13 @@ public class TutorialDisplay {
                 return getArrowLeft();
 
             case Left:
-                return 0;
+                return getTextLeftPosition() + (int)LayoutHelper.dpToPx(_context, 10); //Adding 10dp so the arrow is not right on the edge (Looks better)
 
             case Middle:
-                //return (int)LayoutHelper.dpToPx(_context, _view.getLeft()) + (_view.getMeasuredWidth() / 2) + (int)(_leftMargin * 1.5f);
                 return getTextLeftPosition() + (_view.getMeasuredWidth()/2) - (int)(_context.getResources().getDimension(R.dimen.tutorial_arrow_width)/2);
 
             case Right:
-                return _container.getWidth();
+                return getTextLeftPosition() + _view.getMeasuredWidth() - (int)_context.getResources().getDimension(R.dimen.tutorial_arrow_width) - (int)LayoutHelper.dpToPx(_context, 10); //Adding 10dp so the arrow is not right on the edge (Looks better);
         }
 
         return 0;
