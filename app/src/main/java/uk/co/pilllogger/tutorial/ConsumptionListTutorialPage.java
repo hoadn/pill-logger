@@ -6,6 +6,7 @@ import android.view.View;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
+import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.tasks.SetTutorialSeenTask;
 
@@ -27,7 +28,8 @@ public class ConsumptionListTutorialPage extends TutorialPage {
                 _display.setText(_activity, R.string.consumptionlist_tut_2);
                 _display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Bottom);
                 _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Left);
-                _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Left);
+                _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Custom);
+                _display.setArrowLeft(_activity.getResources().getDimensionPixelSize(R.dimen.consumptionlist_tut_1_arrow));
                 _display.setArrowDirection(TutorialDisplay.ArrowDirection.Down);
                 break;
 
@@ -35,36 +37,13 @@ public class ConsumptionListTutorialPage extends TutorialPage {
                 _display.setText(_activity, R.string.consumptionlist_tut_3);
                 _display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Bottom);
                 _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Right);
-                _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Right);
+                _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Custom);
+                _display.setArrowLeft(_activity.getResources().getDimensionPixelSize(R.dimen.consumptionlist_tut_2_arrow));
                 _display.setArrowDirection(TutorialDisplay.ArrowDirection.Down);
                 break;
 
             default:
-                _layout.animate()
-                        .alpha(0f)
-                        .setDuration(350)
-                        .setListener(new Animator.AnimatorListener() {
-                            @Override
-                            public void onAnimationStart(Animator animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                _layout.setVisibility(View.GONE);
-                            }
-
-                            @Override
-                            public void onAnimationCancel(Animator animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animator animation) {
-
-                            }
-                        });
-
+                animateLayout();
                 new SetTutorialSeenTask(_activity, ConsumptionListFragment.TAG).execute();
                 _isFinished = true;
                 return;
@@ -78,7 +57,8 @@ public class ConsumptionListTutorialPage extends TutorialPage {
         _display.setText(_activity, R.string.consumptionlist_tut_1);
         _display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Top);
         _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Left);
-        _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Left);
+        _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Custom);
+        _display.setArrowLeft(_activity.getResources().getDimensionPixelSize(R.dimen.consumptionlist_tut_0_arrow));
         _display.setArrowDirection(TutorialDisplay.ArrowDirection.Up);
 
         _lastDisplay = new TutorialDisplay(_tutorialText, _layout, _activity);

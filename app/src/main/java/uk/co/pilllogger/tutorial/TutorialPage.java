@@ -1,10 +1,12 @@
 package uk.co.pilllogger.tutorial;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.os.Handler;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -85,6 +87,35 @@ public abstract class TutorialPage {
 
         _lastDisplay = new TutorialDisplay(_tutorialText, _layout, _activity);
         _display = new TutorialDisplay(_tutorialText, _layout, _activity);
+    }
+
+    protected void animateLayout(){
+        ViewPropertyAnimator viewPropertyAnimator = _layout.animate();
+        if(viewPropertyAnimator != null){
+            viewPropertyAnimator.alpha(0f)
+            .setDuration(_animationDuration)
+            .setListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    _layout.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+        }
     }
 
     public abstract void nextHint();

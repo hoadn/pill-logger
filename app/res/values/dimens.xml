@@ -11,4 +11,11 @@
     <dimen name="tutorial_text_top_margin">60dp</dimen>
     <dimen name="tutorial_arrow_height">10dp</dimen>
     <dimen name="tutorial_arrow_width">30dp</dimen>
+
+    <dimen name="consumptionlist_tut_0_arrow">35dp</dimen>
+    <dimen name="consumptionlist_tut_1_arrow">4dp</dimen>
+    <dimen name="consumptionlist_tut_2_arrow">304dp</dimen>
+    <dimen name="consumptionlist_tut_1_width">200dp</dimen>
+
+    <dimen name="pillslist_tut_1_texttop">125dp</dimen>
 </resources>

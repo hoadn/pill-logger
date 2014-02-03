@@ -20,10 +20,6 @@ public class PillsListTutorialPage extends TutorialPage {
 
     @Override
     public void nextHint() {
-
-
-
-
         switch(_shownHints){ // next hint ( 0 based index )
             case 0:
                 _display.setText(_activity, R.string.pillslist_tut_1);
@@ -36,37 +32,14 @@ public class PillsListTutorialPage extends TutorialPage {
             case 1:
                 _display.setText(_activity, R.string.pillslist_tut_2);
                 _display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Custom);
-                _display.setTextTop((int)LayoutHelper.dpToPx(_activity, 125));
+                _display.setTextTop(_activity.getResources().getDimensionPixelSize(R.dimen.pillslist_tut_1_texttop));
                 _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Middle);
                 _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Middle);
                 _display.setArrowDirection(TutorialDisplay.ArrowDirection.Down);
                 break;
 
             default:
-                _layout.animate()
-                        .alpha(0f)
-                        .setDuration(350)
-                        .setListener(new Animator.AnimatorListener() {
-                            @Override
-                            public void onAnimationStart(Animator animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                _layout.setVisibility(View.GONE);
-                            }
-
-                            @Override
-                            public void onAnimationCancel(Animator animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animator animation) {
-
-                            }
-                        });
+                animateLayout();
 
                 new SetTutorialSeenTask(_activity, ConsumptionListFragment.TAG).execute();
                 _isFinished = true;
@@ -94,7 +67,6 @@ public class PillsListTutorialPage extends TutorialPage {
         _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Middle);
         _display.setArrowDirection(TutorialDisplay.ArrowDirection.Up);
 
-        //_lastDisplay = _display.createCopy();
         moveTutorialTextView(_display, false);
     }
 }
