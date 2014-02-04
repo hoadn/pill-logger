@@ -5,6 +5,18 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/graph_fragment_title"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:textStyle="bold"
+        android:text="@string/graph_fragment_title"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:padding="5dp"
+        android:textAllCaps="true"/>
+
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -14,6 +26,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:layout_marginTop="5dp">
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
