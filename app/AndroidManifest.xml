@@ -20,7 +20,6 @@
         <meta-data android:name="com.google.android.backup.api_key" android:value="AEdPqrEAAAAIPN6T9VujiU3d8Os-2oEWhMkjIMFv2fvF8zYjlg" />
 
         <activity
-                android:uiOptions="splitActionBarWhenNarrow"
                 android:name=".activities.MainActivity"
                 android:configChanges="orientation|keyboardHidden"
                 android:label="Pill Logger">

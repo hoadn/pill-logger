@@ -27,6 +27,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.viewpagerindicator.IconPageIndicator;
+
 import java.util.Date;
 import java.util.HashMap;
 
@@ -136,7 +138,6 @@ public class MainActivity extends PillLoggerActivityBase implements
             _fragmentPager.setCurrentItem(savedInstanceState.getInt("item"));
         }
 
-
         setupChrome();
 
         setBackgroundColour();
@@ -171,7 +172,7 @@ public class MainActivity extends PillLoggerActivityBase implements
     private void setupChrome(){
         ActionBar actionBar = getActionBar();
         if(actionBar != null){
-            actionBar.setDisplayShowHomeEnabled(false);
+            //actionBar.setDisplayShowHomeEnabled(false);
             actionBar.setDisplayShowTitleEnabled(false);
 
             // Specify that tabs should be displayed in the action bar.
