@@ -26,20 +26,22 @@ public class ConsumptionListTutorialPage extends TutorialPage {
         switch(_shownHints){ // next hint ( 0 based index )
             case 1:
                 _display.setText(_activity, R.string.consumptionlist_tut_2);
-                _display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Bottom);
+                _display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Top);
                 _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Left);
                 _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Custom);
+                _display.setIgnoreActionBar(true);
                 _display.setArrowLeft(_activity.getResources().getDimensionPixelSize(R.dimen.consumptionlist_tut_1_arrow));
-                _display.setArrowDirection(TutorialDisplay.ArrowDirection.Down);
+                _display.setArrowDirection(TutorialDisplay.ArrowDirection.Up);
                 break;
 
             case 2:
                 _display.setText(_activity, R.string.consumptionlist_tut_3);
-                _display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Bottom);
+                _display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Top);
                 _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Right);
                 _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Custom);
+                _display.setIgnoreActionBar(true);
                 _display.setArrowLeft(_activity.getResources().getDimensionPixelSize(R.dimen.consumptionlist_tut_2_arrow));
-                _display.setArrowDirection(TutorialDisplay.ArrowDirection.Down);
+                _display.setArrowDirection(TutorialDisplay.ArrowDirection.Up);
                 break;
 
             default:

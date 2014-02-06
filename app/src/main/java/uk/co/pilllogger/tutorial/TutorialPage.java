@@ -35,36 +35,8 @@ public abstract class TutorialPage {
     boolean _animate = true;
     TutorialDisplay _lastDisplay;
     TutorialDisplay _display;
-
-    public View getLayout() {
-        return _layout;
-    }
-
-    public TextView getTutorialText() {
-
-        return _tutorialText;
-    }
-
     TextView _tutorialText;
     ImageView _arrow;
-
-    public String getFragmentTag() {
-        return _fragmentTag;
-    }
-
-    public void setFragmentTag(String tag) {
-        _fragmentTag = tag;
-    }
-
-    public int getShownHints() {
-        return _shownHints;
-    }
-
-    public void setShownHints(int shownHints) {
-        _shownHints = shownHints;
-    }
-
-    public boolean isFinished(){ return _isFinished;}
 
     public TutorialPage(Activity activity,  View layout){
         _layout = layout;
@@ -88,6 +60,33 @@ public abstract class TutorialPage {
         _lastDisplay = new TutorialDisplay(_tutorialText, _layout, _activity);
         _display = new TutorialDisplay(_tutorialText, _layout, _activity);
     }
+
+    public View getLayout() {
+        return _layout;
+    }
+
+    public TextView getTutorialText() {
+
+        return _tutorialText;
+    }
+
+    public String getFragmentTag() {
+        return _fragmentTag;
+    }
+
+    public void setFragmentTag(String tag) {
+        _fragmentTag = tag;
+    }
+
+    public int getShownHints() {
+        return _shownHints;
+    }
+
+    public void setShownHints(int shownHints) {
+        _shownHints = shownHints;
+    }
+
+    public boolean isFinished(){ return _isFinished;}
 
     protected void animateLayout(){
         ViewPropertyAnimator viewPropertyAnimator = _layout.animate();

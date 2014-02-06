@@ -15,6 +15,8 @@ public class TutorialDisplay {
     private final View _container;
     private final Context _context;
     private final int _actionBarHeight;
+    private final int _tabBarHeight;
+    boolean _ignoreActionBar = false;
     private final int _leftMargin;
     private final int _topMargin;
     private String _text = "";
@@ -36,6 +38,7 @@ public class TutorialDisplay {
         _context = context;
 
         _actionBarHeight = (int)context.getResources().getDimension(R.dimen.action_bar_height);
+        _tabBarHeight = (int)context.getResources().getDimension(R.dimen.tab_bar_height);
         _modifier = (int) LayoutHelper.dpToPx(_context, 10);
 
         _leftMargin = (int)_context.getResources().getDimension(R.dimen.tutorial_text_left_margin);
@@ -122,6 +125,14 @@ public class TutorialDisplay {
         _arrowLeft = arrowLeft;
     }
 
+    public boolean isIgnoreActionBar() {
+        return _ignoreActionBar;
+    }
+
+    public void setIgnoreActionBar(boolean ignoreActionBar) {
+        _ignoreActionBar = ignoreActionBar;
+    }
+
     public int getArrowRotation(){
         int rotation = 0;
         switch(_arrowDirection){
@@ -149,6 +160,11 @@ public class TutorialDisplay {
         int layoutHeight = _container.getHeight() - _actionBarHeight;
 
         int position = _actionBarHeight;
+
+        if(isIgnoreActionBar()){
+            layoutHeight += _tabBarHeight;
+            position = _tabBarHeight;
+        }
 
         switch(getVerticalTextPosition()){
             case Custom:
