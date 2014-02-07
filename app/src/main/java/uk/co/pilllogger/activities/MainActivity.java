@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
@@ -17,18 +18,22 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.viewpagerindicator.IconPageIndicator;
 
+import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -81,7 +86,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        ViewGroup wrapper = setContentViewWithWrapper(R.layout.activity_main);
         this.setTitle("Consumption");
         _colourBackground = findViewById(R.id.colour_background);
 
@@ -137,6 +142,18 @@ public class MainActivity extends PillLoggerActivityBase implements
         if(savedInstanceState != null) {
             _fragmentPager.setCurrentItem(savedInstanceState.getInt("item"));
         }
+
+        View tutorial = findViewById(R.id.tutorial_layout);
+        ViewGroup parent = (ViewGroup) tutorial.getParent();
+
+        if(parent != null){
+            parent.removeView(tutorial);
+        }
+
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT );
+        tutorial.setLayoutParams(params);
+
+        wrapper.addView(tutorial);
 
         setupChrome();
 
@@ -207,8 +224,50 @@ public class MainActivity extends PillLoggerActivityBase implements
                             .setCustomView(R.layout.tab_icon_charts)
                             .setTabListener(tabListener));
 
+            // force embedded tabs
+//            try {
+//                final Method setHasEmbeddedTabsMethod = actionBar.getClass()
+//                        .getDeclaredMethod("setHasEmbeddedTabs", boolean.class);
+//                setHasEmbeddedTabsMethod.setAccessible(true);
+//                setHasEmbeddedTabsMethod.invoke(actionBar, true);
+//            }
+//            catch(final Exception e) {
+//                // Handle issues as needed: log, warn user, fallback etc
+//                // Alternatively, ignore this and default tab behaviour will apply.
+//            }
 
         }
+    }
+
+    private ViewGroup setContentViewWithWrapper(int resContent) {
+        ViewGroup decorView = (ViewGroup) this.getWindow().getDecorView();
+        ViewGroup decorChild = (ViewGroup) decorView.getChildAt(0);
+
+        // Removing decorChild, we'll add it back soon
+        decorView.removeAllViews();
+
+        ViewGroup wrapperView = new FrameLayout(this);
+
+        // You should set some ID, if you'll want to reference this wrapper in that manner later
+        //
+        // The ID, such as "R.id.ACTIVITY_LAYOUT_WRAPPER" can be set at a resource file, such as:
+        //  <resources xmlns:android="http://schemas.android.com/apk/res/android">
+        //      <item type="id" name="ACTIVITY_LAYOUT_WRAPPER"/>
+        //  </resources>
+        //
+        wrapperView.setId(R.id.activity_layout_wrapper);
+
+        // Now we are rebuilding the DecorView, but this time we
+        // have our wrapper view to stand between the real content and the decor
+        decorView.addView(wrapperView, ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT);
+        wrapperView.addView(decorChild, decorChild.getLayoutParams());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2){
+            LayoutInflater.from(this).inflate(resContent, (ViewGroup)((LinearLayout)wrapperView.getChildAt(0)).getChildAt(1), true);}
+        //This is for KitKat and Jelly 4.3
+        else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2){
+            LayoutInflater.from(this).inflate(resContent, (ViewGroup) (((ViewGroup) wrapperView.getChildAt(0)).getChildAt(0)), true);}
+
+        return wrapperView;
     }
 
     private void SetupTutorial(){

@@ -2,4 +2,5 @@
 <resources>
     <item name="tag_tab_icon_position" type="id">1</item>
     <item name="tag_page_colour" type="id">2</item>
+    <item name="activity_layout_wrapper" type="id"/>
 </resources>

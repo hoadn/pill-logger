@@ -33,17 +33,17 @@ public class TutorialDisplay {
 
     public TutorialDisplay(View view, View container, Context context) {
         _view = view;
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         _container = container;
         _context = context;
 
-        _actionBarHeight = (int)context.getResources().getDimension(R.dimen.action_bar_height);
+        _actionBarHeight = (int)context.getResources().getDimension(R.dimen.tutorial_action_bar_height);
         _tabBarHeight = (int)context.getResources().getDimension(R.dimen.tab_bar_height);
         _modifier = (int) LayoutHelper.dpToPx(_context, 10);
 
         _leftMargin = (int)_context.getResources().getDimension(R.dimen.tutorial_text_left_margin);
         _topMargin = (int)_context.getResources().getDimension(R.dimen.tutorial_text_top_margin);
     }
+    
     public TutorialDisplay(View view, View container, Context context, int textResourceId){
         this(view, container, context);
         _text = context.getString(textResourceId);
