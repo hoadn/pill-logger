@@ -3,9 +3,7 @@ package uk.co.pilllogger.tutorial;
 import android.animation.Animator;
 import android.app.Activity;
 import android.os.Handler;
-import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
@@ -15,8 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.helpers.LayoutHelper;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.state.State;
 
 /**
@@ -25,6 +21,7 @@ import uk.co.pilllogger.state.State;
 public abstract class TutorialPage {
     protected final View _layout;
     protected final int _actionBarHeight;
+    protected final int _tabBarHeight;
     Activity _activity;
     String _fragmentTag = "";
     int _shownHints = 0;
@@ -56,6 +53,7 @@ public abstract class TutorialPage {
         _leftMargin = _activity.getResources().getDimensionPixelSize(R.dimen.tutorial_text_left_margin);
         _topMargin = 0;// _activity.getResources().getDimensionPixelSize(R.dimen.tutorial_text_top_margin);
         _actionBarHeight = _activity.getResources().getDimensionPixelSize(R.dimen.action_bar_height);
+        _tabBarHeight = _activity.getResources().getDimensionPixelSize(R.dimen.tab_bar_height);
 
         _lastDisplay = new TutorialDisplay(_tutorialText, _layout, _activity);
         _display = new TutorialDisplay(_tutorialText, _layout, _activity);
@@ -148,8 +146,8 @@ public abstract class TutorialPage {
                 }
 
                 private void startAnimation(TutorialDisplay display){
-                    TranslateAnimation animText = new TranslateAnimation(_lastDisplay.getTextLeftPosition(), display.getTextLeftPosition(), _lastDisplay.getTextTopPosition(), display.getTextTopPosition());
-                    TranslateAnimation animArrow = new TranslateAnimation(_lastDisplay.getArrowLeftPosition(), display.getArrowLeftPosition(), _lastDisplay.getArrowTopPosition(), display.getArrowTopPosition());
+                    TranslateAnimation animText = new TranslateAnimation(_lastDisplay.getTextPosition(), display.getTextPosition(), _lastDisplay.getTextTopPosition(), display.getTextTopPosition());
+                    TranslateAnimation animArrow = new TranslateAnimation(_lastDisplay.getArrowXPosition(), display.getArrowXPosition(), _lastDisplay.getArrowTopPosition(), display.getArrowTopPosition());
                     animText.setFillAfter(true);
                     animText.setDuration(_animationDuration);
                     animArrow.setFillAfter(true);

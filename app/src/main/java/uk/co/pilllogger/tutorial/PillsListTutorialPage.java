@@ -63,8 +63,15 @@ public class PillsListTutorialPage extends TutorialPage {
 
         _display.setText(_activity, R.string.pillslist_tut_0);
         _display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Top);
-        _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Middle);
-        _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Middle);
+        if(_tabBarHeight > 0){
+            _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Middle);
+            _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Middle);
+        }
+        else{
+            _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Left);
+            _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Custom);
+            _display.setArrowLeft(_activity.getResources().getDimensionPixelSize(R.dimen.pillslist_tut_0_arrow_left));
+        }
         _display.setArrowDirection(TutorialDisplay.ArrowDirection.Up);
 
         moveTutorialTextView(_display, false);

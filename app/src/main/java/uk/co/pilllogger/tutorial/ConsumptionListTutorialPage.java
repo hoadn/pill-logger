@@ -29,6 +29,7 @@ public class ConsumptionListTutorialPage extends TutorialPage {
                 _display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Top);
                 _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Right);
                 _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Custom);
+                _display.setFromRight(true);
                 _display.setIgnoreActionBar(true);
                 _display.setArrowLeft(_activity.getResources().getDimensionPixelSize(R.dimen.consumptionlist_tut_1_arrow));
                 _display.setArrowDirection(TutorialDisplay.ArrowDirection.Up);
@@ -40,6 +41,7 @@ public class ConsumptionListTutorialPage extends TutorialPage {
                 _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Right);
                 _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Custom);
                 _display.setIgnoreActionBar(true);
+                _display.setFromRight(true);
                 _display.setArrowLeft(_activity.getResources().getDimensionPixelSize(R.dimen.consumptionlist_tut_2_arrow));
                 _display.setArrowDirection(TutorialDisplay.ArrowDirection.Up);
                 break;

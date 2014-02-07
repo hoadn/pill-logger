@@ -1,7 +1,6 @@
 package uk.co.pilllogger.tutorial;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import uk.co.pilllogger.R;
@@ -11,26 +10,22 @@ import uk.co.pilllogger.helpers.LayoutHelper;
  * Created by alex on 28/01/2014.
  */
 public class TutorialDisplay {
+    final int _modifier;
     private final View _view;
     private final View _container;
     private final Context _context;
     private final int _actionBarHeight;
     private final int _tabBarHeight;
-    boolean _ignoreActionBar = false;
     private final int _leftMargin;
     private final int _topMargin;
+    boolean _ignoreActionBar = false;
     private String _text = "";
     private int _textLeft = 0;
     private int _textTop = 0;
     private int _arrowLeft = 0;
-    private int _arrowTop = 0;
-    private VerticalPosition _verticalTextPosition = VerticalPosition.Custom;
-    private HorizontalPosition _horizontalTextPosition = HorizontalPosition.Custom;
-    private HorizontalPosition _horizontalArrowPosition = HorizontalPosition.Custom;
-    private ArrowDirection _arrowDirection = ArrowDirection.None;
-
-    final int _modifier;
-
+    private int _arrowTop = 0;    private VerticalPosition _verticalTextPosition = VerticalPosition.Custom;
+    private ArrowDirection _arrowDirection = ArrowDirection.None;    private HorizontalPosition _horizontalTextPosition = HorizontalPosition.Custom;
+    private boolean _fromRight = false;    private HorizontalPosition _horizontalArrowPosition = HorizontalPosition.Custom;
     public TutorialDisplay(View view, View container, Context context) {
         _view = view;
         _container = container;
@@ -43,10 +38,17 @@ public class TutorialDisplay {
         _leftMargin = (int)_context.getResources().getDimension(R.dimen.tutorial_text_left_margin);
         _topMargin = (int)_context.getResources().getDimension(R.dimen.tutorial_text_top_margin);
     }
-
     public TutorialDisplay(View view, View container, Context context, int textResourceId){
         this(view, container, context);
         _text = context.getString(textResourceId);
+    }
+
+    public boolean isFromRight() {
+        return _fromRight;
+    }
+
+    public void setFromRight(boolean fromRight) {
+        _fromRight = fromRight;
     }
 
     public int getArrowTop() {
@@ -101,7 +103,7 @@ public class TutorialDisplay {
         _horizontalArrowPosition = horizontalArrowPosition;
     }
 
-    public int getTextLeft() {
+    public int getTextX() {
         return _textLeft;
     }
 
@@ -117,7 +119,7 @@ public class TutorialDisplay {
         _textTop = textTop;
     }
 
-    public int getArrowLeft() {
+    public int getArrowX() {
         return _arrowLeft;
     }
 
@@ -163,7 +165,8 @@ public class TutorialDisplay {
 
         if(isIgnoreActionBar()){
             layoutHeight += _tabBarHeight;
-            position = _tabBarHeight;
+            if(_tabBarHeight > 0)
+                position = _tabBarHeight;
         }
 
         switch(getVerticalTextPosition()){
@@ -186,11 +189,11 @@ public class TutorialDisplay {
         return position;
     }
 
-    public int getTextLeftPosition(){
+    public int getTextPosition(){
         switch(getHorizontalTextPosition()){
 
             case Custom:
-                return getTextLeft();
+                return isFromRight() ? _container.getMeasuredWidth() - getTextX() : getTextX();
 
             case Left:
                 return 0;
@@ -205,20 +208,20 @@ public class TutorialDisplay {
         return 0;
     }
 
-    public int getArrowLeftPosition(){
+    public int getArrowXPosition(){
         switch(getHorizontalArrowPosition()){
 
             case Custom:
-                return getArrowLeft();
+                return isFromRight() ? _container.getMeasuredWidth() -  getArrowX() : getArrowX();
 
             case Left:
-                return getTextLeftPosition() + (int)LayoutHelper.dpToPx(_context, 10); //Adding 10dp so the arrow is not right on the edge (Looks better)
+                return getTextPosition() + (int)LayoutHelper.dpToPx(_context, 10); //Adding 10dp so the arrow is not right on the edge (Looks better)
 
             case Middle:
-                return getTextLeftPosition() + (_view.getMeasuredWidth()/2) - (int)(_context.getResources().getDimension(R.dimen.tutorial_arrow_width)/2);
+                return getTextPosition() + (_view.getMeasuredWidth()/2) - (int)(_context.getResources().getDimension(R.dimen.tutorial_arrow_width)/2);
 
             case Right:
-                return getTextLeftPosition() + _view.getMeasuredWidth() - (int)_context.getResources().getDimension(R.dimen.tutorial_arrow_width) - (int)LayoutHelper.dpToPx(_context, 10); //Adding 10dp so the arrow is not right on the edge (Looks better);
+                return getTextPosition() + _view.getMeasuredWidth() - (int)_context.getResources().getDimension(R.dimen.tutorial_arrow_width) - (int)LayoutHelper.dpToPx(_context, 10); //Adding 10dp so the arrow is not right on the edge (Looks better);
         }
 
         return 0;
@@ -246,15 +249,16 @@ public class TutorialDisplay {
         TutorialDisplay copy = new TutorialDisplay(_view, _container, _context);
 
         copy.setArrowDirection(this.getArrowDirection());
-        copy.setArrowLeft(this.getArrowLeft());
+        copy.setArrowLeft(this.getArrowX());
         copy.setArrowTop(this.getArrowTop());
         copy.setHorizontalArrowPosition(this.getHorizontalArrowPosition());
         copy.setHorizontalTextPosition(this.getHorizontalTextPosition());
         copy.setText(this.getText());
-        copy.setTextLeft(this.getTextLeft());
+        copy.setTextLeft(this.getTextX());
         copy.setTextTop(this.getTextTop());
         copy.setVerticalTextPosition(this.getVerticalTextPosition());
         copy.setIgnoreActionBar(this.isIgnoreActionBar());
+        copy.setFromRight(this.isFromRight());
 
         return copy;
     }
@@ -280,6 +284,12 @@ public class TutorialDisplay {
         Left,
         None
     }
+
+
+
+
+
+
 }
 
 

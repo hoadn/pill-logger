@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="action_bar_height">111dp</dimen>
+    <dimen name="tab_bar_height">83dp</dimen>
+    <dimen name="tutorial_action_bar_height">131dp</dimen>
+
+    <dimen name="consumptionlist_tut_0_arrow">95dp</dimen>
+    <dimen name="consumptionlist_tut_1_arrow">122dp</dimen>
+    <dimen name="consumptionlist_tut_2_arrow">58dp</dimen>
+
+    <dimen name="pillslist_tut_1_texttop">125dp</dimen>
+    <dimen name="pillslist_tut_0_arrow_left">149dp</dimen>
+</resources>
