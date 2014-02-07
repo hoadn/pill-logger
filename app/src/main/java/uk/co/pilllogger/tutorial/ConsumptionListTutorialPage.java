@@ -27,7 +27,7 @@ public class ConsumptionListTutorialPage extends TutorialPage {
             case 1:
                 _display.setText(_activity, R.string.consumptionlist_tut_2);
                 _display.setVerticalTextPosition(TutorialDisplay.VerticalPosition.Top);
-                _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Left);
+                _display.setHorizontalTextPosition(TutorialDisplay.HorizontalPosition.Right);
                 _display.setHorizontalArrowPosition(TutorialDisplay.HorizontalPosition.Custom);
                 _display.setIgnoreActionBar(true);
                 _display.setArrowLeft(_activity.getResources().getDimensionPixelSize(R.dimen.consumptionlist_tut_1_arrow));

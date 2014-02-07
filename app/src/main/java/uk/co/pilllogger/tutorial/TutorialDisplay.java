@@ -43,7 +43,7 @@ public class TutorialDisplay {
         _leftMargin = (int)_context.getResources().getDimension(R.dimen.tutorial_text_left_margin);
         _topMargin = (int)_context.getResources().getDimension(R.dimen.tutorial_text_top_margin);
     }
-    
+
     public TutorialDisplay(View view, View container, Context context, int textResourceId){
         this(view, container, context);
         _text = context.getString(textResourceId);
@@ -254,6 +254,7 @@ public class TutorialDisplay {
         copy.setTextLeft(this.getTextLeft());
         copy.setTextTop(this.getTextTop());
         copy.setVerticalTextPosition(this.getVerticalTextPosition());
+        copy.setIgnoreActionBar(this.isIgnoreActionBar());
 
         return copy;
     }
