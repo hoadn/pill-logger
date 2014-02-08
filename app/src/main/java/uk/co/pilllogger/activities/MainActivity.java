@@ -262,7 +262,7 @@ public class MainActivity extends PillLoggerActivityBase implements
         decorView.addView(wrapperView, ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT);
         wrapperView.addView(decorChild, decorChild.getLayoutParams());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2){
-            LayoutInflater.from(this).inflate(resContent, (ViewGroup)((LinearLayout)wrapperView.getChildAt(0)).getChildAt(1), true);}
+            LayoutInflater.from(this).inflate(resContent, (ViewGroup)((FrameLayout)wrapperView.getChildAt(0)).getChildAt(0), true);}
         //This is for KitKat and Jelly 4.3
         else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2){
             LayoutInflater.from(this).inflate(resContent, (ViewGroup) (((ViewGroup) wrapperView.getChildAt(0)).getChildAt(0)), true);}
