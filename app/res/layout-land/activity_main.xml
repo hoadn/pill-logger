@@ -55,7 +55,7 @@
             android:layout_marginRight="10dp"
             android:background="@color/tutorial_white"
             android:textColor="@color/text_grey"
-            android:textSize="18sp"
+            android:textSize="11sp"
             android:text="@string/consumptionlist_tut_1"/>
 
 

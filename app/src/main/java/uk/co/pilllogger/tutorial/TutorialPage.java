@@ -48,7 +48,7 @@ public abstract class TutorialPage {
         _arrow = (ImageView)layout.findViewById(R.id.tutorial_arrow);
         _arrow.setVisibility(View.INVISIBLE);
 
-        _tutorialText.setTypeface(State.getSingleton().getTypeface());
+        _tutorialText.setTypeface(State.getSingleton().getScriptTypeface());
 
         _leftMargin = _activity.getResources().getDimensionPixelSize(R.dimen.tutorial_text_left_margin);
         _topMargin = 0;// _activity.getResources().getDimensionPixelSize(R.dimen.tutorial_text_top_margin);

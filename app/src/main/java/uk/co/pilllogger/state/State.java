@@ -18,6 +18,7 @@ public class State {
     private static State _instance;
     private List<Integer> _graphExcludePills;
     private Typeface _typeface;
+    private Typeface _scriptTypeface;
 
     private List<Pill> _consumptionPills = new ArrayList<Pill>();
     Map<Pill, Integer> _openPills = new HashMap<Pill, Integer>();
@@ -37,6 +38,14 @@ public class State {
 
     public void setTypeface(Typeface typeface) {
         _typeface = typeface;
+    }
+
+    public Typeface getScriptTypeface() {
+        return _scriptTypeface;
+    }
+
+    public void setScriptTypeface(Typeface typeface) {
+        _scriptTypeface = typeface;
     }
 
     public List<Integer> getGraphExcludePills() {
