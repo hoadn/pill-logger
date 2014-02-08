@@ -40,14 +40,6 @@ public class State {
         _typeface = typeface;
     }
 
-    public Typeface getScriptTypeface() {
-        return _scriptTypeface;
-    }
-
-    public void setScriptTypeface(Typeface typeface) {
-        _scriptTypeface = typeface;
-    }
-
     public List<Integer> getGraphExcludePills() {
         return _graphExcludePills;
     }

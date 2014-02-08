@@ -93,10 +93,8 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         // Typeface ttf = Typeface.createFromAsset(this.getAssets(), "fonts/OpenSans-Light.ttf");
         Typeface ttf = Typeface.create("sans-serif-condensed", Typeface.NORMAL);
-        Typeface script = Typeface.createFromAsset(this.getAssets(), "fonts/RockSalt.ttf");
 
         State.getSingleton().setTypeface(ttf);
-        State.getSingleton().setScriptTypeface(script);
 
         _consumptionFragment = new ConsumptionListFragment();
         final Fragment fragment2 = new PillListFragment();
