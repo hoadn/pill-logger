@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -131,7 +132,6 @@ public class MainActivity extends PillLoggerActivityBase implements
                     }
                 });
 
-        _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_colourBackground, this));
         _fragmentPagerAdapter = new SlidePagerAdapter(getFragmentManager(),
                 _consumptionFragment,
                 fragment2,
@@ -140,7 +140,9 @@ public class MainActivity extends PillLoggerActivityBase implements
         _fragmentPager.setAdapter(_fragmentPagerAdapter);
 
         if(savedInstanceState != null) {
+            Log.d(TAG, "Loading instance");
             _fragmentPager.setCurrentItem(savedInstanceState.getInt("item"));
+            setBackgroundColour();
         }
 
         View tutorial = findViewById(R.id.tutorial_layout);
@@ -157,7 +159,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         setupChrome();
 
-        setBackgroundColour();
+        _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_colourBackground, this));
 
         Observer.getSingleton().registerPillsUpdatedObserver(this);
     }
@@ -172,6 +174,7 @@ public class MainActivity extends PillLoggerActivityBase implements
     private void setBackgroundColour(){
         int page = _fragmentPager.getCurrentItem();
 
+        Log.d(TAG, "Set currentItem to " + page);
         // TODO: This code will break when colours change in fragments, needs to be updated
         switch(page) {
             case 0:
@@ -308,6 +311,7 @@ public class MainActivity extends PillLoggerActivityBase implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        Log.d(TAG, "Saving instance");
         outState.putInt("item", _fragmentPager.getCurrentItem());
     }
 
