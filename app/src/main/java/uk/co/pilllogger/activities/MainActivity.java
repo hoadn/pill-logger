@@ -435,14 +435,12 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         final TutorialPage page = _tutorialService.getTutorialPage(tag);
         if(page == null) {
-            Toast.makeText(this, "DEBUG: No tutorial setup for this page", Toast.LENGTH_LONG).show();
             return; // no tutorial available for this page
         }
 
         if(page.getLayout() == null || page.getTutorialText() == null) return; // we can't be tutorialling if the views aren't there!
 
         if(page.isFinished()){
-            Toast.makeText(this, "DEBUG: Tutorial finished for this page", Toast.LENGTH_LONG).show();
             return;
         }
         page.resetPage();
@@ -463,7 +461,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
     @Override
     public void isTutorialSeen(Boolean seen, String tag) {
-        //if(!seen) // comment this line out to force tutorial
+        if(!seen) // comment this line out to force tutorial
             startTutorial(tag);
     }
 }

@@ -6,6 +6,7 @@ import android.view.View;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
+import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.tasks.SetTutorialSeenTask;
 
@@ -41,7 +42,7 @@ public class PillsListTutorialPage extends TutorialPage {
             default:
                 animateLayout();
 
-                new SetTutorialSeenTask(_activity, ConsumptionListFragment.TAG).execute();
+                new SetTutorialSeenTask(_activity, PillListFragment.TAG).execute();
                 _isFinished = true;
                 return;
         }
