@@ -72,7 +72,13 @@ public class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
             final Pill pill = _data.get(position);
             if (pill != null) {
                 holder.name.setText(pill.getName());
-                holder.size.setText(String.valueOf(pill.getSize()) + pill.getUnits());
+                if(pill.getSize() <= 0){
+                    holder.size.setVisibility(View.INVISIBLE);
+                }
+                else{
+                    holder.size.setText(String.valueOf(pill.getSize()) + pill.getUnits());
+                    holder.size.setVisibility(View.VISIBLE);
+                }
 
                 int visibility = pill.isFavourite() ? View.VISIBLE : View.INVISIBLE;
                 if (holder.favourite != null)

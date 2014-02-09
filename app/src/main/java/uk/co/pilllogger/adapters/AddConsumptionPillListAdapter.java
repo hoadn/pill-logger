@@ -102,7 +102,16 @@ public class
         Pill pill = _pills.get(position);
         if (pill != null && holder != null) {
             holder.name.setText(pill.getName());
-            holder.size.setText(String.valueOf(pill.getSize()));
+            if(pill.getSize() <= 0){
+                holder.size.setVisibility(View.INVISIBLE);
+                holder.units.setVisibility(View.INVISIBLE);
+            }
+            else{
+                holder.size.setText(String.valueOf(pill.getSize()));
+                holder.units.setText(pill.getUnits());
+                holder.size.setVisibility(View.VISIBLE);
+                holder.units.setVisibility(View.VISIBLE);
+            }
             holder.color.setColour(pill.getColour());
             if (State.getSingleton().getOpenPills().containsKey(pill)) {
                 v = open(v);
