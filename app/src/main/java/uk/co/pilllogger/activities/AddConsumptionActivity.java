@@ -312,21 +312,30 @@ public class AddConsumptionActivity extends Activity implements
     }
 
     public void completed() {
-        CharSequence name = _newPillName.getText();
-        int size = Integer.parseInt(String.valueOf(_newPillSize.getText()));
-        Pill pill = new Pill(name, size);
-        String units = String.valueOf(_unitSpinner.getSelectedItem());
-        pill.setUnits(units);
-        new InsertPillTask(_activity, pill, (InsertPillTask.ITaskComplete)_activity).execute();
 
-        _newPillName.setText("");
-        _newPillSize.setText("");
+        if(_newPillName == null || _newPillSize == null)
+            return;
 
-        _newPillLayout.setVisibility(View.GONE);
-        _selectPillLayout.setVisibility(View.VISIBLE);
+        if(!_newPillName.getText().toString().equals("")){
+            CharSequence name = _newPillName.getText();
+            int size = 0;
+            if(!_newPillSize.getText().toString().equals("")){
+                size = Integer.parseInt(String.valueOf(_newPillSize.getText()));
+            }
+            Pill pill = new Pill(name, size);
+            String units = String.valueOf(_unitSpinner.getSelectedItem());
+            pill.setUnits(units);
+            new InsertPillTask(_activity, pill, (InsertPillTask.ITaskComplete)_activity).execute();
 
-        RadioButton selectPill = (RadioButton) findViewById(R.id.add_consumption_select_select_pill);
-        selectPill.setChecked(true);
+            _newPillName.setText("");
+            _newPillSize.setText("");
+
+            _newPillLayout.setVisibility(View.GONE);
+            _selectPillLayout.setVisibility(View.VISIBLE);
+
+            RadioButton selectPill = (RadioButton) findViewById(R.id.add_consumption_select_select_pill);
+            selectPill.setChecked(true);
+        }
     }
 
     public void setDoneEnabled(boolean enabled) {
