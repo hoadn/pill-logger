@@ -397,7 +397,7 @@ public class MainActivity extends PillLoggerActivityBase implements
         Consumption consumption = new Consumption(pill, new Date());
         new InsertConsumptionTask(MainActivity.this, consumption).execute();
 
-        if (_fragmentPager.getCurrentItem() == 0)
+        if (_consumptionFragment.isResumed())
             new GetConsumptionsTask(MainActivity.this, (GetConsumptionsTask.ITaskComplete)_consumptionFragment, true).execute();
         Toast.makeText(MainActivity.this, "Added consumption of " + pill.getName(), Toast.LENGTH_SHORT).show();
     }
