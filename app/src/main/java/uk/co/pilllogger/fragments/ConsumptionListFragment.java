@@ -75,6 +75,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        this.setRetainInstance(true);
         View v = inflater.inflate(R.layout.main_fragment, container, false);
         v.setTag(R.id.tag_tab_icon_position, 0);
         v.setTag(R.id.tag_page_colour ,Color.argb(120, 0, 233, 255));
@@ -122,7 +123,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
 
     @Override
     public void consumptionsReceived(List<Consumption> consumptions) {
-        TextView noConsumption = (TextView)_activity.findViewById(R.id.no_consumption_text);
+        TextView noConsumption = (TextView)getActivity().findViewById(R.id.no_consumption_text);
         if (consumptions.size() == 0) {
             noConsumption.setVisibility(View.VISIBLE);
             _listView.setVisibility(View.GONE);
