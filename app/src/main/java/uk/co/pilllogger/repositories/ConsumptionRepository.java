@@ -91,7 +91,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                     null,
                     values);
         }
-        notifyUpdated();
+        notifyUpdated(consumption);
         return newRowId;
     }
 
@@ -247,5 +247,10 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
     void notifyUpdated(){
         _invalidateCache = true;
+    }
+
+    public void notifyUpdated(Consumption consumption) {
+        notifyUpdated();
+        Observer.getSingleton().notifyConsumptionAdded(consumption);
     }
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.listeners.AddConsumptionListener;
 import uk.co.pilllogger.models.Pill;
 
 /**
@@ -19,9 +20,10 @@ public class State {
     private List<Integer> _graphExcludePills;
     private Typeface _typeface;
     private Typeface _scriptTypeface;
-
     private List<Pill> _consumptionPills = new ArrayList<Pill>();
     Map<Pill, Integer> _openPills = new HashMap<Pill, Integer>();
+
+
 
     private State() {
     }

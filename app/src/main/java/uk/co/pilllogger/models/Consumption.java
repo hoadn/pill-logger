@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by nick on 22/10/13.
  */
-public class Consumption {
+public class Consumption implements Comparable {
 
     private Pill _pill;
     private Date _date;
@@ -60,4 +60,19 @@ public class Consumption {
 
     public int getQuantity(){return _quantity;}
     public void setQuantity(int quantity){_quantity = quantity;}
+
+    @Override
+    public int compareTo(Object o) {
+        if (!(o instanceof Consumption))
+            return 0;
+
+        Consumption consumption = (Consumption) o;
+        if (this == consumption)
+            return 0;
+
+        if (this.getDate().before(consumption.getDate()))
+            return 1;
+        else
+            return -1;
+    }
 }

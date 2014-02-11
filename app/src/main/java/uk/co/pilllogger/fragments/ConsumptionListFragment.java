@@ -28,6 +28,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +40,7 @@ import uk.co.pilllogger.adapters.ConsumptionListAdapter;
 import uk.co.pilllogger.adapters.GraphPillListAdapter;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.listeners.AddConsumptionListener;
 import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -61,7 +63,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         InitTestDbTask.ITaskComplete,
         GetConsumptionsTask.ITaskComplete,
         GetPillsTask.ITaskComplete,
-        Observer.IPillsUpdated{
+        Observer.IPillsUpdated,
+        AddConsumptionListener {
 
     public static final String TAG = "ConsumptionListFragment";
     ListView _listView;
@@ -70,6 +73,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     Fragment _fragment;
     Activity _activity;
     private List<Pill> _pills;
+    private List<Consumption> _consumptions;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,6 +103,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
             noConsumptions.setTypeface(typeface);
             title.setTypeface(typeface);
         }
+
+        Observer.getSingleton().registerConsumptionAddedObserver(this);
         return v;
     }
 
@@ -123,6 +129,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
 
     @Override
     public void consumptionsReceived(List<Consumption> consumptions) {
+        _consumptions = consumptions;
         TextView noConsumption = (TextView)getActivity().findViewById(R.id.no_consumption_text);
         if (consumptions.size() == 0) {
             noConsumption.setVisibility(View.VISIBLE);
@@ -240,5 +247,20 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     @Override
     public void pillsUpdated(Pill pill) {
         new GetPillsTask(this.getActivity(), this).execute();
+    }
+
+    @Override
+    public void consumptionAdded(Consumption consumption) {
+        final Consumption consumption1 = consumption;
+        getActivity().runOnUiThread(new Runnable(){
+            public void run(){
+                if (_consumptions != null && !(_consumptions.contains(consumption1))) {
+                    _consumptions.add(consumption1);
+                    Collections.sort(_consumptions);
+                    consumptionsReceived(_consumptions);
+                }
+            }
+        });
+
     }
 }
