@@ -91,6 +91,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                     null,
                     values);
         }
+        consumption.setId((int) newRowId);
         notifyUpdated(consumption);
         return newRowId;
     }
