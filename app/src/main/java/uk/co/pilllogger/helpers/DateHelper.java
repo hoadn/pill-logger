@@ -54,7 +54,10 @@ public class DateHelper {
     public static String getRelativeDateTime(Context context, DateTime date){
 
         String dateString;
-        if(date.plusHours(6).isAfterNow()){
+        if (isDateInFuture(date)) {
+            dateString = setAsDateAndTime(context, date);
+        }
+        else if(date.plusHours(6).isAfterNow()){
             // hours ago
             long timeMs = System.currentTimeMillis() - date.getMillis();
             long minutes = timeMs / 1000 / 60;
@@ -76,13 +79,28 @@ public class DateHelper {
             dateString += " " + DateUtils.getRelativeTimeSpanString(context, date.withDate(DateTime.now().year().get(), DateTime.now().monthOfYear().get(), DateTime.now().getDayOfMonth()).getMillis(), true);
         }
         else{
-            // on {date}
-            dateString = (String)DateUtils.getRelativeTimeSpanString(context, date.getMillis(), true);
-
-            // at {time}
-            dateString += " " + DateUtils.getRelativeTimeSpanString(context, date.withDate(DateTime.now().year().get(), DateTime.now().monthOfYear().get(), DateTime.now().getDayOfMonth()).getMillis(), true);
+            dateString = setAsDateAndTime(context, date);
         }
 
         return dateString;
+    }
+
+    private static String setAsDateAndTime(Context context, DateTime date) {
+        String dateString;
+        // on {date}
+        dateString = (String)DateUtils.getRelativeTimeSpanString(context, date.getMillis(), true);
+
+        // at {time}
+        return dateString += " " + DateUtils.getRelativeTimeSpanString(context, date.withDate(DateTime.now().year().get(), DateTime.now().monthOfYear().get(), DateTime.now().getDayOfMonth()).getMillis(), true);
+    }
+
+    public static boolean isDateInFuture(Date date) {
+        Date currentDate = new Date();
+        return date.compareTo(currentDate) > 0;
+    }
+
+    public static boolean isDateInFuture(DateTime date) {
+        DateTime currentDate = new DateTime();
+        return date.compareTo(currentDate) > 0;
     }
 }

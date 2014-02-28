@@ -1,8 +1,10 @@
 package uk.co.pilllogger.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -10,11 +12,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -25,18 +24,15 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.listeners.AddConsumptionPillItemClickListener;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -79,6 +75,7 @@ public class AddConsumptionActivity extends Activity implements
     private DatePickerDialog _endDateDialog;
     DatePickerDialog.OnDateSetListener _endDateListener;
     DatePickerDialog.OnDateSetListener _startDateListener;
+    public boolean _futureOk = false;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -237,7 +234,7 @@ public class AddConsumptionActivity extends Activity implements
     }
 
     public void done(View view) {
-        _adapter.clearOpenPillsList();
+        final View v = view;
         AddConsumptionPillListAdapter adapter = (AddConsumptionPillListAdapter) _pillsList.getAdapter();
         List<Pill> consumptionPills = adapter.getPillsConsumed();
 
@@ -256,13 +253,31 @@ public class AddConsumptionActivity extends Activity implements
                 e.printStackTrace();
             }
         }
-        for (Pill pill : consumptionPills) {
-            Consumption consumption = new Consumption(pill, date);
-            new InsertConsumptionTask(this, consumption).execute();
+
+        if (DateHelper.isDateInFuture(date) && !_futureOk) {
+            new AlertDialog.Builder(this)
+                    .setMessage("Are you sure you want to add this consumption in the future?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            AddConsumptionActivity.this._futureOk = true;
+                            AddConsumptionActivity.this.done(v);
+                        }
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
         }
-        _adapter.clearConsumedPills();
-        finish();
+        else {
+            for (Pill pill : consumptionPills) {
+                Consumption consumption = new Consumption(pill, date);
+                new InsertConsumptionTask(this, consumption).execute();
+            }
+            _adapter.clearOpenPillsList();
+            _adapter.clearConsumedPills();
+            finish();
+        }
     }
+
 
     @Override
     public void pillInserted(Pill pill) {
