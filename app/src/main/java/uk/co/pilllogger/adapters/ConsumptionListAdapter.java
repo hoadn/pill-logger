@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.echo.holographlibrary.BarGraph;
 import com.echo.holographlibrary.LineGraph;
@@ -161,7 +160,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
                     holder.quantity.setText(String.valueOf(consumption.getQuantity()));
                     holder.consumption = consumption;
 
-                    RelativeLayout container = (RelativeLayout) v.findViewById(R.id.consumption_list_item_container);
+                    RelativeLayout container = (RelativeLayout) v.findViewById(R.id.selector_container);
                     FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) container.getLayoutParams();
                     TextView dayText = (TextView) v.findViewById(R.id.day_text);
                     DateTime currentDate = new DateTime(consumption.getDate());

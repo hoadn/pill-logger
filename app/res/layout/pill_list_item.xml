@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="@dimen/pill_list_item_height"
-        android:background="@drawable/list_selector">
+        android:background="@drawable/list_selector"
+        android:tag="selector"
+        android:id="@+id/selector_container">
 
         <View
             android:id="@+id/pill_list_favourite"
