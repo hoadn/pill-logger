@@ -22,6 +22,7 @@ import java.util.List;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillsListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
@@ -172,9 +173,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         _addPillSize.setText("");
         _addPillSize.clearFocus();
 
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
-                InputMethodManager.HIDE_NOT_ALWAYS);
+        LayoutHelper.hideKeyboard(getActivity());
     }
 
     @Override

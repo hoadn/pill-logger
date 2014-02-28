@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -34,6 +35,7 @@ import java.util.Map;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.listeners.AddConsumptionPillItemClickListener;
 import uk.co.pilllogger.models.Consumption;
@@ -268,6 +270,8 @@ public class AddConsumptionActivity extends Activity implements
             new GetPillsTask(_activity, (GetPillsTask.ITaskComplete)_activity).execute();
             _adapter.addOpenPill(pill);
             _adapter.addConsumedPill(pill);
+
+            LayoutHelper.hideKeyboard(this);
         }
     }
 
