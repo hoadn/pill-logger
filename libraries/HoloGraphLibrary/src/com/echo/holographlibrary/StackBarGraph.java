@@ -55,6 +55,7 @@ public class StackBarGraph extends View {
     private OnBarClickedListener mListener;
     private Bitmap mFullImage;
     private boolean mShouldUpdate = false;
+    private int rightPadding = 50;
 
     public boolean getShouldDrawGrid() {
         return mShouldDrawGridHorizontal;
@@ -101,13 +102,13 @@ public class StackBarGraph extends View {
             Canvas canvas = new Canvas(mFullImage);
             canvas.drawColor(Color.TRANSPARENT);
             NinePatchDrawable popup = (NinePatchDrawable)this.getResources().getDrawable(R.drawable.popup_black);
-            
+
             float maxValue = 0;
             float padding = 1 * mContext.getResources().getDisplayMetrics().density;
             int selectPadding = (int) (4 * mContext.getResources().getDisplayMetrics().density);
             float bottomPadding = 20 * mContext.getResources().getDisplayMetrics().density;
             float leftPadding = bottomPadding;
-            
+
             float usableHeight;
             if (mShowBarText) {
                 this.mPaint.setTextSize(VALUE_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
@@ -117,8 +118,6 @@ public class StackBarGraph extends View {
             } else {
                 usableHeight = getHeight()-(bottomPadding*2);
             }
-            
-            float barWidth = (getWidth() - (padding*2)*mBars.size() - leftPadding * 2)/mBars.size();
 
             // Maximum y value = sum of all values.
             for (final StackBar bar : mBars) {
@@ -126,9 +125,15 @@ public class StackBarGraph extends View {
                     maxValue = bar.getTotalValue();
                 }
             }
-            
+
+            if(maxValue >= 10){
+                rightPadding = 75;
+            }
+
+            float barWidth = (getWidth() - (padding*2)*mBars.size() - (leftPadding + rightPadding))/mBars.size();
+
             mRectangle = new Rect();
-            
+
             int count = 0;
             for (final StackBar bar : mBars) {
                 float currentTop = 0;
@@ -211,21 +216,28 @@ public class StackBarGraph extends View {
             }
             mPaint.setColor(Color.argb(50, 255, 255, 255));
             mPaint.setStrokeWidth(padding);
-            
+
             mPaint.setAntiAlias(true);
             mTextPaint.setColor(Color.argb(150, 255, 255, 255));
+
             if(mShouldDrawGridHorizontal){
                 float singleItemHeight = usableHeight / maxValue;
                 for(int i = 0; i <= maxValue; i++){
+                    if(maxValue > 10){
+                        if(i % 5 > 0){
+                            continue;
+                        }
+                    }
+
                     float y = getHeight() - (bottomPadding + ((singleItemHeight) * i) + (padding * i) - density);
-                    canvas.drawLine(0, y, getWidth() - 50, y, mPaint);
+                    canvas.drawLine(0, y, getWidth() - rightPadding, y, mPaint);
 
                     Rect textBounds = new Rect();
                     String value = String.valueOf(i);
-                    mTextPaint.getTextBounds(value, 0, 1, textBounds);
+                    mTextPaint.getTextBounds(value, 0, value.length(), textBounds);
 
                     canvas.drawText(String.valueOf(i),
-                            (getWidth() - 50) + (50/2 - textBounds.width()/2f),
+                            (getWidth() - rightPadding) + (rightPadding/2 - textBounds.width()/2f),
                             y + textBounds.height()/2f,
                             mTextPaint);
                 }
