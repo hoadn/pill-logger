@@ -56,7 +56,17 @@ public class DateHelper {
         String dateString;
         if(date.plusHours(6).isAfterNow()){
             // hours ago
-            dateString = (String) DateUtils.getRelativeTimeSpanString(date.getMillis(), DateTime.now().getMillis(), DateUtils.SECOND_IN_MILLIS);
+            long timeMs = System.currentTimeMillis() - date.getMillis();
+            long minutes = timeMs / 1000 / 60;
+            String minutePlural = (minutes > 1) ? "minutes" : "minute";
+            dateString = String.valueOf(minutes) + " " + minutePlural + " ago";
+            if (minutes > 60) {
+                long hours = minutes / 60;
+                long leftOverMinutes = minutes % 60;
+                String hourPlural = (hours > 1) ? "hours" : "hour";
+                minutePlural = (leftOverMinutes > 1) ? "minutes" : "minute";
+                dateString = String.valueOf(hours) + " " + hourPlural + " " + leftOverMinutes + " " + minutePlural + " ago";
+            }
         }
         else if(date.plusDays(2).isAfterNow()){
             // yesterday / x days ago
