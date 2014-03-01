@@ -22,7 +22,7 @@ public class State {
     private Typeface _scriptTypeface;
     private List<Pill> _consumptionPills = new ArrayList<Pill>();
     Map<Pill, Integer> _openPills = new HashMap<Pill, Integer>();
-
+    private boolean _chartsPaid = false;
 
 
     private State() {
@@ -114,4 +114,11 @@ public class State {
         return _openPills;
     }
 
+    public boolean isChartsPaid() {
+        return _chartsPaid;
+    }
+
+    public void setChartsPaid(boolean chartsPaid) {
+        _chartsPaid = chartsPaid;
+    }
 }

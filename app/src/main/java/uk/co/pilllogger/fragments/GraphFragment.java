@@ -55,6 +55,14 @@ public class GraphFragment extends PillLoggerFragmentBase implements GetConsumpt
         return _layout;
     }
 
+    private void managePaidCharts(){
+        if(!State.getSingleton().isChartsPaid()){
+            return;
+        }
+
+        // todo: hide the covers over the charts
+    }
+
     @Override
     public void consumptionsReceived(List<Consumption> consumptions) {
 
