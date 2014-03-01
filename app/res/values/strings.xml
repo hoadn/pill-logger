@@ -63,5 +63,8 @@
     <string name="pillslist_tut_0">This page shows your saved medication</string>
     <string name="pillslist_tut_1">Use this box to add new medicine</string>
     <string name="pillslist_tut_2">Your medicine will appear here. Long press it for more options</string>
+    <string name="add_consumption_reminder_title">Set Reminder</string>
+    <string name="reminder_hours">Hours</string>
+    <string name="add_consumption_reminder_select_specific_label">Specific Time</string>
 
 </resources>
