@@ -70,5 +70,11 @@
     <string name="notification_reminder_title">Reminder</string>
     <string name="notification_reminder_content_prefix">You took</string>
     <string name="intent_extra_notification_consumption_group">notification_consumption_group</string>
+    <string name="pref_key_reminders">reminders</string>
+    <string name="pref_title_reminders">Reminders</string>
+    <string name="pref_key_reminder_sound">reminder_sound</string>
+    <string name="pref_key_reminder_vibrate">reminder_vibrate</string>
+    <string name="pref_title_reminder_vibrate">Vibrate</string>
+    <string name="pref_title_reminder_sound">Sound</string>
 
 </resources>

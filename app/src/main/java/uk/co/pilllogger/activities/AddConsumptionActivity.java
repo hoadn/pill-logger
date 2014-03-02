@@ -404,7 +404,7 @@ public class AddConsumptionActivity extends Activity implements
                 Intent intent = new Intent(getString(R.string.intent_reminder));
                 intent.putExtra(getString(R.string.intent_extra_notification_consumption_group), consumptionGroup);
 
-                PendingIntent pi = PendingIntent.getBroadcast(this, 121393, intent, 0);
+                PendingIntent pi = PendingIntent.getBroadcast(this, reminderDate.hashCode(), intent, 0);
                 AlarmManager am = (AlarmManager)(this.getSystemService(Context.ALARM_SERVICE));
 
                 am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + difference, pi);

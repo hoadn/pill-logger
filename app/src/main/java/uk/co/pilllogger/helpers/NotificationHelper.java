@@ -10,8 +10,10 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -66,6 +68,11 @@ public abstract class NotificationHelper {
 
         String ticker = String.format("%s: %s", title, content);
 
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        sound = sharedPreferences.getString(context.getString(R.string.pref_key_reminder_sound), "DEFAULT_SOUND");
+        vibrate = sharedPreferences.getBoolean(context.getString(R.string.pref_key_reminder_vibrate), false);
+
         Uri soundUri = Uri.parse(sound);
 
         BitmapDrawable bd = (BitmapDrawable) context.getResources().getDrawable(R.drawable.ic_launcher);
@@ -87,8 +94,8 @@ public abstract class NotificationHelper {
             builder.setTicker(null);
         }
 
-        if(!vibrate)
-            builder.setVibrate(new long[]{});
+        if(vibrate)
+            builder.setDefaults(Notification.DEFAULT_VIBRATE);
 
         if(!lights)
             builder.setLights(0, 0, 0);
