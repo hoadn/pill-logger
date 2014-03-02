@@ -1,13 +1,17 @@
 package uk.co.pilllogger.activities;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.format.DateFormat;
 import android.view.KeyEvent;
 import android.view.View;
@@ -28,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
@@ -356,6 +361,7 @@ public class AddConsumptionActivity extends Activity implements
         List<Pill> consumptionPills = adapter.getPillsConsumed();
 
         Date consumptionDate = new Date();
+        String consumptionGroup = UUID.randomUUID().toString();
         Date reminderDate = null;
         RadioButton dateSelectorNow = (RadioButton) findViewById(R.id.add_consumption_select_select_now);
         RadioButton reminderDateSelectorHours = (RadioButton)findViewById(R.id.add_consumption_select_reminder_hours);
@@ -388,12 +394,21 @@ public class AddConsumptionActivity extends Activity implements
         }
         else {
             for (Pill pill : consumptionPills) {
-                Consumption consumption = new Consumption(pill, consumptionDate);
+                Consumption consumption = new Consumption(pill, consumptionDate, consumptionGroup);
                 new InsertConsumptionTask(this, consumption).execute();
             }
 
             if(reminderDate != null){
-                // todo: set notification alert
+                long difference = reminderDate.getTime() - new Date().getTime();
+
+                Intent intent = new Intent(getString(R.string.intent_reminder));
+                intent.putExtra(getString(R.string.intent_extra_notification_consumption_group), consumptionGroup);
+
+                PendingIntent pi = PendingIntent.getBroadcast(this, 121393, intent, 0);
+                AlarmManager am = (AlarmManager)(this.getSystemService(Context.ALARM_SERVICE));
+                am.cancel(pi); //cancel any that are already set.
+
+                am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + difference, pi);
             }
 
             _adapter.clearOpenPillsList();

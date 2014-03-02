@@ -24,7 +24,7 @@ public class InsertConsumptionTask  extends AsyncTask<Void, Void, Void> {
         _consumption = consumption;
     }
 
-    public  InsertConsumptionTask(Context context, Consumption consumption, ITaskComplete listener) {
+    public InsertConsumptionTask(Context context, Consumption consumption, ITaskComplete listener) {
         this(context, consumption);
         _listener = listener;
     }

@@ -61,13 +61,13 @@ public class DateHelper {
             // hours ago
             long timeMs = System.currentTimeMillis() - date.getMillis();
             long minutes = timeMs / 1000 / 60;
-            String minutePlural = (minutes > 1) ? "minutes" : "minute";
+            String minutePlural = (minutes == 1) ? "minute" : "minutes";
             dateString = String.valueOf(minutes) + " " + minutePlural + " ago";
             if (minutes > 60) {
                 long hours = minutes / 60;
                 long leftOverMinutes = minutes % 60;
-                String hourPlural = (hours > 1) ? "hours" : "hour";
-                minutePlural = (leftOverMinutes > 1) ? "minutes" : "minute";
+                String hourPlural = (hours == 1) ? "hour" : "hours";
+                minutePlural = (leftOverMinutes == 1) ? "minute" : "minutes";
                 dateString = String.valueOf(hours) + " " + hourPlural + " " + leftOverMinutes + " " + minutePlural + " ago";
             }
         }

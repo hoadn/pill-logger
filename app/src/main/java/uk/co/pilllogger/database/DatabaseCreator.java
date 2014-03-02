@@ -1,6 +1,7 @@
 package uk.co.pilllogger.database;
 
 import android.content.Context;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -8,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by root on 21/10/13.
  */
 public class DatabaseCreator extends SQLiteOpenHelper{
-    public static final int DATABASE_VERSION = 7;
+    public static final int DATABASE_VERSION = 8;
     public static final String DATABASE_NAME = "PillLogger.db";
 
     public DatabaseCreator(Context context) {
@@ -26,12 +27,17 @@ public class DatabaseCreator extends SQLiteOpenHelper{
             case 6:
                 db.execSQL(DatabaseContract.CreateTables.CREATE_TUTORIAL_TABLE);
             case 7:
+            case 8:
+                try {
+                    db.execSQL(DatabaseContract.AlterTables.ADD_CONSUMPTIONS_GROUP_COLUMN);
+                } catch (SQLException ignored) {}
                 // add alter SQL statement here
         }
     }
 
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch(newVersion){
+            case 8:
             case 7:
                 db.execSQL(DatabaseContract.DeleteTables.DELETE_TUTORIALS_TABLE);
             case 6:

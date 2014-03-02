@@ -66,5 +66,9 @@
     <string name="add_consumption_reminder_title">Set Reminder</string>
     <string name="reminder_hours">Hours</string>
     <string name="add_consumption_reminder_select_specific_label">Specific Time</string>
+    <string name="intent_reminder">uk.co.pilllogger.REMINDER</string>
+    <string name="notification_reminder_title">Reminder</string>
+    <string name="notification_reminder_content_prefix">You took</string>
+    <string name="intent_extra_notification_consumption_group">notification_consumption_group</string>
 
 </resources>

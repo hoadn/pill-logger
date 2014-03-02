@@ -40,19 +40,20 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.Consumptions.COLUMN_PILL_ID, consumption.getPillId());
         values.put(DatabaseContract.Consumptions.COLUMN_DATE_TIME, consumption.getDate().getTime());
+        values.put(DatabaseContract.Consumptions.COLUMN_GROUP, consumption.getGroup());
 
         return values;
     }
 
     @Override
     protected String[] getProjection() {
-        String[] projection = {
+
+        return new String[]{
                 DatabaseContract.Consumptions._ID,
                 DatabaseContract.Consumptions.COLUMN_PILL_ID,
                 DatabaseContract.Consumptions.COLUMN_DATE_TIME,
+                DatabaseContract.Consumptions.COLUMN_GROUP
         };
-
-        return projection;
     }
 
     @Override
@@ -172,6 +173,38 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
             while (!c.isAfterLast()) {
                 Consumption consumption = getFromCursor(c, false); // we don't want to recursively cause ourselves trouble, we already have the pill
                 consumption.setPill(pill);
+                consumptions.add(consumption);
+                c.moveToNext();
+            }
+            c.close();
+        }
+
+        return consumptions;
+    }
+
+    public List<Consumption> getForGroup(String group) {
+        SQLiteDatabase db = _dbCreator.getReadableDatabase();
+
+        String[] projection = getProjection();
+
+        String sortOrder = DatabaseContract.Consumptions.COLUMN_DATE_TIME + " DESC";
+        String selection = group == null ? null : DatabaseContract.Consumptions.COLUMN_GROUP + " =?";
+        String[] selectionArgs = group == null ? null : new String[] { group };
+        List<Consumption> consumptions = new ArrayList<Consumption>();
+        if (db != null) {
+            Cursor c = db.query(
+                    DatabaseContract.Consumptions.TABLE_NAME,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    sortOrder
+            );
+
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                Consumption consumption = getFromCursor(c, true); // we don't want to recursively cause ourselves trouble, we already have the pill
                 consumptions.add(consumption);
                 c.moveToNext();
             }

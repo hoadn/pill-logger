@@ -23,6 +23,7 @@ public final class DatabaseContract {
         public static final String TABLE_NAME = "consumption";
         public static final String COLUMN_PILL_ID = "pill_id";
         public static final String COLUMN_DATE_TIME = "date_time";
+        public static final String COLUMN_GROUP = "group_id";
     }
 
     public static abstract class Tutorials implements BaseColumns {
@@ -46,7 +47,8 @@ public final class DatabaseContract {
                 createTableSql + Consumptions.TABLE_NAME + " (" +
                 Consumptions._ID + " INTEGER PRIMARY KEY," +
                 Consumptions.COLUMN_PILL_ID + " INTEGER, " +
-                Consumptions.COLUMN_DATE_TIME + " LONG)";
+                Consumptions.COLUMN_DATE_TIME + " LONG, " +
+                Consumptions.COLUMN_GROUP + " TEXT)";
 
         public static final String CREATE_TUTORIAL_TABLE =
                 createTableSql + Tutorials.TABLE_NAME + " (" +
@@ -58,5 +60,9 @@ public final class DatabaseContract {
         public static final String DELETE_PILL_TABLE = "DROP TABLE IF EXISTS " + Pills.TABLE_NAME;
         public static final String DELETE_CONSUMPTION_TABLE = "DROP TABLE IF EXISTS " + Consumptions.TABLE_NAME;
         public static final String DELETE_TUTORIALS_TABLE = "DROP TABLE IF EXISTS " + Tutorials.TABLE_NAME;
+    }
+
+    public static abstract class AlterTables implements BaseColumns{
+        public static final String ADD_CONSUMPTIONS_GROUP_COLUMN = "ALTER TABLE "+Consumptions.TABLE_NAME+" ADD COLUMN " + Consumptions.COLUMN_GROUP + " TEXT DEFAULT ''";
     }
 }

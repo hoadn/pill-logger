@@ -15,18 +15,31 @@ public class GetConsumptionsTask extends AsyncTask<Void, Void, List<Consumption>
 
     Context _context;
     ITaskComplete _listener;
-    private boolean _group;
+    private boolean _shouldGroup;
+    private String _group;
 
-    public GetConsumptionsTask(Context context, ITaskComplete listener, boolean group) {
+    public GetConsumptionsTask(Context context, ITaskComplete listener, boolean shouldGroup){
+        this(context, listener, shouldGroup, null);
+    }
+
+    public GetConsumptionsTask(Context context, ITaskComplete listener, boolean shouldGroup, String group) {
         _context = context;
         _listener = listener;
+        _shouldGroup = shouldGroup;
         _group = group;
     }
     @Override
     protected List<Consumption> doInBackground(Void... voids) {
         ConsumptionRepository repository = ConsumptionRepository.getSingleton(_context);
-        List<Consumption> consumptions = repository.getAll();
-        if(_group)
+
+        List<Consumption> consumptions;
+        if(_group == null){
+            consumptions = repository.getAll();
+        }
+        else{
+            consumptions = repository.getForGroup(_group);
+        }
+        if(_shouldGroup)
             return repository.groupConsumptions(consumptions);
 
         return consumptions;

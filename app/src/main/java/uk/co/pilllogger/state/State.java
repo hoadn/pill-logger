@@ -17,12 +17,12 @@ import uk.co.pilllogger.models.Pill;
 public class State {
 
     private static State _instance;
+    private Map<Pill, Integer> _openPills = new HashMap<Pill, Integer>();
     private List<Integer> _graphExcludePills;
     private Typeface _typeface;
     private Typeface _scriptTypeface;
     private List<Pill> _consumptionPills = new ArrayList<Pill>();
-    Map<Pill, Integer> _openPills = new HashMap<Pill, Integer>();
-
+    private boolean _appVisible = false;
 
 
     private State() {
@@ -114,4 +114,11 @@ public class State {
         return _openPills;
     }
 
+    public boolean isAppVisible() {
+        return _appVisible;
+    }
+
+    public void setAppVisible(boolean appVisible) {
+        _appVisible = appVisible;
+    }
 }
