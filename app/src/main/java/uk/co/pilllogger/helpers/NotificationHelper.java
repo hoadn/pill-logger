@@ -9,6 +9,7 @@ import android.content.*;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
@@ -67,9 +68,12 @@ public abstract class NotificationHelper {
 
         Uri soundUri = Uri.parse(sound);
 
+        BitmapDrawable bd = (BitmapDrawable) context.getResources().getDrawable(R.drawable.ic_launcher);
+
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_notification)
+                        .setLargeIcon(bd.getBitmap())
                         .setContentTitle(title)
                         .setContentText(content)
                         .setWhen(new Date().getTime())
