@@ -406,7 +406,6 @@ public class AddConsumptionActivity extends Activity implements
 
                 PendingIntent pi = PendingIntent.getBroadcast(this, 121393, intent, 0);
                 AlarmManager am = (AlarmManager)(this.getSystemService(Context.ALARM_SERVICE));
-                am.cancel(pi); //cancel any that are already set.
 
                 am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + difference, pi);
             }
