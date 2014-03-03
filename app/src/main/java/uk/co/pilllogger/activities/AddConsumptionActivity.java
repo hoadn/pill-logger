@@ -24,7 +24,10 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -76,6 +79,8 @@ public class AddConsumptionActivity extends Activity implements
     DatePickerDialog.OnDateSetListener _endDateListener;
     DatePickerDialog.OnDateSetListener _startDateListener;
     public boolean _futureOk = false;
+
+    private List<Pill> _addedPills = new ArrayList<Pill>();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -221,6 +226,32 @@ public class AddConsumptionActivity extends Activity implements
             showSelectPillOptions();
         }
 
+        /*
+        Sorts pill collection based on its last consumption date
+         */
+        Collections.sort(pills, new Comparator<Pill>() {
+            public int compare(Pill pill1, Pill pill2) {
+                if (_addedPills.contains(pill1) && !_addedPills.contains(pill2)) { //if pill has been added during this Add Consumption it should be top
+                    return -1;
+                }
+                if (_addedPills.contains(pill1) && !_addedPills.contains(pill2)) {
+                    return 1;
+                }
+                Consumption pill1Consumption = pill1.getLatestConsumption();
+                Consumption pill2Consumption = pill2.getLatestConsumption();
+                if (pill1Consumption == null && pill2Consumption == null) {
+                    return 0;
+                }
+                if (pill1Consumption == null && pill2Consumption != null) {
+                    return 1;
+                }
+                if (pill2Consumption == null && pill1Consumption != null) {
+                    return -1;
+                }
+                return pill2.getLatestConsumption().getDate().compareTo(pill1.getLatestConsumption().getDate());
+            }
+        });
+
         _adapter = new AddConsumptionPillListAdapter(this, R.layout.add_consumption_pill_list, pills);
          _pillsList.setAdapter(_adapter);
         _pillsList.setOnItemClickListener(new AddConsumptionPillItemClickListener(this, (AddConsumptionPillListAdapter)_pillsList.getAdapter()));
@@ -345,6 +376,7 @@ public class AddConsumptionActivity extends Activity implements
             String units = String.valueOf(_unitSpinner.getSelectedItem());
             pill.setUnits(units);
             new InsertPillTask(_activity, pill, (InsertPillTask.ITaskComplete)_activity).execute();
+            _addedPills.add(pill);
 
             _newPillName.setText("");
             _newPillSize.setText("");
@@ -372,6 +404,4 @@ public class AddConsumptionActivity extends Activity implements
             doneLayout.setClickable(true);
         }
     }
-
-
 }
