@@ -1,7 +1,5 @@
 package uk.co.pilllogger.fragments;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -10,12 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -27,9 +23,8 @@ import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
-import uk.co.pilllogger.tasks.GetTutorialSeenTask;
 import uk.co.pilllogger.tasks.InsertPillTask;
-import uk.co.pilllogger.tasks.SetTutorialSeenTask;
+import uk.co.pilllogger.views.ColourIndicator;
 
 
 public class PillListFragment extends PillLoggerFragmentBase implements
@@ -42,6 +37,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     private EditText _addPillName;
     private EditText _addPillSize;
     private Spinner _unitSpinner;
+    ColourIndicator _colour;
 
 	public PillListFragment() {
 	}
@@ -78,10 +74,50 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         _addPillSize = (EditText) v.findViewById(R.id.pill_fragment_add_pill_size);
 
         TextView title = (TextView)v.findViewById(R.id.pill_fragment_title);
+        TextView colourText = (TextView)v.findViewById(R.id.pill_fragment_add_pill_colour);
+        TextView create = (TextView)v.findViewById(R.id.pill_fragment_add_pill_create);
         addPillTitle.setTypeface(typeface);
         _addPillName.setTypeface(typeface);
         _addPillSize.setTypeface(typeface);
         title.setTypeface(typeface);
+        colourText.setTypeface(typeface);
+        create.setTypeface(typeface);
+
+        _colour = (ColourIndicator)v.findViewById(R.id.pill_fragment_colour);
+        final View mainView = v;
+        _colour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final View colourHolder = mainView.findViewById(R.id.pill_fragment_colour_picker_container);
+                final ViewGroup colourContainer = (ViewGroup) colourHolder.findViewById(R.id.colour_container);
+                if (colourHolder.getVisibility() == View.VISIBLE) {
+                    int colourCount = colourContainer.getChildCount();
+                    for (int i = 0; i < colourCount; i++) {
+                        View colourView = colourContainer.getChildAt(i);
+                        if (colourView != null) {
+                            colourView.setOnClickListener(null);
+                        }
+                    }
+                    colourHolder.setVisibility(View.GONE);
+                } else {
+                    colourHolder.setVisibility(View.VISIBLE);
+                    int colourCount = colourContainer.getChildCount();
+                    for (int i = 0; i < colourCount; i++) {
+                        View colourView = colourContainer.getChildAt(i);
+                        if (colourView != null) {
+                            colourView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    int colour = ((ColourIndicator) view).getColour();
+                                    _colour.setColour(colour);
+                                    colourHolder.setVisibility(View.GONE);
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
 
         View completed = v.findViewById(R.id.pill_fragment_add_pill_completed);
         completed.setOnClickListener(new AddPillClickListener(this, this));
@@ -203,6 +239,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             String units = _unitSpinner.getSelectedItem().toString();
             newPill.setUnits(units);
             newPill.setName(pillName);
+            newPill.setColour(_colour.getColour());
 
             int pillSize = 0;
             if (!_addPillSize.getText().toString().matches("")) {

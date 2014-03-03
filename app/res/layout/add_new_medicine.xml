@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pill_fragment_quick_create"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:background="@color/translucent_white"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="15dp">
+
+    <TextView
+        android:id="@+id/pill_fragment_add_pill_title"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:textStyle="bold"
+        android:text="@string/create_a_pill_title"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:padding="5dp"
+        android:textAllCaps="false"/>
+    <RelativeLayout
+        android:id="@+id/pill_fragment_name_outer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pill_fragment_add_pill_title">
+        <LinearLayout
+            android:id="@+id/pill_fragment_add_pill_name_colour"
+            android:layout_height="40dp"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            >
+            <EditText
+                android:id="@+id/pill_fragment_add_pill_name"
+                android:layout_height="40dp"
+                android:layout_width="0dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textSize="22sp"
+                android:layout_weight="1"
+                android:hint="@string/create_a_pill_name_hint"
+                android:textColorHint="@color/text_grey_light"
+                android:textColor="@android:color/white"
+                android:background="@null"
+                android:inputType="textCapWords"
+                android:imeOptions="actionNext"/>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:background="@color/divider_white"/>
+
+            <TextView
+                android:id="@+id/pill_fragment_add_pill_colour"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:textSize="22sp"
+                android:text="Color"/>
+
+            <uk.co.pilllogger.views.ColourIndicator
+                android:id="@+id/pill_fragment_colour"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_weight="0"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"
+                android:paddingTop="8dp"
+                android:paddingRight="4dp"
+                android:paddingLeft="4dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:color="@color/pill_colour9"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pill_fragment_colour_picker_container"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pill_fragment_add_pill_name_colour"
+            android:layout_centerHorizontal="true">
+            <include layout="@layout/colour_picker"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/pill_fragment_size_container"
+        android:layout_height="40dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_below="@id/pill_fragment_name_outer">
+        <EditText
+            android:id="@+id/pill_fragment_add_pill_size"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:textSize="22sp"
+            android:hint="@string/create_a_pill_size_hint"
+            android:textColorHint="@color/text_grey_light"
+            android:textColor="@android:color/white"
+            android:inputType="number"
+            android:background="@null"
+            android:imeOptions="actionDone"/>
+
+        <Spinner
+            android:id="@+id/units_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="0"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@color/divider_white"/>
+
+        <LinearLayout
+            android:id="@+id/pill_fragment_add_pill_completed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="0dp"
+            android:paddingRight="5dp"
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackground">
+            <TextView
+                android:id="@+id/pill_fragment_add_pill_create"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:paddingRight="5dp"
+                android:textSize="22sp"
+                android:text="@string/finish_create_pill"
+                android:gravity="center_vertical"/>
+            <ImageView
+                android:layout_height="40dp"
+                android:layout_width="40dp"
+                android:src="@drawable/tick_light"
+                android:padding="5dp"
+                android:layout_weight="0"
+                android:contentDescription="@string/tick_description"/>
+
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@id/pill_fragment_size_container"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/divider_white"/>
+
+
+</RelativeLayout>

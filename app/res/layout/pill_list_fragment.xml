@@ -19,96 +19,14 @@
         android:textSize="20sp"
         android:padding="5dp"
         android:textAllCaps="true"/>
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/pill_fragment_quick_create"
-        android:layout_height="125dp"
-        android:layout_width="match_parent"
-        android:background="@color/translucent_white"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/pill_fragment_title">
-
-        <TextView
-            android:id="@+id/pill_fragment_add_pill_title"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_alignParentTop="true"
-            android:textStyle="bold"
-            android:text="@string/create_a_pill_title"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:padding="5dp"
-            android:textAllCaps="false"/>
-        <EditText
-            android:id="@+id/pill_fragment_add_pill_name"
-            android:layout_height="40dp"
-            android:layout_width="match_parent"
-            android:paddingLeft="10dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:textSize="22sp"
-            android:layout_below="@id/pill_fragment_add_pill_title"
-            android:hint="@string/create_a_pill_name_hint"
-            android:textColorHint="@color/text_grey_light"
-            android:textColor="@android:color/white"
-            android:background="@null"
-            android:inputType="textCapWords"
-            android:imeOptions="actionNext"/>
-
-        <LinearLayout
-            android:layout_height="40dp"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_below="@id/pill_fragment_add_pill_name">
-            <EditText
-                android:id="@+id/pill_fragment_add_pill_size"
-                android:layout_height="match_parent"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:paddingLeft="10dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textSize="22sp"
-                android:hint="@string/create_a_pill_size_hint"
-                android:textColorHint="@color/text_grey_light"
-                android:textColor="@android:color/white"
-                android:inputType="number"
-                android:background="@null"
-                android:imeOptions="actionDone"/>
-
-            <Spinner
-                android:id="@+id/units_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_weight="0"/>
-
-            <LinearLayout
-                android:id="@+id/pill_fragment_add_pill_completed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="0dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="15dp"
-                android:clickable="true"
-                android:background="?android:attr/selectableItemBackground">
-            <ImageView
-                android:layout_height="40dp"
-                android:layout_width="40dp"
-                android:src="@drawable/tick_light"
-                android:padding="5dp"
-                android:layout_weight="0"
-                android:contentDescription="@string/tick_description"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="@string/finish_create_pill"
-                    android:gravity="center_vertical"/>
-            </LinearLayout>
-        </LinearLayout>
-
-    </RelativeLayout>
+        <include layout="@layout/add_new_medicine"
+            />
+    </LinearLayout>
     <ListView
         android:id="@+id/pill_list"
         android:layout_width="match_parent"

@@ -32,8 +32,8 @@
     <color name="selector_background_pressed">#20FFFFFF</color>
     <color name="popup_menu">#B0000000</color>
     <color name="pill_favourite">#80FFFFFF</color>
-
     <color name="tutorial_white">#FFFFFF</color>
+    <color name="divider_white">#40FFFFFF</color>
 
     <!-- Pill colours are in pill_colours.xml -->
 </resources>
