@@ -23,6 +23,10 @@
         android:id="@+id/pill_fragment_quick_create"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/translucent_white"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="15dp"
         android:layout_below="@id/pill_fragment_title">
         <include layout="@layout/add_new_medicine"
             />
