@@ -125,91 +125,27 @@
         android:layout_width="match_parent"
         android:layout_above="@+id/add_consumption_select_time_title"
         android:layout_below="@id/add_consumption_pill_type_selection"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:orientation="vertical">
         <ListView
             android:id="@+id/add_consumption_pill_list"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:listSelector="@drawable/grey_selector"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:visibility="visible"
             tools:listitem="@layout/add_consumption_pill_list"/>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/add_consumption_quick_create"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
             android:visibility="gone">
-
-            <EditText
-                android:id="@+id/add_consumption_add_pill_name"
-                android:layout_height="40dp"
-                android:layout_width="match_parent"
-                android:paddingLeft="10dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textSize="22sp"
-                android:hint="@string/new_pill_name_hint"
-                android:inputType="textCapWords"
-                android:imeOptions="actionNext"
-                android:background="@null"/>
-
-            <LinearLayout
-                android:layout_height="40dp"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_below="@id/add_consumption_add_pill_name">
-                <EditText
-                    android:id="@+id/add_consumption_add_pill_size"
-                    android:layout_height="match_parent"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:textSize="22sp"
-                    android:hint="@string/new_pill_size_hint"
-                    android:inputType="number"
-                    android:background="@null"
-                    android:imeOptions="actionDone"/>
-
-                <Spinner
-                    android:id="@+id/add_consumption_units_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="0"/>
-
-                <LinearLayout
-                    android:id="@+id/add_consumption_add_pill_completed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="0dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="15dp"
-                    android:clickable="true"
-                    android:background="?android:attr/selectableItemBackground">
-                    <ImageView
-                        android:layout_height="40dp"
-                        android:layout_width="40dp"
-                        android:src="@drawable/tick_light"
-                        android:padding="5dp"
-                        android:layout_weight="0"
-                        android:contentDescription="@string/tick_description"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:text="@string/finish_create_pill"
-                        android:gravity="center_vertical"/>
-                </LinearLayout>
-            </LinearLayout>
-
-        </RelativeLayout>
+            <include layout="@layout/add_new_medicine"
+                />
+        </LinearLayout>
     </LinearLayout>
 
 <!-- TIME -->

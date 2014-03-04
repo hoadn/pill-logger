@@ -15,6 +15,7 @@ import android.os.SystemClock;
 import android.text.format.DateFormat;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
@@ -29,7 +30,10 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -48,6 +52,7 @@ import uk.co.pilllogger.tasks.GetTutorialSeenTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.tasks.InsertPillTask;
 import uk.co.pilllogger.tasks.SetTutorialSeenTask;
+import uk.co.pilllogger.views.ColourIndicator;
 
 /**
  * Created by nick on 24/10/13.
@@ -87,6 +92,8 @@ public class AddConsumptionActivity extends Activity implements
 
     Date _consumptionDate = new Date();
     Date _reminderDate = new Date();
+    private List<Pill> _addedPills = new ArrayList<Pill>();
+    private ColourIndicator _colour;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,12 +115,54 @@ public class AddConsumptionActivity extends Activity implements
         _reminderTimeSpinner = (Spinner)findViewById(R.id.add_consumption_reminder_time);
 
         Typeface typeface = State.getSingleton().getTypeface();
-        _newPillName = (TextView) findViewById(R.id.add_consumption_add_pill_name);
-        _newPillSize = (TextView) findViewById(R.id.add_consumption_add_pill_size);
+        _newPillName = (TextView) findViewById(R.id.pill_fragment_add_pill_name);
+        _newPillSize = (TextView) findViewById(R.id.pill_fragment_add_pill_size);
+        TextView title = (TextView) findViewById(R.id.pill_fragment_add_pill_title);
+        TextView colourText = (TextView) findViewById(R.id.pill_fragment_add_pill_colour);
+        TextView create = (TextView) findViewById(R.id.pill_fragment_add_pill_create);
         _newPillName.setTypeface(typeface);
         _newPillSize.setTypeface(typeface);
+        title.setVisibility(View.GONE);
+        colourText.setTypeface(typeface);
+        create.setTypeface(typeface);
 
-        View addPillCompleted = findViewById(R.id.add_consumption_add_pill_completed);
+        _colour = (ColourIndicator) findViewById(R.id.pill_fragment_colour);
+        _colour.setColour(getResources().getColor(R.color.pill_colour7));
+        _colour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final View colourHolder = AddConsumptionActivity.this.findViewById(R.id.pill_fragment_colour_picker_container);
+                final ViewGroup colourContainer = (ViewGroup) colourHolder.findViewById(R.id.colour_container);
+                if (colourHolder.getVisibility() == View.VISIBLE) {
+                    int colourCount = colourContainer.getChildCount();
+                    for (int i = 0; i < colourCount; i++) {
+                        View colourView = colourContainer.getChildAt(i);
+                        if (colourView != null) {
+                            colourView.setOnClickListener(null);
+                        }
+                    }
+                    colourHolder.setVisibility(View.GONE);
+                } else {
+                    colourHolder.setVisibility(View.VISIBLE);
+                    int colourCount = colourContainer.getChildCount();
+                    for (int i = 0; i < colourCount; i++) {
+                        View colourView = colourContainer.getChildAt(i);
+                        if (colourView != null) {
+                            colourView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    int colour = ((ColourIndicator) view).getColour();
+                                    _colour.setColour(colour);
+                                    colourHolder.setVisibility(View.GONE);
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
+
+        View addPillCompleted = findViewById(R.id.pill_fragment_add_pill_completed);
         addPillCompleted.setOnClickListener(new addNewPillClickListener());
 
         _newPillSize.setOnEditorActionListener(new TextView.OnEditorActionListener(){
@@ -131,7 +180,7 @@ public class AddConsumptionActivity extends Activity implements
         setUpRadioGroups();
         setUpSpinners();
 
-        _unitSpinner = (Spinner) this.findViewById(R.id.add_consumption_units_spinner);
+        _unitSpinner = (Spinner) this.findViewById(R.id.units_spinner);
         String[] units = { "mg", "ml" };
         UnitAdapter adapter = new UnitAdapter(this, android.R.layout.simple_spinner_item, units);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -318,6 +367,32 @@ public class AddConsumptionActivity extends Activity implements
             showSelectPillOptions();
         }
 
+        /*
+        Sorts pill collection based on its last consumption date
+         */
+        Collections.sort(pills, new Comparator<Pill>() {
+            public int compare(Pill pill1, Pill pill2) {
+                if (_addedPills.contains(pill1) && !_addedPills.contains(pill2)) { //if pill has been added during this Add Consumption it should be top
+                    return -1;
+                }
+                if (_addedPills.contains(pill1) && !_addedPills.contains(pill2)) {
+                    return 1;
+                }
+                Consumption pill1Consumption = pill1.getLatestConsumption();
+                Consumption pill2Consumption = pill2.getLatestConsumption();
+                if (pill1Consumption == null && pill2Consumption == null) {
+                    return 0;
+                }
+                if (pill1Consumption == null && pill2Consumption != null) {
+                    return 1;
+                }
+                if (pill2Consumption == null && pill1Consumption != null) {
+                    return -1;
+                }
+                return pill2.getLatestConsumption().getDate().compareTo(pill1.getLatestConsumption().getDate());
+            }
+        });
+
         _adapter = new AddConsumptionPillListAdapter(this, R.layout.add_consumption_pill_list, pills);
          _pillsList.setAdapter(_adapter);
         _pillsList.setOnItemClickListener(new AddConsumptionPillItemClickListener(this, (AddConsumptionPillListAdapter)_pillsList.getAdapter()));
@@ -466,7 +541,10 @@ public class AddConsumptionActivity extends Activity implements
             Pill pill = new Pill(name, size);
             String units = String.valueOf(_unitSpinner.getSelectedItem());
             pill.setUnits(units);
+            pill.setColour(_colour.getColour());
+
             new InsertPillTask(_activity, pill, (InsertPillTask.ITaskComplete)_activity).execute();
+            _addedPills.add(pill);
 
             _newPillName.setText("");
             _newPillSize.setText("");
@@ -494,6 +572,4 @@ public class AddConsumptionActivity extends Activity implements
             doneLayout.setClickable(true);
         }
     }
-
-
 }
