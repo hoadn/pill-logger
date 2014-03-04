@@ -34,8 +34,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -75,7 +73,6 @@ public class AddConsumptionActivity extends Activity implements
 
     private static final String TAG = "AddConsumptionActivity";
     public static String DATE_FORMAT = "E, MMM dd, yyyy";
-    public static String TIME_FORMAT = "kk:mm";
 
     ListView _pillsList;
     Activity _activity;
@@ -374,7 +371,7 @@ public class AddConsumptionActivity extends Activity implements
         datePickerContainer.setOnClickListener(listener);
         reminderDatePickerContainer.setOnClickListener(listener);
 
-        String time = DateFormat.format(TIME_FORMAT, date.getTime()).toString();
+        String time = DateHelper.getTime(this, date);
         String[] times = new String[]{time};
         ArrayAdapter<String> timeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, times );
         _timeSpinner.setAdapter(timeAdapter);
@@ -488,7 +485,7 @@ public class AddConsumptionActivity extends Activity implements
 
         String selectedDate = date.getSelectedItem().toString();
         String selectedTime = time.getSelectedItem().toString();
-        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT + TIME_FORMAT);
+        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT + "kk:mm");
         try {
             return format.parse(selectedDate + selectedTime);
         } catch (ParseException e) {
@@ -528,21 +525,21 @@ public class AddConsumptionActivity extends Activity implements
 
         if (DateHelper.isDateInFuture(consumptionDate) && !futureConsumptionOk) {
             new AlertDialog.Builder(this)
-                    .setMessage("Are you sure you want to add this consumption in the future?")
+                    .setMessage(getString(R.string.add_consumption_future_confirmation))
                     .setCancelable(false)
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             AddConsumptionActivity.this.done(v, true);
                         }
                     })
-                    .setNegativeButton("No", null)
+                    .setNegativeButton(getString(R.string.no), null)
                     .show();
         }
         else if(reminderDate != null && !DateHelper.isDateInFuture(reminderDate)){
             new AlertDialog.Builder(this)
-                    .setMessage("You must set a date in the future for the reminder")
+                    .setMessage(getString(R.string.add_consumption_reminder_warning_past))
                     .setCancelable(true)
-                    .setNeutralButton("OK", null)
+                    .setNeutralButton(getString(R.string.ok), null)
                     .show();
         }
         else {
@@ -562,7 +559,7 @@ public class AddConsumptionActivity extends Activity implements
 
                 am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + difference, pi);
 
-                Toast.makeText(this, "Reminder set for " + DateHelper.getTime(this, reminderDate), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.add_consumption_reminder_toast_prefix) + DateHelper.getTime(this, reminderDate), Toast.LENGTH_SHORT).show();
             }
 
             _adapter.clearOpenPillsList();
@@ -594,7 +591,6 @@ public class AddConsumptionActivity extends Activity implements
     @Override
     public void isTutorialSeen(Boolean seen, String tag) {
         if(!seen) {
-            Toast.makeText(this, "Need to show tutorial for add consumption activity", Toast.LENGTH_LONG).show();
             new SetTutorialSeenTask(this, TAG).execute();
         }
     }
