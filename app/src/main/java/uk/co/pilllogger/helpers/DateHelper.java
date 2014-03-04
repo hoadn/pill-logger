@@ -1,6 +1,7 @@
 package uk.co.pilllogger.helpers;
 
 import android.content.Context;
+import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 
 import org.joda.time.DateTime;
@@ -102,5 +103,14 @@ public class DateHelper {
     public static boolean isDateInFuture(DateTime date) {
         DateTime currentDate = new DateTime();
         return date.compareTo(currentDate) > 0;
+    }
+
+    public static String getTime(Context context, Date date){
+        java.text.DateFormat df = DateFormat.getTimeFormat(context);
+        return df.format(date);
+    }
+
+    public static String getTime(Context context, DateTime date){
+        return getTime(context, date.toDate());
     }
 }

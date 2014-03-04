@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.KeyEvent;
 import android.view.View;
@@ -19,7 +21,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -27,6 +32,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -94,6 +103,12 @@ public class AddConsumptionActivity extends Activity implements
     Date _reminderDate = new Date();
     private List<Pill> _addedPills = new ArrayList<Pill>();
     private ColourIndicator _colour;
+
+    TextView _reminderTitle;
+    CheckBox _reminderToggle;
+    ViewGroup _reminderHoursContainer;
+    EditText _reminderHours;
+    TextView _reminderHoursSuffix;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -180,6 +195,60 @@ public class AddConsumptionActivity extends Activity implements
         setUpRadioGroups();
         setUpSpinners();
 
+        _reminderTitle = (TextView) findViewById(R.id.add_consumption_set_reminder_title);
+        _reminderToggle = (CheckBox) findViewById(R.id.add_consumption_set_reminder_toggle);
+        _reminderHoursContainer = (ViewGroup) findViewById(R.id.add_consumption_reminder_layout);
+        _reminderHours = (EditText) findViewById(R.id.add_consumption_reminder_hours);
+        _reminderHoursSuffix = (TextView)findViewById(R.id.add_consumption_reminder_hours_suffix);
+
+        final String defaultSuffix = getString(R.string.add_consumption_hours_suffix);
+        final Context context = this;
+
+        _reminderHours.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String str = defaultSuffix;
+                if(s.length() > 0){
+                    int hours = Integer.parseInt(s.toString());
+                    DateTime dt = DateTime.now().plusHours(hours);
+
+                    if(hours == 1)
+                        str = str.substring(0, str.length() - 1);
+
+                    str += " (" + DateHelper.getTime(context, dt) + ")";
+                }
+
+                _reminderHoursSuffix.setText(str);
+            }
+        });
+
+        _reminderTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _reminderToggle.setChecked(!_reminderToggle.isChecked());
+            }
+        });
+
+        _reminderToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                for(int i = 0; i <_reminderRadioGroup.getChildCount(); i++){
+                    _reminderRadioGroup.getChildAt(i).setVisibility(isChecked ? View.VISIBLE : View.GONE);
+                }
+                _reminderHoursContainer.setVisibility(isChecked ? View.VISIBLE : View.INVISIBLE);
+            }
+        });
+
         _unitSpinner = (Spinner) this.findViewById(R.id.units_spinner);
         String[] units = { "mg", "ml" };
         UnitAdapter adapter = new UnitAdapter(this, android.R.layout.simple_spinner_item, units);
@@ -222,14 +291,17 @@ public class AddConsumptionActivity extends Activity implements
                 View reminderDatePickers = findViewById(R.id.add_consumption_reminder_date_pickers_layout);
                 View reminderDateContainer = findViewById(R.id.add_consumption_reminder_date_container);
                 View reminderTimeContainer = findViewById(R.id.add_consumption_reminder_time_container);
+                View reminderHoursContainer = findViewById(R.id.add_consumption_reminder_hours_container);
                 if (checkedId == R.id.add_consumption_select_reminder_hours) {
                     reminderDateContainer.setVisibility(View.GONE);
                     reminderTimeContainer.setVisibility(View.GONE);
-                    reminderDatePickers.setVisibility(View.INVISIBLE);
+                    reminderDatePickers.setVisibility(View.GONE);
+                    reminderHoursContainer.setVisibility(View.VISIBLE);
                 } else {
                     reminderDateContainer.setVisibility(View.VISIBLE);
                     reminderTimeContainer.setVisibility(View.VISIBLE);
                     reminderDatePickers.setVisibility(View.VISIBLE);
+                    reminderHoursContainer.setVisibility(View.GONE);
                 }
             }
         });
@@ -444,8 +516,14 @@ public class AddConsumptionActivity extends Activity implements
             consumptionDate = getDateFromSpinners(_dateSpinner, _timeSpinner, new Date());
         }
 
-        if(!reminderDateSelectorHours.isChecked()){
-            reminderDate = getDateFromSpinners(_reminderDateSpinner, _reminderTimeSpinner, null);
+
+        if(_reminderToggle.isChecked()){
+            if(!reminderDateSelectorHours.isChecked()){
+                reminderDate = getDateFromSpinners(_reminderDateSpinner, _reminderTimeSpinner, null);
+            } else {
+                int hours = Integer.parseInt(_reminderHours.getText().toString());
+                reminderDate = DateTime.now().plusHours(hours).toDate();
+            }
         }
 
         if (DateHelper.isDateInFuture(consumptionDate) && !futureConsumptionOk) {
@@ -483,6 +561,8 @@ public class AddConsumptionActivity extends Activity implements
                 AlarmManager am = (AlarmManager)(this.getSystemService(Context.ALARM_SERVICE));
 
                 am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + difference, pi);
+
+                Toast.makeText(this, "Reminder set for " + DateHelper.getTime(this, reminderDate), Toast.LENGTH_SHORT).show();
             }
 
             _adapter.clearOpenPillsList();

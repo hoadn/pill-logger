@@ -231,14 +231,21 @@
     </LinearLayout>
 
     <!-- REMINDER -->
+    <CheckBox
+        android:id="@+id/add_consumption_set_reminder_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/add_consumption_set_reminder_title_divider"
+        android:layout_toRightOf="@+id/add_consumption_set_reminder_title"/>
     <TextView
         android:id="@+id/add_consumption_set_reminder_title"
         android:layout_above="@+id/add_consumption_set_reminder_title_divider"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:padding="7dp"
         android:text="@string/add_consumption_reminder_title"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="0dp"
         android:textAllCaps="true"
         android:textColor="@color/text_grey_medium"/>
     <View
@@ -253,30 +260,65 @@
         android:id="@+id/add_consumption_reminder_type_selection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/add_consumption_reminder_date_pickers_layout"
+        android:layout_above="@+id/add_consumption_reminder_layout"
         android:orientation="horizontal">
         <RadioButton android:id="@+id/add_consumption_select_reminder_hours"
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
                      android:layout_marginLeft="20dp"
                      android:checked="true"
-                     android:text="@string/reminder_hours"/>
+                     android:text="@string/reminder_hours"
+                     android:visibility="gone"/>
         <RadioButton android:id="@+id/add_consumption_select_reminder_specific"
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
                      android:layout_marginLeft="20dp"
-                     android:text="@string/add_consumption_reminder_select_specific_label"/>
+                     android:text="@string/add_consumption_reminder_select_specific_label"
+                     android:visibility="gone"/>
     </RadioGroup>
+    <LinearLayout
+        android:id="@+id/add_consumption_reminder_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:visibility="invisible">
+    <LinearLayout
+        android:id="@+id/add_consumption_reminder_hours_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="3dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:text="@string/add_consumption_hours_prefix"
+            android:textSize="16sp"/>
+        <EditText
+            android:id="@+id/add_consumption_reminder_hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="@string/add_consumption_hours_hint"/>
+        <TextView
+            android:id="@+id/add_consumption_reminder_hours_suffix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_consumption_hours_suffix"
+            android:textSize="16sp"/>
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/add_consumption_reminder_date_pickers_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:paddingBottom="10dp"
         android:orientation="horizontal"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:baselineAligned="false">
 
         <LinearLayout
@@ -312,5 +354,6 @@
                 android:textSize="18sp"
                 android:textColor="@color/text_grey"/>
         </LinearLayout>
+    </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

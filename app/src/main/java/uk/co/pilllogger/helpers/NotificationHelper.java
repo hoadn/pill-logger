@@ -58,7 +58,7 @@ public abstract class NotificationHelper {
                 continue;
 
             if(i == consumptions.size() - 2){
-                content += " and ";
+                content += " and";
             } else {
                 content += ", ";
             }
