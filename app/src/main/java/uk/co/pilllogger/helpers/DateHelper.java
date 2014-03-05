@@ -6,6 +6,7 @@ import android.text.format.DateUtils;
 
 import org.joda.time.DateTime;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -112,5 +113,10 @@ public class DateHelper {
 
     public static String getTime(Context context, DateTime date){
         return getTime(context, date.toDate());
+    }
+
+    public static String formatDateAndTime(Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy kk:mm");
+        return simpleDateFormat.format(date);
     }
 }

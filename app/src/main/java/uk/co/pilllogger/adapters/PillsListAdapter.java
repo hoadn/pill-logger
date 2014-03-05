@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.dialogs.InfoDialog;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.tasks.DeletePillTask;
 import uk.co.pilllogger.tasks.UpdatePillTask;
@@ -69,10 +70,21 @@ public class PillsListAdapter extends PillsListBaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = super.getView(position, convertView, parent);
 
+
         final View listItem = v;
         if (v != null) {
             ViewHolder holder = (ViewHolder) v.getTag();
             final Pill pill = _data.get(position);
+
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (pill != null) {
+                        InfoDialog dialog = new InfoDialog(pill);
+                        dialog.show(_activity.getFragmentManager(), pill.getName());
+                    }
+                }
+            });
             holder.colour.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
