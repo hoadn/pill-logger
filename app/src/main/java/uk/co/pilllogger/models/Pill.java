@@ -3,8 +3,11 @@
  */
 package uk.co.pilllogger.models;
 
+import org.joda.time.DateTime;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import uk.co.pilllogger.R;
@@ -120,6 +123,26 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
         }
 
         return latest;
+    }
+
+    public int getTotalSize(int hours){
+        return getTotalQuantity(hours) * getSize();
+    }
+
+    public int getTotalQuantity(int hours){
+        Date back = DateTime.now().plusHours(hours * -1).toDate();
+        Date currentDate = new Date();
+
+        int total = 0;
+
+        for (Consumption consumption : _consumptions) {
+            Date consumptionDate = consumption.getDate();
+            if (consumptionDate.compareTo(back) >= 0 && consumptionDate.compareTo(currentDate) <= 0) {
+                total += (consumption.getQuantity());
+            }
+        }
+
+        return total;
     }
 
     @Override

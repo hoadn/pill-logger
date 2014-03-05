@@ -32,6 +32,9 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.dialogs.ConsumptionInfoDialog;
+import uk.co.pilllogger.dialogs.InfoDialog;
+import uk.co.pilllogger.dialogs.PillInfoDialog;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
@@ -50,16 +53,18 @@ import org.joda.time.Days;
 /**
  * Created by nick on 22/10/13.
  */
-public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
+public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> implements ConsumptionInfoDialog.ConsumptionInfoDialogListener {
 
     private static String TAG = "ConsumptionListAdapter";
     private Consumption _selectedConsumption;
     private List<Consumption> _consumptions;
+    private Activity _activity;
     private Fragment _fragment;
     private List<Pill> _pills;
 
     public ConsumptionListAdapter(Activity activity, Fragment fragment, int textViewResourceId, List<Consumption> consumptions) {
         super(activity, textViewResourceId, R.menu.consumption_list_item_menu, consumptions);
+        _activity = activity;
         _fragment = fragment;
         _consumptions = consumptions;
     }
@@ -67,6 +72,21 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
     public ConsumptionListAdapter(Activity activity, Fragment fragment, int textViewResourceId, List<Consumption> consumptions, List<Pill> pills) {
         this(activity, fragment, textViewResourceId, consumptions);
         _pills = pills;
+    }
+
+    @Override
+    public void onDialogIncrease(Consumption consumption, InfoDialog dialog) {
+        // todo: handle increased quantity
+    }
+
+    @Override
+    public void onDialogDecrease(Consumption consumption, InfoDialog dialog) {
+        // todo: handle decreased quantity
+    }
+
+    @Override
+    public void onDialogDelete(Consumption consumption, InfoDialog dialog) {
+        // todo: delete consumption
     }
 
     public static class ViewHolder {
@@ -148,9 +168,17 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
             v = super.getView(position, convertView, parent);
             if(v != null){
                 ViewHolder holder = (ViewHolder) v.getTag();
-                Consumption consumption = _data.get(position);
+                final Consumption consumption = _data.get(position);
 
                 if (consumption != null) {
+                    v.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                                InfoDialog dialog = new ConsumptionInfoDialog(consumption, ConsumptionListAdapter.this);
+                                dialog.show(_activity.getFragmentManager(), consumption.getPill().getName());
+                        }
+                    });
+
                     if(consumption.getPill() != null){
                         holder.name.setText(consumption.getPill().getName());
                         holder.size.setText(consumption.getPill().getSize() + consumption.getPill().getUnits());

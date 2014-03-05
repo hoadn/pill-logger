@@ -13,6 +13,7 @@ import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.dialogs.InfoDialog;
+import uk.co.pilllogger.dialogs.PillInfoDialog;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
@@ -23,7 +24,7 @@ import uk.co.pilllogger.views.ColourIndicator;
 /**
  * Created by nick on 22/10/13.
  */
-public class PillsListAdapter extends PillsListBaseAdapter implements InfoDialog.InfoDialogListener {
+public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDialog.PillInfoDialogListener {
 
     private Pill _selectedPill;
 
@@ -84,7 +85,7 @@ public class PillsListAdapter extends PillsListBaseAdapter implements InfoDialog
                 @Override
                 public void onClick(View v) {
                     if (pill != null) {
-                        InfoDialog dialog = new InfoDialog(pill, PillsListAdapter.this);
+                        InfoDialog dialog = new PillInfoDialog(pill, PillsListAdapter.this);
                         dialog.show(_activity.getFragmentManager(), pill.getName());
                     }
                 }
