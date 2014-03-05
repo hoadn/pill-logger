@@ -8,12 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.listeners.AddConsumptionListener;
+import uk.co.pilllogger.state.Observer;
 
 /**
  * @author alex
  *
  */
-public class Pill implements Serializable {
+public class Pill implements Serializable, AddConsumptionListener {
 	/**
 	 * 
 	 */
@@ -28,18 +30,18 @@ public class Pill implements Serializable {
     private List<Consumption> _consumptions = new ArrayList<Consumption>();
 
     public Pill() {
+        Observer.getSingleton().registerConsumptionAddedObserver(this);
     }
 
     public Pill(CharSequence name, int size) {
+        this();
         _name = String.valueOf(name);
         _size = size;
     }
 
     public Pill(String name, int size, String units) {
-        _name = name;
-        _size = size;
+        this(name, size);
         _units = units;
-
     }
 
 	/**
@@ -149,5 +151,14 @@ public class Pill implements Serializable {
         result = 31 * result + _colour;
         result = 31 * result + (_favourite ? 1 : 0);
         return result;
+    }
+
+    @Override
+    public void consumptionAdded(Consumption consumption) {
+        if (consumption != null) {
+            if ((!_consumptions.contains(consumption)) && consumption.getPill().equals(this)) {
+                _consumptions.add(consumption);
+            }
+        }
     }
 }
