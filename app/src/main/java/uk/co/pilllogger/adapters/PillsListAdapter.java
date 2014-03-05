@@ -6,12 +6,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import java.util.Date;
 import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.dialogs.InfoDialog;
+import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.tasks.DeletePillTask;
 import uk.co.pilllogger.tasks.UpdatePillTask;
 import uk.co.pilllogger.views.ColourIndicator;
@@ -19,7 +23,7 @@ import uk.co.pilllogger.views.ColourIndicator;
 /**
  * Created by nick on 22/10/13.
  */
-public class PillsListAdapter extends PillsListBaseAdapter {
+public class PillsListAdapter extends PillsListBaseAdapter implements InfoDialog.InfoDialogListener {
 
     private Pill _selectedPill;
 
@@ -80,7 +84,7 @@ public class PillsListAdapter extends PillsListBaseAdapter {
                 @Override
                 public void onClick(View v) {
                     if (pill != null) {
-                        InfoDialog dialog = new InfoDialog(pill);
+                        InfoDialog dialog = new InfoDialog(pill, PillsListAdapter.this);
                         dialog.show(_activity.getFragmentManager(), pill.getName());
                     }
                 }
@@ -129,5 +133,24 @@ public class PillsListAdapter extends PillsListBaseAdapter {
         }
 
         return v;
+    }
+
+    @Override
+    public void onDialogAddConsumption(Pill pill, InfoDialog dialog) {
+        if (pill != null) {
+            Consumption consumption = new Consumption(pill, new Date());
+            ConsumptionRepository.getSingleton(_activity).insert(consumption);
+            Toast.makeText(_activity, "Added consumption of " + pill.getName(), Toast.LENGTH_SHORT).show();
+        }
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onDialogDelete(Pill pill, InfoDialog dialog) {
+        if (pill != null) {
+            new DeletePillTask(_activity, pill).execute();
+            notifyDataSetChanged();
+        }
+        dialog.dismiss();
     }
 }

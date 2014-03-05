@@ -1,5 +1,6 @@
 package uk.co.pilllogger.dialogs;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -28,11 +29,14 @@ public class InfoDialog extends DialogFragment {
     String _title;
     Pill _pill;
     List<Consumption> _consumpions;
+    InfoDialogListener _listener;
 
-    public InfoDialog(Pill pill) {
-        _title = pill.getName();
+    public InfoDialog(Pill pill, InfoDialogListener listener) {
+        _title = pill.getName() + " " + pill.getSize() + pill.getUnits();
         _pill = pill;
+        _listener = listener;
     }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
@@ -54,7 +58,9 @@ public class InfoDialog extends DialogFragment {
         dosage.setTypeface(typeface);
 
         title.setText(_title);
-        lastTaken.setText(lastTaken.getText() + " " + DateHelper.formatDateAndTime(_pill.getLatestConsumption().getDate()));
+        Consumption lastConsumption = _pill.getLatestConsumption();
+        if (lastConsumption != null)
+            lastTaken.setText(lastTaken.getText() + " " + DateHelper.formatDateAndTime(_pill.getLatestConsumption().getDate()));
         _consumpions = _pill.getConsumptions();
         int dosage24 = 0;
         Date currentDate = new Date();
@@ -70,7 +76,24 @@ public class InfoDialog extends DialogFragment {
         }
         dosage.setText(dosage.getText() + " " + dosage24 + _pill.getUnits());
 
+        addConsumption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _listener.onDialogAddConsumption(_pill, InfoDialog.this);
+            }
+        });
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _listener.onDialogDelete(_pill, InfoDialog.this);
+            }
+        });
         builder.setView(view);
         return builder.create();
+    }
+
+    public interface InfoDialogListener {
+        public void onDialogAddConsumption(Pill pill, InfoDialog dialog);
+        public void onDialogDelete(Pill pill, InfoDialog dialog);
     }
 }

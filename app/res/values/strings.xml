@@ -88,6 +88,6 @@
     <string name="info_dialog_delete">Delete</string>
     <string name="info_dialog_take_now">Take Now</string>
     <string name="info_dialog_last_taken">Last taken: </string>
-    <string name="info_dialog_dosage">Dosage in the last 24hr:</string>
+    <string name="info_dialog_dosage">Dosage in the last 24 hours:</string>
 
 </resources>
