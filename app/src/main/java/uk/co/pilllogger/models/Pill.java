@@ -8,14 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.listeners.AddConsumptionListener;
 import uk.co.pilllogger.state.Observer;
 
 /**
  * @author alex
  *
  */
-public class Pill implements Serializable, AddConsumptionListener {
+public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.IConsumptionDeleted {
 	/**
 	 * 
 	 */
@@ -31,6 +30,7 @@ public class Pill implements Serializable, AddConsumptionListener {
 
     public Pill() {
         Observer.getSingleton().registerConsumptionAddedObserver(this);
+        Observer.getSingleton().registerConsumptionDeletedObserver(this);
     }
 
     public Pill(CharSequence name, int size) {
@@ -156,8 +156,17 @@ public class Pill implements Serializable, AddConsumptionListener {
     @Override
     public void consumptionAdded(Consumption consumption) {
         if (consumption != null) {
-            if ((!_consumptions.contains(consumption)) && consumption.getPill().equals(this)) {
+            if (consumption.getPillId() == _id && !_consumptions.contains(consumption)) {
                 _consumptions.add(consumption);
+            }
+        }
+    }
+
+    @Override
+    public void consumptionDeleted(Consumption consumption) {
+        if (consumption != null) {
+            if (consumption.getPillId() == _id && _consumptions.contains(consumption)) {
+                _consumptions.remove(consumption);
             }
         }
     }

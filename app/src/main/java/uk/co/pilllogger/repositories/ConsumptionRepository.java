@@ -116,7 +116,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                     "_ID = ?",
                     new String[]{id});
         }
-        notifyUpdated();
+        notifyDeleted(consumption);
     }
 
     @Override
@@ -286,5 +286,11 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     public void notifyUpdated(Consumption consumption) {
         notifyUpdated();
         Observer.getSingleton().notifyConsumptionAdded(consumption);
+    }
+
+
+    private void notifyDeleted(Consumption consumption) {
+        notifyUpdated();
+        Observer.getSingleton().notifyConsumptionDeleted(consumption);
     }
 }
