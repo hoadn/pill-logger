@@ -1,17 +1,13 @@
 package uk.co.pilllogger.activities;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
@@ -31,7 +27,6 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import org.joda.time.DateTime;
 
@@ -48,6 +43,7 @@ import java.util.UUID;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.helpers.AlarmHelper;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.listeners.AddConsumptionPillItemClickListener;
@@ -549,17 +545,7 @@ public class AddConsumptionActivity extends Activity implements
             }
 
             if(reminderDate != null){
-                long difference = reminderDate.getTime() - new Date().getTime();
-
-                Intent intent = new Intent(getString(R.string.intent_reminder));
-                intent.putExtra(getString(R.string.intent_extra_notification_consumption_group), consumptionGroup);
-
-                PendingIntent pi = PendingIntent.getBroadcast(this, reminderDate.hashCode(), intent, 0);
-                AlarmManager am = (AlarmManager)(this.getSystemService(Context.ALARM_SERVICE));
-
-                am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + difference, pi);
-
-                Toast.makeText(this, getString(R.string.add_consumption_reminder_toast_prefix) + DateHelper.getTime(this, reminderDate), Toast.LENGTH_SHORT).show();
+                AlarmHelper.addReminderAlarm(this, reminderDate, consumptionGroup, true);
             }
 
             _adapter.clearOpenPillsList();

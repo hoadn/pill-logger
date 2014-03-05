@@ -39,6 +39,20 @@
                 <action android:name="uk.co.pilllogger.REMINDER" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name="uk.co.pilllogger.receivers.DelayReminderReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="uk.co.pilllogger.DELAY_REMINDER" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="uk.co.pilllogger.receivers.TakeAgainReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="uk.co.pilllogger.TAKE_AGAIN" />
+            </intent-filter>
+        </receiver>
         <!--<receiver android:name=".widget.MyAppWidgetProvider" >-->
             <!--<intent-filter>-->
                 <!--<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->

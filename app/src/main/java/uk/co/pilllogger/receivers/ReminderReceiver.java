@@ -18,22 +18,23 @@ import uk.co.pilllogger.tasks.GetConsumptionsTask;
 public class ReminderReceiver extends BroadcastReceiver implements GetConsumptionsTask.ITaskComplete {
     private static final String TAG = "ReminderReceiver";
     private Context _context;
+    private String _group;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
         _context = context;
         Log.d(TAG, "Intent received");
 
-        String group = intent.getStringExtra(context.getString(R.string.intent_extra_notification_consumption_group));
+        _group = intent.getStringExtra(context.getString(R.string.intent_extra_notification_consumption_group));
 
-        Log.d(TAG, "Group: " + group);
+        Log.d(TAG, "Group: " + _group);
 
-        new GetConsumptionsTask(context, this, true, group).execute();
+        new GetConsumptionsTask(context, this, true, _group).execute();
 
     }
 
     @Override
     public void consumptionsReceived(List<Consumption> consumptions) {
-        NotificationHelper.Notification(_context, true, "", true, true, consumptions);
+        NotificationHelper.Notification(_context, true, "", true, true, consumptions, _group);
     }
 }

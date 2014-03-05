@@ -40,7 +40,7 @@ public abstract class NotificationHelper {
         getNotificationManager(context).cancel(id);
     }
 
-    public static void Notification(Context context, boolean showText, String sound, boolean lights, boolean vibrate, List<Consumption> consumptions){
+    public static void Notification(Context context, boolean showText, String sound, boolean lights, boolean vibrate, List<Consumption> consumptions, String group){
         Log.d(TAG, "Notification triggered");
         if(State.getSingleton().isAppVisible() || consumptions == null || consumptions.size() == 0) {
             return; //don't notify if the app is already in front
@@ -84,8 +84,8 @@ public abstract class NotificationHelper {
                         .setContentTitle(title)
                         .setContentText(content)
                         .setWhen(new Date().getTime())
-                        .setSound(soundUri);
-
+                        .setSound(soundUri)
+                        .setAutoCancel(true);
 
         if(showText){
             builder.setTicker(ticker);
@@ -122,7 +122,17 @@ public abstract class NotificationHelper {
         builder.setContentIntent(resultPendingIntent);
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        // mId allows you to update the notification later on.
+
+        Intent takeAgainIntent = new Intent(context.getString(R.string.intent_take_again));
+        takeAgainIntent.putExtra(context.getString(R.string.intent_extra_notification_consumption_group), group);
+        PendingIntent takeAgainPendingIntent = PendingIntent.getBroadcast(context, new Date().hashCode(), takeAgainIntent, 0);
+
+        Intent delayReminderIntent = new Intent(context.getString(R.string.intent_delay_reminder));
+        delayReminderIntent.putExtra(context.getString(R.string.intent_extra_notification_consumption_group), group);
+        PendingIntent delayReminderPendingIntent = PendingIntent.getBroadcast(context, new Date().hashCode(), delayReminderIntent, 0);
+
+        builder.addAction(R.drawable.add, "Take again", takeAgainPendingIntent);
+        builder.addAction(R.drawable.tick_light, "Remind in 1h", delayReminderPendingIntent);
 
         Notification n = builder.build();
         n.flags |= Notification.FLAG_AUTO_CANCEL;
