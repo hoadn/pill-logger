@@ -3,7 +3,6 @@ package uk.co.pilllogger.state;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.co.pilllogger.listeners.AddConsumptionListener;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 
@@ -14,7 +13,8 @@ public class Observer {
 
     private static Observer _instance;
     private List<IPillsUpdated> _pillsUpdatedArrayList = new ArrayList<IPillsUpdated>();
-    private List<AddConsumptionListener> _consumptionListerners = new ArrayList<AddConsumptionListener>();
+    private List<IConsumptionAdded> _consumptionAddedListeners = new ArrayList<IConsumptionAdded>();
+    private List<IConsumptionDeleted> _consumptionDeletedListeners = new ArrayList<IConsumptionDeleted>();
 
 
     public static Observer getSingleton() {
@@ -39,14 +39,33 @@ public class Observer {
         void pillsUpdated(Pill pill);
     }
 
-    public void registerConsumptionAddedObserver(AddConsumptionListener listener) {
-        _consumptionListerners.add(listener);
+    public void registerConsumptionDeletedObserver(IConsumptionDeleted observer){
+        _consumptionDeletedListeners.add(observer);
+    }
+
+    public interface IConsumptionDeleted{
+        void consumptionDeleted(Consumption consumption);
+    }
+
+    public interface IConsumptionAdded {
+        public void consumptionAdded(Consumption consumption);
+    }
+
+    public void registerConsumptionAddedObserver(IConsumptionAdded listener) {
+        _consumptionAddedListeners.add(listener);
     }
 
     public void notifyConsumptionAdded(Consumption consumption) {
-        for (AddConsumptionListener listener : _consumptionListerners) {
+        for (IConsumptionAdded listener : _consumptionAddedListeners) {
             if (listener != null)
                 listener.consumptionAdded(consumption);
+        }
+    }
+
+    public void notifyConsumptionDeleted(Consumption consumption){
+        for(IConsumptionDeleted observer : _consumptionDeletedListeners){
+            if(observer != null)
+                observer.consumptionDeleted(consumption);
         }
     }
 }

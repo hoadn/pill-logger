@@ -91,4 +91,26 @@ public class Consumption implements Comparable {
     public void setGroup(String group) {
         _group = group;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Consumption that = (Consumption) o;
+
+        if (_id != that._id) return false;
+        if (_date != null ? !_date.equals(that._date) : that._date != null) return false;
+        if (_group != null ? !_group.equals(that._group) : that._group != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = _date != null ? _date.hashCode() : 0;
+        result = 31 * result + _id;
+        result = 31 * result + (_group != null ? _group.hashCode() : 0);
+        return result;
+    }
 }

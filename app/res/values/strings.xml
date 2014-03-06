@@ -87,5 +87,14 @@
     <string name="add_consumption_future_confirmation">Are you sure you want to add this consumption in the future?</string>
     <string name="add_consumption_reminder_warning_past">You must set a date in the future for the reminder</string>
     <string name="add_consumption_reminder_toast_prefix">Reminder set for </string>
+    <string name="info_dialog_delete">Delete</string>
+    <string name="info_dialog_take_now">Take now</string>
+    <string name="info_dialog_last_taken">Last taken: </string>
+    <string name="info_dialog_dosage">In the last 24 hours:</string>
+    <string name="consumption_info_dialog_increase">Increase quantity</string>
+    <string name="consumption_info_dialog_decrease">Decrease quantity</string>
+    <string name="consumption_info_dialog_take">Take again</string>
+    <string name="consumption_info_dialog_take_again_prefix">Take </string>
+    <string name="consumption_info_dialog_take_again_suffix"> now</string>
 
 </resources>

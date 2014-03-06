@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.pilllogger.helpers.Logger;
-import uk.co.pilllogger.listeners.AddConsumptionListener;
 import uk.co.pilllogger.models.Pill;
 
 /**

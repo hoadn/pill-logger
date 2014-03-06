@@ -3,17 +3,21 @@
  */
 package uk.co.pilllogger.models;
 
+import org.joda.time.DateTime;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.state.Observer;
 
 /**
  * @author alex
  *
  */
-public class Pill implements Serializable {
+public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.IConsumptionDeleted {
 	/**
 	 * 
 	 */
@@ -28,18 +32,19 @@ public class Pill implements Serializable {
     private List<Consumption> _consumptions = new ArrayList<Consumption>();
 
     public Pill() {
+        Observer.getSingleton().registerConsumptionAddedObserver(this);
+        Observer.getSingleton().registerConsumptionDeletedObserver(this);
     }
 
     public Pill(CharSequence name, int size) {
+        this();
         _name = String.valueOf(name);
         _size = size;
     }
 
     public Pill(String name, int size, String units) {
-        _name = name;
-        _size = size;
+        this(name, size);
         _units = units;
-
     }
 
 	/**
@@ -120,6 +125,26 @@ public class Pill implements Serializable {
         return latest;
     }
 
+    public int getTotalSize(int hours){
+        return getTotalQuantity(hours) * getSize();
+    }
+
+    public int getTotalQuantity(int hours){
+        Date back = DateTime.now().plusHours(hours * -1).toDate();
+        Date currentDate = new Date();
+
+        int total = 0;
+
+        for (Consumption consumption : _consumptions) {
+            Date consumptionDate = consumption.getDate();
+            if (consumptionDate.compareTo(back) >= 0 && consumptionDate.compareTo(currentDate) <= 0) {
+                total += (consumption.getQuantity());
+            }
+        }
+
+        return total;
+    }
+
     @Override
 	public String toString(){
 		return getName() + '(' + getSize() + ')';
@@ -149,5 +174,23 @@ public class Pill implements Serializable {
         result = 31 * result + _colour;
         result = 31 * result + (_favourite ? 1 : 0);
         return result;
+    }
+
+    @Override
+    public void consumptionAdded(Consumption consumption) {
+        if (consumption != null) {
+            if (consumption.getPillId() == _id && !_consumptions.contains(consumption)) {
+                _consumptions.add(consumption);
+            }
+        }
+    }
+
+    @Override
+    public void consumptionDeleted(Consumption consumption) {
+        if (consumption != null) {
+            if (consumption.getPillId() == _id && _consumptions.contains(consumption)) {
+                _consumptions.remove(consumption);
+            }
+        }
     }
 }

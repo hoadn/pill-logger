@@ -40,21 +40,14 @@ import uk.co.pilllogger.adapters.ConsumptionListAdapter;
 import uk.co.pilllogger.adapters.GraphPillListAdapter;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.Logger;
-import uk.co.pilllogger.listeners.AddConsumptionListener;
-import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
-import uk.co.pilllogger.repositories.TutorialRepository;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
-import uk.co.pilllogger.tasks.GetFavouritePillsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
-import uk.co.pilllogger.tasks.GetTutorialSeenTask;
 import uk.co.pilllogger.tasks.InitTestDbTask;
-import uk.co.pilllogger.tasks.InsertConsumptionTask;
-import uk.co.pilllogger.tasks.SetTutorialSeenTask;
 
 /**
  * Created by nick on 23/10/13.
@@ -64,7 +57,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         GetConsumptionsTask.ITaskComplete,
         GetPillsTask.ITaskComplete,
         Observer.IPillsUpdated,
-        AddConsumptionListener {
+        Observer.IConsumptionAdded,
+        Observer.IConsumptionDeleted{
 
     public static final String TAG = "ConsumptionListFragment";
     ListView _listView;
@@ -105,6 +99,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         }
 
         Observer.getSingleton().registerConsumptionAddedObserver(this);
+        Observer.getSingleton().registerConsumptionDeletedObserver(this);
         return v;
     }
 
@@ -262,5 +257,19 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
             }
         });
 
+    }
+
+    @Override
+    public void consumptionDeleted(Consumption consumption) {
+        final Consumption consumption1 = consumption;
+        getActivity().runOnUiThread(new Runnable(){
+            public void run(){
+                if (_consumptions != null && (_consumptions.contains(consumption1))) {
+                    _consumptions.remove(consumption1);
+                    Collections.sort(_consumptions);
+                    consumptionsReceived(_consumptions);
+                }
+            }
+        });
     }
 }
