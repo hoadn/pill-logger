@@ -63,7 +63,7 @@ public class Consumption implements Comparable {
     }
 
     public int getPillId() {
-        return _pill.getId();
+        return _pill != null ? _pill.getId() : 0;
     }
 
     public int getQuantity(){return _quantity;}
