@@ -354,7 +354,7 @@ public class AddConsumptionActivity extends Activity implements
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                             Calendar cal = Calendar.getInstance();
                             cal.set(year, monthOfYear, dayOfMonth);
-                            String dateString = DateFormat.format(DATE_FORMAT, finalDate).toString();
+                            String dateString = DateFormat.format(DATE_FORMAT, cal.getTime()).toString();
                             String[] dates = new String[]{dateString};
                             ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, dates );
                             finalSpinner.setAdapter(adapter);
