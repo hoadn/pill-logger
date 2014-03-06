@@ -1,5 +1,6 @@
 package uk.co.pilllogger.fragments;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -185,13 +186,14 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     @Override
     public void pillsReceived(List<Pill> pills) {
         if (_list.getAdapter() == null){ //we need to init the adapter
-            PillsListAdapter adapter = new PillsListAdapter(getActivity(), R.layout.pill_list_item, pills);
+            Activity activity = getActivity();
 
-           // ContextualUndoAdapter undoAdapter = new ContextualUndoAdapter(adapter, R.layout.pill_list_item_delete, R.id.pill_list_undo);
-            //undoAdapter.setAbsListView(_list);
+            if(activity == null) // it's not gonna work without this
+                return;
+
+            PillsListAdapter adapter = new PillsListAdapter(activity, R.layout.pill_list_item, pills);
+
             _list.setAdapter(adapter);
-
-            //undoAdapter.setDeleteItemCallback(this);
         }
         else
         {
