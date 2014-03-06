@@ -411,21 +411,21 @@ public class AddConsumptionActivity extends Activity implements
                     TimePickerDialog timeDialog = new TimePickerDialog(AddConsumptionActivity.this, new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                            String hours = String.valueOf(hourOfDay);
-                            if (hourOfDay < 10)
-                                hours = "0" + hours;
-                            String minutes = String.valueOf(minute);
-                            if (minute < 10)
-                                minutes = "0" + minutes;
-                            String[] times = new String[]{hours + ":" + minutes};
 
-                            DateTime dt = new DateTime(finalDate);
-                            finalDate.setTime(dt.withHourOfDay(hourOfDay).withMinuteOfHour(minute).toDate().getTime());
+                            Date dt = new DateTime(finalDate)
+                                    .withHourOfDay(hourOfDay)
+                                    .withMinuteOfHour(minute)
+                                    .toDate();
+                            java.text.DateFormat timeFormat = DateFormat.getTimeFormat(context);
+
+                            String[] times = new String[]{ timeFormat.format(dt) };
+
+                            finalDate.setTime(dt.getTime());
 
                             ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, times );
                             finalSpinner.setAdapter(adapter);
                         }
-                    }, hour, minute, true);
+                    }, hour, minute, DateFormat.is24HourFormat(context));
                     timeDialog.show();
                 }
             }
@@ -493,9 +493,20 @@ public class AddConsumptionActivity extends Activity implements
 
         String selectedDate = date.getSelectedItem().toString();
         String selectedTime = time.getSelectedItem().toString();
-        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT + "kk:mm");
+
+        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
+        java.text.DateFormat tf = DateFormat.getTimeFormat(this);
+
         try {
-            return format.parse(selectedDate + selectedTime);
+            Date parsedDate = format.parse(selectedDate);
+            Date parsedTime = tf.parse(selectedTime);
+
+            DateTime parsedDateTime = new DateTime(parsedDate);
+            DateTime parsedTimeDateTime = new DateTime(parsedTime);
+            return parsedDateTime
+                    .withHourOfDay(parsedTimeDateTime.getHourOfDay())
+                    .withMinuteOfHour(parsedTimeDateTime.getMinuteOfHour())
+                    .toDate();
         } catch (ParseException e) {
             e.printStackTrace();
         }

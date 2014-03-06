@@ -115,8 +115,8 @@ public class DateHelper {
         return getTime(context, date.toDate());
     }
 
-    public static String formatDateAndTime(Date date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy kk:mm");
-        return simpleDateFormat.format(date);
+    public static String formatDateAndTime(Context context, Date date) {
+        java.text.DateFormat df = DateFormat.getDateFormat(context);
+        return df.format(date);
     }
 }

@@ -1,5 +1,6 @@
 package uk.co.pilllogger.dialogs;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -40,12 +41,14 @@ public abstract class InfoDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        if(getActivity() == null)
+
+        Activity activity = getActivity();
+        if(activity == null)
             return null;
 
         // Use the Builder class for convenient dialog construction
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        LayoutInflater inflater = activity.getLayoutInflater();
         View view = inflater.inflate(getLayoutId(), null);
 
         if(view == null)
@@ -67,7 +70,7 @@ public abstract class InfoDialog extends DialogFragment {
 
         Consumption lastConsumption = _pill.getLatestConsumption();
         if (lastConsumption != null)
-            lastTaken.setText(lastTaken.getText() + " " + DateHelper.formatDateAndTime(_pill.getLatestConsumption().getDate()));
+            lastTaken.setText(lastTaken.getText() + " " + DateHelper.formatDateAndTime(activity, _pill.getLatestConsumption().getDate()));
         _consumptions = _pill.getConsumptions();
         int dosage24 = _pill.getTotalSize(24);
         int quantity24 = _pill.getTotalQuantity(24);
