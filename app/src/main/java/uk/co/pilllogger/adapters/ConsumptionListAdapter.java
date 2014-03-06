@@ -28,8 +28,10 @@ import com.echo.holographlibrary.PieGraph;
 import com.echo.holographlibrary.StackBarGraph;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.dialogs.ConsumptionInfoDialog;
@@ -45,6 +47,7 @@ import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.DeleteConsumptionTask;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
+import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.views.ColourIndicator;
 
 import org.joda.time.DateTime;
@@ -76,22 +79,40 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
 
     @Override
     public void onDialogTakeAgain(Consumption consumption, InfoDialog dialog) {
-        // todo: handle taking again
+        Date consumptionDate = new Date();
+        String consumptionGroup = UUID.randomUUID().toString();
+
+        for(int i = 0; i < consumption.getQuantity(); i++){
+            Consumption newC = new Consumption(consumption);
+            newC.setId(0);
+            newC.setGroup(consumptionGroup);
+            newC.setDate(consumptionDate);
+            newC.setQuantity(1);
+
+            new InsertConsumptionTask(_activity, newC).execute();
+        }
+
+        dialog.dismiss();
     }
 
     @Override
     public void onDialogIncrease(Consumption consumption, InfoDialog dialog) {
-        // todo: handle increased quantity
+        Consumption newC = new Consumption(consumption);
+        newC.setId(0);
+        new InsertConsumptionTask(_activity, newC).execute();
+        dialog.dismiss();
     }
 
     @Override
     public void onDialogDecrease(Consumption consumption, InfoDialog dialog) {
-        // todo: handle decreased quantity
+        new DeleteConsumptionTask(_activity, consumption).execute();
+        dialog.dismiss();
     }
 
     @Override
     public void onDialogDelete(Consumption consumption, InfoDialog dialog) {
-        // todo: delete consumption
+        new DeleteConsumptionTask(_activity, consumption).execute();
+        dialog.dismiss();
     }
 
     public static class ViewHolder {

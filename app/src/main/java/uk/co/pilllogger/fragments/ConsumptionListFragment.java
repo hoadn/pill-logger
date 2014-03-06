@@ -57,7 +57,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         GetConsumptionsTask.ITaskComplete,
         GetPillsTask.ITaskComplete,
         Observer.IPillsUpdated,
-        Observer.IConsumptionAdded {
+        Observer.IConsumptionAdded,
+        Observer.IConsumptionDeleted{
 
     public static final String TAG = "ConsumptionListFragment";
     ListView _listView;
@@ -98,6 +99,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         }
 
         Observer.getSingleton().registerConsumptionAddedObserver(this);
+        Observer.getSingleton().registerConsumptionDeletedObserver(this);
         return v;
     }
 
@@ -255,5 +257,19 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
             }
         });
 
+    }
+
+    @Override
+    public void consumptionDeleted(Consumption consumption) {
+        final Consumption consumption1 = consumption;
+        getActivity().runOnUiThread(new Runnable(){
+            public void run(){
+                if (_consumptions != null && (_consumptions.contains(consumption1))) {
+                    _consumptions.remove(consumption1);
+                    Collections.sort(_consumptions);
+                    consumptionsReceived(_consumptions);
+                }
+            }
+        });
     }
 }
