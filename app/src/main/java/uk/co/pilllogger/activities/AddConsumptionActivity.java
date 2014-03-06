@@ -331,11 +331,14 @@ public class AddConsumptionActivity extends Activity implements
                 Spinner dateSpinner = null;
                 Date date = null;
 
-                if(view.getId() == R.id.add_consumption_date_container){
+                final boolean consumptionDate = view.getId() == R.id.add_consumption_date_container;
+                final boolean consumptionReminder = view.getId() == R.id.add_consumption_reminder_date_container;
+
+                if(consumptionDate){
                     dateSpinner = _dateSpinner;
                     date = _consumptionDate;
                 }
-                else if (view.getId() == R.id.add_consumption_reminder_date_container){
+                else if (consumptionReminder){
                     dateSpinner = _reminderDateSpinner;
                     date = _reminderDate;
                 }
@@ -354,6 +357,11 @@ public class AddConsumptionActivity extends Activity implements
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                             Calendar cal = Calendar.getInstance();
                             cal.set(year, monthOfYear, dayOfMonth);
+
+                            Date date = cal.getTime();
+
+                            finalDate.setTime(date.getTime());
+
                             String dateString = DateFormat.format(DATE_FORMAT, cal.getTime()).toString();
                             String[] dates = new String[]{dateString};
                             ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, dates );
@@ -410,6 +418,10 @@ public class AddConsumptionActivity extends Activity implements
                             if (minute < 10)
                                 minutes = "0" + minutes;
                             String[] times = new String[]{hours + ":" + minutes};
+
+                            DateTime dt = new DateTime(finalDate);
+                            finalDate.setTime(dt.withHourOfDay(hourOfDay).withMinuteOfHour(minute).toDate().getTime());
+
                             ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, times );
                             finalSpinner.setAdapter(adapter);
                         }
