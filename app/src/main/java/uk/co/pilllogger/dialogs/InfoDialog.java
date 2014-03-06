@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
+import uk.co.pilllogger.views.ColourIndicator;
 
 
 /**
@@ -49,6 +51,7 @@ public abstract class InfoDialog extends DialogFragment {
         if(view == null)
             return null;
 
+        ColourIndicator colour = (ColourIndicator)view.findViewById(R.id.colour);
         TextView title = (TextView) view.findViewById(R.id.info_dialog_title);
         TextView lastTaken = (TextView) view.findViewById(R.id.info_dialog_last_taken);
         TextView dosage = (TextView) view.findViewById(R.id.info_dialog_dosage);
@@ -59,13 +62,17 @@ public abstract class InfoDialog extends DialogFragment {
         dosage.setTypeface(typeface);
 
         title.setText(_title);
+
+        colour.setColour(_pill.getColour());
+
         Consumption lastConsumption = _pill.getLatestConsumption();
         if (lastConsumption != null)
             lastTaken.setText(lastTaken.getText() + " " + DateHelper.formatDateAndTime(_pill.getLatestConsumption().getDate()));
         _consumptions = _pill.getConsumptions();
         int dosage24 = _pill.getTotalSize(24);
+        int quantity24 = _pill.getTotalQuantity(24);
 
-        dosage.setText(dosage.getText() + " " + dosage24 + _pill.getUnits());
+        dosage.setText(dosage.getText() + " " + dosage24 + _pill.getUnits() + " (" + quantity24 + " x " + _pill.getSize() + _pill.getUnits() + ")");
 
         setupMenu(view);
 

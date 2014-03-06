@@ -1,15 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-<TextView
-    android:id="@+id/info_dialog_title"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textSize="22sp"
-    android:textColor="@color/light_blue"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <uk.co.pilllogger.views.ColourIndicator
+            android:id="@+id/colour"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:padding="6dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:color="@color/pill_colour2"/>
+        <TextView
+            android:id="@+id/info_dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="@color/light_blue"
+            tools:text="Paracetamol 500mg"
+            android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+
     <TextView
     android:id="@+id/info_dialog_last_taken"
     android:text="@string/info_dialog_last_taken"
