@@ -1,5 +1,6 @@
 package uk.co.pilllogger.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 
@@ -29,5 +30,17 @@ public class PillLoggerFragmentBase extends Fragment {
 
         this.tracker.set(Fields.SCREEN_NAME, getClass().getSimpleName());
         this.tracker.send( MapBuilder.createAppView().build() );
+    }
+
+    protected void executeRunnable(Runnable runnable){
+        Activity activity = getActivity();
+        if(activity != null)
+            activity.runOnUiThread(runnable);
+        else{
+            try{
+                runnable.run();
+            }
+            catch(Exception ignored){}
+        }
     }
 }

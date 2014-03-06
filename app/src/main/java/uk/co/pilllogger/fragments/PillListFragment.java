@@ -55,6 +55,13 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     }
 
     @Override
+    public void onDestroy(){
+        super.onDestroy();
+
+        Observer.getSingleton().unregisterPillsUpdatedObserver(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment

@@ -3,6 +3,7 @@ package uk.co.pilllogger.state;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 
@@ -33,6 +34,18 @@ public class Observer {
 
     public void registerPillsUpdatedObserver(IPillsUpdated observer){
         _pillsUpdatedArrayList.add(observer);
+    }
+
+    public void unregisterPillsUpdatedObserver(IPillsUpdated observer) {
+        _pillsUpdatedArrayList.remove(observer);
+    }
+
+    public void unregisterConsumptionDeletedObserver(IConsumptionDeleted observer){
+        _consumptionDeletedListeners.remove(observer);
+    }
+
+    public void unregisterConsumptionAddedObserver(IConsumptionAdded observer){
+        _consumptionAddedListeners.remove(observer);
     }
 
     public interface IPillsUpdated{
