@@ -6,8 +6,8 @@
     android:padding="10dp">
     <include layout="@layout/info_dialog_top"/>
     <TextView
-        android:id="@+id/consumption_info_dialog_increase"
-        android:text="@string/consumption_info_dialog_increase"
+        android:id="@+id/consumption_info_dialog_take"
+        android:text="@string/consumption_info_dialog_take"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
@@ -20,18 +20,31 @@
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"/>
     <TextView
+        android:id="@+id/consumption_info_dialog_increase"
+        android:text="@string/consumption_info_dialog_increase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/text_grey"
+        android:paddingTop="8dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingBottom="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"/>
+    <TextView
     android:id="@+id/consumption_info_dialog_decrease"
     android:text="@string/consumption_info_dialog_decrease"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textSize="18sp"
-    android:textColor="@color/text_grey"
+    android:textColor="@color/text_grey_light"
     android:paddingTop="8dp"
     android:paddingLeft="4dp"
     android:paddingRight="4dp"
     android:paddingBottom="8dp"
     android:background="?android:attr/selectableItemBackground"
-    android:clickable="true"/>
+    android:clickable="false"/>
     <TextView
         android:id="@+id/info_dialog_delete"
         android:text="@string/info_dialog_delete"

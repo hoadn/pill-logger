@@ -91,5 +91,8 @@
     <string name="info_dialog_dosage">Dosage in the last 24 hours:</string>
     <string name="consumption_info_dialog_increase">Increase quantity</string>
     <string name="consumption_info_dialog_decrease">Decrease quantity</string>
+    <string name="consumption_info_dialog_take">Take again</string>
+    <string name="consumption_info_dialog_take_again_prefix">Take </string>
+    <string name="consumption_info_dialog_take_again_suffix"> now</string>
 
 </resources>

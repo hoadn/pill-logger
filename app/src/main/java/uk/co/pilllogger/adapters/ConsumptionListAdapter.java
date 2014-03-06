@@ -75,6 +75,11 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
     }
 
     @Override
+    public void onDialogTakeAgain(Consumption consumption, InfoDialog dialog) {
+        // todo: handle taking again
+    }
+
+    @Override
     public void onDialogIncrease(Consumption consumption, InfoDialog dialog) {
         // todo: handle increased quantity
     }
@@ -174,7 +179,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                     v.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                InfoDialog dialog = new ConsumptionInfoDialog(consumption, ConsumptionListAdapter.this);
+                                InfoDialog dialog = new ConsumptionInfoDialog(_activity, consumption, ConsumptionListAdapter.this);
                                 dialog.show(_activity.getFragmentManager(), consumption.getPill().getName());
                         }
                     });

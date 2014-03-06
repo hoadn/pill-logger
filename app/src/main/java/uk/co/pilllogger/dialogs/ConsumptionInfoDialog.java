@@ -1,5 +1,6 @@
 package uk.co.pilllogger.dialogs;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
 import android.widget.TextView;
@@ -13,11 +14,13 @@ import uk.co.pilllogger.state.State;
  * Created by Alex on 05/03/14.
  */
 public class ConsumptionInfoDialog extends InfoDialog {
+    private Context _context;
     private Consumption _consumption;
     private ConsumptionInfoDialogListener _listener;
 
-    public ConsumptionInfoDialog(Consumption consumption, ConsumptionInfoDialogListener listener) {
+    public ConsumptionInfoDialog(Context context, Consumption consumption, ConsumptionInfoDialogListener listener) {
         super(consumption.getPill());
+        _context = context;
         _consumption = consumption;
         _listener = listener;
     }
@@ -30,15 +33,30 @@ public class ConsumptionInfoDialog extends InfoDialog {
     @Override
     protected void setupMenu(View view) {
 
+        TextView takeAgain = (TextView) view.findViewById(R.id.consumption_info_dialog_take);
         TextView increase = (TextView) view.findViewById(R.id.consumption_info_dialog_increase);
         TextView decrease = (TextView) view.findViewById(R.id.consumption_info_dialog_decrease);
         TextView delete = (TextView) view.findViewById(R.id.info_dialog_delete);
 
         Typeface typeface = State.getSingleton().getTypeface();
+        takeAgain.setTypeface(typeface);
         increase.setTypeface(typeface);
         decrease.setTypeface(typeface);
         delete.setTypeface(typeface);
 
+        takeAgain.setText(String.format("%s %d %s %s", _context.getString(R.string.consumption_info_dialog_take_again_prefix), _consumption.getQuantity(), _consumption.getPill().getName(), _context.getString(R.string.consumption_info_dialog_take_again_suffix)));
+
+        if(_consumption.getQuantity() > 1){
+            decrease.setClickable(true);
+            decrease.setTextColor(_context.getResources().getColor(R.color.text_grey));
+        }
+
+        takeAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _listener.onDialogTakeAgain(_consumption, ConsumptionInfoDialog.this);
+            }
+        });
         increase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,6 +78,7 @@ public class ConsumptionInfoDialog extends InfoDialog {
     }
 
     public interface ConsumptionInfoDialogListener {
+        public void onDialogTakeAgain(Consumption consumption, InfoDialog dialog);
         public void onDialogIncrease(Consumption consumption, InfoDialog dialog);
         public void onDialogDecrease(Consumption consumption, InfoDialog dialog);
         public void onDialogDelete(Consumption consumption, InfoDialog dialog);
