@@ -272,4 +272,31 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
             }
         });
     }
+
+    @Override
+    public void consumptionPillGroupDeleted(String group, int pillId) {
+
+        if(_consumptions == null || group == null)
+            return;
+
+        final List<Consumption> toRemove = new ArrayList<Consumption>();
+
+        Consumption[] consumptions = new Consumption[_consumptions.size()];
+        for(Consumption c : _consumptions.toArray(consumptions)){
+            String consumptionGroup = c.getGroup();
+            if(consumptionGroup == null)
+                continue;
+
+            if(c.getGroup().equals(group) && c.getPillId() == pillId)
+                toRemove.add(c);
+        }
+
+        getActivity().runOnUiThread(new Runnable(){
+            public void run(){
+                _consumptions.removeAll(toRemove);
+                Collections.sort(_consumptions);
+                consumptionsReceived(_consumptions);
+            }
+        });
+    }
 }

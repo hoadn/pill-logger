@@ -105,13 +105,13 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
 
     @Override
     public void onDialogDecrease(Consumption consumption, InfoDialog dialog) {
-        new DeleteConsumptionTask(_activity, consumption).execute();
+        new DeleteConsumptionTask(_activity, consumption, false).execute();
         dialog.dismiss();
     }
 
     @Override
     public void onDialogDelete(Consumption consumption, InfoDialog dialog) {
-        new DeleteConsumptionTask(_activity, consumption).execute();
+        new DeleteConsumptionTask(_activity, consumption, true).execute();
         dialog.dismiss();
     }
 
@@ -131,7 +131,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                 int index = _data.indexOf(_selectedConsumption);
                 removeAtPosition(index); //remove() doesn't like newly created pills, so remove manually
 
-                new DeleteConsumptionTask(_activity, _selectedConsumption).execute();
+                new DeleteConsumptionTask(_activity, _selectedConsumption, true).execute();
                 if (_fragment instanceof ConsumptionListFragment) {
                     new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete)_fragment, false).execute();
                 }

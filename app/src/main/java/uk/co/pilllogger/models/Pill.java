@@ -3,6 +3,8 @@
  */
 package uk.co.pilllogger.models;
 
+import android.util.Log;
+
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -22,7 +24,8 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private int _id;
+    private static final String TAG = "Pill";
+    private int _id;
 	private String _name = "";
     private String _units = "mg";
 	private int _size;
@@ -192,5 +195,24 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
                 _consumptions.remove(consumption);
             }
         }
+    }
+
+    @Override
+    public void consumptionPillGroupDeleted(String group, int pillId) {
+        List<Consumption> toRemove = new ArrayList<Consumption>();
+
+        if(group == null)
+            return;
+
+        for(Consumption c : _consumptions){
+            String consumptionGroup = c.getGroup();
+            if(consumptionGroup == null)
+                continue;
+
+            if(c.getGroup().equals(group) && c.getPillId() == pillId)
+                toRemove.add(c);
+        }
+
+        _consumptions.removeAll(toRemove);
     }
 }

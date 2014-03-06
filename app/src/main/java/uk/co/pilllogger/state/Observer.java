@@ -45,6 +45,7 @@ public class Observer {
 
     public interface IConsumptionDeleted{
         void consumptionDeleted(Consumption consumption);
+        void consumptionPillGroupDeleted(String group, int pillId);
     }
 
     public interface IConsumptionAdded {
@@ -66,6 +67,13 @@ public class Observer {
         for(IConsumptionDeleted observer : _consumptionDeletedListeners){
             if(observer != null)
                 observer.consumptionDeleted(consumption);
+        }
+    }
+
+    public void notifyConsumptionPillGroupDeleted(String group, int pillId){
+        for(IConsumptionDeleted observer : _consumptionDeletedListeners){
+            if(observer != null)
+                observer.consumptionPillGroupDeleted(group, pillId);
         }
     }
 }

@@ -70,6 +70,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         Consumption consumption = new Consumption();
         consumption.setId(c.getInt(c.getColumnIndex(DatabaseContract.Consumptions._ID)));
         consumption.setDate(new Date(c.getLong(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_DATE_TIME))));
+        consumption.setGroup(c.getString(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_GROUP)));
         int pillId = c.getInt(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_PILL_ID));
 
         if(getPill){
@@ -117,6 +118,31 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                     new String[]{id});
         }
         notifyDeleted(consumption);
+    }
+
+    public void deleteGroupPill(Consumption consumption){
+        SQLiteDatabase db = _dbCreator.getWritableDatabase();
+
+        String pillId = String.valueOf(consumption.getPillId());
+
+        if (db != null) {
+            if(consumption.getGroup() != null){
+                db.delete(
+                        DatabaseContract.Consumptions.TABLE_NAME,
+                        DatabaseContract.Consumptions.COLUMN_GROUP + " = ? AND " +
+                        DatabaseContract.Consumptions.COLUMN_PILL_ID + " = ? ",
+                        new String[]{consumption.getGroup(), pillId});
+            }
+            else{
+                String dateTime = String.valueOf(consumption.getDate().getTime());
+                db.delete(
+                        DatabaseContract.Consumptions.TABLE_NAME,
+                        DatabaseContract.Consumptions.COLUMN_DATE_TIME + " = ? AND " +
+                                DatabaseContract.Consumptions.COLUMN_PILL_ID + " = ? ",
+                        new String[]{dateTime, pillId});
+            }
+        }
+        notifyDeletedGroupPill(consumption);
     }
 
     @Override
@@ -288,9 +314,13 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         Observer.getSingleton().notifyConsumptionAdded(consumption);
     }
 
-
     private void notifyDeleted(Consumption consumption) {
         notifyUpdated();
         Observer.getSingleton().notifyConsumptionDeleted(consumption);
+    }
+
+    private void notifyDeletedGroupPill(Consumption consumption){
+        notifyUpdated();
+        Observer.getSingleton().notifyConsumptionPillGroupDeleted(consumption.getGroup(), consumption.getPillId());
     }
 }
