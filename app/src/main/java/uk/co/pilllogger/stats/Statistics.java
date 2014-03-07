@@ -20,13 +20,17 @@ import uk.co.pilllogger.tasks.GetPillsTask;
  */
 public class Statistics {
 
-    public static Pill getMostTakePill(Date startDate, Date endDate, List<Consumption> consumptions) {
+    private static List<Consumption> filterConsumptions(Date startDate, Date endDate, List<Consumption> consumptions) {
         List<Consumption> filteredConsumptions = new ArrayList<Consumption>();
         for (Consumption consumption : consumptions) {
             if (consumption.getDate().compareTo(startDate) > 0 && consumption.getDate().compareTo(endDate) < 0)
                 filteredConsumptions.add(consumption);
         }
-        return getMostTakenPill(filteredConsumptions);
+        return filteredConsumptions;
+    }
+
+    public static Pill getMostTakePill(Date startDate, Date endDate, List<Consumption> consumptions) {
+        return getMostTakenPill(filterConsumptions(startDate, endDate, consumptions));
     }
 
     public static Pill getMostTakenPill(List<Consumption> consumptions) { //Does not support grouped consumptions (Use ungrouped)
@@ -49,6 +53,10 @@ public class Statistics {
         }
 
         return (mostlyTakenPill == null) ? null : mostlyTakenPill.getKey();
+    }
+
+    public static String getDayWithMostConsumptions(Date startDate, Date endDate, List<Consumption> consumptinos) {
+        return getDayWithMostConsumptions(filterConsumptions(startDate, endDate, consumptinos));
     }
 
     public static String getDayWithMostConsumptions(List<Consumption> consumptions) {
