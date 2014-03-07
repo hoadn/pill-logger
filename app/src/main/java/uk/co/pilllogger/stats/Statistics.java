@@ -24,7 +24,7 @@ public class Statistics {
         return filteredConsumptions;
     }
 
-    public static Pill getMostTakePill(Date startDate, Date endDate, List<Consumption> consumptions) {
+    public static Pill getMostTakenPill(Date startDate, Date endDate, List<Consumption> consumptions) {
         return getMostTakenPill(filterConsumptions(startDate, endDate, consumptions));
     }
 
@@ -86,5 +86,14 @@ public class Statistics {
         }
 
         return timeWithMostConsumptions;
+    }
+
+    public static Consumption getLastConsumption(List<Consumption> consumptions) {
+        Consumption mostRecentConsumption = null;
+        for (Consumption consumption : consumptions) {
+            if (mostRecentConsumption == null || consumption.getDate().compareTo(mostRecentConsumption.getDate()) > 0)
+                mostRecentConsumption = consumption;
+        }
+        return mostRecentConsumption;
     }
 }
