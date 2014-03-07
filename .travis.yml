@@ -22,7 +22,7 @@ before_install:
 
   # install android build tools
   - wget https://dl-ssl.google.com/android/repository/build-tools_r19.0.3-linux.zip
-  - unzip build-tools_r19-linux.zip -d $ANDROID_HOME
+  - unzip build-tools_r19.0.3-linux.zip -d $ANDROID_HOME
   - wget https://dl-ssl.google.com/android/repository/build-tools_r18.1.1-linux.zip
   - unzip build-tools_r18.1.1-linux.zip -d $ANDROID_HOME
   - wget https://dl-ssl.google.com/android/repository/build-tools_r17-linux.zip
