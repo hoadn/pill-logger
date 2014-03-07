@@ -21,8 +21,6 @@ public class State {
     private Typeface _typeface;
     private Typeface _scriptTypeface;
     private List<Pill> _consumptionPills = new ArrayList<Pill>();
-    Map<Pill, Integer> _openPills = new HashMap<Pill, Integer>();
-
     private boolean _appVisible = false;
     private boolean _chartsPaid = false;
 
@@ -118,14 +116,15 @@ public class State {
 
     public boolean isChartsPaid() {
         return _chartsPaid;
-    public boolean isAppVisible() {
-        return _appVisible;
     }
 
     public void setChartsPaid(boolean chartsPaid) {
         _chartsPaid = chartsPaid;
+    }
+
+    public boolean isAppVisible() {return _appVisible;}
+
     public void setAppVisible(boolean appVisible) {
         _appVisible = appVisible;
     }
-}
 }
