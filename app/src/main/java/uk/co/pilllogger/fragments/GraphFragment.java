@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.vending.billing.IInAppBillingService;
 import com.echo.holographlibrary.BarGraph;
 import com.echo.holographlibrary.LineGraph;
 import com.echo.holographlibrary.PieGraph;
@@ -22,6 +23,7 @@ import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.Feature;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 
@@ -52,14 +54,23 @@ public class GraphFragment extends PillLoggerFragmentBase implements GetConsumpt
         TextView title = (TextView)_layout.findViewById(R.id.graph_fragment_title);
         title.setTypeface(State.getSingleton().getTypeface());
 
+        managePaidCharts(_layout);
+
         return _layout;
     }
 
-    private void managePaidCharts(){
-        if(!State.getSingleton().isChartsPaid()){
+    private void managePaidCharts(View layout){
+        if(!State.getSingleton().hasFeature(Feature.CHARTS) && false){
             return;
         }
 
+        View graph2Cover = layout.findViewById(R.id.line_graph_lock);
+        View graph3Cover = layout.findViewById(R.id.pie_graph_lock);
+        View graph4Cover = layout.findViewById(R.id.week_graph_lock);
+
+        graph2Cover.setVisibility(View.INVISIBLE);
+        graph3Cover.setVisibility(View.INVISIBLE);
+        graph4Cover.setVisibility(View.INVISIBLE);
         // todo: hide the covers over the charts
     }
 

@@ -53,6 +53,7 @@ import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
+import uk.co.pilllogger.services.BillingServiceConnection;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.DeletePillTask;
@@ -88,6 +89,7 @@ public class MainActivity extends PillLoggerActivityBase implements
     private Menu _menu;
     Fragment _consumptionFragment;
     private TutorialService _tutorialService;
+    BillingServiceConnection _billingServiceConnection = new BillingServiceConnection();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,6 +168,19 @@ public class MainActivity extends PillLoggerActivityBase implements
         _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_colourBackground, this));
 
         Observer.getSingleton().registerPillsUpdatedObserver(this);
+
+        bindService(new
+                        Intent("com.android.vending.billing.InAppBillingService.BIND"),
+                _billingServiceConnection, Context.BIND_AUTO_CREATE
+        );
+    }
+
+    @Override
+    protected void onDestroy(){
+        if(_billingServiceConnection != null &&
+                _billingServiceConnection.getBillingService() != null){
+            unbindService(_billingServiceConnection);
+        }
     }
 
     @Override

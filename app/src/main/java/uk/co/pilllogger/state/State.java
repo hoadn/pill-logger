@@ -22,8 +22,7 @@ public class State {
     private Typeface _scriptTypeface;
     private List<Pill> _consumptionPills = new ArrayList<Pill>();
     private boolean _appVisible = false;
-    private boolean _chartsPaid = false;
-
+    private List<Feature.InAppId> _enabledFeatures = new ArrayList<Feature.InAppId>();
 
     private State() {
     }
@@ -114,17 +113,18 @@ public class State {
         return _openPills;
     }
 
-    public boolean isChartsPaid() {
-        return _chartsPaid;
-    }
-
-    public void setChartsPaid(boolean chartsPaid) {
-        _chartsPaid = chartsPaid;
-    }
-
     public boolean isAppVisible() {return _appVisible;}
 
     public void setAppVisible(boolean appVisible) {
         _appVisible = appVisible;
     }
+
+    public List<Feature.InAppId> getEnabledFeatures(){
+        return _enabledFeatures;
+    }
+
+    public boolean hasFeature(Feature feature){
+        return _enabledFeatures.contains(feature);
+    }
 }
+
