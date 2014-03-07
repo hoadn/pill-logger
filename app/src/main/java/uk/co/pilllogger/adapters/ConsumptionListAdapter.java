@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.echo.holographlibrary.BarGraph;
 import com.echo.holographlibrary.LineGraph;
@@ -45,6 +46,7 @@ import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
+import uk.co.pilllogger.stats.Statistics;
 import uk.co.pilllogger.tasks.DeleteConsumptionTask;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
@@ -202,6 +204,11 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                         public void onClick(View v) {
                                 InfoDialog dialog = new ConsumptionInfoDialog(_activity, consumption, ConsumptionListAdapter.this);
                                 dialog.show(_activity.getFragmentManager(), consumption.getPill().getName());
+                                String day = Statistics.getDayWithMostConsumptions(_data);
+                                if (day == null)
+                                    Toast.makeText(_activity, "day is null", Toast.LENGTH_SHORT).show();
+                                else
+                                    Toast.makeText(_activity, "Mostly Taken Pill: " + day, Toast.LENGTH_SHORT).show();
                         }
                     });
 
