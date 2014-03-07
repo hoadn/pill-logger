@@ -1,19 +1,14 @@
 package uk.co.pilllogger.stats;
 
-import android.content.Context;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
-import uk.co.pilllogger.tasks.GetConsumptionsTask;
-import uk.co.pilllogger.tasks.GetPillsTask;
 
 /**
  * Created by nick on 07/03/14.
@@ -60,23 +55,36 @@ public class Statistics {
     }
 
     public static String getDayWithMostConsumptions(List<Consumption> consumptions) {
-        Map<String, Integer> amountPerDay = new HashMap<String, Integer>();
+        SimpleDateFormat format = new SimpleDateFormat("EEEE"); //Turns date into Day of week e.g Monday
+        return getTimeWithMostConsumptions(consumptions, format).getKey();
+    }
+
+    public static String getHourWithMmostConsumptions(Date startDate, Date endDate, List<Consumption> consumptions) {
+        return getHourWithMostConsumptions(filterConsumptions(startDate, endDate, consumptions));
+    }
+
+    public static String getHourWithMostConsumptions(List<Consumption> consumptions) {
+        SimpleDateFormat format = new SimpleDateFormat("kk"); //Turns date into Day of week e.g Monday
+        return getTimeWithMostConsumptions(consumptions, format).getKey();
+    }
+
+    private static Map.Entry<String, Integer> getTimeWithMostConsumptions(List<Consumption> consumptions, SimpleDateFormat format) {
+        Map<String, Integer> amountPerTime = new HashMap<String, Integer>();
 
         for (Consumption consumption : consumptions) {
-            SimpleDateFormat format = new SimpleDateFormat("EEEE");
             String day = format.format(consumption.getDate());
-            if (amountPerDay.containsKey(day))
-                amountPerDay.put(day, amountPerDay.get(day) + 1);
+            if (amountPerTime.containsKey(day))
+                amountPerTime.put(day, amountPerTime.get(day) + 1);
             else
-                amountPerDay.put(day, 1);
+                amountPerTime.put(day, 1);
         }
 
-        Map.Entry<String, Integer> dayWithMostConsumptions = null;
-        for (Map.Entry<String, Integer> entry : amountPerDay.entrySet()) {
-            if (dayWithMostConsumptions == null || entry.getValue() > dayWithMostConsumptions.getValue())
-                dayWithMostConsumptions = entry;
+        Map.Entry<String, Integer> timeWithMostConsumptions = null;
+        for (Map.Entry<String, Integer> entry : amountPerTime.entrySet()) {
+            if (timeWithMostConsumptions == null || entry.getValue() > timeWithMostConsumptions.getValue())
+                timeWithMostConsumptions = entry;
         }
 
-        return dayWithMostConsumptions.getKey();
+        return timeWithMostConsumptions;
     }
 }

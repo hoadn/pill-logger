@@ -204,11 +204,11 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                         public void onClick(View v) {
                                 InfoDialog dialog = new ConsumptionInfoDialog(_activity, consumption, ConsumptionListAdapter.this);
                                 dialog.show(_activity.getFragmentManager(), consumption.getPill().getName());
-                                String day = Statistics.getDayWithMostConsumptions(_data);
-                                if (day == null)
-                                    Toast.makeText(_activity, "day is null", Toast.LENGTH_SHORT).show();
+                                String hour = Statistics.getHourWithMostConsumptions(_data);
+                                if (hour == null)
+                                    Toast.makeText(_activity, "hour is null", Toast.LENGTH_SHORT).show();
                                 else
-                                    Toast.makeText(_activity, "Mostly Taken Pill: " + day, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(_activity, "Hour: " + hour, Toast.LENGTH_SHORT).show();
                         }
                     });
 
