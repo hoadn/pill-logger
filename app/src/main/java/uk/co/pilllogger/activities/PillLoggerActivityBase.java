@@ -7,6 +7,8 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 
+import uk.co.pilllogger.state.State;
+
 /**
  * Created by alex on 25/01/2014.
  */
@@ -28,5 +30,19 @@ public class PillLoggerActivityBase extends Activity {
         super.onStop();
 
         EasyTracker.getInstance(this).activityStop(this);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        State.getSingleton().setAppVisible(true);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+        State.getSingleton().setAppVisible(false);
     }
 }

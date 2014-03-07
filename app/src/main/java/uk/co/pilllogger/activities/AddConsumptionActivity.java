@@ -4,33 +4,46 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
+
+import org.joda.time.DateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.helpers.AlarmHelper;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.listeners.AddConsumptionPillItemClickListener;
@@ -42,6 +55,7 @@ import uk.co.pilllogger.tasks.GetTutorialSeenTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.tasks.InsertPillTask;
 import uk.co.pilllogger.tasks.SetTutorialSeenTask;
+import uk.co.pilllogger.views.ColourIndicator;
 
 /**
  * Created by nick on 24/10/13.
@@ -55,7 +69,6 @@ public class AddConsumptionActivity extends Activity implements
 
     private static final String TAG = "AddConsumptionActivity";
     public static String DATE_FORMAT = "E, MMM dd, yyyy";
-    public static String TIME_FORMAT = "kk:mm";
 
     ListView _pillsList;
     Activity _activity;
@@ -67,15 +80,28 @@ public class AddConsumptionActivity extends Activity implements
     Spinner _timeSpinner;
     Spinner _dateSpinner;
     Spinner _unitSpinner;
+    private Spinner _reminderDateSpinner;
+    private Spinner _reminderTimeSpinner;
 
     RadioGroup _choosePillRadioGroup;
     RadioGroup _dateRadioGroup;
+    private RadioGroup _reminderRadioGroup;
 
     private DatePickerDialog _startDateDialog;
     private DatePickerDialog _endDateDialog;
     DatePickerDialog.OnDateSetListener _endDateListener;
     DatePickerDialog.OnDateSetListener _startDateListener;
-    public boolean _futureOk = false;
+
+    Date _consumptionDate = new Date();
+    Date _reminderDate = new Date();
+    private List<Pill> _addedPills = new ArrayList<Pill>();
+    private ColourIndicator _colour;
+
+    TextView _reminderTitle;
+    CheckBox _reminderToggle;
+    ViewGroup _reminderHoursContainer;
+    EditText _reminderHours;
+    TextView _reminderHoursSuffix;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,13 +119,58 @@ public class AddConsumptionActivity extends Activity implements
         _dateSpinner = (Spinner) findViewById(R.id.add_consumption_date);
         _timeSpinner = (Spinner) findViewById(R.id.add_consumption_time);
 
+        _reminderDateSpinner = (Spinner) findViewById(R.id.add_consumption_reminder_date);
+        _reminderTimeSpinner = (Spinner)findViewById(R.id.add_consumption_reminder_time);
+
         Typeface typeface = State.getSingleton().getTypeface();
-        _newPillName = (TextView) findViewById(R.id.add_consumption_add_pill_name);
-        _newPillSize = (TextView) findViewById(R.id.add_consumption_add_pill_size);
+        _newPillName = (TextView) findViewById(R.id.pill_fragment_add_pill_name);
+        _newPillSize = (TextView) findViewById(R.id.pill_fragment_add_pill_size);
+        TextView title = (TextView) findViewById(R.id.pill_fragment_add_pill_title);
+        TextView colourText = (TextView) findViewById(R.id.pill_fragment_add_pill_colour);
+        TextView create = (TextView) findViewById(R.id.pill_fragment_add_pill_create);
         _newPillName.setTypeface(typeface);
         _newPillSize.setTypeface(typeface);
+        title.setVisibility(View.GONE);
+        colourText.setTypeface(typeface);
+        create.setTypeface(typeface);
 
-        View addPillCompleted = findViewById(R.id.add_consumption_add_pill_completed);
+        _colour = (ColourIndicator) findViewById(R.id.pill_fragment_colour);
+        _colour.setColour(getResources().getColor(R.color.pill_colour7));
+        _colour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final View colourHolder = AddConsumptionActivity.this.findViewById(R.id.pill_fragment_colour_picker_container);
+                final ViewGroup colourContainer = (ViewGroup) colourHolder.findViewById(R.id.colour_container);
+                if (colourHolder.getVisibility() == View.VISIBLE) {
+                    int colourCount = colourContainer.getChildCount();
+                    for (int i = 0; i < colourCount; i++) {
+                        View colourView = colourContainer.getChildAt(i);
+                        if (colourView != null) {
+                            colourView.setOnClickListener(null);
+                        }
+                    }
+                    colourHolder.setVisibility(View.GONE);
+                } else {
+                    colourHolder.setVisibility(View.VISIBLE);
+                    int colourCount = colourContainer.getChildCount();
+                    for (int i = 0; i < colourCount; i++) {
+                        View colourView = colourContainer.getChildAt(i);
+                        if (colourView != null) {
+                            colourView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    int colour = ((ColourIndicator) view).getColour();
+                                    _colour.setColour(colour);
+                                    colourHolder.setVisibility(View.GONE);
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
+
+        View addPillCompleted = findViewById(R.id.pill_fragment_add_pill_completed);
         addPillCompleted.setOnClickListener(new addNewPillClickListener());
 
         _newPillSize.setOnEditorActionListener(new TextView.OnEditorActionListener(){
@@ -117,7 +188,61 @@ public class AddConsumptionActivity extends Activity implements
         setUpRadioGroups();
         setUpSpinners();
 
-        _unitSpinner = (Spinner) this.findViewById(R.id.add_consumption_units_spinner);
+        _reminderTitle = (TextView) findViewById(R.id.add_consumption_set_reminder_title);
+        _reminderToggle = (CheckBox) findViewById(R.id.add_consumption_set_reminder_toggle);
+        _reminderHoursContainer = (ViewGroup) findViewById(R.id.add_consumption_reminder_layout);
+        _reminderHours = (EditText) findViewById(R.id.add_consumption_reminder_hours);
+        _reminderHoursSuffix = (TextView)findViewById(R.id.add_consumption_reminder_hours_suffix);
+
+        final String defaultSuffix = getString(R.string.add_consumption_hours_suffix);
+        final Context context = this;
+
+        _reminderHours.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String str = defaultSuffix;
+                if(s.length() > 0){
+                    int hours = Integer.parseInt(s.toString());
+                    DateTime dt = DateTime.now().plusHours(hours);
+
+                    if(hours == 1)
+                        str = str.substring(0, str.length() - 1);
+
+                    str += " (" + DateHelper.getTime(context, dt) + ")";
+                }
+
+                _reminderHoursSuffix.setText(str);
+            }
+        });
+
+        _reminderTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _reminderToggle.setChecked(!_reminderToggle.isChecked());
+            }
+        });
+
+        _reminderToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                for(int i = 0; i <_reminderRadioGroup.getChildCount(); i++){
+                    _reminderRadioGroup.getChildAt(i).setVisibility(isChecked ? View.VISIBLE : View.GONE);
+                }
+                _reminderHoursContainer.setVisibility(isChecked ? View.VISIBLE : View.INVISIBLE);
+            }
+        });
+
+        _unitSpinner = (Spinner) this.findViewById(R.id.units_spinner);
         String[] units = { "mg", "ml" };
         UnitAdapter adapter = new UnitAdapter(this, android.R.layout.simple_spinner_item, units);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -146,9 +271,30 @@ public class AddConsumptionActivity extends Activity implements
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 View datePickers = findViewById(R.id.add_consumption_date_pickers_layout);
                 if (checkedId == R.id.add_consumption_select_select_now) {
-                    datePickers.setVisibility(View.INVISIBLE);
+                    datePickers.setVisibility(View.GONE);
                 } else {
                     datePickers.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        _reminderRadioGroup = (RadioGroup) findViewById(R.id.add_consumption_reminder_type_selection);
+        _reminderRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                View reminderDatePickers = findViewById(R.id.add_consumption_reminder_date_pickers_layout);
+                View reminderDateContainer = findViewById(R.id.add_consumption_reminder_date_container);
+                View reminderTimeContainer = findViewById(R.id.add_consumption_reminder_time_container);
+                View reminderHoursContainer = findViewById(R.id.add_consumption_reminder_hours_container);
+                if (checkedId == R.id.add_consumption_select_reminder_hours) {
+                    reminderDateContainer.setVisibility(View.GONE);
+                    reminderTimeContainer.setVisibility(View.GONE);
+                    reminderDatePickers.setVisibility(View.GONE);
+                    reminderHoursContainer.setVisibility(View.VISIBLE);
+                } else {
+                    reminderDateContainer.setVisibility(View.VISIBLE);
+                    reminderTimeContainer.setVisibility(View.VISIBLE);
+                    reminderDatePickers.setVisibility(View.VISIBLE);
+                    reminderHoursContainer.setVisibility(View.GONE);
                 }
             }
         });
@@ -172,44 +318,121 @@ public class AddConsumptionActivity extends Activity implements
         String[] dates = new String[]{dateString};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, dates );
         _dateSpinner.setAdapter(adapter);
+        _reminderDateSpinner.setAdapter(adapter);
         View datePickerContainer = this.findViewById(R.id.add_consumption_date_container);
-        datePickerContainer.setOnClickListener(new View.OnClickListener() {
+        View reminderDatePickerContainer = this.findViewById(R.id.add_consumption_reminder_date_container);
 
+        final Context context = this;
+
+        View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (_dateSpinner.isEnabled()) {
-                    Date date = new Date();
+
+                Spinner dateSpinner = null;
+                Date date = null;
+
+                final boolean consumptionDate = view.getId() == R.id.add_consumption_date_container;
+                final boolean consumptionReminder = view.getId() == R.id.add_consumption_reminder_date_container;
+
+                if(consumptionDate){
+                    dateSpinner = _dateSpinner;
+                    date = _consumptionDate;
+                }
+                else if (consumptionReminder){
+                    dateSpinner = _reminderDateSpinner;
+                    date = _reminderDate;
+                }
+
+                final Date finalDate = date;
+                final Spinner finalSpinner = dateSpinner;
+
+                if (finalSpinner != null && finalSpinner.isEnabled()) {
                     Calendar cal = Calendar.getInstance();
-                    cal.setTime(date);
+                    cal.setTime(finalDate);
                     int year = cal.get(Calendar.YEAR);
                     int month = cal.get(Calendar.MONTH);
                     int day = cal.get(Calendar.DAY_OF_MONTH);
-                    DatePickerDialog dateDialog = new DatePickerDialog(AddConsumptionActivity.this, AddConsumptionActivity.this, year, month, day);
+                    DatePickerDialog dateDialog = new DatePickerDialog(AddConsumptionActivity.this, new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                            Calendar cal = Calendar.getInstance();
+                            cal.set(year, monthOfYear, dayOfMonth);
+
+                            Date date = cal.getTime();
+
+                            finalDate.setTime(date.getTime());
+
+                            String dateString = DateFormat.format(DATE_FORMAT, cal.getTime()).toString();
+                            String[] dates = new String[]{dateString};
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, dates );
+                            finalSpinner.setAdapter(adapter);
+                        }
+                    }, year, month, day);
                     dateDialog.show();
                 }
             }
-        });
+        };
+        datePickerContainer.setOnClickListener(listener);
+        reminderDatePickerContainer.setOnClickListener(listener);
 
-        String time = DateFormat.format(TIME_FORMAT, date.getTime()).toString();
+        String time = DateHelper.getTime(this, date);
         String[] times = new String[]{time};
         ArrayAdapter<String> timeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, times );
         _timeSpinner.setAdapter(timeAdapter);
+        _reminderTimeSpinner.setAdapter(timeAdapter);
         View timePickerContainer = this.findViewById(R.id.add_consumption_time_container);
-        timePickerContainer.setOnClickListener(new View.OnClickListener() {
+        View reminderTimePickerContainer = this.findViewById(R.id.add_consumption_reminder_time_container);
 
+        View.OnClickListener timeListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (_timeSpinner.isEnabled()) {
-                    Date date = new Date();
+
+                Spinner timeSpinner = null;
+                Date date = null;
+
+                if(view.getId() == R.id.add_consumption_time_container){
+                    timeSpinner = _timeSpinner;
+                    date = _consumptionDate;
+                }
+                else if (view.getId() == R.id.add_consumption_reminder_time_container){
+                    timeSpinner = _reminderTimeSpinner;
+                    date = _reminderDate;
+                }
+
+                final Date finalDate = date;
+                final Spinner finalSpinner = timeSpinner;
+
+
+                if (finalSpinner != null && finalSpinner.isEnabled()) {
                     Calendar cal = Calendar.getInstance();
-                    cal.setTime(date);
+                    cal.setTime(finalDate);
                     int hour = cal.get(Calendar.HOUR_OF_DAY);
                     int minute = cal.get(Calendar.MINUTE);
-                    TimePickerDialog timeDialog = new TimePickerDialog(AddConsumptionActivity.this, AddConsumptionActivity.this, hour, minute, true);
+                    TimePickerDialog timeDialog = new TimePickerDialog(AddConsumptionActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                            Date dt = new DateTime(finalDate)
+                                    .withHourOfDay(hourOfDay)
+                                    .withMinuteOfHour(minute)
+                                    .toDate();
+                            java.text.DateFormat timeFormat = DateFormat.getTimeFormat(context);
+
+                            String[] times = new String[]{ timeFormat.format(dt) };
+
+                            finalDate.setTime(dt.getTime());
+
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, times );
+                            finalSpinner.setAdapter(adapter);
+                        }
+                    }, hour, minute, DateFormat.is24HourFormat(context));
                     timeDialog.show();
                 }
             }
-        });
+        };
+
+        timePickerContainer.setOnClickListener(timeListener);
+        reminderTimePickerContainer.setOnClickListener(timeListener);
     }
 
     @Override
@@ -220,6 +443,32 @@ public class AddConsumptionActivity extends Activity implements
         else{
             showSelectPillOptions();
         }
+
+        /*
+        Sorts pill collection based on its last consumption date
+         */
+        Collections.sort(pills, new Comparator<Pill>() {
+            public int compare(Pill pill1, Pill pill2) {
+                if (_addedPills.contains(pill1) && !_addedPills.contains(pill2)) { //if pill has been added during this Add Consumption it should be top
+                    return -1;
+                }
+                if (_addedPills.contains(pill1) && !_addedPills.contains(pill2)) {
+                    return 1;
+                }
+                Consumption pill1Consumption = pill1.getLatestConsumption();
+                Consumption pill2Consumption = pill2.getLatestConsumption();
+                if (pill1Consumption == null && pill2Consumption == null) {
+                    return 0;
+                }
+                if (pill1Consumption == null && pill2Consumption != null) {
+                    return 1;
+                }
+                if (pill2Consumption == null && pill1Consumption != null) {
+                    return -1;
+                }
+                return pill2.getLatestConsumption().getDate().compareTo(pill1.getLatestConsumption().getDate());
+            }
+        });
 
         _adapter = new AddConsumptionPillListAdapter(this, R.layout.add_consumption_pill_list, pills);
          _pillsList.setAdapter(_adapter);
@@ -233,45 +482,95 @@ public class AddConsumptionActivity extends Activity implements
         finish();
     }
 
-    public void done(View view) {
+    private Date getDateFromSpinners(Spinner date, Spinner time, Date defaultDate) {
+        if(date == null || time == null){
+            throw new IllegalArgumentException();
+        }
+
+        if(date.getSelectedItem() == null
+                || time.getSelectedItem() == null)
+            return defaultDate;
+
+        String selectedDate = date.getSelectedItem().toString();
+        String selectedTime = time.getSelectedItem().toString();
+
+        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
+        java.text.DateFormat tf = DateFormat.getTimeFormat(this);
+
+        try {
+            Date parsedDate = format.parse(selectedDate);
+            Date parsedTime = tf.parse(selectedTime);
+
+            DateTime parsedDateTime = new DateTime(parsedDate);
+            DateTime parsedTimeDateTime = new DateTime(parsedTime);
+            return parsedDateTime
+                    .withHourOfDay(parsedTimeDateTime.getHourOfDay())
+                    .withMinuteOfHour(parsedTimeDateTime.getMinuteOfHour())
+                    .toDate();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return defaultDate;
+    }
+
+    public void done(View view){
+        done(view, false);
+    }
+
+    public void done(View view, final boolean futureConsumptionOk) {
         final View v = view;
         AddConsumptionPillListAdapter adapter = (AddConsumptionPillListAdapter) _pillsList.getAdapter();
         List<Pill> consumptionPills = adapter.getPillsConsumed();
 
-        Date date = new Date();
+        Date consumptionDate = new Date();
+        String consumptionGroup = UUID.randomUUID().toString();
+        Date reminderDate = null;
         RadioButton dateSelectorNow = (RadioButton) findViewById(R.id.add_consumption_select_select_now);
-        if (!dateSelectorNow.isChecked()
-                && _dateSpinner.getSelectedItem() != null
-                && _timeSpinner.getSelectedItem() != null) {
-            String selectedDate = _dateSpinner.getSelectedItem().toString();
-            String selectedTime = _timeSpinner.getSelectedItem().toString();
-            SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT + TIME_FORMAT);
-            try {
-                date = format.parse(selectedDate + selectedTime);
-                System.out.println(date);
-            } catch (ParseException e) {
-                e.printStackTrace();
+        RadioButton reminderDateSelectorHours = (RadioButton)findViewById(R.id.add_consumption_select_reminder_hours);
+        if (!dateSelectorNow.isChecked()) {
+            consumptionDate = getDateFromSpinners(_dateSpinner, _timeSpinner, new Date());
+        }
+
+
+        if(_reminderToggle.isChecked()){
+            if(!reminderDateSelectorHours.isChecked()){
+                reminderDate = getDateFromSpinners(_reminderDateSpinner, _reminderTimeSpinner, null);
+            } else {
+                int hours = Integer.parseInt(_reminderHours.getText().toString());
+                reminderDate = DateTime.now().plusHours(hours).toDate();
             }
         }
 
-        if (DateHelper.isDateInFuture(date) && !_futureOk) {
+        if (DateHelper.isDateInFuture(consumptionDate) && !futureConsumptionOk) {
             new AlertDialog.Builder(this)
-                    .setMessage("Are you sure you want to add this consumption in the future?")
+                    .setMessage(getString(R.string.add_consumption_future_confirmation))
                     .setCancelable(false)
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            AddConsumptionActivity.this._futureOk = true;
-                            AddConsumptionActivity.this.done(v);
+                            AddConsumptionActivity.this.done(v, true);
                         }
                     })
-                    .setNegativeButton("No", null)
+                    .setNegativeButton(getString(R.string.no), null)
+                    .show();
+        }
+        else if(reminderDate != null && !DateHelper.isDateInFuture(reminderDate)){
+            new AlertDialog.Builder(this)
+                    .setMessage(getString(R.string.add_consumption_reminder_warning_past))
+                    .setCancelable(true)
+                    .setNeutralButton(getString(R.string.ok), null)
                     .show();
         }
         else {
             for (Pill pill : consumptionPills) {
-                Consumption consumption = new Consumption(pill, date);
+                Consumption consumption = new Consumption(pill, consumptionDate, consumptionGroup);
                 new InsertConsumptionTask(this, consumption).execute();
             }
+
+            if(reminderDate != null){
+                AlarmHelper.addReminderAlarm(this, reminderDate, consumptionGroup, true);
+            }
+
             _adapter.clearOpenPillsList();
             _adapter.clearConsumedPills();
             finish();
@@ -292,32 +591,15 @@ public class AddConsumptionActivity extends Activity implements
 
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i2, int i3) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(i, i2, i3);
-        Date date = cal.getTime();
-        String dateString = DateFormat.format(DATE_FORMAT, date).toString();
-        String[] dates = new String[]{dateString};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, dates );
-        _dateSpinner.setAdapter(adapter);
     }
 
     @Override
     public void onTimeSet(TimePicker timePicker, int i, int i2) {
-        String hours = String.valueOf(i);
-        if (i < 10)
-            hours = "0" + hours;
-        String minutes = String.valueOf(i2);
-        if (i2 < 10)
-            minutes = "0" + minutes;
-        String[] times = new String[]{hours + ":" + minutes};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, times );
-        _timeSpinner.setAdapter(adapter);
     }
 
     @Override
     public void isTutorialSeen(Boolean seen, String tag) {
         if(!seen) {
-            Toast.makeText(this, "Need to show tutorial for add consumption activity", Toast.LENGTH_LONG).show();
             new SetTutorialSeenTask(this, TAG).execute();
         }
     }
@@ -344,7 +626,10 @@ public class AddConsumptionActivity extends Activity implements
             Pill pill = new Pill(name, size);
             String units = String.valueOf(_unitSpinner.getSelectedItem());
             pill.setUnits(units);
+            pill.setColour(_colour.getColour());
+
             new InsertPillTask(_activity, pill, (InsertPillTask.ITaskComplete)_activity).execute();
+            _addedPills.add(pill);
 
             _newPillName.setText("");
             _newPillSize.setText("");
@@ -372,6 +657,4 @@ public class AddConsumptionActivity extends Activity implements
             doneLayout.setClickable(true);
         }
     }
-
-
 }

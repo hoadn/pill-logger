@@ -3,7 +3,7 @@ package uk.co.pilllogger.state;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.co.pilllogger.listeners.AddConsumptionListener;
+import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 
@@ -14,7 +14,8 @@ public class Observer {
 
     private static Observer _instance;
     private List<IPillsUpdated> _pillsUpdatedArrayList = new ArrayList<IPillsUpdated>();
-    private List<AddConsumptionListener> _consumptionListerners = new ArrayList<AddConsumptionListener>();
+    private List<IConsumptionAdded> _consumptionAddedListeners = new ArrayList<IConsumptionAdded>();
+    private List<IConsumptionDeleted> _consumptionDeletedListeners = new ArrayList<IConsumptionDeleted>();
 
 
     public static Observer getSingleton() {
@@ -35,18 +36,57 @@ public class Observer {
         _pillsUpdatedArrayList.add(observer);
     }
 
+    public void unregisterPillsUpdatedObserver(IPillsUpdated observer) {
+        _pillsUpdatedArrayList.remove(observer);
+    }
+
+    public void unregisterConsumptionDeletedObserver(IConsumptionDeleted observer){
+        _consumptionDeletedListeners.remove(observer);
+    }
+
+    public void unregisterConsumptionAddedObserver(IConsumptionAdded observer){
+        _consumptionAddedListeners.remove(observer);
+    }
+
     public interface IPillsUpdated{
         void pillsUpdated(Pill pill);
     }
 
-    public void registerConsumptionAddedObserver(AddConsumptionListener listener) {
-        _consumptionListerners.add(listener);
+    public void registerConsumptionDeletedObserver(IConsumptionDeleted observer){
+        _consumptionDeletedListeners.add(observer);
+    }
+
+    public interface IConsumptionDeleted{
+        void consumptionDeleted(Consumption consumption);
+        void consumptionPillGroupDeleted(String group, int pillId);
+    }
+
+    public interface IConsumptionAdded {
+        public void consumptionAdded(Consumption consumption);
+    }
+
+    public void registerConsumptionAddedObserver(IConsumptionAdded listener) {
+        _consumptionAddedListeners.add(listener);
     }
 
     public void notifyConsumptionAdded(Consumption consumption) {
-        for (AddConsumptionListener listener : _consumptionListerners) {
+        for (IConsumptionAdded listener : _consumptionAddedListeners) {
             if (listener != null)
                 listener.consumptionAdded(consumption);
+        }
+    }
+
+    public void notifyConsumptionDeleted(Consumption consumption){
+        for(IConsumptionDeleted observer : _consumptionDeletedListeners){
+            if(observer != null)
+                observer.consumptionDeleted(consumption);
+        }
+    }
+
+    public void notifyConsumptionPillGroupDeleted(String group, int pillId){
+        for(IConsumptionDeleted observer : _consumptionDeletedListeners){
+            if(observer != null)
+                observer.consumptionPillGroupDeleted(group, pillId);
         }
     }
 }

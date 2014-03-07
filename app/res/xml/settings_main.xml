@@ -1,7 +1,22 @@
 <PreferenceScreen
     android:key="general_preferenceScreen" xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <Preference android:title="@string/pref_title_licenses"
-        android:key="@string/pref_key_licenses"/>
+    <PreferenceCategory android:title="@string/pref_title_reminders" android:key="@string/pref_key_reminders">
+        <RingtonePreference
+            android:title="@string/pref_title_reminder_sound"
+            android:key="@string/pref_key_reminder_sound"
+            android:showSilent="true"
+            android:showDefault="true"
+            android:ringtoneType="notification"/>
+        <CheckBoxPreference
+            android:title="@string/pref_title_reminder_vibrate"
+            android:key="@string/pref_key_reminder_vibrate"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="About" android:key="about">
+        <Preference
+            android:title="@string/pref_title_licenses"
+            android:key="@string/pref_key_licenses"/>
+    </PreferenceCategory>
 
 </PreferenceScreen> 

@@ -13,15 +13,21 @@ public class DeleteConsumptionTask extends AsyncTask<Void, Void, Void> {
 
     Activity _activity;
     Consumption _consumption;
+    private boolean _deleteGroup;
 
-    public DeleteConsumptionTask(Activity activity, Consumption consumption) {
+    public DeleteConsumptionTask(Activity activity, Consumption consumption, boolean deleteGroup) {
         _activity = activity;
         _consumption = consumption;
+        _deleteGroup = deleteGroup;
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
-        ConsumptionRepository.getSingleton(_activity).delete(_consumption);
+        if(_deleteGroup)
+            ConsumptionRepository.getSingleton(_activity).deleteGroupPill(_consumption);
+        else
+            ConsumptionRepository.getSingleton(_activity).delete(_consumption);
+
         return null;
     }
 }

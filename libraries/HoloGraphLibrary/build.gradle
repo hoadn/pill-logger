@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.+'
+        classpath 'com.android.tools.build:gradle:0.9.+'
     }
 }
 
@@ -11,10 +11,9 @@ apply plugin: 'android-library'
 
 android {
     compileSdkVersion 17
-    buildToolsVersion = 17
+    buildToolsVersion = 19
 
     sourceSets {
-
         main {
             assets.srcDirs       = ['assets']
             res.srcDirs          = ['res']
@@ -30,6 +29,6 @@ android {
 
 
 dependencies {
-    compile 'com.android.support:support-v4:18.0.+'
+    compile 'com.android.support:support-v4:19.0.+'
     compile 'com.android.support:support-v13:13.0.0'
 }

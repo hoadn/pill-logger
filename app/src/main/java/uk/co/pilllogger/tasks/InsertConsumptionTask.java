@@ -3,12 +3,8 @@ package uk.co.pilllogger.tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import java.util.List;
-
-import uk.co.pilllogger.listeners.AddConsumptionListener;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
-import uk.co.pilllogger.state.State;
 
 /**
  * Created by nick on 31/10/13.
@@ -24,7 +20,7 @@ public class InsertConsumptionTask  extends AsyncTask<Void, Void, Void> {
         _consumption = consumption;
     }
 
-    public  InsertConsumptionTask(Context context, Consumption consumption, ITaskComplete listener) {
+    public InsertConsumptionTask(Context context, Consumption consumption, ITaskComplete listener) {
         this(context, consumption);
         _listener = listener;
     }

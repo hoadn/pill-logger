@@ -1,10 +1,12 @@
 package uk.co.pilllogger.helpers;
 
 import android.content.Context;
+import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 
 import org.joda.time.DateTime;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -61,13 +63,13 @@ public class DateHelper {
             // hours ago
             long timeMs = System.currentTimeMillis() - date.getMillis();
             long minutes = timeMs / 1000 / 60;
-            String minutePlural = (minutes > 1) ? "minutes" : "minute";
+            String minutePlural = (minutes == 1) ? "minute" : "minutes";
             dateString = String.valueOf(minutes) + " " + minutePlural + " ago";
             if (minutes > 60) {
                 long hours = minutes / 60;
                 long leftOverMinutes = minutes % 60;
-                String hourPlural = (hours > 1) ? "hours" : "hour";
-                minutePlural = (leftOverMinutes > 1) ? "minutes" : "minute";
+                String hourPlural = (hours == 1) ? "hour" : "hours";
+                minutePlural = (leftOverMinutes == 1) ? "minute" : "minutes";
                 dateString = String.valueOf(hours) + " " + hourPlural + " " + leftOverMinutes + " " + minutePlural + " ago";
             }
         }
@@ -102,5 +104,19 @@ public class DateHelper {
     public static boolean isDateInFuture(DateTime date) {
         DateTime currentDate = new DateTime();
         return date.compareTo(currentDate) > 0;
+    }
+
+    public static String getTime(Context context, Date date){
+        java.text.DateFormat df = DateFormat.getTimeFormat(context);
+        return df.format(date);
+    }
+
+    public static String getTime(Context context, DateTime date){
+        return getTime(context, date.toDate());
+    }
+
+    public static String formatDateAndTime(Context context, Date date) {
+        java.text.DateFormat df = DateFormat.getDateFormat(context);
+        return df.format(date);
     }
 }

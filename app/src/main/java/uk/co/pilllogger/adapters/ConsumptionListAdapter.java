@@ -28,10 +28,15 @@ import com.echo.holographlibrary.PieGraph;
 import com.echo.holographlibrary.StackBarGraph;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.dialogs.ConsumptionInfoDialog;
+import uk.co.pilllogger.dialogs.InfoDialog;
+import uk.co.pilllogger.dialogs.PillInfoDialog;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
@@ -42,6 +47,7 @@ import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.DeleteConsumptionTask;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
+import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.views.ColourIndicator;
 
 import org.joda.time.DateTime;
@@ -50,16 +56,18 @@ import org.joda.time.Days;
 /**
  * Created by nick on 22/10/13.
  */
-public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
+public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> implements ConsumptionInfoDialog.ConsumptionInfoDialogListener {
 
     private static String TAG = "ConsumptionListAdapter";
     private Consumption _selectedConsumption;
     private List<Consumption> _consumptions;
+    private Activity _activity;
     private Fragment _fragment;
     private List<Pill> _pills;
 
     public ConsumptionListAdapter(Activity activity, Fragment fragment, int textViewResourceId, List<Consumption> consumptions) {
         super(activity, textViewResourceId, R.menu.consumption_list_item_menu, consumptions);
+        _activity = activity;
         _fragment = fragment;
         _consumptions = consumptions;
     }
@@ -67,6 +75,44 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
     public ConsumptionListAdapter(Activity activity, Fragment fragment, int textViewResourceId, List<Consumption> consumptions, List<Pill> pills) {
         this(activity, fragment, textViewResourceId, consumptions);
         _pills = pills;
+    }
+
+    @Override
+    public void onDialogTakeAgain(Consumption consumption, InfoDialog dialog) {
+        Date consumptionDate = new Date();
+        String consumptionGroup = UUID.randomUUID().toString();
+
+        for(int i = 0; i < consumption.getQuantity(); i++){
+            Consumption newC = new Consumption(consumption);
+            newC.setId(0);
+            newC.setGroup(consumptionGroup);
+            newC.setDate(consumptionDate);
+            newC.setQuantity(1);
+
+            new InsertConsumptionTask(_activity, newC).execute();
+        }
+
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onDialogIncrease(Consumption consumption, InfoDialog dialog) {
+        Consumption newC = new Consumption(consumption);
+        newC.setId(0);
+        new InsertConsumptionTask(_activity, newC).execute();
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onDialogDecrease(Consumption consumption, InfoDialog dialog) {
+        new DeleteConsumptionTask(_activity, consumption, false).execute();
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onDialogDelete(Consumption consumption, InfoDialog dialog) {
+        new DeleteConsumptionTask(_activity, consumption, true).execute();
+        dialog.dismiss();
     }
 
     public static class ViewHolder {
@@ -85,7 +131,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
                 int index = _data.indexOf(_selectedConsumption);
                 removeAtPosition(index); //remove() doesn't like newly created pills, so remove manually
 
-                new DeleteConsumptionTask(_activity, _selectedConsumption).execute();
+                new DeleteConsumptionTask(_activity, _selectedConsumption, true).execute();
                 if (_fragment instanceof ConsumptionListFragment) {
                     new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete)_fragment, false).execute();
                 }
@@ -148,9 +194,17 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
             v = super.getView(position, convertView, parent);
             if(v != null){
                 ViewHolder holder = (ViewHolder) v.getTag();
-                Consumption consumption = _data.get(position);
+                final Consumption consumption = _data.get(position);
 
                 if (consumption != null) {
+                    v.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                                InfoDialog dialog = new ConsumptionInfoDialog(_activity, consumption, ConsumptionListAdapter.this);
+                                dialog.show(_activity.getFragmentManager(), consumption.getPill().getName());
+                        }
+                    });
+
                     if(consumption.getPill() != null){
                         holder.name.setText(consumption.getPill().getName());
                         holder.size.setText(consumption.getPill().getSize() + consumption.getPill().getUnits());

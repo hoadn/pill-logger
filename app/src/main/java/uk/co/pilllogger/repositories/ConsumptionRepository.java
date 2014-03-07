@@ -40,19 +40,20 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.Consumptions.COLUMN_PILL_ID, consumption.getPillId());
         values.put(DatabaseContract.Consumptions.COLUMN_DATE_TIME, consumption.getDate().getTime());
+        values.put(DatabaseContract.Consumptions.COLUMN_GROUP, consumption.getGroup());
 
         return values;
     }
 
     @Override
     protected String[] getProjection() {
-        String[] projection = {
+
+        return new String[]{
                 DatabaseContract.Consumptions._ID,
                 DatabaseContract.Consumptions.COLUMN_PILL_ID,
                 DatabaseContract.Consumptions.COLUMN_DATE_TIME,
+                DatabaseContract.Consumptions.COLUMN_GROUP
         };
-
-        return projection;
     }
 
     @Override
@@ -69,6 +70,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         Consumption consumption = new Consumption();
         consumption.setId(c.getInt(c.getColumnIndex(DatabaseContract.Consumptions._ID)));
         consumption.setDate(new Date(c.getLong(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_DATE_TIME))));
+        consumption.setGroup(c.getString(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_GROUP)));
         int pillId = c.getInt(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_PILL_ID));
 
         if(getPill){
@@ -115,7 +117,32 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                     "_ID = ?",
                     new String[]{id});
         }
-        notifyUpdated();
+        notifyDeleted(consumption);
+    }
+
+    public void deleteGroupPill(Consumption consumption){
+        SQLiteDatabase db = _dbCreator.getWritableDatabase();
+
+        String pillId = String.valueOf(consumption.getPillId());
+
+        if (db != null) {
+            if(consumption.getGroup() != null){
+                db.delete(
+                        DatabaseContract.Consumptions.TABLE_NAME,
+                        DatabaseContract.Consumptions.COLUMN_GROUP + " = ? AND " +
+                        DatabaseContract.Consumptions.COLUMN_PILL_ID + " = ? ",
+                        new String[]{consumption.getGroup(), pillId});
+            }
+            else{
+                String dateTime = String.valueOf(consumption.getDate().getTime());
+                db.delete(
+                        DatabaseContract.Consumptions.TABLE_NAME,
+                        DatabaseContract.Consumptions.COLUMN_DATE_TIME + " = ? AND " +
+                                DatabaseContract.Consumptions.COLUMN_PILL_ID + " = ? ",
+                        new String[]{dateTime, pillId});
+            }
+        }
+        notifyDeletedGroupPill(consumption);
     }
 
     @Override
@@ -172,6 +199,38 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
             while (!c.isAfterLast()) {
                 Consumption consumption = getFromCursor(c, false); // we don't want to recursively cause ourselves trouble, we already have the pill
                 consumption.setPill(pill);
+                consumptions.add(consumption);
+                c.moveToNext();
+            }
+            c.close();
+        }
+
+        return consumptions;
+    }
+
+    public List<Consumption> getForGroup(String group) {
+        SQLiteDatabase db = _dbCreator.getReadableDatabase();
+
+        String[] projection = getProjection();
+
+        String sortOrder = DatabaseContract.Consumptions.COLUMN_DATE_TIME + " DESC";
+        String selection = group == null ? null : DatabaseContract.Consumptions.COLUMN_GROUP + " =?";
+        String[] selectionArgs = group == null ? null : new String[] { group };
+        List<Consumption> consumptions = new ArrayList<Consumption>();
+        if (db != null) {
+            Cursor c = db.query(
+                    DatabaseContract.Consumptions.TABLE_NAME,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    sortOrder
+            );
+
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                Consumption consumption = getFromCursor(c, true); // we don't want to recursively cause ourselves trouble, we already have the pill
                 consumptions.add(consumption);
                 c.moveToNext();
             }
@@ -253,5 +312,15 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     public void notifyUpdated(Consumption consumption) {
         notifyUpdated();
         Observer.getSingleton().notifyConsumptionAdded(consumption);
+    }
+
+    private void notifyDeleted(Consumption consumption) {
+        notifyUpdated();
+        Observer.getSingleton().notifyConsumptionDeleted(consumption);
+    }
+
+    private void notifyDeletedGroupPill(Consumption consumption){
+        notifyUpdated();
+        Observer.getSingleton().notifyConsumptionPillGroupDeleted(consumption.getGroup(), consumption.getPillId());
     }
 }

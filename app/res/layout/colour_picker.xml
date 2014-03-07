@@ -2,60 +2,72 @@
 
     <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
-        android:layout_height="50dp">
+        android:layout_height="42dp">
         <LinearLayout
             android:id="@+id/colour_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             >
             <uk.co.pilllogger.views.ColourIndicator
-                android:layout_width="41dp"
-                android:layout_height="41dp"
-                android:padding="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="4dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:color="@color/pill_colour1"/>
             <uk.co.pilllogger.views.ColourIndicator
-                android:layout_width="41dp"
-                android:layout_height="41dp"
-                android:padding="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="4dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:color="@color/pill_colour2"/>
             <uk.co.pilllogger.views.ColourIndicator
-                android:layout_width="41dp"
-                android:layout_height="41dp"
-                android:padding="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="4dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:color="@color/pill_colour3"/>
             <uk.co.pilllogger.views.ColourIndicator
-                android:layout_width="41dp"
-                android:layout_height="41dp"
-                android:padding="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="4dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:color="@color/pill_colour4"/>
             <uk.co.pilllogger.views.ColourIndicator
-                android:layout_width="41dp"
-                android:layout_height="41dp"
-                android:padding="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="4dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:color="@color/pill_colour5"/>
             <uk.co.pilllogger.views.ColourIndicator
-                android:layout_width="41dp"
-                android:layout_height="41dp"
-                android:padding="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="4dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:color="@color/pill_colour6"/>
             <uk.co.pilllogger.views.ColourIndicator
-                android:layout_width="41dp"
-                android:layout_height="41dp"
-                android:padding="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="4dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:color="@color/pill_colour7"/>
             <uk.co.pilllogger.views.ColourIndicator
-                android:layout_width="41dp"
-                android:layout_height="41dp"
-                android:padding="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="4dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:color="@color/pill_colour8"/>
+            <uk.co.pilllogger.views.ColourIndicator
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="4dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:color="@color/pill_colour9"/>
+            <uk.co.pilllogger.views.ColourIndicator
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="4dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:color="@color/pill_colour10"/>
         </LinearLayout>
 
         </HorizontalScrollView>

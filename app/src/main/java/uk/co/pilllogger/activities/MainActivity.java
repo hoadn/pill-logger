@@ -1,6 +1,7 @@
 package uk.co.pilllogger.activities;
 
 import android.app.ActionBar;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -43,6 +44,7 @@ import java.util.List;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.SlidePagerAdapter;
 import uk.co.pilllogger.animations.FadeBackgroundPageTransformer;
+import uk.co.pilllogger.dialogs.InfoDialog;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
@@ -50,8 +52,10 @@ import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
+import uk.co.pilllogger.tasks.DeletePillTask;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetFavouritePillsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
@@ -464,4 +468,5 @@ public class MainActivity extends PillLoggerActivityBase implements
         if(!seen) // comment this line out to force tutorial
             startTutorial(tag);
     }
+
 }

@@ -1,6 +1,7 @@
 package uk.co.pilllogger.models;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by nick on 22/10/13.
@@ -11,15 +12,21 @@ public class Consumption implements Comparable {
     private Date _date;
     private int _id;
     private int _quantity;
+    private String _group;
 
-    public Consumption() {
+    public Consumption(){
         _quantity = 1;
     }
 
-    public Consumption(Pill pill, Date date) {
+    public Consumption(Pill pill, Date date){
+        this(pill, date, UUID.randomUUID().toString());
+    }
+
+    public Consumption(Pill pill, Date date, String group) {
         this();
         this._pill = pill;
         this._date = date;
+        this._group = group;
     }
 
     /// copy ctor
@@ -28,6 +35,7 @@ public class Consumption implements Comparable {
         setQuantity(consumption.getQuantity());
         setPill(consumption.getPill());
         setId(consumption.getId());
+        setGroup(consumption.getGroup());
     }
 
     public Pill getPill() {
@@ -55,7 +63,7 @@ public class Consumption implements Comparable {
     }
 
     public int getPillId() {
-        return _pill.getId();
+        return _pill != null ? _pill.getId() : 0;
     }
 
     public int getQuantity(){return _quantity;}
@@ -74,5 +82,35 @@ public class Consumption implements Comparable {
             return 1;
         else
             return -1;
+    }
+
+    public String getGroup() {
+        return _group;
+    }
+
+    public void setGroup(String group) {
+        _group = group;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Consumption that = (Consumption) o;
+
+        if (_id != that._id) return false;
+        if (_date != null ? !_date.equals(that._date) : that._date != null) return false;
+        if (_group != null ? !_group.equals(that._group) : that._group != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = _date != null ? _date.hashCode() : 0;
+        result = 31 * result + _id;
+        result = 31 * result + (_group != null ? _group.hashCode() : 0);
+        return result;
     }
 }

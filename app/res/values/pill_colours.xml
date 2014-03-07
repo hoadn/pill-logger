@@ -8,8 +8,10 @@
     <color name="pill_colour4">#99CC0000</color>
     <color name="pill_colour5">#99FFCC00</color>
     <color name="pill_colour6">#997DC71D</color>
-    <color name="pill_colour7">#99CCCCCC</color>
+    <color name="pill_colour7">#99BBBBBB</color>
     <color name="pill_colour8">#99FFBAD2</color>
+    <color name="pill_colour9">#99000000</color>
+    <color name="pill_colour10">#BBFFFFFF</color>
 
     <string name="pill_colour_name1">Blue</string>
     <string name="pill_colour_name2">Orange</string>
@@ -19,4 +21,6 @@
     <string name="pill_colour_name6">Green</string>
     <string name="pill_colour_name7">Grey</string>
     <string name="pill_colour_name8">Pink</string>
+    <string name="pill_colour_name9">Black</string>
+    <string name="pill_colour_name10">White</string>
 </resources>

@@ -161,7 +161,7 @@
                     android:layout_below="@id/graph4"
                     android:text="Pill Consumption by Day of The Week"/>
                 <RelativeLayout
-                    android:id="@+id/pie_graph_lock"
+                    android:id="@+id/pie_graph_lock4"
                     android:layout_width="500dp"
                     android:layout_height="match_parent"
                     android:layout_above="@id/graph4_description"
