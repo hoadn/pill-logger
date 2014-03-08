@@ -17,10 +17,14 @@ import com.echo.holographlibrary.StackBarSection;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 
@@ -181,7 +185,22 @@ public class GraphHelper {
             DateTime dateTime = new DateTime().plusDays((7-i) * -1);
             sb.setName(dateTime.dayOfWeek().getAsShortText());
 
-            for(Pill pill : data.keySet()){
+
+            List<Pill> pills = new ArrayList<Pill>(data.keySet());
+
+            Collections.sort(pills, new Comparator<Pill>() {
+                public int compare(Pill pill1, Pill pill2) {
+                    if(pill1.getSortOrder() < pill2.getSortOrder())
+                        return -1;
+
+                    if(pill1.getSortOrder() > pill2.getSortOrder())
+                        return 1;
+
+                    return 0;
+                }
+            });
+
+            for(Pill pill : pills){
                 if(State.getSingleton().isPillExcluded(pill))
                     continue;
 
