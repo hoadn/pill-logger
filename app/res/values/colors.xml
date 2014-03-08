@@ -28,7 +28,8 @@
     <color name="sunday">#FFBAD2</color>
 
     <color name="selector_background">#30000000</color>
-    <color name="translucent_white">#80FFFFFF</color>
+    <color name="translucent_white">#20FFFFFF</color>
+    <color name="translucent_whiter">#80FFFFFF</color>
     <color name="selector_background_pressed">#20FFFFFF</color>
     <color name="popup_menu">#B0000000</color>
     <color name="pill_favourite">#80FFFFFF</color>
