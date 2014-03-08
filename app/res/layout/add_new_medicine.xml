@@ -54,11 +54,12 @@
 
             <TextView
                 android:id="@+id/pill_fragment_add_pill_colour"
-                android:layout_width="50dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:textSize="22sp"
-                android:text="Color"/>
+                android:text="Color"
+                android:layout_gravity="center_vertical"/>
 
             <uk.co.pilllogger.views.ColourIndicator
                 android:id="@+id/pill_fragment_colour"
@@ -113,7 +114,9 @@
             android:id="@+id/units_spinner"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_weight="0"/>
+            android:layout_weight="0"
+            android:layout_gravity="center_vertical"
+            />
 
         <View
             android:layout_width="1dp"
