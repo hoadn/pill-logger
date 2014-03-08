@@ -8,6 +8,7 @@ import android.graphics.Region;
  */
 public class StackBarSection {
     private int mColor;
+    private int mStrokeColor;
     private float mValue;
     private String mValueString = null;
 
@@ -20,6 +21,8 @@ public class StackBarSection {
     public void setColor(int color) {
         this.mColor = color;
     }
+    public int getStrokeColor(){return mStrokeColor;}
+    public void setStrokeColor(int strokeColor){this.mStrokeColor = strokeColor;}
     public float getValue() {
         return mValue;
     }

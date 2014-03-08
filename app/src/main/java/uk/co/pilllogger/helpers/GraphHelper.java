@@ -193,6 +193,7 @@ public class GraphHelper {
 
                 StackBarSection sbs = new StackBarSection();
                 sbs.setColor(pill.getColour());
+                sbs.setStrokeColor(ColourHelper.getDarker(pill.getColour()));
                 sbs.setValue(value);
 
                 sb.getSections().add(sbs);
