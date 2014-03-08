@@ -69,7 +69,6 @@ public class ColourIndicator extends ImageView {
 
     public void setColour(int colour){
         int stroke = ColourHelper.getDarker(colour);
-        Logger.d(TAG, "colour: " + colour + " - stroke: " + stroke);
 
         if(this.getBackground() == null){
             preInit(getContext());

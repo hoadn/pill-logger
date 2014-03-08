@@ -30,7 +30,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/selector_background"
+                android:background="@color/translucent_whiter"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="10dp"
@@ -44,7 +44,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center"
-                    android:text="@string/graph_title"/>
+                    android:text="@string/graph_title"
+                    android:textColor="@android:color/black"/>
             </LinearLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
