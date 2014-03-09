@@ -17,7 +17,6 @@ import uk.co.pilllogger.dialogs.PillInfoDialog;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
-import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.tasks.DeletePillTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.tasks.UpdatePillTask;
