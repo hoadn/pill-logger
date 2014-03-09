@@ -50,6 +50,7 @@ import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
@@ -400,6 +401,8 @@ public class MainActivity extends PillLoggerActivityBase implements
     private void addConsumption(Pill pill){
         Consumption consumption = new Consumption(pill, new Date());
         new InsertConsumptionTask(MainActivity.this, consumption).execute();
+
+        TrackerHelper.addConsumptionEvent(MainActivity.this, "FavouriteMenu");
 
         //if (_consumptionFragment.isResumed())
         //    new GetConsumptionsTask(MainActivity.this, (GetConsumptionsTask.ITaskComplete)_consumptionFragment, true).execute();

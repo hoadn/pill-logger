@@ -46,6 +46,7 @@ import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.helpers.AlarmHelper;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
+import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.listeners.AddConsumptionPillItemClickListener;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -573,6 +574,9 @@ public class AddConsumptionActivity extends Activity implements
 
             _adapter.clearOpenPillsList();
             _adapter.clearConsumedPills();
+
+            TrackerHelper.addConsumptionEvent(this, TAG);
+
             finish();
         }
     }
@@ -629,6 +633,8 @@ public class AddConsumptionActivity extends Activity implements
             pill.setColour(_colour.getColour());
 
             new InsertPillTask(_activity, pill, (InsertPillTask.ITaskComplete)_activity).execute();
+
+            TrackerHelper.createPillEvent(_activity, TAG);
             _addedPills.add(pill);
 
             _newPillName.setText("");

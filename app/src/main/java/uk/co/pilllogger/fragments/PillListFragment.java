@@ -20,6 +20,7 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillsListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.helpers.LayoutHelper;
+import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
@@ -257,6 +258,8 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             newPill.setSize(pillSize);
 
             new InsertPillTask(getActivity(), newPill, this).execute();
+
+            TrackerHelper.createPillEvent(getActivity(), TAG);
         }
     }
 
