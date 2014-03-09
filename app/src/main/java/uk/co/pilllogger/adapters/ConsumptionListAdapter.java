@@ -291,7 +291,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                                 graphPills.add(pill.getId());
                             }
                         }
-                        //new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete) _fragment, true).execute();
+                        TrackerHelper.filterGraphEvent(_activity, TAG);
                         ((ConsumptionListFragment)_fragment).replotGraph();
                     }
                 });

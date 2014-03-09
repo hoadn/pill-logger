@@ -49,4 +49,8 @@ public class TrackerHelper {
     public static void showInfoDialogEvent(Context context, String source){
         sendEvent(context, "Usage", "ShowInfoDialog", source);
     }
+
+    public static void filterGraphEvent(Context context, String source){
+        sendEvent(context, "Usage", "FilterGraph", source);
+    }
 }

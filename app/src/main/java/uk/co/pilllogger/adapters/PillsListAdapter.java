@@ -1,12 +1,15 @@
 package uk.co.pilllogger.adapters;
 
 import android.app.Activity;
+import android.media.MediaPlayer;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.google.analytics.tracking.android.Tracker;
 
 import java.util.Date;
 import java.util.List;
@@ -123,6 +126,8 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
                                             pill.setColour(colour);
 
                                             new UpdatePillTask(_activity, pill).execute();
+
+                                            TrackerHelper.updatePillColourEvent(_activity, TAG);
 
                                             notifyDataSetChanged();
                                             viewholder.pickerContainer.setVisibility(View.GONE);

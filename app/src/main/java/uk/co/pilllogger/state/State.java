@@ -95,18 +95,15 @@ public class State {
     public void addOpenPill(Pill pill) {
         if (!(_openPills.containsKey(pill)))
             _openPills.put(pill, 1);
-        Logger.v("TEST", "pill: open in activity, size = " + _openPills.size());
     }
 
     public void removeOpenPill(Pill pill) {
         if (_openPills.containsKey(pill))
             _openPills.remove(pill);
-        Logger.v("TEST", "removeOpenPill called");
     }
 
     public void clearOpenPillsList() {
         _openPills.clear();
-        Logger.v("TEST", "clearOpenPillsList called");
     }
 
     public Map<Pill, Integer> getOpenPills() {
