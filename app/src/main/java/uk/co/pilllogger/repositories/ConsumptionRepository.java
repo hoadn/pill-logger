@@ -180,7 +180,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
         String[] projection = getProjection();
 
-        String sortOrder = DatabaseContract.Consumptions.COLUMN_DATE_TIME + " DESC";
+        String sortOrder = getSortOrder();
         String selection = pill == null ? null : DatabaseContract.Consumptions.COLUMN_PILL_ID + " =?";
         String[] selectionArgs = pill == null ? null : new String[] { String.valueOf(pill.getId()) };
         List<Consumption> consumptions = new ArrayList<Consumption>();
@@ -213,7 +213,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
         String[] projection = getProjection();
 
-        String sortOrder = DatabaseContract.Consumptions.COLUMN_DATE_TIME + " DESC";
+        String sortOrder = getSortOrder();
         String selection = group == null ? null : DatabaseContract.Consumptions.COLUMN_GROUP + " =?";
         String[] selectionArgs = group == null ? null : new String[] { group };
         List<Consumption> consumptions = new ArrayList<Consumption>();
@@ -240,6 +240,10 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         return consumptions;
     }
 
+    private String getSortOrder(){
+        return DatabaseContract.Consumptions.COLUMN_DATE_TIME + " DESC" + ", " + DatabaseContract.Consumptions.COLUMN_PILL_ID + " ASC";
+    }
+
     @Override
     public List<Consumption> getAll() {
         if(!_invalidateCache && _cache != null && _cache.size() > 0)
@@ -249,7 +253,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
         String[] projection = getProjection();
 
-        String sortOrder = DatabaseContract.Consumptions.COLUMN_DATE_TIME + " DESC";
+        String sortOrder = getSortOrder();
         List<Consumption> consumptions = new ArrayList<Consumption>();
         if (db != null) {
             Cursor c = db.query(

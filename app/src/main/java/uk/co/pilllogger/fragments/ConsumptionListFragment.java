@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.activities.MainActivity;
 import uk.co.pilllogger.adapters.ConsumptionListAdapter;
 import uk.co.pilllogger.adapters.GraphPillListAdapter;
 import uk.co.pilllogger.helpers.GraphHelper;
@@ -149,14 +148,11 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                 _listView.setVisibility(View.VISIBLE);
                 noConsumption.setVisibility(View.GONE);
             }
-            List<Consumption> grouped = ConsumptionRepository.getSingleton(activity).groupConsumptions(consumptions);
+            //List<Consumption> grouped = ConsumptionRepository.getSingleton(activity).groupConsumptions(consumptions);
             ConsumptionListAdapter adapter;
-            if (_pills != null) {
-                adapter = new ConsumptionListAdapter(activity, this, R.layout.consumption_list_item, grouped, _pills);
-            }
-            else {
-                adapter = new ConsumptionListAdapter(activity, this, R.layout.consumption_list_item, grouped);
-            }
+
+            adapter = new ConsumptionListAdapter(activity, this, R.layout.consumption_list_item, consumptions, _pills);
+
             _listView.setAdapter(adapter);
             _listView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -244,12 +240,11 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                                 graphPills.add(pill.getId());
                             }
                         }
-                        //new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete) _fragment, true).execute();
                         replotGraph();
                     }
                 });
             }
-            new GetConsumptionsTask(this.getActivity(), this, false).execute();
+            new GetConsumptionsTask(this.getActivity(), this, true).execute();
         }
     }
 

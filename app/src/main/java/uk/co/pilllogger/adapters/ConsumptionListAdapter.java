@@ -42,6 +42,7 @@ import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -94,6 +95,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
             new InsertConsumptionTask(_activity, newC).execute();
         }
 
+        TrackerHelper.addConsumptionEvent(_activity, "DialogTakeAgain");
         dialog.dismiss();
     }
 
@@ -102,18 +104,21 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         Consumption newC = new Consumption(consumption);
         newC.setId(0);
         new InsertConsumptionTask(_activity, newC).execute();
+        TrackerHelper.addConsumptionEvent(_activity, "DialogIncrease");
         dialog.dismiss();
     }
 
     @Override
     public void onDialogDecrease(Consumption consumption, InfoDialog dialog) {
         new DeleteConsumptionTask(_activity, consumption, false).execute();
+        TrackerHelper.deleteConsumptionEvent(_activity, "DialogDecrease");
         dialog.dismiss();
     }
 
     @Override
     public void onDialogDelete(Consumption consumption, InfoDialog dialog) {
         new DeleteConsumptionTask(_activity, consumption, true).execute();
+        TrackerHelper.deleteConsumptionEvent(_activity, "DialogDelete");
         dialog.dismiss();
     }
 
@@ -137,6 +142,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                 if (_fragment instanceof ConsumptionListFragment) {
                     new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete)_fragment, false).execute();
                 }
+                TrackerHelper.deleteConsumptionEvent(_activity, "ActionBar");
                 notifyDataSetChanged();
                 mode.finish();
                 return true;
@@ -203,6 +209,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                         @Override
                         public void onClick(View v) {
                                 InfoDialog dialog = new ConsumptionInfoDialog(_activity, consumption, ConsumptionListAdapter.this);
+                                TrackerHelper.showInfoDialogEvent(_activity, TAG);
                                 dialog.show(_activity.getFragmentManager(), consumption.getPill().getName());
                         }
                     });
@@ -286,7 +293,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                                 graphPills.add(pill.getId());
                             }
                         }
-                        //new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete) _fragment, true).execute();
+                        TrackerHelper.filterGraphEvent(_activity, TAG);
                         ((ConsumptionListFragment)_fragment).replotGraph();
                     }
                 });

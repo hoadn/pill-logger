@@ -110,6 +110,8 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
         this._units = _units;
     }
 
+    public int getSortOrder(){return _id;}
+
     public List<Consumption> getConsumptions() {
         return _consumptions;
     }

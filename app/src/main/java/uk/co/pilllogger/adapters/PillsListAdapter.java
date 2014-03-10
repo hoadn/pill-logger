@@ -1,6 +1,7 @@
 package uk.co.pilllogger.adapters;
 
 import android.app.Activity;
+import android.media.MediaPlayer;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -8,17 +9,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.analytics.tracking.android.Tracker;
+
 import java.util.Date;
 import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.dialogs.InfoDialog;
 import uk.co.pilllogger.dialogs.PillInfoDialog;
+import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.stats.Statistics;
 import uk.co.pilllogger.tasks.DeletePillTask;
+import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.tasks.UpdatePillTask;
 import uk.co.pilllogger.views.ColourIndicator;
 
@@ -27,6 +32,7 @@ import uk.co.pilllogger.views.ColourIndicator;
  */
 public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDialog.PillInfoDialogListener {
 
+    private static final String TAG = "PillsListAdapter";
     private Pill _selectedPill;
 
     public PillsListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
@@ -53,6 +59,7 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
                 removeAtPosition(index); //remove() doesn't like newly created pills, so remove manually
 
                 new DeletePillTask(_activity, _selectedPill).execute();
+                TrackerHelper.deletePillEvent(_activity, "ActionBar");
                 notifyDataSetChanged();
                 mode.finish();
                 return true;
@@ -87,6 +94,7 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
                 public void onClick(View v) {
                     if (pill != null) {
                         InfoDialog dialog = new PillInfoDialog(pill, PillsListAdapter.this);
+                        TrackerHelper.showInfoDialogEvent(_activity, TAG);
                         dialog.show(_activity.getFragmentManager(), pill.getName());
                     }
                 }
@@ -121,6 +129,8 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
 
                                             new UpdatePillTask(_activity, pill).execute();
 
+                                            TrackerHelper.updatePillColourEvent(_activity, TAG);
+
                                             notifyDataSetChanged();
                                             viewholder.pickerContainer.setVisibility(View.GONE);
                                         }
@@ -141,7 +151,8 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
     public void onDialogAddConsumption(Pill pill, InfoDialog dialog) {
         if (pill != null) {
             Consumption consumption = new Consumption(pill, new Date());
-            ConsumptionRepository.getSingleton(_activity).insert(consumption);
+            new InsertConsumptionTask(_activity, consumption).execute();
+            TrackerHelper.addConsumptionEvent(_activity, "PillDialog");
             Toast.makeText(_activity, "Added consumption of " + pill.getName(), Toast.LENGTH_SHORT).show();
         }
         dialog.dismiss();
@@ -151,6 +162,7 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
     public void onDialogDelete(Pill pill, InfoDialog dialog) {
         if (pill != null) {
             new DeletePillTask(_activity, pill).execute();
+            TrackerHelper.deletePillEvent(_activity, "DialogDelete");
             notifyDataSetChanged();
         }
         dialog.dismiss();

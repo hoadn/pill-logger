@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.helpers.ColourHelper;
 import uk.co.pilllogger.helpers.Logger;
 
 /**
@@ -67,12 +68,7 @@ public class ColourIndicator extends ImageView {
     }
 
     public void setColour(int colour){
-        float[] hsv = new float[3];
-        Color.colorToHSV(colour, hsv);
-        hsv[2] *= 0.5f; // value component
-        int stroke = Color.HSVToColor(hsv);
-        
-        Logger.d(TAG, "colour: " + colour + " - stroke: " + stroke);
+        int stroke = ColourHelper.getDarker(colour);
 
         if(this.getBackground() == null){
             preInit(getContext());

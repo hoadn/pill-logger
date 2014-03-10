@@ -174,8 +174,8 @@ public class PillRepository extends BaseRepository<Pill>{
             }
             //sql.append(" group by ");
             //sql.append(getTableName()).append(".").append(DatabaseContract.Pills._ID);
-            //sql.append(" order by ");
-            //sql.append(DatabaseContract.Consumptions.TABLE_NAME + "." + DatabaseContract.Consumptions.COLUMN_DATE_TIME);
+            sql.append(" order by ");
+            sql.append(DatabaseContract.Pills._ID + " ASC");
             //sql.append(" desc ");
             Cursor c = db.rawQuery(sql.toString(), selectionArgs);
 
