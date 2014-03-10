@@ -48,7 +48,12 @@ public class ConsumptionInfoDialog extends InfoDialog {
 
         if(_consumption.getQuantity() > 1){
             decrease.setClickable(true);
+            decrease.setEnabled(true);
             decrease.setTextColor(_context.getResources().getColor(R.color.text_grey));
+        }
+        else {
+            decrease.setClickable(false);
+            decrease.setEnabled(false);
         }
 
         takeAgain.setOnClickListener(new View.OnClickListener() {
