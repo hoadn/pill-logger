@@ -263,6 +263,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                 if (_consumptions != null && !(_consumptions.contains(consumption1))) {
                     _consumptions.add(consumption1);
                     Collections.sort(_consumptions);
+                    _consumptions = ConsumptionRepository.getSingleton(_activity).groupConsumptions(_consumptions);
                     consumptionsReceived(_consumptions);
                 }
             }
