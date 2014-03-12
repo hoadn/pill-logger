@@ -1,7 +1,10 @@
 package uk.co.pilllogger.stats;
 
+import android.content.Context;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +12,7 @@ import java.util.Map;
 
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 
 /**
  * Created by nick on 07/03/14.
@@ -50,8 +54,8 @@ public class Statistics {
         return (mostlyTakenPill == null) ? null : mostlyTakenPill.getKey();
     }
 
-    public static String getDayWithMostConsumptions(Date startDate, Date endDate, List<Consumption> consumptinos) {
-        return getDayWithMostConsumptions(filterConsumptions(startDate, endDate, consumptinos));
+    public static String getDayWithMostConsumptions(Date startDate, Date endDate, List<Consumption> consumptions) {
+        return getDayWithMostConsumptions(filterConsumptions(startDate, endDate, consumptions));
     }
 
     public static String getDayWithMostConsumptions(List<Consumption> consumptions) {
@@ -95,5 +99,35 @@ public class Statistics {
                 mostRecentConsumption = consumption;
         }
         return mostRecentConsumption;
+    }
+
+    public static String getAverageTimeBetweenConsumptions(Date startDate, Date endDate, List<Consumption> consumptions, Context context) {
+        return getAverageTimeBetweenConsumptions(filterConsumptions(startDate, endDate, consumptions), context);
+    }
+
+    public static String getAverageTimeBetweenConsumptions(List<Consumption> consumptions, Context context) {
+        Collections.sort(consumptions);
+        consumptions = ConsumptionRepository.getSingleton(context).groupConsumptions(consumptions); //Need grouped consumptions for this to be accurate
+        Consumption lastConsumption = consumptions.get(0);
+        Consumption firstConsumption = consumptions.get(consumptions.size() - 1);
+
+        int timeDifference = (int) ((lastConsumption.getDate().getTime()) - (firstConsumption.getDate().getTime()));
+        int averageTimeDifference = timeDifference / consumptions.size();
+        return timeToString(averageTimeDifference);
+    }
+
+    private static String timeToString(int time) {
+        final int MILLIS_TO_DAYS = 1000 * 60 * 60 * 24;
+        final int MILLIS_TO_HOURS = 1000 * 60 * 60;
+        final int MILLIS_TO_MINS = 100 * 60 * 60;
+
+        int daysInt = time / MILLIS_TO_DAYS;
+        int hoursInt = time / MILLIS_TO_HOURS % 24;
+        int minsInt = time / MILLIS_TO_MINS % 60;
+
+        String days = (daysInt > 0) ? daysInt + " days, " : "";
+        String hours = (hoursInt > 0) ? hoursInt + " hours, " : "";
+        String minutes = String.valueOf(minsInt) + " minutes";
+        return days + hours + minutes;
     }
 }

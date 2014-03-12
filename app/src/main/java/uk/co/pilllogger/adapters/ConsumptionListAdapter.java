@@ -211,6 +211,8 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                                 InfoDialog dialog = new ConsumptionInfoDialog(_activity, consumption, ConsumptionListAdapter.this);
                                 TrackerHelper.showInfoDialogEvent(_activity, TAG);
                                 dialog.show(_activity.getFragmentManager(), consumption.getPill().getName());
+                                String mins = Statistics.getAverageTimeBetweenConsumptions(_data, _activity);
+                                Toast.makeText(_activity, "Average time: " + mins, Toast.LENGTH_SHORT).show();
                         }
                     });
 
