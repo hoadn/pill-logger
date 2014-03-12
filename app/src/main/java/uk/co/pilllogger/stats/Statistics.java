@@ -125,9 +125,37 @@ public class Statistics {
         int hoursInt = time / MILLIS_TO_HOURS % 24;
         int minsInt = time / MILLIS_TO_MINS % 60;
 
-        String days = (daysInt > 0) ? daysInt + " days, " : "";
-        String hours = (hoursInt > 0) ? hoursInt + " hours, " : "";
-        String minutes = String.valueOf(minsInt) + " minutes";
+        String days = "";
+        String hours = "";
+        String minutes = "";
+        if (daysInt > 0)
+            days = daysInt + ((daysInt > 1) ? " days, " : " day, ");
+        if (hoursInt > 0)
+            hours = hoursInt + ((hoursInt > 1) ? " hours, " : " hour, ");
+        if (minsInt > 0)
+            minutes = String.valueOf(minsInt) + ((minsInt > 1) ? " minutes" : " minute");
         return days + hours + minutes;
+    }
+
+    public static String getLongestTimeBetweenConsumptions(Date startDate, Date endDate, List<Consumption> consumptions, Context context) {
+        return getLongestTimeBetweenConsumptions(filterConsumptions(startDate, endDate, consumptions), context);
+    }
+
+    public static String getLongestTimeBetweenConsumptions(List<Consumption> consumptions, Context context) {
+        Collections.sort(consumptions);
+        Consumption lastConsumption = null;
+        int longestTimeBetweenConsumptions = 0;
+        for(Consumption consumption : consumptions) {
+            if (lastConsumption == null) {
+                lastConsumption = consumption;
+                continue;
+            }
+            int timeBetweenConsumptions = (int)(lastConsumption.getDate().getTime() - consumption.getDate().getTime());
+            if (timeBetweenConsumptions > longestTimeBetweenConsumptions)
+                longestTimeBetweenConsumptions = timeBetweenConsumptions;
+
+            lastConsumption = consumption;
+        }
+        return timeToString(longestTimeBetweenConsumptions);
     }
 }
