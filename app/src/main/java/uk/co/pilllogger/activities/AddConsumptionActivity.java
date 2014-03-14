@@ -623,9 +623,9 @@ public class AddConsumptionActivity extends Activity implements
 
         if(!_newPillName.getText().toString().equals("")){
             CharSequence name = _newPillName.getText();
-            int size = 0;
+            float size = 0f;
             if(!_newPillSize.getText().toString().equals("")){
-                size = Integer.parseInt(String.valueOf(_newPillSize.getText()));
+                size = Float.parseFloat(String.valueOf(_newPillSize.getText()));
             }
             Pill pill = new Pill(name, size);
             String units = String.valueOf(_unitSpinner.getSelectedItem());

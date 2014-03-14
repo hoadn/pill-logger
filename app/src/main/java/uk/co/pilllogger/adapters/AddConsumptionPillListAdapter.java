@@ -22,6 +22,7 @@ import uk.co.pilllogger.activities.AddConsumptionActivity;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
@@ -99,6 +100,7 @@ public class
         }
         else
             holder=(ViewHolder) v.getTag();
+
         Pill pill = _pills.get(position);
         if (pill != null && holder != null) {
             holder.name.setText(pill.getName());
@@ -107,7 +109,7 @@ public class
                 holder.units.setVisibility(View.INVISIBLE);
             }
             else{
-                holder.size.setText(String.valueOf(pill.getSize()));
+                holder.size.setText(NumberHelper.getNiceFloatString(pill.getSize()));
                 holder.units.setText(pill.getUnits());
                 holder.size.setVisibility(View.VISIBLE);
                 holder.units.setVisibility(View.VISIBLE);

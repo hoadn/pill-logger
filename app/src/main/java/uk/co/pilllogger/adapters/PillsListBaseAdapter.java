@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.views.ColourIndicator;
@@ -76,7 +77,7 @@ public class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
                     holder.size.setVisibility(View.INVISIBLE);
                 }
                 else{
-                    holder.size.setText(String.valueOf(pill.getSize()) + pill.getUnits());
+                    holder.size.setText(NumberHelper.getNiceFloatString(pill.getSize()) + pill.getUnits());
                     holder.size.setVisibility(View.VISIBLE);
                 }
 

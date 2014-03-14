@@ -106,7 +106,7 @@
             android:hint="@string/create_a_pill_size_hint"
             android:textColorHint="@color/text_grey_light"
             android:textColor="@android:color/white"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:background="@null"
             android:imeOptions="actionDone"/>
 

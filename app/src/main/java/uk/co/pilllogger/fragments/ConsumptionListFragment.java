@@ -280,11 +280,11 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                 if (_consumptions != null && (_consumptions.contains(consumption1))) {
                     Collections.sort(_consumptions);
                     for (Consumption consumption2 : _consumptions) {
-                        if (consumption2.getGroup() == consumption1.getGroup() && consumption2.getPillId() == consumption1.getPillId()) {
+                        if (consumption2.getGroup().equals(consumption1.getGroup()) && consumption2.getPillId() == consumption1.getPillId()) {
                             consumption2.setQuantity(consumption2.getQuantity()-1);
                         }
                     }
-                    _consumptions = ConsumptionRepository.getSingleton(_activity).groupConsumptions(_consumptions);
+                    //_consumptions = ConsumptionRepository.getSingleton(_activity).groupConsumptions(_consumptions);
                     consumptionsReceived(_consumptions);
                 }
             }
@@ -314,7 +314,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
             public void run(){
                 _consumptions.removeAll(toRemove);
                 Collections.sort(_consumptions);
-                _consumptions = ConsumptionRepository.getSingleton(_activity).groupConsumptions(_consumptions);
+                //_consumptions = ConsumptionRepository.getSingleton(_activity).groupConsumptions(_consumptions);
                 consumptionsReceived(_consumptions);
             }
         };

@@ -46,6 +46,11 @@ public abstract class BaseRepository<T> implements IRepository<T>{
         return cursor.getLong(idx);
     }
 
+    protected float getFloat(Cursor cursor, String columnName){
+        int idx = getIdx(cursor, columnName);
+        return cursor.getFloat(idx);
+    }
+
     protected String getString(Cursor cursor, String columnName){
         int idx = getIdx(cursor, columnName);
         return cursor.getString(idx);
