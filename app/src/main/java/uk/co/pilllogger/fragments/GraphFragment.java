@@ -57,6 +57,8 @@ public class GraphFragment extends PillLoggerFragmentBase implements GetConsumpt
 
     @Override
     public void consumptionsReceived(List<Consumption> consumptions) {
+        if (consumptions.size() == 0)
+            return;
 
         int days = 7;
         Map<Pill, SparseIntArray> lastMonthOfConsumptions = ConsumptionMapper.mapByPillAndDate(consumptions, days);

@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 import uk.co.pilllogger.database.DatabaseContract;
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Observer;
@@ -266,11 +267,12 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                     sortOrder
             );
 
-            c.moveToFirst();
-            while (!c.isAfterLast()) {
-                Consumption consumption = getFromCursor(c);
-                consumptions.add(consumption);
-                c.moveToNext();
+            if (c.moveToFirst() != false) {
+                while (!c.isAfterLast()) {
+                    Consumption consumption = getFromCursor(c);
+                    consumptions.add(consumption);
+                    c.moveToNext();
+                }
             }
             c.close();
         }
@@ -280,6 +282,8 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     }
 
     public List<Consumption> groupConsumptions(List<Consumption> consumptions){
+        if (consumptions.size() == 0)
+            return consumptions;
         List<Consumption> grouped = new ArrayList<Consumption>();
 
         Consumption groupedConsumption = null;
