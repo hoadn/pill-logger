@@ -39,7 +39,7 @@ public class GetConsumptionsTask extends AsyncTask<Void, Void, List<Consumption>
         else{
             consumptions = repository.getForGroup(_group);
         }
-        if(_shouldGroup)
+        if(_shouldGroup && consumptions.size() > 0)
             return repository.groupConsumptions(consumptions);
 
         return consumptions;
