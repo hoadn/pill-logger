@@ -4,7 +4,9 @@ import android.content.Context;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,11 +30,21 @@ public class Statistics {
         return filteredConsumptions;
     }
 
-    public static Pill getMostTakenPill(Date startDate, Date endDate, List<Consumption> consumptions) {
+    public static Pill getMostTakenPill(Date startDate, Date endDate, List<Consumption> consumptions){
         return getMostTakenPill(filterConsumptions(startDate, endDate, consumptions));
     }
 
-    public static Pill getMostTakenPill(List<Consumption> consumptions) { //Does not support grouped consumptions (Use ungrouped)
+    public static Pill getMostTakenPill(List<Consumption> consumptions){
+        List<PillAmount> amountOfPill = getPillsWithAmounts(consumptions);
+
+        return amountOfPill.get(0).getPill();
+    }
+
+    public static List<PillAmount> getPillsWithAmounts(Date startDate, Date endDate, List<Consumption> consumptions) {
+        return getPillsWithAmounts(filterConsumptions(startDate, endDate, consumptions));
+    }
+
+    public static List<PillAmount> getPillsWithAmounts(List<Consumption> consumptions) { //Does not support grouped consumptions (Use ungrouped)
         if (consumptions == null)
             return null;
 
@@ -40,18 +52,33 @@ public class Statistics {
         for (Consumption consumption : consumptions) {
             Pill pill = consumption.getPill();
             if (amountOfPill.containsKey(pill))
-                amountOfPill.put(pill, (amountOfPill.get(pill)) + 1);
+                amountOfPill.put(pill, (amountOfPill.get(pill)) + consumption.getQuantity());
             else
-                amountOfPill.put(pill, 1);
+                amountOfPill.put(pill, consumption.getQuantity());
         }
 
-        Map.Entry<Pill, Integer> mostlyTakenPill = null;
-        for (Map.Entry<Pill, Integer> entry : amountOfPill.entrySet()) {
-            if (mostlyTakenPill == null || entry.getValue() > mostlyTakenPill.getValue())
-                mostlyTakenPill = entry;
+        List<PillAmount> pillAmounts = new ArrayList<PillAmount>();
+        for(Pill p : amountOfPill.keySet()){
+            PillAmount pa = new PillAmount();
+            pa.setPill(p);
+            pa.setAmount(amountOfPill.get(p));
+
+            pillAmounts.add(pa);
         }
 
-        return (mostlyTakenPill == null) ? null : mostlyTakenPill.getKey();
+        Collections.sort(pillAmounts, new Comparator<PillAmount>() {
+            @Override
+            public int compare(PillAmount lhs, PillAmount rhs) {
+                if(lhs.getAmount() < rhs.getAmount())
+                    return 1;
+                if(lhs.getAmount() > rhs.getAmount())
+                    return -1;
+
+                return 0;
+            }
+        });
+
+        return pillAmounts;
     }
 
     public static String getDayWithMostConsumptions(Date startDate, Date endDate, List<Consumption> consumptions) {

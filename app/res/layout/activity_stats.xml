@@ -1,5 +1,6 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,18 +24,108 @@
                 android:layout_height="wrap_content"
                 android:text="@string/medicine_taken_most_often_title"
                 android:textColor="@color/light_blue"
-                android:textSize="20sp"/>
-            <TextView
-                android:id="@+id/stats_most_taken_medicine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_grey"
-                android:layout_margin="5dp"
-                android:textSize="16sp"/>
+                android:textSize="20sp"
+                android:layout_marginBottom="10dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <uk.co.pilllogger.views.ColourIndicator
+                        android:id="@+id/stats_most_taken_indicator_1st"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="center_vertical"/>
+                    <TextView
+                        android:id="@+id/stats_most_taken_medicine_1st"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_grey"
+                        android:layout_margin="5dp"
+                        android:textSize="18sp"
+                        tools:text="Paracetamol"/>
+                    <TextView
+                        android:id="@+id/stats_most_taken_count_1st"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:textStyle="italic"
+                        android:textColor="@color/text_grey_medium"
+                        android:layout_gravity="center_vertical"
+                        tools:text="(17)"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <uk.co.pilllogger.views.ColourIndicator
+                        android:id="@+id/stats_most_taken_indicator_2nd"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="center_vertical"/>
+                    <TextView
+                        android:id="@+id/stats_most_taken_medicine_2nd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_grey"
+                        android:layout_margin="5dp"
+                        android:textSize="18sp"
+                        tools:text="Paracetamol"/>
+                    <TextView
+                        android:id="@+id/stats_most_taken_count_2nd"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:textStyle="italic"
+                        android:textColor="@color/text_grey_medium"
+                        android:layout_gravity="center_vertical"
+                        tools:text="(17)"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <uk.co.pilllogger.views.ColourIndicator
+                        android:id="@+id/stats_most_taken_indicator_3rd"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="center_vertical"/>
+                    <TextView
+                        android:id="@+id/stats_most_taken_medicine_3rd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_grey"
+                        android:layout_margin="5dp"
+                        android:textSize="18sp"
+                        tools:text="Paracetamol"/>
+                    <TextView
+                        android:id="@+id/stats_most_taken_count_3rd"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:textStyle="italic"
+                        android:textColor="@color/text_grey_medium"
+                        android:layout_gravity="center_vertical"
+                        tools:text="(17)"/>
+                </LinearLayout>
+                </LinearLayout>
+                <com.echo.holographlibrary.PieGraph
+                    android:id="@+id/stats_most_taken_graph"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"/>
+            </LinearLayout>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/text_grey_light"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"/>
 
             <TextView
