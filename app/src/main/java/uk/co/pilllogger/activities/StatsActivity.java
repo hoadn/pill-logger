@@ -58,10 +58,12 @@ public class StatsActivity extends Activity implements GetPillsTask.ITaskComplet
 
     @Override
     public void consumptionsReceived(List<Consumption> consumptions) {
-        _medicineMostTaken.setText(Statistics.getMostTakenPill(consumptions).getName());
-        _dayMostTaken.setText(Statistics.getDayWithMostConsumptions(consumptions));
-        _hourMostTaken.setText(Statistics.getHourWithMostConsumptions(consumptions) + ":00");
-        _averageTimeBetween.setText(Statistics.getAverageTimeBetweenConsumptions(consumptions, this));
-        _longestTimeBetween.setText(Statistics.getLongestTimeBetweenConsumptions(consumptions, this));
+        if (consumptions != null && consumptions.size() > 0) {
+            _medicineMostTaken.setText(Statistics.getMostTakenPill(consumptions).getName());
+            _dayMostTaken.setText(Statistics.getDayWithMostConsumptions(consumptions));
+            _hourMostTaken.setText(Statistics.getHourWithMostConsumptions(consumptions) + ":00");
+            _averageTimeBetween.setText(Statistics.getAverageTimeBetweenConsumptions(consumptions, this));
+            _longestTimeBetween.setText(Statistics.getLongestTimeBetweenConsumptions(consumptions, this));
+        }
     }
 }
