@@ -30,8 +30,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_grey"
                 android:layout_margin="5dp"
-                android:textSize="16sp"
-                android:text="Paractamol"/>
+                android:textSize="16sp"/>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -51,8 +50,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_grey"
                 android:layout_margin="5dp"
-                android:textSize="16sp"
-                android:text="Friday"/>
+                android:textSize="16sp"/>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -72,8 +70,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_grey"
                 android:layout_margin="5dp"
-                android:textSize="16sp"
-                android:text="14:00"/>
+                android:textSize="16sp"/>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -93,8 +90,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_grey"
                 android:layout_margin="5dp"
-                android:textSize="16sp"
-                android:text="3 hours ago"/>
+                android:textSize="16sp"/>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -114,8 +110,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_grey"
                 android:layout_margin="5dp"
-                android:textSize="16sp"
-                android:text="3 hours ago"/>
+                android:textSize="16sp"/>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
