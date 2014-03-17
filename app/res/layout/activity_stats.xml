@@ -162,6 +162,9 @@
                 android:textColor="@color/text_grey"
                 android:layout_margin="5dp"
                 android:textSize="16sp"/>
+            <uk.co.pilllogger.views.HourOfDayView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
