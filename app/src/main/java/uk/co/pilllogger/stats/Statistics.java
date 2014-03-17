@@ -63,7 +63,7 @@ public class Statistics {
         return getTimeWithMostConsumptions(consumptions, format).getKey();
     }
 
-    public static String getHourWithMmostConsumptions(Date startDate, Date endDate, List<Consumption> consumptions) {
+    public static String getHourWithMostConsumptions(Date startDate, Date endDate, List<Consumption> consumptions) {
         return getHourWithMostConsumptions(filterConsumptions(startDate, endDate, consumptions));
     }
 
