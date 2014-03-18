@@ -21,10 +21,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.stats.PillAmount;
@@ -107,19 +105,19 @@ public class GraphHelper {
     private static String getDayOfWeek(int dayOfWeek, Context context){
         switch(dayOfWeek){
             case 1:
-                return context.getString(R.string.monday);
+                return context.getString(R.string.monday_short);
             case 2:
-                return context.getString(R.string.tuesday);
+                return context.getString(R.string.tuesday_short);
             case 3:
-                return context.getString(R.string.wednesday);
+                return context.getString(R.string.wednesday_short);
             case 4:
-                return context.getString(R.string.thursday);
+                return context.getString(R.string.thursday_short);
             case 5:
-                return context.getString(R.string.friday);
+                return context.getString(R.string.friday_short);
             case 6:
-                return context.getString(R.string.saturday);
+                return context.getString(R.string.saturday_short);
             case 7:
-                return context.getString(R.string.sunday);
+                return context.getString(R.string.sunday_short);
         }
 
         return "";

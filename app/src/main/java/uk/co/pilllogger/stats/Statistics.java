@@ -2,9 +2,10 @@ package uk.co.pilllogger.stats;
 
 import android.content.Context;
 
+import org.joda.time.DateTime;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -12,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import uk.co.pilllogger.R;
+import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
@@ -81,42 +84,95 @@ public class Statistics {
         return pillAmounts;
     }
 
-    public static String getDayWithMostConsumptions(Date startDate, Date endDate, List<Consumption> consumptions) {
-        return getDayWithMostConsumptions(filterConsumptions(startDate, endDate, consumptions));
+    public static String getDayWithMostConsumptions(Context context, Date startDate, Date endDate, List<Consumption> consumptions) {
+        return getDayWithMostConsumptions(context, filterConsumptions(startDate, endDate, consumptions));
     }
 
-    public static String getDayWithMostConsumptions(List<Consumption> consumptions) {
-        SimpleDateFormat format = new SimpleDateFormat("EEEE"); //Turns date into Day of week e.g Monday
-        return getTimeWithMostConsumptions(consumptions, format).getKey();
+    public static String getDayWithMostConsumptions(Context context, List<Consumption> consumptions) {
+        Map<Integer, Integer> days = getDaysWithAmounts(consumptions);
+
+        Map.Entry<Integer, Integer> dayWithMostConsumptions = null;
+        for (Map.Entry<Integer, Integer> entry : days.entrySet()) {
+            if (dayWithMostConsumptions == null || entry.getValue() > dayWithMostConsumptions.getValue())
+                dayWithMostConsumptions = entry;
+        }
+
+        int day = dayWithMostConsumptions.getKey();
+
+        return getDayOfWeek(day, context);
     }
 
-    public static String getHourWithMostConsumptions(Date startDate, Date endDate, List<Consumption> consumptions) {
+    public static int getHourWithMostConsumptions(Date startDate, Date endDate, List<Consumption> consumptions) {
         return getHourWithMostConsumptions(filterConsumptions(startDate, endDate, consumptions));
     }
 
-    public static String getHourWithMostConsumptions(List<Consumption> consumptions) {
-        SimpleDateFormat format = new SimpleDateFormat("kk"); //Turns date into Day of week e.g Monday
-        return getTimeWithMostConsumptions(consumptions, format).getKey();
-    }
+    public static int getHourWithMostConsumptions(List<Consumption> consumptions) {
+        Map<Integer, Integer> hours =  getHoursWithAmounts(consumptions);
 
-    private static Map.Entry<String, Integer> getTimeWithMostConsumptions(List<Consumption> consumptions, SimpleDateFormat format) {
-        Map<String, Integer> amountPerTime = new HashMap<String, Integer>();
-
-        for (Consumption consumption : consumptions) {
-            String day = format.format(consumption.getDate());
-            if (amountPerTime.containsKey(day))
-                amountPerTime.put(day, amountPerTime.get(day) + 1);
-            else
-                amountPerTime.put(day, 1);
-        }
-
-        Map.Entry<String, Integer> timeWithMostConsumptions = null;
-        for (Map.Entry<String, Integer> entry : amountPerTime.entrySet()) {
+        Map.Entry<Integer, Integer> timeWithMostConsumptions = null;
+        for (Map.Entry<Integer, Integer> entry : hours.entrySet()) {
             if (timeWithMostConsumptions == null || entry.getValue() > timeWithMostConsumptions.getValue())
                 timeWithMostConsumptions = entry;
         }
 
-        return timeWithMostConsumptions;
+        return timeWithMostConsumptions.getKey();
+    }
+
+    private static String getDayOfWeek(int dayOfWeek, Context context){
+        switch(dayOfWeek){
+            case 1:
+                return context.getString(R.string.monday);
+            case 2:
+                return context.getString(R.string.tuesday);
+            case 3:
+                return context.getString(R.string.wednesday);
+            case 4:
+                return context.getString(R.string.thursday);
+            case 5:
+                return context.getString(R.string.friday);
+            case 6:
+                return context.getString(R.string.saturday);
+            case 7:
+                return context.getString(R.string.sunday);
+        }
+
+        return "";
+    }
+
+    public static Map<Integer, Integer> getHoursWithAmounts(List<Consumption> consumptions) {
+        Map<Integer, Integer> amountPerTime = new HashMap<Integer, Integer>();
+
+        for(int i = 0; i < 24; i++){
+            amountPerTime.put(i, 0);
+        }
+
+        for (Consumption consumption : consumptions) {
+            int hour = new DateTime(consumption.getDate()).getHourOfDay();
+            if (amountPerTime.containsKey(hour))
+                amountPerTime.put(hour, amountPerTime.get(hour) + 1);
+            else
+                amountPerTime.put(hour, 1);
+        }
+
+        return amountPerTime;
+    }
+
+    public static Map<Integer, Integer> getDaysWithAmounts(List<Consumption> consumptions){
+        Map<Integer, Integer> amountPerDay = new HashMap<Integer, Integer>();
+
+        for(int i = 1; i <= 7; i++){
+            amountPerDay.put(i, 0);
+        }
+
+        for (Consumption consumption : consumptions) {
+            int day = new DateTime(consumption.getDate()).getDayOfWeek();
+            if (amountPerDay.containsKey(day))
+                amountPerDay.put(day, amountPerDay.get(day) + 1);
+            else
+                amountPerDay.put(day, 1);
+        }
+
+        return amountPerDay;
     }
 
     public static Consumption getLastConsumption(List<Consumption> consumptions) {

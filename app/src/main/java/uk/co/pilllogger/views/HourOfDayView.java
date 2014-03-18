@@ -4,10 +4,16 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+
+import uk.co.pilllogger.R;
 
 /**
  * Created by Alex on 17/03/14.
@@ -16,42 +22,57 @@ public class HourOfDayView extends View
 {
     Paint _fillPaint = new Paint();
     Paint _borderPaint = new Paint();
-    private List<Integer> _data;
-    private int _min;
-    private int _max;
+    Paint _textPaint = new Paint();
+    Paint _indicatorPaint = new Paint();
+    private Map<Integer, Integer> _data;
+    private int _hour;
+    private int _min = 0;
+    private int _max = 24;
+    private Context _context;
 
     public HourOfDayView(Context context) {
         super(context);
-        preInit();
+        preInit(context);
     }
 
     public HourOfDayView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        preInit();
+        preInit(context);
     }
 
     public HourOfDayView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        preInit();
+        preInit(context);
     }
 
-    private void preInit() {
-        _fillPaint.setColor(Color.BLUE);
+    private void preInit(Context context) {
+        _context = context;
+        _fillPaint.setColor(context.getResources().getColor(R.color.pill_colour1));
         _fillPaint.setStyle(Paint.Style.FILL);
-        _borderPaint.setColor(Color.WHITE);
+        _borderPaint.setColor(Color.GRAY);
         _borderPaint.setStyle(Paint.Style.STROKE);
+        _indicatorPaint.setColor(Color.BLACK);
+        _indicatorPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        _indicatorPaint.setStrokeWidth(2);
+        _indicatorPaint.setAntiAlias(true);
+        _textPaint.setTextSize(42);
     }
 
-    public void setData(List<Integer> data){
+    public void setData(Map<Integer, Integer> data, int hour){
         _data = data;
+        _hour = hour;
 
-        for(int i : _data){
-            if(i > _max)
-                _max = i;
+        for(int key : _data.keySet()){
+            int value = _data.get(key);
 
-            if(i < _min)
-                _min = i;
+            if(value > _max)
+                _max = value;
+
+            if(value < _min)
+                _min = value;
         }
+
+        invalidate();
     }
 
     @Override
@@ -61,13 +82,72 @@ public class HourOfDayView extends View
 
         int boxSize = Math.min(width / 24, height);
 
-        int top = 0;
+        int top = (int) ((boxSize / 1.5f) + 2);
         int bottom = top + boxSize;
+        int border = 1;
+
         for(int i = 0; i < 24; i++){
-            int left = i * boxSize;
+            int left = i * boxSize + (i * (border * 2));
             int right = left + boxSize;
-            canvas.drawRect(left, 0, right, bottom, _fillPaint);
-            canvas.drawRect(left, 0, right, bottom, _borderPaint);
+
+            int value = 0;
+            if(_data != null && _data.containsKey(i))
+                value = _data.get(i);
+
+            float percentage = (100.0f / (_max - _min)) * value;
+            float opacity = (percentage / 100.0f) * 255;
+
+            _fillPaint.setAlpha((int)opacity);
+
+            canvas.drawRect(left, top, right, bottom, _fillPaint);
+            canvas.drawRect(left, top, right, bottom, _borderPaint);
+
+            if(i == _hour){
+                //canvas.drawCircle(left + (boxSize / 2), top - (boxSize / 2), 8, _indicatorPaint);
+                Point a = new Point(left + (boxSize / 4), (int) (top - (boxSize / 2f)));
+                Point b = new Point(right - (boxSize / 4), (int) (top - (boxSize / 2f)));
+                Point c = new Point(left + (boxSize / 2), top - 5);
+
+                Path path = new Path();
+                path.setFillType(Path.FillType.EVEN_ODD);
+                path.moveTo(a.x, a.y);
+                path.lineTo(b.x, b.y);
+                path.moveTo(b.x, b.y);
+                path.lineTo(c.x, c.y);
+                path.moveTo(c.x, c.y);
+                path.lineTo(a.x, a.y);
+                path.close();
+
+                canvas.drawPath(path, _indicatorPaint);
+            }
         }
+
+        String fewer = _context.getString(R.string.fewer);
+        String more = _context.getString(R.string.more);
+        float fewerWidth = _textPaint.measureText(fewer);
+        float moreWidth = _textPaint.measureText(more);
+        int fewerBoxes = (int) Math.ceil(fewerWidth / boxSize);
+        int moreBoxes = (int)Math.ceil(moreWidth / boxSize);
+
+        top += (boxSize * 2);
+        bottom = top + boxSize;
+        float percentage = 0;
+        int endBox = 24 - (moreBoxes + 1);
+        int startBox = endBox - 5;
+        for(int i = startBox; i < endBox; i++){
+            int left = i * boxSize + (i * (border * 2));
+            int right = left + boxSize;
+
+            float opacity = (percentage / 100.0f) * 255;
+
+            _fillPaint.setAlpha((int)opacity);
+            canvas.drawRect(left, top, right, bottom, _fillPaint);
+            canvas.drawRect(left, top, right, bottom, _borderPaint);
+
+            percentage += 20;
+        }
+
+        canvas.drawText(fewer, (startBox - fewerBoxes) * boxSize, top + (boxSize / 1.2f), _textPaint);
+        canvas.drawText(more, ((endBox + 1)  * boxSize) + 10, top + (boxSize / 1.2f), _textPaint);
     }
 }

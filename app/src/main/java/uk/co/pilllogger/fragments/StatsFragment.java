@@ -8,9 +8,14 @@ import android.widget.TextView;
 
 import com.echo.holographlibrary.PieGraph;
 
+import org.joda.time.DateTime;
+
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -19,6 +24,7 @@ import uk.co.pilllogger.stats.Statistics;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.views.ColourIndicator;
+import uk.co.pilllogger.views.HourOfDayView;
 
 /**
  * Created by nick on 18/03/14.
@@ -39,6 +45,7 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
     private ColourIndicator _medicineMostTakenIndicator2nd;
     private ColourIndicator _medicineMostTakenIndicator3rd;
     private PieGraph _medicineMostTakenGraph;
+    private HourOfDayView _hourOfDayView;
     View _pill2;
     View _pill3;
 
@@ -62,12 +69,12 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
         _medicineMostTakenCount3rd = (TextView) v.findViewById(R.id.stats_most_taken_count_3rd);
 
         _medicineMostTakenGraph = (PieGraph) v.findViewById(R.id.stats_most_taken_graph);
+        _hourOfDayView = (HourOfDayView) v.findViewById(R.id.stats_hour_most_graph);
 
         _dayMostTaken = (TextView) v.findViewById(R.id.stats_day_most_consumptions);
         _hourMostTaken = (TextView) v.findViewById(R.id.stats_hour_most_consumptions);
         _averageTimeBetween = (TextView) v.findViewById(R.id.stats_average_between_consumption);
         _longestTimeBetween = (TextView) v.findViewById(R.id.stats_longest_between_consumption);
-
         _pill2 = v.findViewById(R.id.stats_most_taken_2nd);
         _pill3 = v.findViewById(R.id.stats_most_taken_3rd);
 
@@ -92,11 +99,24 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
     public void consumptionsReceived(List<Consumption> consumptions) {
         if (consumptions != null && consumptions.size() > 0) {
             handleMostTaken(consumptions);
-            _dayMostTaken.setText(Statistics.getDayWithMostConsumptions(consumptions));
-            _hourMostTaken.setText(Statistics.getHourWithMostConsumptions(consumptions) + ":00");
+            handleMostTakenHour(consumptions);
+            _dayMostTaken.setText(Statistics.getDayWithMostConsumptions(this.getActivity(), consumptions));
             _averageTimeBetween.setText(Statistics.getAverageTimeBetweenConsumptions(consumptions, getActivity()));
             _longestTimeBetween.setText(Statistics.getLongestTimeBetweenConsumptions(consumptions, getActivity()));
         }
+    }
+
+    private void handleMostTakenHour(List<Consumption> consumptions){
+        Map<Integer, Integer> hours = Statistics.getHoursWithAmounts(consumptions);
+        int hour = Statistics.getHourWithMostConsumptions(consumptions);
+
+        DateTime dateTime = new DateTime().withHourOfDay(hour).withMinuteOfHour(0);
+        DateTime nextHour = dateTime.plusHours(1);
+
+        String hourMostTaken = String.format("%s - %s", DateHelper.getTime(this.getActivity(), dateTime), DateHelper.getTime(this.getActivity(), nextHour));
+        _hourMostTaken.setText(hourMostTaken);
+
+        _hourOfDayView.setData(hours, hour);
     }
 
     private void handleMostTaken(List<Consumption> consumptions){

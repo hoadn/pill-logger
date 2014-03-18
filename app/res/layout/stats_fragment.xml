@@ -152,8 +152,9 @@
         android:layout_margin="5dp"
         android:textSize="16sp"/>
     <uk.co.pilllogger.views.HourOfDayView
+        android:id="@+id/stats_hour_most_graph"
         android:layout_width="match_parent"
-        android:layout_height="50dp"/>
+        android:layout_height="60dp"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

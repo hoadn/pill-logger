@@ -29,13 +29,20 @@
     <string name="create_a_pill_name_hint">Name</string>
     <string name="create_a_pill_size_hint">Size</string>
     <string name="drawer_charts">Charts</string>
-    <string name="monday">Mon</string>
-    <string name="tuesday">Tue</string>
-    <string name="wednesday">Wed</string>
-    <string name="thursday">Thu</string>
-    <string name="friday">Fri</string>
-    <string name="saturday">Sat</string>
-    <string name="sunday">Sun</string>
+    <string name="monday_short">Mon</string>
+    <string name="tuesday_short">Tue</string>
+    <string name="wednesday_short">Wed</string>
+    <string name="thursday_short">Thu</string>
+    <string name="friday_short">Fri</string>
+    <string name="saturday_short">Sat</string>
+    <string name="sunday_short">Sun</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
     <string name="no_consumptions_message">No consumptions recorded</string>
     <string name="last_taken_message_prefix">Last taken</string>
     <string name="add_consumption_quantity_default">1</string>
@@ -104,5 +111,7 @@
     <string name="your_last_consumption_title">Your Last Consumption</string>
     <string name="average_between_consumptions_title">Average Time Between Consumptions</string>
     <string name="longest_between_consumption_title">Longest Time Between Consumptions</string>
+    <string name="fewer">Fewer</string>
+    <string name="more">More</string>
 
 </resources>
