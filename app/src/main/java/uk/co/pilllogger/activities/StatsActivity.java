@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.SparseIntArray;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
@@ -85,6 +86,16 @@ public class StatsActivity extends Activity implements GetPillsTask.ITaskComplet
     @Override
     public void pillsReceived(List<Pill> pills) {
         new GetConsumptionsTask(this, this, false).execute();
+        View pill2 = findViewById(R.id.stats_most_taken_2nd);
+        View pill3 = findViewById(R.id.stats_most_taken_3rd);
+        if (pills.size() == 1) {
+            pill2.setVisibility(View.GONE);
+            pill3.setVisibility(View.GONE);
+        }
+        else if (pills.size() == 2) {
+            pill3.setVisibility(View.GONE);
+        }
+
     }
 
     @Override

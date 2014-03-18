@@ -36,6 +36,7 @@
                     android:layout_weight="2"
                     android:orientation="vertical">
                 <LinearLayout
+                    android:id="@+id/stats_most_taken_1st"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -62,6 +63,7 @@
                         tools:text="(17)"/>
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/stats_most_taken_2nd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -88,6 +90,7 @@
                         tools:text="(17)"/>
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/stats_most_taken_3rd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
