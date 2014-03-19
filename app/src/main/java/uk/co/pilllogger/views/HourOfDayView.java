@@ -79,12 +79,13 @@ public class HourOfDayView extends View
     public void onDraw(Canvas canvas){
         int width = getWidth();
         int height = getHeight();
+        int border = 1;
 
-        int boxSize = Math.min(width / 24, height);
+        int boxSize = Math.min((width - (24*(border*2))) / 24, height);
 
         int top = (int) ((boxSize / 1.5f) + 2);
         int bottom = top + boxSize;
-        int border = 1;
+
 
         for(int i = 0; i < 24; i++){
             int left = i * boxSize + (i * (border * 2));
