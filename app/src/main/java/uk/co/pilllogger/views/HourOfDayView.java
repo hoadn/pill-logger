@@ -29,6 +29,7 @@ public class HourOfDayView extends View
     private int _min = 0;
     private int _max = 0;
     private Context _context;
+    private String _hourText = "";
 
     public HourOfDayView(Context context) {
         super(context);
@@ -55,12 +56,13 @@ public class HourOfDayView extends View
         _indicatorPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         _indicatorPaint.setStrokeWidth(2);
         _indicatorPaint.setAntiAlias(true);
-        _textPaint.setTextSize(42);
+        _textPaint.setTextSize(36);
     }
 
-    public void setData(Map<Integer, Integer> data, int hour){
+    public void setData(Map<Integer, Integer> data, int hour, String hourText){
         _data = data;
         _hour = hour;
+        _hourText = hourText;
 
         for(int key : _data.keySet()){
             int value = _data.get(key);
@@ -83,7 +85,7 @@ public class HourOfDayView extends View
 
         int boxSize = Math.min((width - (24*(border*2))) / 24, height);
 
-        int top = (int) ((boxSize / 1.5f) + 2);
+        int top = (int) ((boxSize / 1.5f) + 2) + 30;
         int bottom = top + boxSize;
 
 
@@ -105,8 +107,9 @@ public class HourOfDayView extends View
 
             if(i == _hour){
                 //canvas.drawCircle(left + (boxSize / 2), top - (boxSize / 2), 8, _indicatorPaint);
-                Point a = new Point(left + (boxSize / 4), (int) (top - (boxSize / 2f)));
-                Point b = new Point(right - (boxSize / 4), (int) (top - (boxSize / 2f)));
+                int triangleTop = (int) (top - (boxSize / 2f));
+                Point a = new Point(left + (boxSize / 4), triangleTop);
+                Point b = new Point(right - (boxSize / 4), triangleTop);
                 Point c = new Point(left + (boxSize / 2), top - 5);
 
                 Path path = new Path();
@@ -120,6 +123,17 @@ public class HourOfDayView extends View
                 path.close();
 
                 canvas.drawPath(path, _indicatorPaint);
+
+                float timeWidth = _textPaint.measureText(_hourText);
+                float timeLeft = (left + (boxSize /2)) - timeWidth / 2f;
+
+                if(timeLeft < 0)
+                    timeLeft = 0;
+
+                if(timeLeft + timeWidth > getWidth())
+                    timeLeft = getWidth() - timeWidth - 5;
+
+                canvas.drawText(_hourText, timeLeft, top - (boxSize / 1.5f), _textPaint);
             }
         }
 

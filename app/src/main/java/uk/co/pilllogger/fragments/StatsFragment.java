@@ -38,7 +38,6 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
     TextView _medicineMostTakenCount2nd;
     TextView _medicineMostTakenCount3rd;
     TextView _dayMostTaken;
-    TextView _hourMostTaken;
     TextView _averageTimeBetween;
     TextView _longestTimeBetween;
     private ColourIndicator _medicineMostTakenIndicator1st;
@@ -72,7 +71,6 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
         _hourOfDayView = (HourOfDayView) v.findViewById(R.id.stats_hour_most_graph);
 
         _dayMostTaken = (TextView) v.findViewById(R.id.stats_day_most_consumptions);
-        _hourMostTaken = (TextView) v.findViewById(R.id.stats_hour_most_consumptions);
         _averageTimeBetween = (TextView) v.findViewById(R.id.stats_average_between_consumption);
         _longestTimeBetween = (TextView) v.findViewById(R.id.stats_longest_between_consumption);
         _pill2 = v.findViewById(R.id.stats_most_taken_2nd);
@@ -114,9 +112,8 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
         DateTime nextHour = dateTime.plusHours(1);
 
         String hourMostTaken = String.format("%s - %s", DateHelper.getTime(this.getActivity(), dateTime), DateHelper.getTime(this.getActivity(), nextHour));
-        _hourMostTaken.setText(hourMostTaken);
 
-        _hourOfDayView.setData(hours, hour);
+        _hourOfDayView.setData(hours, hour, hourMostTaken);
     }
 
     private void handleMostTaken(List<Consumption> consumptions){

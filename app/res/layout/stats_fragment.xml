@@ -148,17 +148,12 @@
         android:text="@string/hour_with_most_consumptions_title"
         android:textColor="@color/light_blue"
         android:textSize="20sp"/>
-    <TextView
-        android:id="@+id/stats_hour_most_consumptions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_grey"
-        android:layout_margin="5dp"
-        android:textSize="16sp"/>
     <uk.co.pilllogger.views.HourOfDayView
         android:id="@+id/stats_hour_most_graph"
         android:layout_width="match_parent"
-        android:layout_height="60dp"/>
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
