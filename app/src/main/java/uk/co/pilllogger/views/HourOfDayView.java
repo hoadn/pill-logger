@@ -148,7 +148,7 @@ public class HourOfDayView extends View
             percentage += 20;
         }
 
-        canvas.drawText(fewer, (startBox - fewerBoxes) * boxSize, top + (boxSize / 1.2f), _textPaint);
+        canvas.drawText(fewer, (startBox * boxSize) - fewerWidth, top + (boxSize / 1.2f), _textPaint);
         canvas.drawText(more, ((endBox + 1)  * boxSize) + 10, top + (boxSize / 1.2f), _textPaint);
     }
 }
