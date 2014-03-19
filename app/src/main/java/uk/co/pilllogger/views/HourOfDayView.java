@@ -27,7 +27,7 @@ public class HourOfDayView extends View
     private Map<Integer, Integer> _data;
     private int _hour;
     private int _min = 0;
-    private int _max = 24;
+    private int _max = 0;
     private Context _context;
 
     public HourOfDayView(Context context) {
