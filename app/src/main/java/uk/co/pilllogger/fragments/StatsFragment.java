@@ -1,5 +1,6 @@
 package uk.co.pilllogger.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,6 @@ import com.echo.holographlibrary.PieGraph;
 
 import org.joda.time.DateTime;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +19,7 @@ import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.stats.PillAmount;
 import uk.co.pilllogger.stats.Statistics;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
@@ -47,6 +48,12 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
     private HourOfDayView _hourOfDayView;
     View _pill2;
     View _pill3;
+    TextView _medicineMostTakenTitle;
+    TextView _dayMostTakenTitle;
+    TextView _hourMostTakenTitle;
+    TextView _averageTimeBetweenTitle;
+    TextView _longestTimeBetweenTitle;
+    TextView _statsTitle;
 
 
     @Override
@@ -54,6 +61,8 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.stats_fragment, container, false);
+        v.setTag(R.id.tag_page_colour, Color.argb(0, 0, 0, 0));
+        v.setTag(R.id.tag_tab_icon_position, 2);
 
         _medicineMostTakenIndicator1st = (ColourIndicator) v.findViewById(R.id.stats_most_taken_indicator_1st);
         _medicineMostTakenIndicator2nd = (ColourIndicator) v.findViewById(R.id.stats_most_taken_indicator_2nd);
@@ -76,7 +85,15 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
         _pill2 = v.findViewById(R.id.stats_most_taken_2nd);
         _pill3 = v.findViewById(R.id.stats_most_taken_3rd);
 
+        _medicineMostTakenTitle = (TextView) v.findViewById(R.id.stats_most_taken_medicine_title);
+        _dayMostTakenTitle = (TextView) v.findViewById(R.id.stats_day_most_consumptions_title);
+        _hourMostTakenTitle = (TextView) v.findViewById(R.id.stats_hour_most_consumptions_title);
+        _averageTimeBetweenTitle = (TextView) v.findViewById(R.id.stats_average_between_consumption_title);
+        _longestTimeBetweenTitle = (TextView) v.findViewById(R.id.stats_longest_between_consumption_title);
+        _statsTitle = (TextView) v.findViewById(R.id.stats_fragment_title);
+
         new GetPillsTask(getActivity(), this).execute();
+        setFont();
         return v;
     }
 
@@ -141,5 +158,20 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
         }
 
         GraphHelper.plotPieChart(pills, _medicineMostTakenGraph);
+    }
+
+    private void setFont() {
+        _medicineMostTaken1st.setTypeface(State.getSingleton().getTypeface());
+        _medicineMostTaken2nd.setTypeface(State.getSingleton().getTypeface());
+        _medicineMostTaken3rd.setTypeface(State.getSingleton().getTypeface());
+        _dayMostTaken.setTypeface(State.getSingleton().getTypeface());
+        _averageTimeBetween.setTypeface(State.getSingleton().getTypeface());
+        _longestTimeBetween.setTypeface(State.getSingleton().getTypeface());
+        _medicineMostTakenTitle.setTypeface(State.getSingleton().getTypeface());
+        _dayMostTakenTitle.setTypeface(State.getSingleton().getTypeface());
+        _hourMostTakenTitle.setTypeface(State.getSingleton().getTypeface());
+        _averageTimeBetweenTitle.setTypeface(State.getSingleton().getTypeface());
+        _longestTimeBetweenTitle.setTypeface(State.getSingleton().getTypeface());
+        _statsTitle.setTypeface(State.getSingleton().getTypeface());
     }
 }

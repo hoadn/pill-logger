@@ -52,11 +52,12 @@ public class HourOfDayView extends View
         _fillPaint.setStyle(Paint.Style.FILL);
         _borderPaint.setColor(Color.GRAY);
         _borderPaint.setStyle(Paint.Style.STROKE);
-        _indicatorPaint.setColor(Color.BLACK);
+        _indicatorPaint.setColor(Color.WHITE);
         _indicatorPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         _indicatorPaint.setStrokeWidth(2);
         _indicatorPaint.setAntiAlias(true);
         _textPaint.setTextSize(36);
+        _textPaint.setColor(Color.WHITE);
     }
 
     public void setData(Map<Integer, Integer> data, int hour, String hourText){

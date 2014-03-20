@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
@@ -20,7 +21,7 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
     private static String TAG = "FadeBackgroundPageTransformer";
     private final View _background;
     private final Activity _activity;
-    float[] _transitionModifiers = new float[3];
+    float[] _transitionModifiers = new float[4];
     int _fadeFrom;
     int _fadeTo;
     ActionBar _actionBar;
@@ -55,9 +56,10 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
             float r = Color.red(_fadeFrom) - (modifier * _transitionModifiers[0]);
             float g = Color.green(_fadeFrom) - (modifier * _transitionModifiers[1]);
             float b = Color.blue(_fadeFrom) - (modifier * _transitionModifiers[2]);
+            float a = Color.alpha(_fadeFrom) - (modifier * _transitionModifiers[3]);
 
             if(position > 0)
-                _background.setBackgroundColor(Color.argb(120, (int)r, (int)g, (int)b));
+                _background.setBackgroundColor(Color.argb((int)a, (int)r, (int)g, (int)b));
 
             // transition tab bar icons
             if(_actionBar != null){
@@ -71,9 +73,9 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
     }
 
     private float[] calculateColourTransition(int from, int to) {
-        float[] results = new float[3];
-        int[] fadeFrom = { Color.red(from), Color.green(from), Color.blue(from)};
-        int[] fadeTo = { Color.red(to), Color.green(to), Color.blue(to)};
+        float[] results = new float[4];
+        int[] fadeFrom = { Color.red(from), Color.green(from), Color.blue(from), Color.alpha(from)};
+        int[] fadeTo = { Color.red(to), Color.green(to), Color.blue(to), Color.alpha(to)};
 
         for (int i = 0 ; i < fadeFrom.length ; i++) {
             float diff = fadeFrom[i] - fadeTo[i];

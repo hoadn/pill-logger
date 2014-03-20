@@ -33,6 +33,7 @@ import uk.co.pilllogger.animations.FadeBackgroundPageTransformer;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
+import uk.co.pilllogger.fragments.StatsFragment;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -63,7 +64,7 @@ public class MainActivity extends PillLoggerActivityBase implements
     private PagerAdapter _fragmentPagerAdapter;
     private int _colour1 = Color.argb(120, 0, 233, 255);
     private int _colour2 = Color.argb(120, 204, 51, 153);
-    private int _colour3 = Color.argb(120, 0, 106, 255);
+    private int _colour3 = Color.argb(0, 0, 106, 255);
     View _colourBackground;
     private Menu _menu;
     Fragment _consumptionFragment;
@@ -82,7 +83,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         _consumptionFragment = new ConsumptionListFragment();
         final Fragment fragment2 = new PillListFragment();
-        final Fragment fragment3 = new GraphFragment();
+        final Fragment fragment3 = new StatsFragment();
 
         _fragmentPager = (MyViewPager)findViewById(R.id.fragment_pager);
 
