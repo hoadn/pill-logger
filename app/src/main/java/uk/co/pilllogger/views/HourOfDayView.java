@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.state.State;
 
 /**
  * Created by Alex on 17/03/14.
@@ -75,8 +76,10 @@ public class HourOfDayView extends View
         _indicatorPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         _indicatorPaint.setStrokeWidth(2);
         _indicatorPaint.setAntiAlias(true);
-        _textPaint.setTextSize(36);
+        _textPaint.setTextSize(13 * getResources().getDisplayMetrics().density);
         _textPaint.setColor(Color.WHITE);
+        _textPaint.setTypeface(State.getSingleton().getTypeface());
+        _textPaint.setAntiAlias(true);
     }
 
     public void setData(Map<Integer, Integer> data, int hour, String hourText){
@@ -184,6 +187,6 @@ public class HourOfDayView extends View
         }
 
         canvas.drawText(fewer, (startBox * _boxSize) - fewerWidth, top + (_boxSize / 1.2f), _textPaint);
-        canvas.drawText(more, ((endBox + 1)  * _boxSize) + 10, top + (_boxSize / 1.2f), _textPaint);
+        canvas.drawText(more, ((endBox + 1)  * _boxSize) + endBox, top + (_boxSize / 1.2f), _textPaint);
     }
 }
