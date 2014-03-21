@@ -42,6 +42,7 @@ import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
@@ -219,7 +220,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
 
                     if(consumption.getPill() != null){
                         holder.name.setText(consumption.getPill().getName());
-                        holder.size.setText(consumption.getPill().getSize() + consumption.getPill().getUnits());
+                        holder.size.setText(NumberHelper.getNiceFloatString(consumption.getPill().getSize()) + consumption.getPill().getUnits());
                         holder.colour.setColour(consumption.getPill().getColour());
                     }
                     holder.date.setText(DateHelper.getRelativeDateTime(_fragment.getActivity(), consumption.getDate()));

@@ -1,6 +1,7 @@
 package uk.co.pilllogger.helpers;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.SparseIntArray;
 
 import com.echo.holographlibrary.Bar;
@@ -148,6 +149,9 @@ public class GraphHelper {
                 resId = R.color.sunday;
                 break;
         }
+
+        if(context == null)
+            return Color.WHITE;
 
         return context.getResources().getColor(resId);
     }

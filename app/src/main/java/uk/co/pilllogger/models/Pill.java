@@ -28,7 +28,7 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
     private int _id;
 	private String _name = "";
     private String _units = "mg";
-	private int _size;
+	private float _size;
     private int _colour = R.color.pill_default_color;
     private boolean _favourite = false;
 
@@ -39,7 +39,7 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
         Observer.getSingleton().registerConsumptionDeletedObserver(this);
     }
 
-    public Pill(CharSequence name, int size) {
+    public Pill(CharSequence name, float size) {
         this();
         _name = String.valueOf(name);
         _size = size;
@@ -67,14 +67,14 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
 	/**
 	 * @return the size
 	 */
-	public int getSize() {
+	public float getSize() {
 		return _size;
 	}
 
 	/**
 	 * @param size the size to set
 	 */
-	public void setSize(int size) {
+	public void setSize(float size) {
 		_size = size;
 	}
 
@@ -130,7 +130,7 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
         return latest;
     }
 
-    public int getTotalSize(int hours){
+    public float getTotalSize(int hours){
         return getTotalQuantity(hours) * getSize();
     }
 
@@ -175,7 +175,8 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
     public int hashCode() {
         int result = _id;
         result = 31 * result + _name.hashCode();
-        result = 31 * result + _size;
+        result = 31 * result + _units.hashCode();
+        result = 31 * result + (_size != +0.0f ? Float.floatToIntBits(_size) : 0);
         result = 31 * result + _colour;
         result = 31 * result + (_favourite ? 1 : 0);
         return result;

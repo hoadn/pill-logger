@@ -65,7 +65,7 @@ public class PillRepository extends BaseRepository<Pill>{
         Pill pill = new Pill();
         pill.setId(getInt(c, DatabaseContract.Pills._ID));
         pill.setName(getString(c, DatabaseContract.Pills.COLUMN_NAME));
-        pill.setSize(getInt(c, DatabaseContract.Pills.COLUMN_SIZE));
+        pill.setSize(getFloat(c, DatabaseContract.Pills.COLUMN_SIZE));
         pill.setColour(getInt(c, DatabaseContract.Pills.COLUMN_COLOUR));
         pill.setUnits(getString(c, DatabaseContract.Pills.COLUMN_UNITS));
 

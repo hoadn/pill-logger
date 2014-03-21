@@ -251,9 +251,9 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             newPill.setName(pillName);
             newPill.setColour(_colour.getColour());
 
-            int pillSize = 0;
+            float pillSize = 0f;
             if (!_addPillSize.getText().toString().matches("")) {
-                pillSize = Integer.parseInt(_addPillSize.getText().toString());
+                pillSize = Float.parseFloat(_addPillSize.getText().toString());
             }
             newPill.setSize(pillSize);
 

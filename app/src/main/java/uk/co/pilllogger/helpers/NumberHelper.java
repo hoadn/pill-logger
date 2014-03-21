@@ -27,4 +27,12 @@ public class NumberHelper {
 
         return randomNum;
     }
+
+    public static String getNiceFloatString(float value){
+        if(value - (int)value == 0){
+            return String.valueOf((int)value);
+        }
+
+        return String.valueOf(value);
+    }
 }
