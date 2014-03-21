@@ -64,7 +64,7 @@ public class MainActivity extends PillLoggerActivityBase implements
     private PagerAdapter _fragmentPagerAdapter;
     private int _colour1 = Color.argb(120, 0, 233, 255);
     private int _colour2 = Color.argb(120, 204, 51, 153);
-    private int _colour3 = Color.argb(0, 0, 106, 255);
+    private int _colour3 = Color.argb(120, 81, 81, 81);
     View _colourBackground;
     private Menu _menu;
     Fragment _consumptionFragment;
