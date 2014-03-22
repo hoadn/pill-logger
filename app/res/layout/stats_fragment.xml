@@ -188,19 +188,22 @@
         android:layout_height="wrap_content"
         android:text="@string/average_between_consumptions_title"
         android:textColor="@color/white"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/stats_average_between_consumption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/text_grey_medium"
         android:layout_margin="5dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:visibility="gone"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/grey_divider"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/stats_longest_between_consumption_title"
@@ -208,20 +211,98 @@
         android:layout_height="wrap_content"
         android:text="@string/longest_between_consumption_title"
         android:textColor="@color/white"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/stats_longest_between_consumption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/text_grey_medium"
         android:layout_margin="5dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:visibility="gone"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/grey_divider"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total"
+            android:layout_gravity="center_horizontal"
+            android:textSize="14sp"/>
+        <TextView
+            android:id="@+id/stats_total_consumption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="983"
+            android:textSize="40sp"
+            android:layout_gravity="center"
+            android:textStyle="bold"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Longest Streak"
+                android:layout_gravity="center_horizontal"
+                android:textSize="14sp"/>
+            <TextView
+                android:id="@+id/stats_longest_streak"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="983"
+                android:textSize="40sp"
+                android:layout_gravity="center"
+                android:textStyle="bold"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="days"
+                android:textSize="14sp"
+                android:layout_gravity="center"/></LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current Streak"
+                android:layout_gravity="center_horizontal"
+                android:textSize="14sp"/>
+            <TextView
+                android:id="@+id/stats_current_streak"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="983"
+                android:textSize="40sp"
+                android:layout_gravity="center"
+                android:textStyle="bold"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="days"
+                android:textSize="14sp"
+                android:layout_gravity="center"/></LinearLayout>
+    </LinearLayout>
 </LinearLayout>
 </ScrollView>
 

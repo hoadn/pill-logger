@@ -56,6 +56,9 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
     TextView _longestTimeBetweenTitle;
     TextView _statsTitle;
     private DayOfWeekView _dayOfWeekView;
+    private TextView _totalConsumptions;
+    private TextView _longestStreak;
+    private TextView _currentStreak;
 
 
     @Override
@@ -95,6 +98,11 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
         _longestTimeBetweenTitle = (TextView) v.findViewById(R.id.stats_longest_between_consumption_title);
         _statsTitle = (TextView) v.findViewById(R.id.stats_fragment_title);
 
+
+        _totalConsumptions = (TextView)v.findViewById(R.id.stats_total_consumption);
+        _longestStreak = (TextView) v.findViewById(R.id.stats_longest_streak);
+        _currentStreak = (TextView) v.findViewById(R.id.stats_current_streak);
+
         new GetPillsTask(getActivity(), this).execute();
         setFont();
         return v;
@@ -119,9 +127,13 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
             handleMostTaken(consumptions);
             handleMostTakenHour(consumptions);
             handleMostTakenDay(consumptions);
-            //_dayMostTaken.setText(Statistics.getDayWithMostConsumptions(consumptions));
+
             _averageTimeBetween.setText(Statistics.getAverageTimeBetweenConsumptions(consumptions, getActivity()));
             _longestTimeBetween.setText(Statistics.getLongestTimeBetweenConsumptions(consumptions, getActivity()));
+
+            _totalConsumptions.setText(String.valueOf(Statistics.getTotalConsumptions(consumptions)));
+            _longestStreak.setText(String.valueOf(Statistics.getLongestStreak(consumptions)));
+            _currentStreak.setText(String.valueOf(Statistics.getCurrentStreak(consumptions)));
         }
     }
 

@@ -3,6 +3,7 @@ package uk.co.pilllogger.stats;
 import android.content.Context;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -237,5 +238,71 @@ public class Statistics {
             lastConsumption = consumption;
         }
         return timeToString(longestTimeBetweenConsumptions);
+    }
+
+    public static int getTotalConsumptions(List<Consumption> consumptions){
+        int total = 0;
+        for(Consumption consumption : consumptions){
+            total += consumption.getQuantity();
+        }
+        return total;
+    }
+
+    public static int getLongestStreak(List<Consumption> consumptions){
+        int longestStreak = 0;
+        int currentStreak = 0;
+        Collections.sort(consumptions);
+        Collections.reverse(consumptions);
+
+        DateTime previousConsumptionDate = null;
+        DateTime firstStreakDate = null;
+        for(Consumption consumption : consumptions){
+
+            DateTime dateTime = new DateTime(consumption.getDate());
+
+            if(firstStreakDate == null)
+                firstStreakDate = dateTime;
+
+            if(previousConsumptionDate != null) {
+                if(!previousConsumptionDate.withTimeAtStartOfDay().plusDays(2).isAfter(consumption.getDate().getTime())){
+                    firstStreakDate = dateTime;
+                }
+
+                currentStreak = Days.daysBetween(firstStreakDate.withTimeAtStartOfDay(), previousConsumptionDate.withTimeAtStartOfDay()).getDays();
+            }
+            previousConsumptionDate = dateTime;
+
+            if(currentStreak > longestStreak)
+                longestStreak = currentStreak;
+        }
+
+        return longestStreak;
+    }
+
+    public static int getCurrentStreak(List<Consumption> consumptions){
+        int currentStreak = 0;
+        Collections.sort(consumptions);
+
+        DateTime previousConsumptionDate = null;
+        DateTime firstStreakDate = null;
+        for(Consumption consumption : consumptions){
+
+            DateTime dateTime = new DateTime(consumption.getDate());
+
+            if(firstStreakDate == null)
+                firstStreakDate = dateTime;
+
+            if(previousConsumptionDate != null) {
+                if(!previousConsumptionDate.withTimeAtStartOfDay().minusDays(2).isBefore(consumption.getDate().getTime())){
+                    return currentStreak;
+                }
+
+                currentStreak = Math.abs(Days.daysBetween(firstStreakDate.withTimeAtStartOfDay(), previousConsumptionDate.withTimeAtStartOfDay()).getDays());
+            }
+            previousConsumptionDate = dateTime;
+        }
+
+
+        return currentStreak;
     }
 }
