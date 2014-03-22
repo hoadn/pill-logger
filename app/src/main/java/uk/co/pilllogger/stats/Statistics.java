@@ -191,19 +191,19 @@ public class Statistics {
         Consumption lastConsumption = consumptions.get(0);
         Consumption firstConsumption = consumptions.get(consumptions.size() - 1);
 
-        int timeDifference = (int) ((lastConsumption.getDate().getTime()) - (firstConsumption.getDate().getTime()));
-        int averageTimeDifference = timeDifference / consumptions.size();
+        long timeDifference = ((lastConsumption.getDate().getTime()) - (firstConsumption.getDate().getTime()));
+        long averageTimeDifference = timeDifference / consumptions.size();
         return timeToString(averageTimeDifference);
     }
 
-    private static String timeToString(int time) {
+    private static String timeToString(long time) {
         final int MILLIS_TO_DAYS = 1000 * 60 * 60 * 24;
         final int MILLIS_TO_HOURS = 1000 * 60 * 60;
         final int MILLIS_TO_MINS = 100 * 60 * 60;
 
-        int daysInt = time / MILLIS_TO_DAYS;
-        int hoursInt = time / MILLIS_TO_HOURS % 24;
-        int minsInt = time / MILLIS_TO_MINS % 60;
+        long daysInt = time / MILLIS_TO_DAYS;
+        long hoursInt = time / MILLIS_TO_HOURS % 24;
+        long minsInt = time / MILLIS_TO_MINS % 60;
 
         String days = "";
         String hours = "";
