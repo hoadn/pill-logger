@@ -140,19 +140,19 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
 
         if(pills.size() > 0){
             PillAmount pa = pills.get(0);
-            _medicineMostTakenIndicator1st.setColour(pa.getPill().getColour());
+            _medicineMostTakenIndicator1st.setColour(pa.getPill().getColour(), true);
             _medicineMostTaken1st.setText(pa.getPill().getName());
             _medicineMostTakenCount1st.setText(String.format(countFormat, pa.getAmount()));
         }
         if(pills.size() > 1){
             PillAmount pa = pills.get(1);
-            _medicineMostTakenIndicator2nd.setColour(pa.getPill().getColour());
+            _medicineMostTakenIndicator2nd.setColour(pa.getPill().getColour(), true);
             _medicineMostTaken2nd.setText(pa.getPill().getName());
             _medicineMostTakenCount2nd.setText(String.format(countFormat, pa.getAmount()));
         }
         if(pills.size() > 2){
             PillAmount pa = pills.get(2);
-            _medicineMostTakenIndicator3rd.setColour(pa.getPill().getColour());
+            _medicineMostTakenIndicator3rd.setColour(pa.getPill().getColour(), true);
             _medicineMostTaken3rd.setText(pa.getPill().getName());
             _medicineMostTakenCount3rd.setText(String.format(countFormat, pa.getAmount()));
         }

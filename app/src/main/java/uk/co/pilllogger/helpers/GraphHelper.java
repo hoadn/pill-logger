@@ -175,6 +175,7 @@ public class GraphHelper {
             PieSlice ps = new PieSlice();
             ps.setValue(sliceValue);
             ps.setColor(pill.getColour());
+            ps.setStrokeColor(ColourHelper.getLighter(pill.getColour()));
             pie.addSlice(ps);
         }
     }
@@ -186,6 +187,7 @@ public class GraphHelper {
             PieSlice ps = new PieSlice();
             ps.setValue(pa.getAmount());
             ps.setColor(pa.getPill().getColour());
+            ps.setStrokeColor(ColourHelper.getLighter(pa.getPill().getColour()));
             pie.addSlice(ps);
         }
     }

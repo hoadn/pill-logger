@@ -68,7 +68,11 @@ public class ColourIndicator extends ImageView {
     }
 
     public void setColour(int colour){
-        int stroke = ColourHelper.getDarker(colour);
+        setColour(colour, false);
+    }
+
+    public void setColour(int colour, boolean lightStroke){
+        int stroke = lightStroke ? ColourHelper.getLighter(colour) : ColourHelper.getDarker(colour);
 
         if(this.getBackground() == null){
             preInit(getContext());
