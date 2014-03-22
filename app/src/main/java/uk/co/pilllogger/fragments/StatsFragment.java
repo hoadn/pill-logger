@@ -25,6 +25,7 @@ import uk.co.pilllogger.stats.Statistics;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.views.ColourIndicator;
+import uk.co.pilllogger.views.DayOfWeekView;
 import uk.co.pilllogger.views.HourOfDayView;
 
 /**
@@ -54,6 +55,7 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
     TextView _averageTimeBetweenTitle;
     TextView _longestTimeBetweenTitle;
     TextView _statsTitle;
+    private DayOfWeekView _dayOfWeekView;
 
 
     @Override
@@ -78,6 +80,7 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
 
         _medicineMostTakenGraph = (PieGraph) v.findViewById(R.id.stats_most_taken_graph);
         _hourOfDayView = (HourOfDayView) v.findViewById(R.id.stats_hour_most_graph);
+        _dayOfWeekView = (DayOfWeekView) v.findViewById(R.id.stats_day_most_consumptions_view);
 
         _dayMostTaken = (TextView) v.findViewById(R.id.stats_day_most_consumptions);
         _averageTimeBetween = (TextView) v.findViewById(R.id.stats_average_between_consumption);
@@ -115,10 +118,23 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
         if (consumptions != null && consumptions.size() > 0) {
             handleMostTaken(consumptions);
             handleMostTakenHour(consumptions);
-            _dayMostTaken.setText(Statistics.getDayWithMostConsumptions(this.getActivity(), consumptions));
+            handleMostTakenDay(consumptions);
+            //_dayMostTaken.setText(Statistics.getDayWithMostConsumptions(consumptions));
             _averageTimeBetween.setText(Statistics.getAverageTimeBetweenConsumptions(consumptions, getActivity()));
             _longestTimeBetween.setText(Statistics.getLongestTimeBetweenConsumptions(consumptions, getActivity()));
         }
+    }
+
+    private void handleMostTakenDay(List<Consumption> consumptions){
+        Map<Integer, Map<Integer, Integer>> hours = Statistics.getDaysWithHourAmounts(consumptions);
+        int day = Statistics.getDayWithMostConsumptions(consumptions);
+
+        DateTime dateTime = new DateTime().withHourOfDay(day).withMinuteOfHour(0);
+        DateTime nextHour = dateTime.plusHours(1);
+
+        //String hourMostTaken = String.format("%s - %s", DateHelper.getTime(this.getActivity(), dateTime), DateHelper.getTime(this.getActivity(), nextHour));
+
+        _dayOfWeekView.setData(hours, day);
     }
 
     private void handleMostTakenHour(List<Consumption> consumptions){
@@ -130,6 +146,7 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
 
         String hourMostTaken = String.format("%s - %s", DateHelper.getTime(this.getActivity(), dateTime), DateHelper.getTime(this.getActivity(), nextHour));
 
+        _hourOfDayView.setSmallMode(false);
         _hourOfDayView.setData(hours, hour, hourMostTaken);
     }
 

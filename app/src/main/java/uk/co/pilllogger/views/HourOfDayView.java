@@ -9,8 +9,6 @@ import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.View;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import uk.co.pilllogger.R;
@@ -37,6 +35,7 @@ public class HourOfDayView extends View
     int _height;
     int _border;
     int _boxSize;
+    private boolean _drawLegend = true;
 
     public HourOfDayView(Context context) {
         super(context);
@@ -105,13 +104,15 @@ public class HourOfDayView extends View
 
         _width = getWidth();
         _height = getHeight();
-        _border = 1;
+        _border = isSmallMode() ? 0 : 1;
 
         _boxSize = (_width - (24*(_border*2))) / 24;
 
         int top = (int) ((_boxSize / 1.5f) + 2) + 30;
         int bottom = top + _boxSize;
 
+        if(isSmallMode())
+            top = 0;
 
         for(int i = 0; i < 24; i++){
             int left = i * _boxSize + (i * (_border * 2));
@@ -127,9 +128,10 @@ public class HourOfDayView extends View
             _fillPaint.setAlpha((int)opacity);
 
             canvas.drawRect(left, top, right, bottom, _fillPaint);
-            canvas.drawRect(left, top, right, bottom, _borderPaint);
+            if(!isSmallMode())
+                canvas.drawRect(left, top, right, bottom, _borderPaint);
 
-            if(i == _hour){
+            if(i == _hour && !isSmallMode()){
                 //canvas.drawCircle(left + (boxSize / 2), top - (boxSize / 2), 8, _indicatorPaint);
                 int triangleTop = (int) (top - (_boxSize / 2f));
                 Point a = new Point(left + (_boxSize / 4), triangleTop);
@@ -161,32 +163,42 @@ public class HourOfDayView extends View
             }
         }
 
-        String fewer = _context.getString(R.string.fewer);
-        String more = _context.getString(R.string.more);
-        float fewerWidth = _textPaint.measureText(fewer);
-        float moreWidth = _textPaint.measureText(more);
-        int fewerBoxes = (int) Math.ceil(fewerWidth / _boxSize);
-        int moreBoxes = (int)Math.ceil(moreWidth / _boxSize);
+        if(!isSmallMode()) {
+            String fewer = _context.getString(R.string.fewer);
+            String more = _context.getString(R.string.more);
+            float fewerWidth = _textPaint.measureText(fewer);
+            float moreWidth = _textPaint.measureText(more);
+            int fewerBoxes = (int) Math.ceil(fewerWidth / _boxSize);
+            int moreBoxes = (int) Math.ceil(moreWidth / _boxSize);
 
-        top += (_boxSize * 2);
-        bottom = top + _boxSize;
-        float percentage = 0;
-        int endBox = 24 - (moreBoxes + 1);
-        int startBox = endBox - 5;
-        for(int i = startBox; i < endBox; i++){
-            int left = i * _boxSize + (i * (_border * 2));
-            int right = left + _boxSize;
+            top += (_boxSize * 2);
+            bottom = top + _boxSize;
+            float percentage = 0;
+            int endBox = 24 - (moreBoxes + 1);
+            int startBox = endBox - 5;
+            for (int i = startBox; i < endBox; i++) {
+                int left = i * _boxSize + (i * (_border * 2));
+                int right = left + _boxSize;
 
-            float opacity = (percentage / 100.0f) * 255;
+                float opacity = (percentage / 100.0f) * 255;
 
-            _fillPaint.setAlpha((int)opacity);
-            canvas.drawRect(left, top, right, bottom, _fillPaint);
-            canvas.drawRect(left, top, right, bottom, _borderPaint);
+                _fillPaint.setAlpha((int) opacity);
+                canvas.drawRect(left, top, right, bottom, _fillPaint);
+                canvas.drawRect(left, top, right, bottom, _borderPaint);
 
-            percentage += 20;
+                percentage += 20;
+            }
+
+            canvas.drawText(fewer, (startBox * _boxSize) - fewerWidth, top + (_boxSize / 1.2f), _textPaint);
+            canvas.drawText(more, ((endBox + 1) * _boxSize) + endBox, top + (_boxSize / 1.2f), _textPaint);
         }
+    }
 
-        canvas.drawText(fewer, (startBox * _boxSize) - fewerWidth, top + (_boxSize / 1.2f), _textPaint);
-        canvas.drawText(more, ((endBox + 1)  * _boxSize) + endBox, top + (_boxSize / 1.2f), _textPaint);
+    public void setSmallMode(boolean drawLegend) {
+        _drawLegend = drawLegend;
+    }
+
+    public boolean isSmallMode() {
+        return _drawLegend;
     }
 }

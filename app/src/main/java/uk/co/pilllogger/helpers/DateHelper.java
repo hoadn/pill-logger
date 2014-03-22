@@ -9,6 +9,8 @@ import org.joda.time.DateTime;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import uk.co.pilllogger.R;
+
 /**
  * Created by alex on 13/11/2013.
  */
@@ -121,5 +123,47 @@ public class DateHelper {
     public static String formatDateAndTime(Context context, Date date) {
         java.text.DateFormat df = DateFormat.getDateFormat(context);
         return df.format(date);
+    }
+
+    public static String getDayOfWeek(int dayOfWeek, Context context){
+        switch(dayOfWeek){
+            case 1:
+                return context.getString(R.string.monday);
+            case 2:
+                return context.getString(R.string.tuesday);
+            case 3:
+                return context.getString(R.string.wednesday);
+            case 4:
+                return context.getString(R.string.thursday);
+            case 5:
+                return context.getString(R.string.friday);
+            case 6:
+                return context.getString(R.string.saturday);
+            case 7:
+                return context.getString(R.string.sunday);
+        }
+
+        return "";
+    }
+
+    public static String getShortDayOfWeek(int dayOfWeek, Context context){
+        switch(dayOfWeek){
+            case 1:
+                return context.getString(R.string.monday_short);
+            case 2:
+                return context.getString(R.string.tuesday_short);
+            case 3:
+                return context.getString(R.string.wednesday_short);
+            case 4:
+                return context.getString(R.string.thursday_short);
+            case 5:
+                return context.getString(R.string.friday_short);
+            case 6:
+                return context.getString(R.string.saturday_short);
+            case 7:
+                return context.getString(R.string.sunday_short);
+        }
+
+        return "";
     }
 }

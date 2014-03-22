@@ -84,11 +84,11 @@ public class Statistics {
         return pillAmounts;
     }
 
-    public static String getDayWithMostConsumptions(Context context, Date startDate, Date endDate, List<Consumption> consumptions) {
-        return getDayWithMostConsumptions(context, filterConsumptions(startDate, endDate, consumptions));
+    public static int getDayWithMostConsumptions(Date startDate, Date endDate, List<Consumption> consumptions) {
+        return getDayWithMostConsumptions(filterConsumptions(startDate, endDate, consumptions));
     }
 
-    public static String getDayWithMostConsumptions(Context context, List<Consumption> consumptions) {
+    public static int getDayWithMostConsumptions(List<Consumption> consumptions) {
         Map<Integer, Integer> days = getDaysWithAmounts(consumptions);
 
         Map.Entry<Integer, Integer> dayWithMostConsumptions = null;
@@ -99,7 +99,7 @@ public class Statistics {
 
         int day = dayWithMostConsumptions.getKey();
 
-        return getDayOfWeek(day, context);
+        return day;
     }
 
     public static int getHourWithMostConsumptions(Date startDate, Date endDate, List<Consumption> consumptions) {
@@ -118,28 +118,11 @@ public class Statistics {
         return timeWithMostConsumptions.getKey();
     }
 
-    private static String getDayOfWeek(int dayOfWeek, Context context){
-        switch(dayOfWeek){
-            case 1:
-                return context.getString(R.string.monday);
-            case 2:
-                return context.getString(R.string.tuesday);
-            case 3:
-                return context.getString(R.string.wednesday);
-            case 4:
-                return context.getString(R.string.thursday);
-            case 5:
-                return context.getString(R.string.friday);
-            case 6:
-                return context.getString(R.string.saturday);
-            case 7:
-                return context.getString(R.string.sunday);
-        }
-
-        return "";
+    public static Map<Integer, Integer> getHoursWithAmounts(List<Consumption> consumptions){
+        return getHoursWithAmounts(consumptions, -1);
     }
 
-    public static Map<Integer, Integer> getHoursWithAmounts(List<Consumption> consumptions) {
+    public static Map<Integer, Integer> getHoursWithAmounts(List<Consumption> consumptions, int dayOfWeek) {
         Map<Integer, Integer> amountPerTime = new HashMap<Integer, Integer>();
 
         for(int i = 0; i < 24; i++){
@@ -147,7 +130,11 @@ public class Statistics {
         }
 
         for (Consumption consumption : consumptions) {
-            int hour = new DateTime(consumption.getDate()).getHourOfDay();
+            DateTime dateTime = new DateTime(consumption.getDate());
+            if(dayOfWeek > 0 && dateTime.getDayOfWeek() != dayOfWeek)
+                continue;
+
+            int hour = dateTime.getHourOfDay();
             if (amountPerTime.containsKey(hour))
                 amountPerTime.put(hour, amountPerTime.get(hour) + 1);
             else
@@ -155,6 +142,16 @@ public class Statistics {
         }
 
         return amountPerTime;
+    }
+
+    public static Map<Integer, Map<Integer, Integer>> getDaysWithHourAmounts(List<Consumption> consumptions){
+        Map<Integer, Map<Integer, Integer>> days = new HashMap<Integer, Map<Integer, Integer>>();
+        for(int i = 1; i <= 7; i++){
+            Map<Integer, Integer> hours = getHoursWithAmounts(consumptions, i);
+            days.put(i, hours);
+        }
+
+        return days;
     }
 
     public static Map<Integer, Integer> getDaysWithAmounts(List<Consumption> consumptions){
