@@ -68,9 +68,9 @@ public class HourOfDayView extends View
 
     private void preInit(Context context) {
         _context = context;
-        _fillPaint.setColor(context.getResources().getColor(R.color.pill_colour1));
+        _fillPaint.setColor(context.getResources().getColor(R.color.pill_colour6));
         _fillPaint.setStyle(Paint.Style.FILL);
-        _borderPaint.setColor(Color.GRAY);
+        _borderPaint.setColor(Color.DKGRAY);
         _borderPaint.setStyle(Paint.Style.STROKE);
         _indicatorPaint.setColor(Color.WHITE);
         _indicatorPaint.setStyle(Paint.Style.FILL_AND_STROKE);
