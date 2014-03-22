@@ -1,6 +1,22 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/stats_fragment_title"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:textStyle="bold"
+        android:text="@string/stats_fragment_title"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:padding="5dp"
+        android:textAllCaps="true"/>
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1">
 <LinearLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,17 +25,6 @@
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingBottom="20dp">
-    <TextView
-        android:id="@+id/stats_fragment_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="Statistics"
-        android:textAllCaps="true"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:layout_marginBottom="10dp"/>
     <TextView
         android:id="@+id/stats_most_taken_medicine_title"
         android:layout_width="match_parent"
@@ -215,3 +220,6 @@
 
 </LinearLayout>
 </ScrollView>
+
+
+</LinearLayout>

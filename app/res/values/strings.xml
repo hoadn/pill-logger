@@ -113,5 +113,6 @@
     <string name="longest_between_consumption_title">Longest Time Between Consumptions</string>
     <string name="fewer">Fewer</string>
     <string name="more">More</string>
+    <string name="stats_fragment_title">Statistics</string>
 
 </resources>
