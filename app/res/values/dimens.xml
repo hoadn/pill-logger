@@ -21,4 +21,5 @@
 
     <dimen name="pillslist_tut_1_texttop">125dp</dimen>
     <dimen name="tutorial_font_size">18sp</dimen>
+    <dimen name="numeric_stat_font_size">40sp</dimen>
 </resources>
