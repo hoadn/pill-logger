@@ -268,7 +268,7 @@ public class Statistics {
                     firstStreakDate = dateTime;
                 }
 
-                currentStreak = Days.daysBetween(firstStreakDate.withTimeAtStartOfDay(), previousConsumptionDate.withTimeAtStartOfDay()).getDays();
+                currentStreak = Days.daysBetween(firstStreakDate.withTimeAtStartOfDay(), dateTime.withTimeAtStartOfDay()).getDays();
             }
             previousConsumptionDate = dateTime;
 
