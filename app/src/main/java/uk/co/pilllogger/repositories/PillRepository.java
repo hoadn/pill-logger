@@ -4,9 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.SparseIntArray;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.helpers.Logger;
@@ -20,8 +23,7 @@ import uk.co.pilllogger.state.Observer;
 public class PillRepository extends BaseRepository<Pill>{
     private static final String TAG = "PillRepository";
     private static PillRepository _instance;
-    private boolean _invalidateCache;
-    private List<Pill> _cache = new ArrayList<Pill>();
+    private Map<Integer, Pill> _cache = new HashMap<Integer, Pill>();
 
     private PillRepository(Context context){
         super(context);
@@ -74,6 +76,8 @@ public class PillRepository extends BaseRepository<Pill>{
 
         List<Consumption> consumptions = ConsumptionRepository.getSingleton(_context).getForPill(pill);
         pill.getConsumptions().addAll(consumptions);
+
+        _cache.put(pill.getId(), pill);
 
         return pill;
     }
@@ -135,12 +139,17 @@ public class PillRepository extends BaseRepository<Pill>{
         for (Consumption consumption : pillConsumptions) {
             ConsumptionRepository.getSingleton(_context).delete(consumption);
         }
-        notifyUpdated(pill);
+        notifyUpdated(pill, true);
     }
 
 
     @Override
     public Pill get(int id) {
+        if(_cache != null
+                && _cache.size() > 0
+                && _cache.containsKey(id))
+            return _cache.get(id);
+
         String selection = getTableName() + "." + DatabaseContract.Pills._ID + " =?";
         String[] selectionArgs = { String.valueOf(id) };
 
@@ -200,16 +209,22 @@ public class PillRepository extends BaseRepository<Pill>{
 
     @Override
     public List<Pill> getAll() {
-        if(!_invalidateCache && _cache != null && _cache.size() > 0)
-            return _cache;
+        if(_cache != null && _cache.size() > 0)
+            return new ArrayList<Pill>(_cache.values());
 
-        _cache = getList(null, null);
-        return _cache;
+        return getList(null, null);
     }
 
     private void notifyUpdated(Pill pill){
-        _invalidateCache = true;
-        ConsumptionRepository.getSingleton(_context).notifyUpdated();
+        notifyUpdated(pill, false);
+    }
+
+    private void notifyUpdated(Pill pill, boolean remove){
+        if(remove)
+            _cache.remove(pill.getId());
+        else
+            _cache.put(pill.getId(), pill);
+
         Observer.getSingleton().notifyPillsUpdated(pill);
     }
 }

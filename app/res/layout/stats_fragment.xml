@@ -179,14 +179,16 @@
         android:layout_height="wrap_content"
         android:textColor="@color/text_grey_medium"
         android:layout_margin="5dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:visibility="gone"/>
 
     <uk.co.pilllogger.views.DayOfWeekView
         android:id="@+id/stats_day_most_consumptions_view"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

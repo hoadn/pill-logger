@@ -47,19 +47,6 @@ public class DayOfWeekView extends View
         preInit(context);
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        int border = 1;
-
-
-        int boxSize = (width - (24*(border*2))) / 24;
-
-        final int desiredHSpec = MeasureSpec.makeMeasureSpec(boxSize*5, MeasureSpec.EXACTLY);
-        final int desiredWSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
-        setMeasuredDimension(desiredWSpec, desiredHSpec);
-    }
-
     private void preInit(Context context) {
         _textColour = getResources().getColor(R.color.text_grey_medium);
         _context = context;

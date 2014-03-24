@@ -158,7 +158,7 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || this.getClass() != o.getClass()) return false;
+        if (o == null || ((Object) this).getClass() != o.getClass()) return false;
 
         Pill pill = (Pill) o;
 

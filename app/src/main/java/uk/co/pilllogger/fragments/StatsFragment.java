@@ -1,5 +1,7 @@
 package uk.co.pilllogger.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.stats.PillAmount;
 import uk.co.pilllogger.stats.Statistics;
@@ -31,7 +34,7 @@ import uk.co.pilllogger.views.HourOfDayView;
 /**
  * Created by nick on 18/03/14.
  */
-public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTask.ITaskComplete, GetConsumptionsTask.ITaskComplete {
+public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTask.ITaskComplete, GetConsumptionsTask.ITaskComplete, Observer.IConsumptionAdded, Observer.IConsumptionDeleted, Observer.IPillsUpdated {
 
     TextView _medicineMostTaken1st;
     TextView _medicineMostTaken2nd;
@@ -105,7 +108,21 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
 
         new GetPillsTask(getActivity(), this).execute();
         setFont();
+
+        Observer.getSingleton().registerPillsUpdatedObserver(this);
+        Observer.getSingleton().registerConsumptionAddedObserver(this);
+        Observer.getSingleton().registerConsumptionDeletedObserver(this);
+
         return v;
+    }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+
+        Observer.getSingleton().unregisterPillsUpdatedObserver(this);
+        Observer.getSingleton().unregisterConsumptionAddedObserver(this);
+        Observer.getSingleton().unregisterConsumptionDeletedObserver(this);
     }
 
     @Override
@@ -128,18 +145,20 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
             handleMostTakenHour(consumptions);
             handleMostTakenDay(consumptions);
 
-            _averageTimeBetween.setText(Statistics.getAverageTimeBetweenConsumptions(consumptions, getActivity()));
-            _longestTimeBetween.setText(Statistics.getLongestTimeBetweenConsumptions(consumptions, getActivity()));
+            Context context = getActivity();
+            _averageTimeBetween.setText(Statistics.getInstance(context).getAverageTimeBetweenConsumptions(consumptions, context));
+            _longestTimeBetween.setText(Statistics.getInstance(context).getLongestTimeBetweenConsumptions(consumptions));
 
-            _totalConsumptions.setText(String.valueOf(Statistics.getTotalConsumptions(consumptions)));
-            _longestStreak.setText(String.valueOf(Statistics.getLongestStreak(consumptions)));
-            _currentStreak.setText(String.valueOf(Statistics.getCurrentStreak(consumptions)));
+            _totalConsumptions.setText(String.valueOf(Statistics.getInstance(context).getTotalConsumptions(consumptions)));
+            _longestStreak.setText(String.valueOf(Statistics.getInstance(context).getLongestStreak(consumptions)));
+            _currentStreak.setText(String.valueOf(Statistics.getInstance(context).getCurrentStreak(consumptions)));
         }
     }
 
     private void handleMostTakenDay(List<Consumption> consumptions){
-        Map<Integer, Map<Integer, Integer>> hours = Statistics.getDaysWithHourAmounts(consumptions);
-        int day = Statistics.getDayWithMostConsumptions(consumptions);
+        Activity activity = getActivity();
+        Map<Integer, Map<Integer, Integer>> hours = Statistics.getInstance(activity).getDaysWithHourAmounts(consumptions);
+        int day = Statistics.getInstance(activity).getDayWithMostConsumptions(consumptions);
 
         DateTime dateTime = new DateTime().withHourOfDay(day).withMinuteOfHour(0);
         DateTime nextHour = dateTime.plusHours(1);
@@ -150,8 +169,8 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
     }
 
     private void handleMostTakenHour(List<Consumption> consumptions){
-        Map<Integer, Integer> hours = Statistics.getHoursWithAmounts(consumptions);
-        int hour = Statistics.getHourWithMostConsumptions(consumptions);
+        Map<Integer, Integer> hours = Statistics.getInstance(getActivity()).getHoursWithAmounts(consumptions);
+        int hour = Statistics.getInstance(getActivity()).getHourWithMostConsumptions(consumptions);
 
         DateTime dateTime = new DateTime().withHourOfDay(hour).withMinuteOfHour(0);
         DateTime nextHour = dateTime.plusHours(1);
@@ -163,7 +182,7 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
     }
 
     private void handleMostTaken(List<Consumption> consumptions){
-        List<PillAmount> pills = Statistics.getPillsWithAmounts(consumptions);
+        List<PillAmount> pills = Statistics.getInstance(getActivity()).getPillsWithAmounts(consumptions);
 
         String countFormat = "(%d)";
 
@@ -202,5 +221,25 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
         _averageTimeBetweenTitle.setTypeface(State.getSingleton().getTypeface());
         _longestTimeBetweenTitle.setTypeface(State.getSingleton().getTypeface());
         _statsTitle.setTypeface(State.getSingleton().getTypeface());
+    }
+
+    @Override
+    public void consumptionAdded(Consumption consumption) {
+        new GetConsumptionsTask(getActivity(), this, false).execute();
+    }
+
+    @Override
+    public void consumptionDeleted(Consumption consumption) {
+        new GetConsumptionsTask(getActivity(), this, false).execute();
+    }
+
+    @Override
+    public void consumptionPillGroupDeleted(String group, int pillId) {
+        new GetConsumptionsTask(getActivity(), this, false).execute();
+    }
+
+    @Override
+    public void pillsUpdated(Pill pill) {
+        new GetConsumptionsTask(getActivity(), this, false).execute();
     }
 }

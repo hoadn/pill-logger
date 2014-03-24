@@ -44,6 +44,7 @@ import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
+import uk.co.pilllogger.stats.Statistics;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.InitTestDbTask;
@@ -80,7 +81,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         _fragment = this;
         _activity = getActivity();
 
-        Logger.v(TAG, "onCreateView Called");
         //Doing this to test - will not be needed when working fully
         //new InitTestDbTask(this.getActivity(), this).execute();
 
@@ -97,6 +97,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
             title.setTypeface(typeface);
         }
 
+
+        Logger.v(TAG, "onCreateView");
         Observer.getSingleton().registerConsumptionAddedObserver(this);
         Observer.getSingleton().registerConsumptionDeletedObserver(this);
         return v;
@@ -111,12 +113,30 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     public void onStart(){
         super.onStart();
 
+        Logger.d(TAG, "onStart");
+
         Observer.getSingleton().registerPillsUpdatedObserver(this);
     }
 
     @Override
-    public void onDestroy(){
-        super.onDestroy();
+    public void onPause(){
+        super.onPause();
+
+        Logger.d(TAG, "onPause");
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+
+        Logger.d(TAG, "onStop");
+    }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+
+        Logger.d(TAG, "onDestroyView");
 
         Observer.getSingleton().unregisterPillsUpdatedObserver(this);
         Observer.getSingleton().unregisterConsumptionAddedObserver(this);
@@ -126,7 +146,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     @Override
     public void onResume() {
         super.onResume();
-
+        Logger.d(TAG, "onResume");
         new GetPillsTask(this.getActivity(), this).execute();
     }
 
@@ -170,6 +190,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
 //            View view = _mainLayout.findViewById(R.id.main_graph);
 //            plotGraph(xPoints, dayCount, view);
         }
+
+        Statistics.getInstance(activity).refreshConsumptionCaches(consumptions);
     }
 
     private int getGraphDays(){

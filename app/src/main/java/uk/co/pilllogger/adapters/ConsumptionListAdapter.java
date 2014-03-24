@@ -104,6 +104,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
     public void onDialogIncrease(Consumption consumption, InfoDialog dialog) {
         Consumption newC = new Consumption(consumption);
         newC.setId(0);
+        newC.setQuantity(1);
         new InsertConsumptionTask(_activity, newC).execute();
         TrackerHelper.addConsumptionEvent(_activity, "DialogIncrease");
         dialog.dismiss();
