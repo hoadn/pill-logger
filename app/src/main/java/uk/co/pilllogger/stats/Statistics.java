@@ -271,6 +271,8 @@ public class Statistics implements Observer.IConsumptionAdded, Observer.IConsump
         if(_averageTimeBetweenConsumptionsCache != null)
             return _averageTimeBetweenConsumptionsCache;
 
+        if (!(consumptions.size() > 0))
+            return null;
         Collections.sort(consumptions);
         consumptions = ConsumptionRepository.getSingleton(context).groupConsumptions(consumptions); //Need grouped consumptions for this to be accurate
         Consumption lastConsumption = consumptions.get(0);

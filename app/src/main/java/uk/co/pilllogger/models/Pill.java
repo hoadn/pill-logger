@@ -144,7 +144,7 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
             Date consumptionDate = consumption.getDate();
             if (consumptionDate.compareTo(back) >= 0 && consumptionDate.compareTo(currentDate) <= 0) {
                 total += (consumption.getQuantity());
-            }
+        }
         }
 
         return total;

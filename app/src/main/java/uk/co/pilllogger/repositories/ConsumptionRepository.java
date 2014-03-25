@@ -361,7 +361,11 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
     public void notifyUpdated(Consumption consumption) {
         _consumptionsCache.put(consumption.getId(), consumption);
-        _cache.get(consumption.getPillId()).put(consumption.getId(), consumption);
+        if (_cache.size() > 0) {
+            Map map = _cache.get(consumption.getPillId());
+            if (map != null)
+              map.put(consumption.getId(), consumption);
+        }
         Observer.getSingleton().notifyConsumptionAdded(consumption);
     }
 
