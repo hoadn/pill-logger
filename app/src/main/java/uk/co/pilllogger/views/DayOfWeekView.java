@@ -27,9 +27,6 @@ public class DayOfWeekView extends View
     private int _min = 0;
     private int _max = 0;
     private Context _context;
-    int _width;
-    int _height;
-    int _border;
     int _textColour;
 
     public DayOfWeekView(Context context) {
@@ -86,14 +83,25 @@ public class DayOfWeekView extends View
     }
 
     @Override
-    public void onDraw(Canvas canvas){
-
-        _width = getWidth();
-        _height = getHeight();
-        _border = 0;
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int width = MeasureSpec.getSize(widthMeasureSpec);
 
         float boxes = 24 * 7;
-        float boxSize = _width / boxes;
+        float boxSize = width / boxes;
+
+        final int desiredHSpec = MeasureSpec.makeMeasureSpec((int)boxSize*25, MeasureSpec.EXACTLY);
+        final int desiredWSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
+        setMeasuredDimension(desiredWSpec, desiredHSpec);
+    }
+
+    @Override
+    public void onDraw(Canvas canvas){
+
+        int width = getWidth();
+        int border = 0;
+
+        float boxes = 24 * 7;
+        float boxSize = width / boxes;
 
         int top = 0;
         float bottom = top + (boxSize * 6);
@@ -105,7 +113,7 @@ public class DayOfWeekView extends View
             Map<Integer, Integer> dayValues = _data.get(i);
             float dayLeft = ((i-1)*24* boxSize);
             for (int j = 0; j < 24; j++) {
-                float left = dayLeft + (j * boxSize + (j * (_border * 2)));
+                float left = dayLeft + (j * boxSize + (j * (border * 2)));
                 float right = left + boxSize;
 
                 int value = 0;
@@ -118,10 +126,9 @@ public class DayOfWeekView extends View
                 _fillPaint.setAlpha((int) opacity);
 
                 canvas.drawRect(left, top, right, bottom, _fillPaint);
-                //canvas.drawRect(left, top, right, bottom, _borderPaint);
             }
 
-            float dayRight = dayLeft + _width / 7;
+            float dayRight = dayLeft + width / 7;
             float dayLineTop = top + (boxSize * 7);
             canvas.drawLine(dayLeft, dayLineTop, dayRight, dayLineTop, _indicatorPaint);
             canvas.drawLine(dayLeft, dayLineTop, dayLeft, dayLineTop - boxSize, _indicatorPaint);
