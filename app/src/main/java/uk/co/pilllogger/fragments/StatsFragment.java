@@ -128,14 +128,6 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
     @Override
     public void pillsReceived(List<Pill> pills) {
         new GetConsumptionsTask(getActivity(), this, false).execute();
-
-        if (pills.size() == 1) {
-            _pill2.setVisibility(View.GONE);
-            _pill3.setVisibility(View.GONE);
-        }
-        else if (pills.size() == 2) {
-            _pill3.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -186,6 +178,9 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
 
         String countFormat = "(%d)";
 
+        _pill2.setVisibility(View.GONE);
+        _pill3.setVisibility(View.GONE);
+
         if(pills.size() > 0){
             PillAmount pa = pills.get(0);
             _medicineMostTakenIndicator1st.setColour(pa.getPill().getColour(), true);
@@ -197,12 +192,14 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
             _medicineMostTakenIndicator2nd.setColour(pa.getPill().getColour(), true);
             _medicineMostTaken2nd.setText(pa.getPill().getName());
             _medicineMostTakenCount2nd.setText(String.format(countFormat, pa.getAmount()));
+            _pill2.setVisibility(View.VISIBLE);
         }
         if(pills.size() > 2){
             PillAmount pa = pills.get(2);
             _medicineMostTakenIndicator3rd.setColour(pa.getPill().getColour(), true);
             _medicineMostTaken3rd.setText(pa.getPill().getName());
             _medicineMostTakenCount3rd.setText(String.format(countFormat, pa.getAmount()));
+            _pill3.setVisibility(View.VISIBLE);
         }
 
         GraphHelper.plotPieChart(pills, _medicineMostTakenGraph);
