@@ -33,10 +33,6 @@
         <activity android:name=".activities.AddConsumptionActivity" />
         <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.WebViewActivity" />
-        <activity android:name="uk.co.pilllogger.activities.StatsActivity"
-            android:label="@string/title_activity_stats"
-            >
-        </activity>
         <receiver
             android:name="uk.co.pilllogger.receivers.ReminderReceiver"
             android:exported="false" >

@@ -314,9 +314,6 @@ public class MainActivity extends PillLoggerActivityBase implements
             case R.id.action_settings:
                 startSettingsActivity();
                 return true;
-            case R.id.action_stats:
-                startStatsActivity();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -324,11 +321,6 @@ public class MainActivity extends PillLoggerActivityBase implements
 
     private void startSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
-    }
-
-    private void startStatsActivity() {
-        Intent intent = new Intent(this, StatsActivity.class);
         startActivity(intent);
     }
 
