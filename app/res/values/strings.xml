@@ -68,7 +68,7 @@
 
     <string name="consumptionlist_tut_1">This page shows all of your consumptions so far</string>
     <string name="consumptionlist_tut_2">Tap here to log when you take medicine</string>
-    <string name="consumptionlist_tut_3">Favourite pills will be shown in this menu</string>
+    <string name="consumptionlist_tut_3">Favourite medicine will be shown in this menu</string>
     <string name="pillslist_tut_0">This page shows your saved medication</string>
     <string name="pillslist_tut_1">Use this box to add new medicine</string>
     <string name="pillslist_tut_2">Your medicine will appear here. Long press it for more options</string>
