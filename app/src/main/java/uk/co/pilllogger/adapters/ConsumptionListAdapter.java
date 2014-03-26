@@ -189,8 +189,6 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
 
                 int dayCount = getGraphDays();
 
-
-
                 View view = v.findViewById(R.id.main_graph);
                 setUpSlidingPane(v);
                 setUpGraphPillsList(v);
@@ -221,7 +219,14 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
 
                     if(consumption.getPill() != null){
                         holder.name.setText(consumption.getPill().getName());
-                        holder.size.setText(NumberHelper.getNiceFloatString(consumption.getPill().getSize()) + consumption.getPill().getUnits());
+
+                        if(consumption.getPill().getSize() == 0) {
+                            holder.size.setVisibility(View.INVISIBLE);
+                        }
+                        else {
+                            holder.size.setText(NumberHelper.getNiceFloatString(consumption.getPill().getSize()) + consumption.getPill().getUnits());
+                            holder.size.setVisibility(View.VISIBLE);
+                        }
                         holder.colour.setColour(consumption.getPill().getColour());
                     }
                     holder.date.setText(DateHelper.getRelativeDateTime(_fragment.getActivity(), consumption.getDate()));
