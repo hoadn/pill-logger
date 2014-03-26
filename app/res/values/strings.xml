@@ -113,10 +113,9 @@
     <string name="longest_between_consumption_title">Longest Time Between Consumptions</string>
     <string name="fewer">Fewer</string>
     <string name="more">More</string>
-    <string name="stats_fragment_title">Statistics</string>
+    <string name="stats_fragment_title">Your Statistics</string>
     <string name="days_text">days</string>
     <string name="current_streak_title">Current Streak</string>
     <string name="longest_streak_title">Longest Streak</string>
     <string name="total_taken_title">Total</string>
-
 </resources>
