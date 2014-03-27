@@ -56,6 +56,7 @@ public class StackBarGraph extends View {
     private Bitmap mFullImage;
     private boolean mShouldUpdate = false;
     private int rightPadding = 50;
+    private boolean _noData;
 
     public boolean getShouldDrawGrid() {
         return mShouldDrawGridHorizontal;
@@ -94,13 +95,34 @@ public class StackBarGraph extends View {
         return this.mBars;
     }
 
+    public void setNoData(boolean noData) {
+        _noData = noData;
+    }
+
     public void onDraw(Canvas ca) {
+
+
     	
         if (mFullImage == null || mShouldUpdate) {
             float density = mContext.getResources().getDisplayMetrics().density;
             mFullImage = Bitmap.createBitmap(getWidth(), getHeight(), Config.ARGB_8888);
             Canvas canvas = new Canvas(mFullImage);
             canvas.drawColor(Color.TRANSPARENT);
+            if (_noData) {
+                Paint textPaint = new Paint();
+                textPaint.setTextSize(16 * density);
+                textPaint.setColor(Color.WHITE);
+                textPaint.setAntiAlias(true);
+                String noConsumptions = "No Consumptions in the Past 7 Days";
+                float textWidth = textPaint.measureText(noConsumptions);
+                canvas.drawText(
+                        noConsumptions,
+                        ((getWidth()/2) - (textWidth/2)),
+                        getHeight()/2,
+                        textPaint);
+                ca.drawBitmap(mFullImage, 0, 0, null);
+                return;
+            }
             NinePatchDrawable popup = (NinePatchDrawable)this.getResources().getDrawable(R.drawable.popup_black);
 
             float maxValue = 0;
