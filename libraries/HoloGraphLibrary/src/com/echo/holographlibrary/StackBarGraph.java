@@ -120,7 +120,7 @@ public class StackBarGraph extends View {
                 canvas.drawText(
                         noConsumptions,
                         ((getWidth() - textWidth) /2),
-                        ((getHeight() + bounds.height()) /2),
+                        ((getHeight() - (textPaint.descent() + textPaint.ascent())) /2),
                         textPaint);
                 ca.drawBitmap(mFullImage, 0, 0, null);
                 return;
