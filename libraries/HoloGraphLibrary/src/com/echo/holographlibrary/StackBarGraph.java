@@ -113,12 +113,14 @@ public class StackBarGraph extends View {
                 textPaint.setTextSize(16 * density);
                 textPaint.setColor(Color.WHITE);
                 textPaint.setAntiAlias(true);
-                String noConsumptions = "No Consumptions in the Past 7 Days";
+                String noConsumptions = "No Consumptions in the past 7 days";
                 float textWidth = textPaint.measureText(noConsumptions);
+                Rect bounds = new Rect();
+                textPaint.getTextBounds("a", 0, 1, bounds);
                 canvas.drawText(
                         noConsumptions,
-                        ((getWidth()/2) - (textWidth/2)),
-                        getHeight()/2,
+                        ((getWidth() - textWidth) /2),
+                        ((getHeight() + bounds.height()) /2),
                         textPaint);
                 ca.drawBitmap(mFullImage, 0, 0, null);
                 return;
