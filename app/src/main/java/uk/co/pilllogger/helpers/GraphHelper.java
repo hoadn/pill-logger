@@ -193,7 +193,8 @@ public class GraphHelper {
     }
 
     public static void plotStackBarGraph(Map<Pill, SparseIntArray> data, int days, StackBarGraph view) {
-
+        if (data.size() == 0)
+            return;
         List<StackBar> bars = new ArrayList<StackBar>();
 
         for(int i = 1; i <= days; i++){
