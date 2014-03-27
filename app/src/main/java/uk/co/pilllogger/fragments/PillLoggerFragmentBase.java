@@ -1,7 +1,9 @@
 package uk.co.pilllogger.fragments;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.analytics.tracking.android.EasyTracker;
@@ -23,13 +25,14 @@ public class PillLoggerFragmentBase extends Fragment {
         this.tracker = EasyTracker.getInstance(this.getActivity());
     }
 
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
     @Override
-    public void onResume() {
-
-        super.onResume();
-
-        this.tracker.set(Fields.SCREEN_NAME, getClass().getSimpleName());
-        this.tracker.send( MapBuilder.createAppView().build() );
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            this.tracker.set(Fields.SCREEN_NAME, getClass().getSimpleName());
+            this.tracker.send(MapBuilder.createAppView().build());
+        }
     }
 
     protected void executeRunnable(Runnable runnable){
