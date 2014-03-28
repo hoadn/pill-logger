@@ -9,6 +9,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -147,7 +148,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT );
         tutorial.setLayoutParams(params);
-        
+
         wrapper.addView(tutorial);
 
         setupChrome();
@@ -322,6 +323,9 @@ public class MainActivity extends PillLoggerActivityBase implements
             case R.id.action_settings:
                 startSettingsActivity();
                 return true;
+            case R.id.action_feedback:
+                sendFeedbackIntent();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -330,6 +334,17 @@ public class MainActivity extends PillLoggerActivityBase implements
     private void startSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
+    }
+
+    private void sendFeedbackIntent(){
+        Intent send = new Intent(Intent.ACTION_SENDTO);
+        String uriText = "mailto:" + Uri.encode("support@allendev.co") +
+                "?subject=" + Uri.encode("Pill Logger Feedback") +
+                "&body=" + Uri.encode("");
+        Uri uri = Uri.parse(uriText);
+
+        send.setData(uri);
+        startActivity(Intent.createChooser(send, "Send feedback..."));
     }
 
     private void startAddConsumptionActivity(){

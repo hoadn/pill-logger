@@ -118,4 +118,5 @@
     <string name="current_streak_title">Current Streak</string>
     <string name="longest_streak_title">Longest Streak</string>
     <string name="total_taken_title">Total</string>
+    <string name="action_feedback">Send Feedback</string>
 </resources>
