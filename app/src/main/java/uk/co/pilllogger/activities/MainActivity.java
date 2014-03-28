@@ -147,7 +147,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT );
         tutorial.setLayoutParams(params);
-        wrapper= null;
+        
         wrapper.addView(tutorial);
 
         setupChrome();
