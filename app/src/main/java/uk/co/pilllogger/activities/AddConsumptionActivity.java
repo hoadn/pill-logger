@@ -46,6 +46,7 @@ import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.helpers.AlarmHelper;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.listeners.AddConsumptionPillItemClickListener;
 import uk.co.pilllogger.models.Consumption;
@@ -538,7 +539,13 @@ public class AddConsumptionActivity extends Activity implements
             if(!reminderDateSelectorHours.isChecked()){
                 reminderDate = getDateFromSpinners(_reminderDateSpinner, _reminderTimeSpinner, null);
             } else {
-                int hours = Integer.parseInt(_reminderHours.getText().toString());
+                int hours = 0;
+                try {
+                    hours = Integer.parseInt(_reminderHours.getText().toString());
+                }
+                catch(NumberFormatException e) {
+                    Logger.e(TAG, "Parse of reminder hours error: " + e.getMessage());
+                }
                 reminderDate = DateTime.now().plusHours(hours).toDate();
             }
         }
