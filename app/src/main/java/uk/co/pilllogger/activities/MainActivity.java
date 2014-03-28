@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -72,6 +74,12 @@ public class MainActivity extends PillLoggerActivityBase implements
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        boolean isDebuggable =  ( 0 != ( getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
+
+        if(!isDebuggable)
+            Crashlytics.start(this);
+
         ViewGroup wrapper = setContentViewWithWrapper(R.layout.activity_main);
         this.setTitle("Consumption");
         _colourBackground = findViewById(R.id.colour_background);
@@ -139,7 +147,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT );
         tutorial.setLayoutParams(params);
-
+        wrapper= null;
         wrapper.addView(tutorial);
 
         setupChrome();
