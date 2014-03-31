@@ -79,7 +79,10 @@ public class DateHelper {
                 long leftOverMinutes = minutes % 60;
                 String hourPlural = (hours == 1) ? "hour" : "hours";
                 minutePlural = (leftOverMinutes == 1) ? "minute" : "minutes";
-                dateString = String.valueOf(hours) + " " + hourPlural + " " + leftOverMinutes + " " + minutePlural + " ago";
+                dateString = String.valueOf(hours) + " " + hourPlural + " ";
+                if(minutes > 0)
+                    dateString += leftOverMinutes + " " + minutePlural;
+                dateString += " ago";
             }
         }
         else if(date.plusDays(2).isAfterNow()){
