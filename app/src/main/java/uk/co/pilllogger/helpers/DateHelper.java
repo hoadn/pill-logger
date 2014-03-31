@@ -70,6 +70,10 @@ public class DateHelper {
             long minutes = timeMs / 1000 / 60;
             String minutePlural = (minutes == 1) ? "minute" : "minutes";
             dateString = String.valueOf(minutes) + " " + minutePlural + " ago";
+
+            if(minutes == 0)
+                dateString = context.getString(R.string.just_now);
+
             if (minutes > 60) {
                 long hours = minutes / 60;
                 long leftOverMinutes = minutes % 60;
