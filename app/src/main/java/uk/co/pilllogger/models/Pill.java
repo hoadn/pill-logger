@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.state.Observer;
 
 /**
@@ -103,7 +104,7 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
     }
 
     public String getUnits() {
-        return _units;
+        return _size > 0 ? _units : "";
     }
 
     public void setUnits(String _units) {
@@ -144,10 +145,16 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
             Date consumptionDate = consumption.getDate();
             if (consumptionDate.compareTo(back) >= 0 && consumptionDate.compareTo(currentDate) <= 0) {
                 total += (consumption.getQuantity());
-        }
+            }
         }
 
         return total;
+    }
+
+    public String getFormattedSize(){
+        if(_size <= 0)
+            return "";
+        return NumberHelper.getNiceFloatString(_size);
     }
 
     @Override

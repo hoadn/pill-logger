@@ -15,6 +15,7 @@ import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.helpers.DateHelper;
+import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
@@ -31,7 +32,7 @@ public abstract class InfoDialog extends DialogFragment {
     List<Consumption> _consumptions;
 
     public InfoDialog(Pill pill) {
-        _title = pill.getName() + " " + pill.getSize() + pill.getUnits();
+        _title = pill.getName() + " " + pill.getFormattedSize() + pill.getUnits();
         _pill = pill;
     }
 
@@ -72,10 +73,10 @@ public abstract class InfoDialog extends DialogFragment {
         if (lastConsumption != null)
             lastTaken.setText(lastTaken.getText() + " " + DateHelper.formatDateAndTime(activity, _pill.getLatestConsumption().getDate()));
         _consumptions = _pill.getConsumptions();
-        float dosage24 = _pill.getTotalSize(24);
+        String dosage24 = NumberHelper.getNiceFloatString(_pill.getTotalSize(24));
         int quantity24 = _pill.getTotalQuantity(24);
 
-        dosage.setText(dosage.getText() + " " + dosage24 + _pill.getUnits() + " (" + quantity24 + " x " + _pill.getSize() + _pill.getUnits() + ")");
+        dosage.setText(dosage.getText() + " " + dosage24 + _pill.getUnits() + " (" + quantity24 + " x " + _pill.getFormattedSize() + _pill.getUnits() + ")");
 
         setupMenu(view);
 
