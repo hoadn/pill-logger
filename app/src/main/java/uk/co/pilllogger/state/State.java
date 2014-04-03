@@ -17,7 +17,7 @@ public class State {
 
     private static State _instance;
     private Map<Pill, Integer> _openPills = new HashMap<Pill, Integer>();
-    private List<Integer> _graphExcludePills;
+    private List<Integer> _graphExcludePills = new ArrayList<Integer>;
     private Typeface _typeface;
     private Typeface _scriptTypeface;
     private List<Pill> _consumptionPills = new ArrayList<Pill>();
