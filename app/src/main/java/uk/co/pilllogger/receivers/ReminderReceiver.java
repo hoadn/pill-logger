@@ -35,6 +35,7 @@ public class ReminderReceiver extends BroadcastReceiver implements GetConsumptio
 
     @Override
     public void consumptionsReceived(List<Consumption> consumptions) {
-        NotificationHelper.Notification(_context, true, "", true, true, consumptions, _group);
+        if(consumptions != null && consumptions.size() > 0)
+            NotificationHelper.Notification(_context, true, "", true, true, consumptions, _group);
     }
 }
