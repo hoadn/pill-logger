@@ -209,6 +209,15 @@ public class GraphHelper {
 
             Collections.sort(pills, new Comparator<Pill>() {
                 public int compare(Pill pill1, Pill pill2) {
+                    if(pill1 == null && pill2 == null)
+                        return 0;
+
+                    if(pill1 == null && pill2 != null)
+                        return 1;
+
+                    if(pill1 != null && pill2 == null)
+                        return -1;
+
                     if(pill1.getSortOrder() < pill2.getSortOrder())
                         return -1;
 
