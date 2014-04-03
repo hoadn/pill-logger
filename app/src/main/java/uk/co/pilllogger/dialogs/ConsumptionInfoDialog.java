@@ -18,6 +18,11 @@ public class ConsumptionInfoDialog extends InfoDialog {
     private Consumption _consumption;
     private ConsumptionInfoDialogListener _listener;
 
+
+    public ConsumptionInfoDialog(){
+        super();
+    }
+
     public ConsumptionInfoDialog(Context context, Consumption consumption, ConsumptionInfoDialogListener listener) {
         super(consumption.getPill());
         _context = context;
@@ -43,6 +48,11 @@ public class ConsumptionInfoDialog extends InfoDialog {
         increase.setTypeface(typeface);
         decrease.setTypeface(typeface);
         delete.setTypeface(typeface);
+
+        if(_consumption == null) {
+            dismiss();
+            return;
+        }
 
         takeAgain.setText(String.format("%s %d %s %s", _context.getString(R.string.consumption_info_dialog_take_again_prefix), _consumption.getQuantity(), _consumption.getPill().getName(), _context.getString(R.string.consumption_info_dialog_take_again_suffix)));
 

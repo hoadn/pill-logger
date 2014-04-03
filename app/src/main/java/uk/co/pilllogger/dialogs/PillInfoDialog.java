@@ -14,6 +14,10 @@ import uk.co.pilllogger.state.State;
 public class PillInfoDialog extends InfoDialog {
     private PillInfoDialogListener _listener;
 
+    public PillInfoDialog(){
+        super();
+    }
+
     public PillInfoDialog(Pill pill, PillInfoDialogListener listener) {
         super(pill);
         _listener = listener;
@@ -33,6 +37,11 @@ public class PillInfoDialog extends InfoDialog {
         Typeface typeface = State.getSingleton().getTypeface();
         addConsumption.setTypeface(typeface);
         delete.setTypeface(typeface);
+
+        if(_pill == null) {
+            dismiss();
+            return;
+        }
 
         addConsumption.setOnClickListener(new View.OnClickListener() {
             @Override

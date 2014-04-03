@@ -31,6 +31,9 @@ public abstract class InfoDialog extends DialogFragment {
     Pill _pill;
     List<Consumption> _consumptions;
 
+    public InfoDialog(){
+    }
+
     public InfoDialog(Pill pill) {
         _title = pill.getName() + " " + pill.getFormattedSize() + pill.getUnits();
         _pill = pill;
@@ -41,7 +44,6 @@ public abstract class InfoDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
 
         Activity activity = getActivity();
         if(activity == null)
@@ -67,17 +69,18 @@ public abstract class InfoDialog extends DialogFragment {
 
         title.setText(_title);
 
-        colour.setColour(_pill.getColour());
+        if(_pill != null) {
+            colour.setColour(_pill.getColour());
 
-        Consumption lastConsumption = _pill.getLatestConsumption();
-        if (lastConsumption != null)
-            lastTaken.setText(lastTaken.getText() + " " + DateHelper.formatDateAndTime(activity, _pill.getLatestConsumption().getDate()));
-        _consumptions = _pill.getConsumptions();
-        String dosage24 = NumberHelper.getNiceFloatString(_pill.getTotalSize(24));
-        int quantity24 = _pill.getTotalQuantity(24);
+            Consumption lastConsumption = _pill.getLatestConsumption();
+            if (lastConsumption != null)
+                lastTaken.setText(lastTaken.getText() + " " + DateHelper.formatDateAndTime(activity, _pill.getLatestConsumption().getDate()));
+            _consumptions = _pill.getConsumptions();
+            String dosage24 = NumberHelper.getNiceFloatString(_pill.getTotalSize(24));
+            int quantity24 = _pill.getTotalQuantity(24);
 
-        dosage.setText(dosage.getText() + " " + dosage24 + _pill.getUnits() + " (" + quantity24 + " x " + _pill.getFormattedSize() + _pill.getUnits() + ")");
-
+            dosage.setText(dosage.getText() + " " + dosage24 + _pill.getUnits() + " (" + quantity24 + " x " + _pill.getFormattedSize() + _pill.getUnits() + ")");
+        }
         setupMenu(view);
 
         builder.setView(view);
