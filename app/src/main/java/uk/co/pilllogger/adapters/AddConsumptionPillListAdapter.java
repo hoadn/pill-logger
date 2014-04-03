@@ -235,16 +235,19 @@ public class
         @Override
         public void onClick(View view) {
             Pill pill = _pills.get(_position);
+            Integer value = State.getSingleton().getOpenPills().get(pill);
+            if(value == null) value = 0;
+
             if (_add) {
                 int amount = Integer.parseInt(_amount.getText().toString()) + 1;
-                State.getSingleton().getOpenPills().put(pill, State.getSingleton().getOpenPills().get(pill) + 1);
+                State.getSingleton().getOpenPills().put(pill, value + 1);
                 _amount.setText(String.valueOf(amount));
                 _adapter.addConsumedPill(pill);
             }
             else {
                 int amount = Integer.parseInt(_amount.getText().toString()) - 1;
-                if (amount >= 0) {
-                    State.getSingleton().getOpenPills().put(pill, State.getSingleton().getOpenPills().get(pill) - 1);
+                if (amount >= 0 && value > 0) {
+                    State.getSingleton().getOpenPills().put(pill, value - 1);
                     _amount.setText(String.valueOf(amount));
                     _adapter.removeConsumedPill(pill);
                 }
