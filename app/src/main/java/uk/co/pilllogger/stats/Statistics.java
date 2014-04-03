@@ -89,6 +89,9 @@ public class Statistics implements Observer.IConsumptionAdded, Observer.IConsump
         Map<Pill, Integer> amountOfPill = new HashMap<Pill, Integer>();
         for (Consumption consumption : consumptions) {
             Pill pill = consumption.getPill();
+            if(pill == null)
+                continue;
+
             if (amountOfPill.containsKey(pill))
                 amountOfPill.put(pill, (amountOfPill.get(pill)) + consumption.getQuantity());
             else
