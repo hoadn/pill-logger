@@ -13,6 +13,17 @@
             android:key="@string/pref_key_reminder_vibrate"/>
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/pref_title_theme" android:key="@string/pref_key_theme">
+        <ListPreference
+            android:title="@string/chooseTheme"
+            android:dialogTitle="@string/chooseTheme"
+            android:entries="@array/themeNames"
+            android:entryValues="@array/themes"
+            android:defaultValue="@string/rainbowTheme"
+            android:key="@string/pref_key_theme_list"
+            android:persistent="true"/>
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="About" android:key="about">
         <Preference
             android:title="@string/pref_title_licenses"

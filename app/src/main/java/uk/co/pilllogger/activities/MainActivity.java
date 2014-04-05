@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -12,6 +13,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -46,6 +48,8 @@ import uk.co.pilllogger.tasks.GetFavouritePillsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.GetTutorialSeenTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
+import uk.co.pilllogger.themes.ProfessionalTheme;
+import uk.co.pilllogger.themes.RainbowTheme;
 import uk.co.pilllogger.tutorial.ConsumptionListTutorialPage;
 import uk.co.pilllogger.tutorial.PillsListTutorialPage;
 import uk.co.pilllogger.tutorial.TutorialPage;
@@ -60,7 +64,8 @@ public class MainActivity extends PillLoggerActivityBase implements
         GetPillsTask.ITaskComplete,
         Observer.IPillsUpdated,
         GetFavouritePillsTask.ITaskComplete,
-        GetTutorialSeenTask.ITaskComplete{
+        GetTutorialSeenTask.ITaskComplete,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = "MainActivity";
     private MyViewPager _fragmentPager;
@@ -72,6 +77,7 @@ public class MainActivity extends PillLoggerActivityBase implements
     private Menu _menu;
     Fragment _consumptionFragment;
     private TutorialService _tutorialService;
+    private boolean _themeChanged;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +86,13 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         if(!isDebuggable)
             Crashlytics.start(this);
+
+        _themeChanged = false;
+
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String theme = defaultSharedPreferences.getString(getString(R.string.pref_key_theme_list), getString(R.string.rainbowTheme));
+
+        updateTheme(theme);
 
         setTheme(State.getSingleton().getTheme().getStyleResourceId());
 
@@ -158,6 +171,23 @@ public class MainActivity extends PillLoggerActivityBase implements
         _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_colourBackground, this));
 
         Observer.getSingleton().registerPillsUpdatedObserver(this);
+
+        defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+
+
+        if(_themeChanged){
+            finish();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -477,4 +507,28 @@ public class MainActivity extends PillLoggerActivityBase implements
             startTutorial(tag);
     }
 
+    private boolean updateTheme(String key){
+        if(key.equals(getString(R.string.pref_key_theme_list))) {
+
+            String theme = PreferenceManager.getDefaultSharedPreferences(this).getString(key, getString(R.string.rainbowTheme));
+
+            if (theme.equals(getString(R.string.rainbowTheme))) {
+                State.getSingleton().setTheme(new RainbowTheme());
+            }
+
+            if (theme.equals(getString(R.string.professionalTheme))) {
+                State.getSingleton().setTheme(new ProfessionalTheme());
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        _themeChanged = updateTheme(key);
+    }
 }
