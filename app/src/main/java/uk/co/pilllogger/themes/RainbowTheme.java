@@ -31,4 +31,9 @@ public class RainbowTheme implements ITheme {
     public int getTabMaskColourResourceId() {
         return R.color.tab_mask;
     }
+
+    @Override
+    public int getConsumptionListItemBackgroundResourceId() {
+        return R.drawable.list_selector;
+    }
 }

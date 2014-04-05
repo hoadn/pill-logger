@@ -17,6 +17,7 @@ import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.state.State;
 
 /**
  * Created by alex on 12/11/2013.
@@ -127,7 +128,7 @@ public abstract class ActionBarArrayAdapter<T> extends ArrayAdapter<T>{
             _selector.setBackgroundColor(_activity.getResources().getColor(R.color.selector_background_pressed));
         }
         else
-            _selector.setBackgroundDrawable(_activity.getResources().getDrawable(R.drawable.list_selector));
+            _selector.setBackgroundDrawable(_activity.getResources().getDrawable(State.getSingleton().getTheme().getConsumptionListItemBackgroundResourceId()));
 
         return v;
     }

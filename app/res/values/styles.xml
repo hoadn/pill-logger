@@ -49,8 +49,11 @@
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_example</item>
     </style>
 
+    <style name="ConsumptionListItem">
 
-    <style name="Consumption">
+    </style>
+
+    <style name="ConsumptionPillName">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">20dp</item>
@@ -67,7 +70,8 @@
 
     <style name="Rainbow" parent="AppTheme">
         <item name="android:textViewStyle">@style/RainbowTextView</item>
-        <item name="Consumption">@style/Consumption.Rainbow</item>
+        <item name="ConsumptionListItem">@style/ConsumptionListItem.Rainbow</item>
+        <item name="ConsumptionPillName">@style/ConsumptionPillName.Rainbow</item>
         <item name="ConsumptionDate">@style/ConsumptionDate.Rainbow</item>
         <item name="ConsumptionSize">@style/ConsumptionSize.Rainbow</item>
     </style>
@@ -76,7 +80,11 @@
         <item name="android:textColor">@color/default_text</item>
     </style>
 
-    <style name="Consumption.Rainbow">
+    <style name="ConsumptionListItem.Rainbow">
+        <item name="android:background">@drawable/list_selector</item>
+    </style>
+
+    <style name="ConsumptionPillName.Rainbow">
         <item name="android:textColor">@color/default_text</item>
     </style>
 
@@ -90,7 +98,8 @@
 
     <style name="Professional" parent="AppTheme">
         <item name="android:textViewStyle">@style/ProfessionalTextView</item>
-        <item name="Consumption">@style/Consumption.Professional</item>
+        <item name="ConsumptionListItem">@style/ConsumptionListItem.Professional</item>
+        <item name="ConsumptionPillName">@style/ConsumptionPillName.Professional</item>
         <item name="ConsumptionDate">@style/ConsumptionDate.Professional</item>
         <item name="ConsumptionSize">@style/ConsumptionSize.Professional</item>
     </style>
@@ -99,12 +108,16 @@
         <item name="android:textColor">@color/default_text_professional</item>
     </style>
 
-    <style name="Consumption.Professional">
+    <style name="ConsumptionPillName.Professional">
         <item name="android:textColor">@color/consumption_professional</item>
     </style>
 
     <style name="ConsumptionDate.Professional">
         <item name="android:textColor">@color/consumption_date_professional</item>
+    </style>
+
+    <style name="ConsumptionListItem.Professional">
+        <item name="android:background">@drawable/cogs</item>
     </style>
 
     <style name="ConsumptionSize.Professional">

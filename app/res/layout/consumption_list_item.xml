@@ -23,14 +23,12 @@
     android:clickable="false"
     android:padding="10dp"
     android:layout_marginBottom="0dp"
-    android:background="@drawable/list_selector"
+    android:background="@color/minus_red"
     android:id="@+id/selector_container">
-
-
 
         <TextView
             android:id="@+id/consumption_list_name"
-            style="?Consumption"/>
+            style="?attr/ConsumptionPillName"/>
 
 
         <uk.co.pilllogger.views.ColourIndicator

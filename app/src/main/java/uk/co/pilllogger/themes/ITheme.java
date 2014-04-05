@@ -9,4 +9,5 @@ public interface ITheme {
     int getPillListBackgroundResourceId();
     int getStatsBackgroundResourceId();
     int getTabMaskColourResourceId();
+    int getConsumptionListItemBackgroundResourceId();
 }

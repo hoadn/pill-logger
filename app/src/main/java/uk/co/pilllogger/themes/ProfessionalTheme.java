@@ -32,4 +32,9 @@ public class ProfessionalTheme implements ITheme {
     public int getTabMaskColourResourceId() {
         return R.color.tab_mask_professional;
     }
+
+    @Override
+    public int getConsumptionListItemBackgroundResourceId() {
+        return R.drawable.list_selector_professional;
+    }
 }

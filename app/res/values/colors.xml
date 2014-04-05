@@ -49,7 +49,7 @@
     <color name="tab_mask">#FFFFFF</color>
 
     <!-- Professional Style -->
-    <color name="selector_background_professional">#30000000</color>
+    <color name="selector_background_professional">#10000000</color>
     <color name="translucent_white_professional">#20FFFFFF</color>
     <color name="translucent_whiter_professional">#80FFFFFF</color>
     <color name="selector_background_pressed_professional">#20FFFFFF</color>
