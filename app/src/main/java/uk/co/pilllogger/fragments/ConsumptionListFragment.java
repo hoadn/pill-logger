@@ -215,6 +215,9 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     }
 
     public void plotGraph(Map<Pill, SparseIntArray> data, int dayCount, View view){
+
+        int lineColour = _activity.getResources().getColor(State.getSingleton().getTheme().getStackBarGraphLineColourResourceId());
+
         if(view instanceof LineGraph)
             GraphHelper.plotLineGraph(data, dayCount, (LineGraph) view);
 
@@ -225,7 +228,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
             GraphHelper.plotPieChart(data, dayCount, (PieGraph)view);
 
         if(view instanceof StackBarGraph)
-            GraphHelper.plotStackBarGraph(data, dayCount, (StackBarGraph)view);
+            GraphHelper.plotStackBarGraph(data, dayCount, (StackBarGraph)view, lineColour);
 
         view.setTag(data);
     }

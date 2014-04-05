@@ -57,6 +57,7 @@ public class StackBarGraph extends View {
     private boolean mShouldUpdate = false;
     private int rightPadding = 50;
     private boolean _noData;
+    private int _lineColour;
 
     public boolean getShouldDrawGrid() {
         return mShouldDrawGridHorizontal;
@@ -99,10 +100,11 @@ public class StackBarGraph extends View {
         _noData = noData;
     }
 
+    public void setLineColour(int lineColour){
+        _lineColour = lineColour;
+    }
+
     public void onDraw(Canvas ca) {
-
-
-    	
         if (mFullImage == null || mShouldUpdate) {
             float density = mContext.getResources().getDisplayMetrics().density;
             mFullImage = Bitmap.createBitmap(getWidth(), getHeight(), Config.ARGB_8888);
@@ -238,7 +240,7 @@ public class StackBarGraph extends View {
                 canvas.drawText(bar.getName(), x, y, this.mTextPaint);
                 count++;
             }
-            mPaint.setColor(Color.argb(50, 255, 255, 255));
+            mPaint.setColor(_lineColour);
             mPaint.setStrokeWidth(padding);
 
             mPaint.setAntiAlias(true);

@@ -36,4 +36,9 @@ public class RainbowTheme implements ITheme {
     public int getConsumptionListItemBackgroundResourceId() {
         return R.drawable.list_selector;
     }
+
+    @Override
+    public int getStackBarGraphLineColourResourceId() {
+        return R.color.stackbar_graph_line;
+    }
 }

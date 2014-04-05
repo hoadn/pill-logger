@@ -47,6 +47,7 @@
     <color name="consumption_size">@color/consumption_secondary</color>
     <color name="default_text">#FFFFFF</color>
     <color name="tab_mask">#FFFFFF</color>
+    <color name="stackbar_graph_line">#32FFFFFF</color>
 
     <!-- Professional Style -->
     <color name="selector_background_professional">#10000000</color>
@@ -65,5 +66,6 @@
     <color name="professional_background">#FFFFFFFF</color>
     <color name="default_text_professional">#000000</color>
     <color name="tab_mask_professional">#000000</color>
+    <color name="stackbar_graph_line_professional">#DDDDDD</color>
     <!-- Pill colours are in pill_colours.xml -->
 </resources>

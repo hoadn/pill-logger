@@ -37,4 +37,9 @@ public class ProfessionalTheme implements ITheme {
     public int getConsumptionListItemBackgroundResourceId() {
         return R.drawable.list_selector_professional;
     }
+
+    @Override
+    public int getStackBarGraphLineColourResourceId() {
+        return R.color.stackbar_graph_line_professional;
+    }
 }

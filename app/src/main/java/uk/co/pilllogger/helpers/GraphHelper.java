@@ -192,11 +192,11 @@ public class GraphHelper {
         }
     }
 
-    public static void plotStackBarGraph(Map<Pill, SparseIntArray> data, int days, StackBarGraph view) {
-        if (data.size() == 0)
-            view.setNoData(true);
-        else
-            view.setNoData(false);
+    public static void plotStackBarGraph(Map<Pill, SparseIntArray> data, int days, StackBarGraph view, int lineColour) {
+        view.setNoData(data.size() == 0);
+
+        view.setLineColour(lineColour);
+
         List<StackBar> bars = new ArrayList<StackBar>();
 
         for(int i = 1; i <= days; i++){

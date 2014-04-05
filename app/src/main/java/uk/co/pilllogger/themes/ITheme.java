@@ -10,4 +10,6 @@ public interface ITheme {
     int getStatsBackgroundResourceId();
     int getTabMaskColourResourceId();
     int getConsumptionListItemBackgroundResourceId();
+
+    int getStackBarGraphLineColourResourceId();
 }
