@@ -15,7 +15,6 @@
         android:textStyle="bold"
         android:text="@string/pill_fragment_title"
         android:gravity="center_horizontal"
-        android:textColor="@android:color/white"
         android:textSize="20sp"
         android:padding="5dp"
         android:textAllCaps="true"/>
