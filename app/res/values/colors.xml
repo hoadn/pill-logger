@@ -46,6 +46,7 @@
     <color name="consumption_date">@color/consumption_secondary</color>
     <color name="consumption_size">@color/consumption_secondary</color>
     <color name="default_text">#FFFFFF</color>
+    <color name="tab_mask">#FFFFFF</color>
 
     <!-- Professional Style -->
     <color name="selector_background_professional">#30000000</color>
@@ -63,5 +64,6 @@
 
     <color name="professional_background">#FFFFFFFF</color>
     <color name="default_text_professional">#000000</color>
+    <color name="tab_mask_professional">#000000</color>
     <!-- Pill colours are in pill_colours.xml -->
 </resources>

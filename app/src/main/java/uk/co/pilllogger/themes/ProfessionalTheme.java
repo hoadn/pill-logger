@@ -26,4 +26,10 @@ public class ProfessionalTheme implements ITheme {
     public int getStatsBackgroundResourceId() {
         return R.color.professional_background;
     }
+
+
+    @Override
+    public int getTabMaskColourResourceId() {
+        return R.color.tab_mask_professional;
+    }
 }

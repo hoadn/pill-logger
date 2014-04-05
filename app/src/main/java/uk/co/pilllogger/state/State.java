@@ -25,7 +25,7 @@ public class State {
     private Typeface _scriptTypeface;
     private List<Pill> _consumptionPills = new ArrayList<Pill>();
     private boolean _appVisible = false;
-    private ITheme _theme = new ProfessionalTheme();
+    private ITheme _theme = new RainbowTheme();
 
     private State() {
     }

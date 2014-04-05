@@ -26,4 +26,9 @@ public class RainbowTheme implements ITheme {
     public int getStatsBackgroundResourceId() {
         return R.color.stats_background;
     }
+
+    @Override
+    public int getTabMaskColourResourceId() {
+        return R.color.tab_mask;
+    }
 }

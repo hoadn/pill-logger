@@ -5,13 +5,16 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.ImageView;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.SlidePagerAdapter;
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.state.State;
 
 /**
  * Created by Nick on 07/12/13.
@@ -21,15 +24,25 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
     private static String TAG = "FadeBackgroundPageTransformer";
     private final View _background;
     private final Activity _activity;
+    private final int _tabColour;
     float[] _transitionModifiers = new float[4];
     int _fadeFrom;
     int _fadeTo;
     ActionBar _actionBar;
 
-    public FadeBackgroundPageTransformer(View background, Activity activity) {
+    public FadeBackgroundPageTransformer(View background, Activity activity, int tabColour) {
         _background = background;
         _activity = activity;
+        _tabColour = tabColour;
         _actionBar = _activity.getActionBar();
+
+        initTabs();
+    }
+
+    private void initTabs(){
+        setColorOfTab(0, 1);
+        setColorOfTab(1, 0.25f);
+        setColorOfTab(2, 0.25f);
     }
 
     @Override
@@ -64,12 +77,22 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
             // transition tab bar icons
             if(_actionBar != null){
                 float tabAlpha = 1 - (Math.abs(position) * 0.75f);
-                ActionBar.Tab tab = _actionBar.getTabAt(tabPosition);
-                View tabCustomView = tab.getCustomView();
-                View tabImage = tabCustomView.findViewById(R.id.tab_icon_image);
-                tabImage.setAlpha(tabAlpha);
+
+                setColorOfTab(tabPosition, tabAlpha);
             }
         }
+    }
+
+    private void setColorOfTab(int tabPosition, float alpha){
+        ActionBar.Tab tab = _actionBar.getTabAt(tabPosition);
+        View tabCustomView = tab.getCustomView();
+        ImageView tabImage = (ImageView) tabCustomView.findViewById(R.id.tab_icon_image);
+        Drawable background = tabImage.getDrawable();
+
+        background.mutate().setColorFilter(_tabColour, PorterDuff.Mode.MULTIPLY);
+
+        if(alpha >= 0)
+            tabImage.setAlpha(alpha);
     }
 
     private float[] calculateColourTransition(int from, int to) {

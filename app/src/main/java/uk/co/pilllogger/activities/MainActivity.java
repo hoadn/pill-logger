@@ -166,7 +166,9 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         setupChrome();
 
-        _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_colourBackground, this));
+        int tabMaskColour = getResources().getColor(State.getSingleton().getTheme().getTabMaskColourResourceId());
+
+        _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_colourBackground, this, tabMaskColour));
 
         Observer.getSingleton().registerPillsUpdatedObserver(this);
 
