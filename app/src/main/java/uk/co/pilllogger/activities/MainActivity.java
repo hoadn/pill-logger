@@ -48,6 +48,7 @@ import uk.co.pilllogger.tasks.GetFavouritePillsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.GetTutorialSeenTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
+import uk.co.pilllogger.themes.ITheme;
 import uk.co.pilllogger.themes.ProfessionalTheme;
 import uk.co.pilllogger.themes.RainbowTheme;
 import uk.co.pilllogger.tutorial.ConsumptionListTutorialPage;
@@ -90,11 +91,8 @@ public class MainActivity extends PillLoggerActivityBase implements
         _themeChanged = false;
 
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String theme = defaultSharedPreferences.getString(getString(R.string.pref_key_theme_list), getString(R.string.rainbowTheme));
 
-        updateTheme(theme);
-
-        setTheme(State.getSingleton().getTheme().getStyleResourceId());
+        updateTheme(getString(R.string.pref_key_theme_list));
 
         ViewGroup wrapper = setContentViewWithWrapper(R.layout.activity_main);
         this.setTitle("Consumption");
@@ -510,15 +508,24 @@ public class MainActivity extends PillLoggerActivityBase implements
     private boolean updateTheme(String key){
         if(key.equals(getString(R.string.pref_key_theme_list))) {
 
-            String theme = PreferenceManager.getDefaultSharedPreferences(this).getString(key, getString(R.string.rainbowTheme));
+            String themeKey = PreferenceManager.getDefaultSharedPreferences(this).getString(key, getString(R.string.rainbowTheme));
+            ITheme theme = new RainbowTheme();
 
-            if (theme.equals(getString(R.string.rainbowTheme))) {
-                State.getSingleton().setTheme(new RainbowTheme());
+            if (themeKey.equals(getString(R.string.rainbowTheme))) {
+                theme = new RainbowTheme();
             }
 
-            if (theme.equals(getString(R.string.professionalTheme))) {
-                State.getSingleton().setTheme(new ProfessionalTheme());
+            if (themeKey.equals(getString(R.string.professionalTheme))) {
+                theme = new ProfessionalTheme();
             }
+
+            State.getSingleton().setTheme(theme);
+
+            _colour1 = getResources().getColor(theme.getConsumptionListBackgroundResourceId());
+            _colour2 = getResources().getColor(theme.getPillListBackgroundResourceId());
+            _colour3 = getResources().getColor(theme.getStatsBackgroundResourceId());
+
+            setTheme(State.getSingleton().getTheme().getStyleResourceId());
 
             return true;
         }
