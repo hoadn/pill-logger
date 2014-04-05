@@ -9,6 +9,9 @@ import java.util.Map;
 
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.themes.ITheme;
+import uk.co.pilllogger.themes.ProfessionalTheme;
+import uk.co.pilllogger.themes.RainbowTheme;
 
 /**
  * Created by nick on 28/10/13.
@@ -22,7 +25,7 @@ public class State {
     private Typeface _scriptTypeface;
     private List<Pill> _consumptionPills = new ArrayList<Pill>();
     private boolean _appVisible = false;
-
+    private ITheme _theme = new ProfessionalTheme();
 
     private State() {
     }
@@ -116,5 +119,13 @@ public class State {
 
     public void setAppVisible(boolean appVisible) {
         _appVisible = appVisible;
+    }
+
+    public ITheme getTheme() {
+        return _theme;
+    }
+
+    public void setTheme(ITheme theme) {
+        _theme = theme;
     }
 }

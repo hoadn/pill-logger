@@ -3,4 +3,6 @@
     <declare-styleable name="ColourIndicator">
         <attr name="android:color"/>
     </declare-styleable>
+
+    <attr name="Consumption" format="reference" />
 </resources>

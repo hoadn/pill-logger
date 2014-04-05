@@ -29,11 +29,8 @@
 
 
         <TextView
-            android:textSize="20dp"
             android:id="@+id/consumption_list_name"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            style="?Consumption"/>
 
 
         <uk.co.pilllogger.views.ColourIndicator

@@ -29,6 +29,8 @@
     <color name="saturday">#7DC71D</color>
     <color name="sunday">#FFBAD2</color>
 
+    <!-- Rainbow Style -->
+
     <color name="selector_background">#30000000</color>
     <color name="translucent_white">#20FFFFFF</color>
     <color name="translucent_whiter">#80FFFFFF</color>
@@ -37,6 +39,20 @@
     <color name="pill_favourite">#80FFFFFF</color>
     <color name="tutorial_white">#FFFFFF</color>
     <color name="divider_white">#40FFFFFF</color>
+    <color name="consumption_background">#7800E9FF</color>
+    <color name="pill_background">#78CC339A</color>
+    <color name="stats_background">#78515151</color>
 
+    <!-- Professional Style -->
+    <color name="selector_background_professional">#30000000</color>
+    <color name="translucent_white_professional">#20FFFFFF</color>
+    <color name="translucent_whiter_professional">#80FFFFFF</color>
+    <color name="selector_background_pressed_professional">#20FFFFFF</color>
+    <color name="popup_menu_professional">#B0000000</color>
+    <color name="pill_favourite_professional">#80FFFFFF</color>
+    <color name="tutorial_white_professional">#FFFFFF</color>
+    <color name="divider_white_professional">#40FFFFFF</color>
+
+    <color name="professional_background">#FFFFFFFF</color>
     <!-- Pill colours are in pill_colours.xml -->
 </resources>

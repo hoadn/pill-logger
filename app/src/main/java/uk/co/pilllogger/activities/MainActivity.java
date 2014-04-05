@@ -81,6 +81,8 @@ public class MainActivity extends PillLoggerActivityBase implements
         if(!isDebuggable)
             Crashlytics.start(this);
 
+        setTheme(State.getSingleton().getTheme().getStyleResourceId());
+
         ViewGroup wrapper = setContentViewWithWrapper(R.layout.activity_main);
         this.setTitle("Consumption");
         _colourBackground = findViewById(R.id.colour_background);
