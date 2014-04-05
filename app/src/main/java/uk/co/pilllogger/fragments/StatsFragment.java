@@ -69,7 +69,11 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.stats_fragment, container, false);
-        v.setTag(R.id.tag_page_colour, Color.argb(120, 81, 81, 81));
+        if(getActivity() == null || v == null){
+            return null;
+        }
+        int color = getActivity().getResources().getColor(State.getSingleton().getTheme().getStatsBackgroundResourceId());
+        v.setTag(R.id.tag_page_colour, color);
         v.setTag(R.id.tag_tab_icon_position, 2);
 
         _medicineMostTakenIndicator1st = (ColourIndicator) v.findViewById(R.id.stats_most_taken_indicator_1st);

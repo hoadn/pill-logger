@@ -75,8 +75,13 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         // Inflate the layout for this fragment
         this.setRetainInstance(true);
         View v = inflater.inflate(R.layout.main_fragment, container, false);
+        if(getActivity() == null || v == null){
+            return null;
+        }
+        int color = getActivity().getResources().getColor(State.getSingleton().getTheme().getConsumptionListBackgroundResourceId());
+        v.setTag(R.id.tag_page_colour, color);
         v.setTag(R.id.tag_tab_icon_position, 0);
-        v.setTag(R.id.tag_page_colour ,Color.argb(120, 0, 233, 255));
+
         _mainLayout = v;
         _fragment = this;
         _activity = getActivity();
