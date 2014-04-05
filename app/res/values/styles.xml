@@ -56,29 +56,58 @@
         <item name="android:textSize">20dp</item>
     </style>
 
+    <style name="ConsumptionDate">
+        <item name="android:textSize">14dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginTop">-5dp</item>
+    </style>
+
+    <style name="ConsumptionSize"/>
+
     <style name="Rainbow" parent="AppTheme">
         <item name="android:textViewStyle">@style/RainbowTextView</item>
         <item name="Consumption">@style/Consumption.Rainbow</item>
+        <item name="ConsumptionDate">@style/ConsumptionDate.Rainbow</item>
+        <item name="ConsumptionSize">@style/ConsumptionSize.Rainbow</item>
     </style>
 
     <style name="RainbowTextView">
-        <item name="android:textColor">#FF0000</item>
+        <item name="android:textColor">@color/default_text</item>
     </style>
 
     <style name="Consumption.Rainbow">
-        <item name="android:textColor">#FF00FF</item>
+        <item name="android:textColor">@color/default_text</item>
+    </style>
+
+    <style name="ConsumptionDate.Rainbow">
+        <item name="android:textColor">@color/consumption_date</item>
+    </style>
+
+    <style name="ConsumptionSize.Rainbow">
+        <item name="android:textColor">@color/consumption_size</item>
     </style>
 
     <style name="Professional" parent="AppTheme">
         <item name="android:textViewStyle">@style/ProfessionalTextView</item>
         <item name="Consumption">@style/Consumption.Professional</item>
+        <item name="ConsumptionDate">@style/ConsumptionDate.Professional</item>
+        <item name="ConsumptionSize">@style/ConsumptionSize.Professional</item>
     </style>
 
     <style name="ProfessionalTextView">
-        <item name="android:textColor">#000000</item>
+        <item name="android:textColor">@color/default_text_professional</item>
     </style>
 
     <style name="Consumption.Professional">
-        <item name="android:textColor">#333333</item>
+        <item name="android:textColor">@color/consumption_professional</item>
+    </style>
+
+    <style name="ConsumptionDate.Professional">
+        <item name="android:textColor">@color/consumption_date_professional</item>
+    </style>
+
+    <style name="ConsumptionSize.Professional">
+        <item name="android:textColor">@color/consumption_size_professional</item>
     </style>
 </resources>
