@@ -167,4 +167,22 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
         }
         dialog.dismiss();
     }
+
+    @Override
+    public void setDialogFavourite(Pill pill, InfoDialog dialog) {
+        if (pill != null) {
+            if (pill.isFavourite())
+                pill.setFavourite(false);
+            else
+                pill.setFavourite(true);
+            new UpdatePillTask(_activity, pill).execute();
+        }
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onDialogChangePillColour(Pill pill, InfoDialog dialog) {
+        new UpdatePillTask(_activity, pill).execute();
+        dialog.dismiss();
+    }
 }
