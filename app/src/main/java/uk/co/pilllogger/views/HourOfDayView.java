@@ -36,6 +36,7 @@ public class HourOfDayView extends View
     int _border;
     int _boxSize;
     private boolean _drawLegend = true;
+    private int _textColour;
 
     public HourOfDayView(Context context) {
         super(context);
@@ -67,16 +68,17 @@ public class HourOfDayView extends View
 
     private void preInit(Context context) {
         _context = context;
-        _fillPaint.setColor(context.getResources().getColor(R.color.pill_colour6));
+        _textColour = context.getResources().getColor(State.getSingleton().getTheme().getDefaultTextColourResourceId());
+        _fillPaint.setColor(context.getResources().getColor(State.getSingleton().getTheme().getDefaultChartColourResourceId()));
         _fillPaint.setStyle(Paint.Style.FILL);
         _borderPaint.setColor(Color.DKGRAY);
         _borderPaint.setStyle(Paint.Style.STROKE);
-        _indicatorPaint.setColor(Color.WHITE);
+        _indicatorPaint.setColor(_textColour);
         _indicatorPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         _indicatorPaint.setStrokeWidth(2);
         _indicatorPaint.setAntiAlias(true);
         _textPaint.setTextSize(13 * getResources().getDisplayMetrics().density);
-        _textPaint.setColor(Color.WHITE);
+        _textPaint.setColor(_textColour);
         _textPaint.setTypeface(State.getSingleton().getTypeface());
         _textPaint.setAntiAlias(true);
     }
