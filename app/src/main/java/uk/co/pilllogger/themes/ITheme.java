@@ -12,4 +12,10 @@ public interface ITheme {
     int getConsumptionListItemBackgroundResourceId();
 
     int getStackBarGraphLineColourResourceId();
+
+    int getDefaultTextColourResourceId();
+
+    int getSecondaryTextColourResourceId();
+
+    int getDefaultChartColourResourceId();
 }

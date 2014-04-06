@@ -41,4 +41,19 @@ public class RainbowTheme implements ITheme {
     public int getStackBarGraphLineColourResourceId() {
         return R.color.stackbar_graph_line;
     }
+
+    @Override
+    public int getDefaultTextColourResourceId() {
+        return R.color.default_text;
+    }
+
+    @Override
+    public int getSecondaryTextColourResourceId() {
+        return R.color.secondary_text;
+    }
+
+    @Override
+    public int getDefaultChartColourResourceId() {
+        return R.color.pill_colour6;
+    }
 }

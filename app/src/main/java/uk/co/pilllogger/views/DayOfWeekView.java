@@ -28,6 +28,7 @@ public class DayOfWeekView extends View
     private int _max = 0;
     private Context _context;
     int _textColour;
+    private int _highlightTextColour;
 
     public DayOfWeekView(Context context) {
         super(context);
@@ -45,9 +46,10 @@ public class DayOfWeekView extends View
     }
 
     private void preInit(Context context) {
-        _textColour = getResources().getColor(R.color.text_grey_medium);
+        _highlightTextColour = getResources().getColor(State.getSingleton().getTheme().getDefaultTextColourResourceId());
+        _textColour = getResources().getColor(State.getSingleton().getTheme().getSecondaryTextColourResourceId());
         _context = context;
-        _fillPaint.setColor(context.getResources().getColor(R.color.pill_colour6));
+        _fillPaint.setColor(context.getResources().getColor(State.getSingleton().getTheme().getDefaultChartColourResourceId()));
         _fillPaint.setStyle(Paint.Style.FILL);
         _borderPaint.setColor(Color.DKGRAY);
         _borderPaint.setStyle(Paint.Style.STROKE);
@@ -138,7 +140,7 @@ public class DayOfWeekView extends View
             float measureText = _textPaint.measureText(dayOfWeek);
 
             _textPaint.setFakeBoldText(i == _day);
-            _textPaint.setColor(i == _day ? Color.WHITE : _textColour);
+            _textPaint.setColor(i == _day ? _highlightTextColour : _textColour);
 
             canvas.drawText(dayOfWeek, dayLeft + ((dayRight - dayLeft) - measureText) / 2f, dayLineTop + (boxSize * 8), _textPaint);
 

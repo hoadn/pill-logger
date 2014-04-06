@@ -42,4 +42,19 @@ public class ProfessionalTheme implements ITheme {
     public int getStackBarGraphLineColourResourceId() {
         return R.color.stackbar_graph_line_professional;
     }
+
+    @Override
+    public int getDefaultTextColourResourceId() {
+        return R.color.default_text_professional;
+    }
+
+    @Override
+    public int getSecondaryTextColourResourceId() {
+        return R.color.secondary_text_professional;
+    }
+
+    @Override
+    public int getDefaultChartColourResourceId() {
+        return R.color.pill_colour1;
+    }
 }
