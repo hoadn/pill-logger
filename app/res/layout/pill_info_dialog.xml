@@ -16,9 +16,32 @@
         android:paddingTop="8dp"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
-        android:paddingBottom="8dp"
+        android:paddingBottom="4dp"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"/>
+    <TextView
+        android:id="@+id/info_dialog_change_colour"
+        android:text="@string/info_dialog_change_colour"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/text_grey"
+        android:paddingTop="8dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingBottom="4dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"/>
+    <LinearLayout
+        android:id="@+id/info_dialog_colour_picker_container"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:layout_below="@id/pill_fragment_add_pill_name_colour"
+        android:layout_centerHorizontal="true">
+        <include layout="@layout/colour_picker_small"/>
+    </LinearLayout>
     <TextView
         android:id="@+id/info_dialog_set_favourite"
         android:text="@string/info_dialog_set_favourite"
@@ -26,7 +49,7 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:textColor="@color/text_grey"
-        android:paddingTop="4dp"
+        android:paddingTop="8dp"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
         android:paddingBottom="4dp"

@@ -179,4 +179,10 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
         }
         dialog.dismiss();
     }
+
+    @Override
+    public void onDialogChangePillColour(Pill pill, InfoDialog dialog) {
+        new UpdatePillTask(_activity, pill).execute();
+        dialog.dismiss();
+    }
 }
