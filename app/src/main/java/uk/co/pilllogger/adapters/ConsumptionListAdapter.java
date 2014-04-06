@@ -242,8 +242,6 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
 
                     if(params != null){
                         params.topMargin = 0;
-                        int marginWithTextHeight = 75;
-
                         boolean setText = false;
 
                         if(position == 0)
@@ -262,8 +260,9 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                         }
 
                         if(setText){
-                            params.topMargin = marginWithTextHeight;
                             dayText.setText(DateHelper.getPrettyDayOfMonth(currentDate));
+
+                            params.topMargin = (int) (dayText.getLineHeight() * 1.5f);
                         }
                     }
                 }
