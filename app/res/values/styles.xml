@@ -23,6 +23,16 @@
         <item name="android:popupMenuStyle">@style/PopupMenu.Example</item>
     </style>
 
+    <style name="AppThemeLight" parent="@android:style/Theme.Holo.Light">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:actionBarStyle">@style/PartiallyTransparentActionBar</item>
+        <item name="android:actionBarTabStyle">@style/PartiallyTransparentActionBarTab</item>
+        <item name="android:actionBarTabBarStyle">@android:style/Widget.Holo.ActionBar.TabBar</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.Example</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu.Example</item>
+    </style>
+
     <!-- ActionBar styles -->
     <style name="PartiallyTransparentActionBar"
            parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
@@ -51,6 +61,8 @@
 
     <style name="Tick"/>
     <style name="ConsumptionListItem"/>
+    <style name="ListItemBackgroundSecondary"/>
+    <style name="DefaultText"/>
     <style name="SecondaryText"/>
 
     <style name="ConsumptionPillName">
@@ -68,14 +80,19 @@
 
     <style name="ConsumptionSize"/>
 
+    <style name="AddConsumptionBackground"/>
+
     <style name="Rainbow" parent="AppTheme">
         <item name="android:textViewStyle">@style/RainbowTextView</item>
         <item name="ConsumptionListItem">@style/ConsumptionListItem.Rainbow</item>
+        <item name="ListItemBackgroundSecondary">@style/ListItemBackgroundSecondary.Rainbow</item>
         <item name="ConsumptionPillName">@style/ConsumptionPillName.Rainbow</item>
         <item name="ConsumptionDate">@style/ConsumptionDate.Rainbow</item>
         <item name="ConsumptionSize">@style/ConsumptionSize.Rainbow</item>
         <item name="Tick">@style/Tick.Rainbow</item>
+        <item name="DefaultText">@style/DefaultText.Rainbow</item>
         <item name="SecondaryText">@style/SecondaryText.Rainbow</item>
+        <item name="AddConsumptionBackground">@style/AddConsumptionBackground.Rainbow</item>
     </style>
 
     <style name="RainbowTextView">
@@ -84,6 +101,10 @@
 
     <style name="ConsumptionListItem.Rainbow">
         <item name="android:background">@drawable/list_selector</item>
+    </style>
+
+    <style name="ListItemBackgroundSecondary.Rainbow">
+        <item name="android:background">@color/list_item_background_secondary</item>
     </style>
 
     <style name="ConsumptionPillName.Rainbow">
@@ -102,18 +123,29 @@
         <item name="android:src">@drawable/tick_light</item>
     </style>
 
+    <style name="DefaultText.Rainbow">
+        <item name="android:textColor">@color/default_text</item>
+    </style>
+
     <style name="SecondaryText.Rainbow">
         <item name="android:textColor">@color/secondary_text</item>
     </style>
 
-    <style name="Professional" parent="AppTheme">
+    <style name="AddConsumptionBackground.Rainbow">
+        <item name="android:background">@drawable/back</item>
+    </style>
+
+    <style name="Professional" parent="AppThemeLight">
         <item name="android:textViewStyle">@style/ProfessionalTextView</item>
         <item name="ConsumptionListItem">@style/ConsumptionListItem.Professional</item>
+        <item name="ListItemBackgroundSecondary">@style/ListItemBackgroundSecondary.Rainbow</item>
         <item name="ConsumptionPillName">@style/ConsumptionPillName.Professional</item>
         <item name="ConsumptionDate">@style/ConsumptionDate.Professional</item>
         <item name="ConsumptionSize">@style/ConsumptionSize.Professional</item>
         <item name="Tick">@style/Tick.Professional</item>
+        <item name="DefaultText">@style/DefaultText.Professional</item>
         <item name="SecondaryText">@style/SecondaryText.Professional</item>
+        <item name="AddConsumptionBackground">@style/AddConsumptionBackground.Professional</item>
     </style>
 
     <style name="ProfessionalTextView">
@@ -132,6 +164,10 @@
         <item name="android:background">@drawable/cogs</item>
     </style>
 
+    <style name="ListItemBackgroundSecondary.Professional">
+        <item name="android:background">@color/list_item_background_secondary_professional</item>
+    </style>
+
     <style name="ConsumptionSize.Professional">
         <item name="android:textColor">@color/consumption_size_professional</item>
     </style>
@@ -140,7 +176,15 @@
         <item name="android:src">@drawable/tick</item>
     </style>
 
+    <style name="DefaultText.Professional">
+        <item name="android:textColor">@color/default_text_professional</item>
+    </style>
+
     <style name="SecondaryText.Professional">
         <item name="android:textColor">@color/secondary_text_professional</item>
+    </style>
+
+    <style name="AddConsumptionBackground.Professional">
+        <item name="android:background">@color/professional_background</item>
     </style>
 </resources>

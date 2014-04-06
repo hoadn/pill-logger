@@ -37,7 +37,7 @@
         android:layout_width="0dp"
         android:layout_alignParentRight="true"
         android:orientation="horizontal"
-        android:background="@color/done_cancel_grey">
+        style="?ListItemBackgroundSecondary">
         <View
             android:id="@+id/pill_separator"
             android:layout_width="1dip"

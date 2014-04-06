@@ -6,7 +6,12 @@
     android:layout_height="match_parent"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
-    android:background="@drawable/back">
+    style="?AddConsumptionBackground">
+    <RelativeLayout
+        android:id="@+id/main_gradient"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/orange_gradient">
     <LinearLayout
         android:id="@+id/add_consumption_top_buttons"
         android:layout_height="50dp"
@@ -92,7 +97,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
         android:textAllCaps="true"
-        android:textColor="@color/text_grey_medium"/>
+        style="?SecondaryText"/>
     <View
         android:id="@+id/add_consumption_select_pill_title_divider"
         android:layout_height="1dp"
@@ -111,11 +116,13 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:checked="true"
+            style="?DefaultText"
             android:text="@string/add_consumption_existing_pill_label"/>
         <RadioButton android:id="@+id/add_consumption_select_new_pill"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            style="?DefaultText"
             android:text="@string/new_pill_label"/>
     </RadioGroup>
 
@@ -158,7 +165,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
         android:textAllCaps="true"
-        android:textColor="@color/text_grey_medium"/>
+        style="?SecondaryText"/>
     <View
         android:id="@+id/add_consumption_select_time_title_divider"
         android:layout_height="1dp"
@@ -178,12 +185,14 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:checked="true"
-            android:text="@string/now"/>
+            android:text="@string/now"
+            style="?DefaultText"/>
         <RadioButton android:id="@+id/add_consumption_select_select_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="@string/add_consumption_time_select_date_label"/>
+            android:text="@string/add_consumption_time_select_date_label"
+            style="?DefaultText"/>
     </RadioGroup>
     <LinearLayout
         android:id="@+id/add_consumption_date_pickers_layout"
@@ -247,7 +256,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="0dp"
         android:textAllCaps="true"
-        android:textColor="@color/text_grey_medium"/>
+        style="?SecondaryText"/>
     <View
         android:id="@+id/add_consumption_set_reminder_title_divider"
         android:layout_height="1dp"
@@ -268,13 +277,15 @@
                      android:layout_marginLeft="20dp"
                      android:checked="true"
                      android:text="@string/reminder_hours"
-                     android:visibility="gone"/>
+                     android:visibility="gone"
+                     style="?DefaultText"/>
         <RadioButton android:id="@+id/add_consumption_select_reminder_specific"
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
                      android:layout_marginLeft="20dp"
                      android:text="@string/add_consumption_reminder_select_specific_label"
-                     android:visibility="gone"/>
+                     android:visibility="gone"
+                     style="?DefaultText"/>
     </RadioGroup>
     <LinearLayout
         android:id="@+id/add_consumption_reminder_layout"
@@ -356,4 +367,5 @@
         </LinearLayout>
     </LinearLayout>
     </LinearLayout>
+        </RelativeLayout>
 </RelativeLayout>

@@ -108,6 +108,9 @@ public class AddConsumptionActivity extends Activity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        setTheme(State.getSingleton().getTheme().getStyleResourceId());
+
         setContentView(R.layout.add_consumption_activity);
 
         _pillsList = (ListView)findViewById(R.id.add_consumption_pill_list);
