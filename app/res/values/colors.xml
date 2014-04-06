@@ -42,10 +42,10 @@
     <color name="consumption_background">#7800E9FF</color>
     <color name="pill_background">#78CC339A</color>
     <color name="stats_background">#78515151</color>
-    <color name="consumption_secondary">#80CCCCCC</color>
-    <color name="consumption_date">@color/consumption_secondary</color>
-    <color name="consumption_size">@color/consumption_secondary</color>
+    <color name="consumption_date">@color/secondary_text</color>
+    <color name="consumption_size">@color/secondary_text</color>
     <color name="default_text">#FFFFFF</color>
+    <color name="secondary_text">#BBBBBB</color>
     <color name="tab_mask">#FFFFFF</color>
     <color name="stackbar_graph_line">#32FFFFFF</color>
 
@@ -65,6 +65,7 @@
 
     <color name="professional_background">#FFFFFFFF</color>
     <color name="default_text_professional">#000000</color>
+    <color name="secondary_text_professional">#444444</color>
     <color name="tab_mask_professional">#000000</color>
     <color name="stackbar_graph_line_professional">#DDDDDD</color>
     <!-- Pill colours are in pill_colours.xml -->
