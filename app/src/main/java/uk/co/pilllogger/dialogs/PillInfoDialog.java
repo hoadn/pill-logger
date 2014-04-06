@@ -38,8 +38,6 @@ public class PillInfoDialog extends InfoDialog {
         TextView delete = (TextView) view.findViewById(R.id.info_dialog_delete);
         final TextView changeColour = (TextView) view.findViewById(R.id.info_dialog_change_colour);
         TextView favourite = (TextView) view.findViewById(R.id.info_dialog_set_favourite);
-        if (_pill.isFavourite())
-            favourite.setText(getResources().getString(R.string.info_dialog_unset_favourite));
 
         Typeface typeface = State.getSingleton().getTypeface();
         addConsumption.setTypeface(typeface);
@@ -51,6 +49,9 @@ public class PillInfoDialog extends InfoDialog {
             dismiss();
             return;
         }
+
+        if (_pill.isFavourite())
+            favourite.setText(getResources().getString(R.string.info_dialog_unset_favourite));
 
         addConsumption.setOnClickListener(new View.OnClickListener() {
             @Override
