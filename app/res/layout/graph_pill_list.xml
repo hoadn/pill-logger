@@ -34,7 +34,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:textColor="@color/text_grey_light"
         android:paddingLeft="5dp"
         android:layout_toRightOf="@id/graph_list_pill_colour"
         tools:text="Ibuprofen"/>
@@ -52,7 +51,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textColor="@color/text_grey_light"
             tools:text="200"/>
         <TextView
             android:id="@+id/pill_list_units"
@@ -60,7 +58,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textColor="@color/text_grey_light"
             android:text="@string/pill_units"/>
     </LinearLayout>
 
