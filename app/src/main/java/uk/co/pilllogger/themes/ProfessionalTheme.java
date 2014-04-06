@@ -55,6 +55,6 @@ public class ProfessionalTheme implements ITheme {
 
     @Override
     public int getDefaultChartColourResourceId() {
-        return R.color.pill_colour1;
+        return R.color.default_chart_professional;
     }
 }

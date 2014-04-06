@@ -48,6 +48,7 @@
     <color name="secondary_text">#BBBBBB</color>
     <color name="tab_mask">#FFFFFF</color>
     <color name="stackbar_graph_line">#32FFFFFF</color>
+    <color name="default_chart">@color/pill_colour6</color>
 
     <!-- Professional Style -->
     <color name="selector_background_professional">#10000000</color>
@@ -68,5 +69,6 @@
     <color name="secondary_text_professional">#444444</color>
     <color name="tab_mask_professional">#000000</color>
     <color name="stackbar_graph_line_professional">#DDDDDD</color>
+    <color name="default_chart_professional">@color/pill_colour1</color>
     <!-- Pill colours are in pill_colours.xml -->
 </resources>
