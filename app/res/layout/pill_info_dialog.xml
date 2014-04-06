@@ -20,6 +20,19 @@
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"/>
     <TextView
+        android:id="@+id/info_dialog_set_favourite"
+        android:text="@string/info_dialog_set_favourite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/text_grey"
+        android:paddingTop="4dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingBottom="4dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"/>
+    <TextView
         android:id="@+id/info_dialog_delete"
         android:text="@string/info_dialog_delete"
         android:layout_width="match_parent"

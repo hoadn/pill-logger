@@ -98,6 +98,8 @@
     <string name="add_consumption_reminder_toast_prefix">Reminder set for </string>
     <string name="info_dialog_delete">Delete</string>
     <string name="info_dialog_take_now">Take now</string>
+    <string name="info_dialog_set_favourite">Set as favourite</string>
+    <string name="info_dialog_unset_favourite">Remove from favourites</string>
     <string name="info_dialog_last_taken">Last taken: </string>
     <string name="info_dialog_dosage">In the last 24 hours:</string>
     <string name="consumption_info_dialog_increase">Increase quantity</string>
