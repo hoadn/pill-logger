@@ -49,9 +49,8 @@
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_example</item>
     </style>
 
-    <style name="ConsumptionListItem">
-
-    </style>
+    <style name="Tick"/>
+    <style name="ConsumptionListItem"/>
 
     <style name="ConsumptionPillName">
         <item name="android:layout_width">wrap_content</item>
@@ -74,6 +73,7 @@
         <item name="ConsumptionPillName">@style/ConsumptionPillName.Rainbow</item>
         <item name="ConsumptionDate">@style/ConsumptionDate.Rainbow</item>
         <item name="ConsumptionSize">@style/ConsumptionSize.Rainbow</item>
+        <item name="Tick">@style/Tick.Rainbow</item>
     </style>
 
     <style name="RainbowTextView">
@@ -96,12 +96,17 @@
         <item name="android:textColor">@color/consumption_size</item>
     </style>
 
+    <style name="Tick.Rainbow">
+        <item name="android:src">@drawable/tick_light</item>
+    </style>
+
     <style name="Professional" parent="AppTheme">
         <item name="android:textViewStyle">@style/ProfessionalTextView</item>
         <item name="ConsumptionListItem">@style/ConsumptionListItem.Professional</item>
         <item name="ConsumptionPillName">@style/ConsumptionPillName.Professional</item>
         <item name="ConsumptionDate">@style/ConsumptionDate.Professional</item>
         <item name="ConsumptionSize">@style/ConsumptionSize.Professional</item>
+        <item name="Tick">@style/Tick.Professional</item>
     </style>
 
     <style name="ProfessionalTextView">
@@ -122,5 +127,9 @@
 
     <style name="ConsumptionSize.Professional">
         <item name="android:textColor">@color/consumption_size_professional</item>
+    </style>
+
+    <style name="Tick.Professional">
+        <item name="android:src">@drawable/tick</item>
     </style>
 </resources>

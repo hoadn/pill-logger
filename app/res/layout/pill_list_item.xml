@@ -22,7 +22,6 @@
             android:padding="10dp">
             <TextView
                 android:textSize="20dp"
-                android:textColor="@color/white"
                 android:id="@+id/pill_list_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,7 +42,6 @@
 
             <TextView
                 android:textSize="20dip"
-                android:textColor="@color/white"
                 android:id="@+id/pill_list_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

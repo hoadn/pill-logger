@@ -4,6 +4,7 @@
         <attr name="android:color"/>
     </declare-styleable>
 
+    <attr name="Tick" format="reference"/>
     <attr name="ConsumptionListItem" format="reference" />
     <attr name="ConsumptionPillName" format="reference" />
     <attr name="ConsumptionDate" format="reference"/>
