@@ -19,6 +19,8 @@ public interface ITheme {
 
     int getDefaultChartColourResourceId();
 
+    int getSelectedBackgroundColourResourceId();
+
     GraphHighlightMode getGraphHighlightMode();
 
     public enum GraphHighlightMode{

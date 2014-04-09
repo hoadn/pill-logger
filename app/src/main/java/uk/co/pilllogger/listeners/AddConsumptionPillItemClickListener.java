@@ -45,7 +45,7 @@ public class AddConsumptionPillItemClickListener implements ListView.OnItemClick
         }
         else {
             animation = new AddPillToConsumptionAnimation(addButtonLayout, (int) LayoutHelper.dpToPx(_activity, 125), true, _activity);
-            color = R.color.pill_selection_background;
+            color = State.getSingleton().getTheme().getSelectedBackgroundColourResourceId();
             _adapter.addConsumedPillAtStart(i);
             TextView amount = (TextView) view.findViewById(R.id.add_consumption_amount);
             amount.setText("1");

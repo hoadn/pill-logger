@@ -72,6 +72,7 @@
     <color name="stackbar_graph_line_professional">#DDDDDD</color>
     <color name="default_chart_professional">@color/pill_colour1</color>
     <color name="list_item_background_secondary_professional">@color/translucent_whiter_professional</color>
+    <color name="selected_list_background_professional">#DDDDDD</color>
 
     <!-- Pill colours are in pill_colours.xml -->
 </resources>

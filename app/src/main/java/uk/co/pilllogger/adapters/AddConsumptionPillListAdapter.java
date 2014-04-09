@@ -137,9 +137,9 @@ public class
                 holder.lastTaken.setText(_activity.getString(R.string.no_consumptions_message));
             }
         }
-        TextView add = (TextView)v.findViewById(R.id.add_consumption_add);
+        View add = v.findViewById(R.id.add_consumption_add);
         add.setOnClickListener(new buttonClick(true, holder.amount, position, this));
-        TextView minus = (TextView)v.findViewById(R.id.add_consumption_minus);
+        View minus = v.findViewById(R.id.add_consumption_minus);
         minus.setOnClickListener(new buttonClick(false, holder.amount, position, this));
         return v;
     }

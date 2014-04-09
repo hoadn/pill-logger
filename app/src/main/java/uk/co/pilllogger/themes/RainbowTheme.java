@@ -61,4 +61,9 @@ public class RainbowTheme implements ITheme {
     public int getDefaultChartColourResourceId() {
         return R.color.default_chart;
     }
+
+    @Override
+    public int getSelectedBackgroundColourResourceId() {
+        return R.color.pill_selection_background;
+    }
 }

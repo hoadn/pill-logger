@@ -62,4 +62,9 @@ public class ProfessionalTheme implements ITheme {
     public int getDefaultChartColourResourceId() {
         return R.color.default_chart_professional;
     }
+
+    @Override
+    public int getSelectedBackgroundColourResourceId() {
+        return R.color.selected_list_background_professional;
+    }
 }
