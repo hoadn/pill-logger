@@ -149,6 +149,7 @@ public class
         v.setBackgroundColor(backgroundColor);
         View view = v.findViewById(R.id.add_consumption_after_click_layout);
         if(view != null){
+            view.bringToFront();
             view.setBackgroundColor(backgroundColor);
             View rightLayout = v.findViewById(R.id.add_consumption_right_info);
             rightLayout.setBackgroundColor(backgroundColor);

@@ -37,7 +37,7 @@
         android:layout_width="0dp"
         android:layout_alignParentRight="true"
         android:orientation="horizontal"
-        style="?ListItemBackgroundSecondary">
+        android:background="@color/minus_red">
         <View
             android:id="@+id/pill_separator"
             android:layout_width="1dip"
@@ -81,7 +81,7 @@
 
     <RelativeLayout
         android:id="@+id/add_consumption_right_info"
-        android:layout_width="90dp"
+        android:layout_width="100dp"
         android:layout_height="@dimen/add_consumption_pill_list_item_height"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/add_consumption_after_click_layout">
