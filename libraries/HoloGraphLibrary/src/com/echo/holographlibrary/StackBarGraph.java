@@ -160,6 +160,35 @@ public class StackBarGraph extends View {
 
             mRectangle = new Rect();
 
+            mPaint.setColor(_lineColour);
+            mPaint.setStrokeWidth(padding);
+
+            mPaint.setAntiAlias(true);
+            mTextPaint.setColor(Color.argb(150, 0, 0, 0));
+
+            if(mShouldDrawGridHorizontal){
+                float singleItemHeight = usableHeight / maxValue;
+                for(int i = 0; i <= maxValue; i++){
+                    if(maxValue > 10){
+                        if(i % 5 > 0){
+                            continue;
+                        }
+                    }
+
+                    float y = getHeight() - (bottomPadding + ((singleItemHeight) * i) + (padding * i) - density);
+                    canvas.drawLine(0, y, getWidth() - rightPadding, y, mPaint);
+
+                    Rect textBounds = new Rect();
+                    String value = String.valueOf(i);
+                    mTextPaint.getTextBounds(value, 0, value.length(), textBounds);
+
+                    canvas.drawText(String.valueOf(i),
+                            (getWidth() - rightPadding) + (rightPadding/2 - textBounds.width()/2f),
+                            y + textBounds.height()/2f,
+                            mTextPaint);
+                }
+            }
+
             int count = 0;
             for (final StackBar bar : mBars) {
                 float currentTop = 0;
@@ -240,34 +269,7 @@ public class StackBarGraph extends View {
                 canvas.drawText(bar.getName(), x, y, this.mTextPaint);
                 count++;
             }
-            mPaint.setColor(_lineColour);
-            mPaint.setStrokeWidth(padding);
 
-            mPaint.setAntiAlias(true);
-            mTextPaint.setColor(Color.argb(150, 0, 0, 0));
-
-            if(mShouldDrawGridHorizontal){
-                float singleItemHeight = usableHeight / maxValue;
-                for(int i = 0; i <= maxValue; i++){
-                    if(maxValue > 10){
-                        if(i % 5 > 0){
-                            continue;
-                        }
-                    }
-
-                    float y = getHeight() - (bottomPadding + ((singleItemHeight) * i) + (padding * i) - density);
-                    canvas.drawLine(0, y, getWidth() - rightPadding, y, mPaint);
-
-                    Rect textBounds = new Rect();
-                    String value = String.valueOf(i);
-                    mTextPaint.getTextBounds(value, 0, value.length(), textBounds);
-
-                    canvas.drawText(String.valueOf(i),
-                            (getWidth() - rightPadding) + (rightPadding/2 - textBounds.width()/2f),
-                            y + textBounds.height()/2f,
-                            mTextPaint);
-                }
-            }
             mShouldUpdate = false;
         }
         
