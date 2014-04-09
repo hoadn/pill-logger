@@ -51,7 +51,7 @@
             android:id="@+id/consumption_list_quantity"
             android:layout_centerVertical="true"
             android:gravity="center"
-            android:textColor="#aaffffff"
+            android:textColor="#ffffff"
             android:textStyle="bold"
             android:layout_width="29dp"
             android:layout_height="45dp"
