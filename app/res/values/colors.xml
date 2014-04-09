@@ -56,7 +56,7 @@
     <color name="translucent_white_professional">#20FFFFFF</color>
     <color name="translucent_whiter_professional">#80FFFFFF</color>
     <color name="selector_background_pressed_professional">#20FFFFFF</color>
-    <color name="popup_menu_professional">#B0000000</color>
+    <color name="popup_menu_professional">#9f9f9f</color>
     <color name="pill_favourite_professional">#80FFFFFF</color>
     <color name="tutorial_white_professional">#FFFFFF</color>
     <color name="divider_white_professional">#40FFFFFF</color>

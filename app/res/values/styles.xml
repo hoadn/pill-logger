@@ -146,6 +146,7 @@
         <item name="DefaultText">@style/DefaultText.Professional</item>
         <item name="SecondaryText">@style/SecondaryText.Professional</item>
         <item name="AddConsumptionBackground">@style/AddConsumptionBackground.Professional</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu.Example.Professional</item>
     </style>
 
     <style name="ProfessionalTextView">
@@ -186,5 +187,9 @@
 
     <style name="AddConsumptionBackground.Professional">
         <item name="android:background">@color/professional_background</item>
+    </style>
+
+    <style name="PopupMenu.Example.Professional" parent="@android:style/Widget.Holo.Light.ListPopupWindow">
+        <!--<item name="android:popupBackground">@color/popup_menu_professional</item>-->
     </style>
 </resources>
