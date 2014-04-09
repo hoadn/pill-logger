@@ -145,7 +145,7 @@ public class
     }
 
     private View open(View v) {
-        int backgroundColor = _activity.getResources().getColor(R.color.pill_selection_background);
+        int backgroundColor = _activity.getResources().getColor(State.getSingleton().getTheme().getSelectedBackgroundColourResourceId());
         v.setBackgroundColor(backgroundColor);
         View view = v.findViewById(R.id.add_consumption_after_click_layout);
         if(view != null){
