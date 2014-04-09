@@ -39,6 +39,7 @@ import uk.co.pilllogger.adapters.ConsumptionListAdapter;
 import uk.co.pilllogger.adapters.GraphPillListAdapter;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
@@ -195,6 +196,10 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
 //            View view = _mainLayout.findViewById(R.id.main_graph);
 //            plotGraph(xPoints, dayCount, view);
         }
+
+        String usageStats = "UsageStats";
+        TrackerHelper.sendEvent(activity, usageStats, "Pills", "", (long) _pills.size());
+        TrackerHelper.sendEvent(activity, usageStats, "Consumptions", "", (long) _consumptions.size());
 
         Statistics.getInstance(activity).refreshConsumptionCaches(consumptions);
     }
