@@ -145,6 +145,7 @@ public class StackBarGraph extends View {
                 usableHeight = getHeight()-(bottomPadding*2);
             }
 
+            this.mTextPaint.setTextSize(VALUE_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
             // Maximum y value = sum of all values.
             for (final StackBar bar : mBars) {
                 if (bar.getTotalValue() > maxValue) {
@@ -232,7 +233,6 @@ public class StackBarGraph extends View {
 
                     // Draw value text
                     if (mShowBarText && section.getValue() > 0){
-                        this.mTextPaint.setTextSize(VALUE_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
                         this.mTextPaint.setColor(Color.WHITE);
                         Rect r2 = new Rect();
                         this.mTextPaint.getTextBounds(section.getValueString(), 0, 1, r2);
