@@ -53,6 +53,11 @@ public class RainbowTheme implements ITheme {
     }
 
     @Override
+    public GraphHighlightMode getGraphHighlightMode() {
+        return GraphHighlightMode.Lighten;
+    }
+
+    @Override
     public int getDefaultChartColourResourceId() {
         return R.color.default_chart;
     }

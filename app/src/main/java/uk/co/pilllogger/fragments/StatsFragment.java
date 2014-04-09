@@ -27,6 +27,7 @@ import uk.co.pilllogger.stats.PillAmount;
 import uk.co.pilllogger.stats.Statistics;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
+import uk.co.pilllogger.themes.ITheme;
 import uk.co.pilllogger.views.ColourIndicator;
 import uk.co.pilllogger.views.DayOfWeekView;
 import uk.co.pilllogger.views.HourOfDayView;
@@ -185,10 +186,12 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
         _pill2.setVisibility(View.GONE);
         _pill3.setVisibility(View.GONE);
 
+        boolean lighten = State.getSingleton().getTheme().getGraphHighlightMode() == ITheme.GraphHighlightMode.Lighten;
+
         if(pills.size() > 0){
             PillAmount pa = pills.get(0);
             if(pa.getPill() != null) {
-                _medicineMostTakenIndicator1st.setColour(pa.getPill().getColour(), true);
+                _medicineMostTakenIndicator1st.setColour(pa.getPill().getColour(), lighten);
                 _medicineMostTaken1st.setText(pa.getPill().getName());
                 _medicineMostTakenCount1st.setText(String.format(countFormat, pa.getAmount()));
             }
@@ -196,7 +199,7 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
         if(pills.size() > 1){
             PillAmount pa = pills.get(1);
             if(pa.getPill() != null) {
-                _medicineMostTakenIndicator2nd.setColour(pa.getPill().getColour(), true);
+                _medicineMostTakenIndicator2nd.setColour(pa.getPill().getColour(), lighten);
                 _medicineMostTaken2nd.setText(pa.getPill().getName());
                 _medicineMostTakenCount2nd.setText(String.format(countFormat, pa.getAmount()));
                 _pill2.setVisibility(View.VISIBLE);
@@ -205,7 +208,7 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
         if(pills.size() > 2){
             PillAmount pa = pills.get(2);
             if(pa.getPill() != null) {
-                _medicineMostTakenIndicator3rd.setColour(pa.getPill().getColour(), true);
+                _medicineMostTakenIndicator3rd.setColour(pa.getPill().getColour(), lighten);
                 _medicineMostTaken3rd.setText(pa.getPill().getName());
                 _medicineMostTakenCount3rd.setText(String.format(countFormat, pa.getAmount()));
                 _pill3.setVisibility(View.VISIBLE);

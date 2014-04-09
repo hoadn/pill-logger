@@ -54,6 +54,11 @@ public class ProfessionalTheme implements ITheme {
     }
 
     @Override
+    public GraphHighlightMode getGraphHighlightMode() {
+        return GraphHighlightMode.Darken;
+    }
+
+    @Override
     public int getDefaultChartColourResourceId() {
         return R.color.default_chart_professional;
     }

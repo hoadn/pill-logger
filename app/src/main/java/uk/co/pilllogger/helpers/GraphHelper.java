@@ -27,6 +27,7 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.stats.PillAmount;
+import uk.co.pilllogger.themes.ITheme;
 
 /**
  * Created by alex on 25/11/2013.
@@ -187,7 +188,10 @@ public class GraphHelper {
             PieSlice ps = new PieSlice();
             ps.setValue(pa.getAmount());
             ps.setColor(pa.getPill().getColour());
-            ps.setStrokeColor(ColourHelper.getLighter(pa.getPill().getColour()));
+            int strokeColor = (State.getSingleton().getTheme().getGraphHighlightMode() == ITheme.GraphHighlightMode.Lighten)
+                    ? ColourHelper.getLighter(pa.getPill().getColour())
+                    : ColourHelper.getDarker(pa.getPill().getColour());
+            ps.setStrokeColor(strokeColor);
             pie.addSlice(ps);
         }
     }

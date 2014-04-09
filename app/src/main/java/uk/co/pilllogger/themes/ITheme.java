@@ -18,4 +18,11 @@ public interface ITheme {
     int getSecondaryTextColourResourceId();
 
     int getDefaultChartColourResourceId();
+
+    GraphHighlightMode getGraphHighlightMode();
+
+    public enum GraphHighlightMode{
+        Lighten,
+        Darken
+    }
 }
