@@ -37,7 +37,6 @@
                 android:layout_weight="1"
                 android:hint="@string/create_a_pill_name_hint"
                 android:textColorHint="@color/text_grey_light"
-                android:textColor="@android:color/white"
                 android:background="@null"
                 android:inputType="textCapWords"
                 android:imeOptions="actionNext"/>
@@ -104,7 +103,6 @@
             android:textSize="22sp"
             android:hint="@string/create_a_pill_size_hint"
             android:textColorHint="@color/text_grey_light"
-            android:textColor="@android:color/white"
             android:inputType="numberDecimal"
             android:background="@null"
             android:imeOptions="actionDone"/>
