@@ -138,7 +138,7 @@
     <style name="Professional" parent="AppThemeLight">
         <item name="android:textViewStyle">@style/ProfessionalTextView</item>
         <item name="ConsumptionListItem">@style/ConsumptionListItem.Professional</item>
-        <item name="ListItemBackgroundSecondary">@style/ListItemBackgroundSecondary.Rainbow</item>
+        <item name="ListItemBackgroundSecondary">@style/ListItemBackgroundSecondary.Professional</item>
         <item name="ConsumptionPillName">@style/ConsumptionPillName.Professional</item>
         <item name="ConsumptionDate">@style/ConsumptionDate.Professional</item>
         <item name="ConsumptionSize">@style/ConsumptionSize.Professional</item>
