@@ -24,6 +24,7 @@ public class PillRepository extends BaseRepository<Pill>{
     private static final String TAG = "PillRepository";
     private static PillRepository _instance;
     private Map<Integer, Pill> _cache = new HashMap<Integer, Pill>();
+    private boolean _getAllCalled = false;
 
     private PillRepository(Context context){
         super(context);
@@ -209,9 +210,10 @@ public class PillRepository extends BaseRepository<Pill>{
 
     @Override
     public List<Pill> getAll() {
-        if(_cache != null && _cache.size() > 0)
+        if(_cache != null && _cache.size() > 0 && _getAllCalled)
             return new ArrayList<Pill>(_cache.values());
 
+        _getAllCalled = true;
         return getList(null, null);
     }
 
