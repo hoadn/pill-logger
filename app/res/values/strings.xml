@@ -118,8 +118,8 @@
     <string name="more">More</string>
     <string name="stats_fragment_title">Your Statistics</string>
     <string name="days_text">days</string>
-    <string name="current_streak_title">Current Streak</string>
-    <string name="longest_streak_title">Longest Streak</string>
+    <string name="current_streak_title">Current \nConsecutive</string>
+    <string name="longest_streak_title">Longest \nConsecutive</string>
     <string name="total_taken_title">Total</string>
     <string name="action_feedback">Send Feedback</string>
     <string name="just_now">just now</string>

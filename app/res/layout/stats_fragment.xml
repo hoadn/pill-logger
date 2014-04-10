@@ -252,9 +252,10 @@
         android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text="@string/total_taken_title"
             android:layout_gravity="center_horizontal"
+            android:gravity="center"
             android:textSize="14sp"/>
         <TextView
             android:id="@+id/stats_total_consumption"
@@ -272,9 +273,10 @@
             android:orientation="vertical">
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:text="@string/longest_streak_title"
                 android:layout_gravity="center_horizontal"
+                android:gravity="center"
                 android:textSize="14sp"/>
             <TextView
                 android:id="@+id/stats_longest_streak"
@@ -297,9 +299,10 @@
             android:orientation="vertical">
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:text="@string/current_streak_title"
                 android:layout_gravity="center_horizontal"
+                android:gravity="center"
                 android:textSize="14sp"/>
             <TextView
                 android:id="@+id/stats_current_streak"
