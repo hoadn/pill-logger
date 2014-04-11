@@ -23,6 +23,8 @@ public interface ITheme {
 
     GraphHighlightMode getGraphHighlightMode();
 
+    boolean isChartTranslucent();
+
     public enum GraphHighlightMode{
         Lighten,
         Darken

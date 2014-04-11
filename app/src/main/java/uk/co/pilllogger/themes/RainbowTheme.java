@@ -58,6 +58,11 @@ public class RainbowTheme implements ITheme {
     }
 
     @Override
+    public boolean isChartTranslucent() {
+        return true;
+    }
+
+    @Override
     public int getDefaultChartColourResourceId() {
         return R.color.default_chart;
     }

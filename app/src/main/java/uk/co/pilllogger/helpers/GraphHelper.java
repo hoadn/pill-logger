@@ -246,6 +246,7 @@ public class GraphHelper {
                 sbs.setColor(pill.getColour());
                 sbs.setStrokeColor(ColourHelper.getDarker(pill.getColour()));
                 sbs.setValue(value);
+                sbs.setTranslucent(State.getSingleton().getTheme().isChartTranslucent());
 
                 sb.getSections().add(sbs);
             }

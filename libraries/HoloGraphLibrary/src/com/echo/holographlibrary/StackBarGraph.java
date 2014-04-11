@@ -133,7 +133,7 @@ public class StackBarGraph extends View {
             float padding = 1 * mContext.getResources().getDisplayMetrics().density;
             int selectPadding = (int) (4 * mContext.getResources().getDisplayMetrics().density);
             float bottomPadding = 20 * mContext.getResources().getDisplayMetrics().density;
-            float leftPadding = bottomPadding;
+            float leftPadding = padding;
 
             float usableHeight;
             if (mShowBarText) {
@@ -146,6 +146,7 @@ public class StackBarGraph extends View {
             }
 
             this.mTextPaint.setTextSize(VALUE_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
+            this.mTextPaint.setAntiAlias(true);
             // Maximum y value = sum of all values.
             for (final StackBar bar : mBars) {
                 if (bar.getTotalValue() > maxValue) {
@@ -176,7 +177,7 @@ public class StackBarGraph extends View {
                         }
                     }
 
-                    float y = getHeight() - (bottomPadding + ((singleItemHeight) * i) + (padding * i) - density);
+                    float y = getHeight() - (bottomPadding + ((singleItemHeight) * i) + (padding * i) - density) - (padding * 0.75f);
                     canvas.drawLine(0, y, getWidth() - rightPadding, y, mPaint);
 
                     Rect textBounds = new Rect();
@@ -207,11 +208,19 @@ public class StackBarGraph extends View {
                            top -= padding * (section.getValue() - 1);
                     }
 
-                    int stroke = (int)padding * 2;
+                    int stroke = (int)(padding * 1.5f);
 
                     mRectangle.set(left + stroke / 2, top + stroke / 2, right - stroke / 2, bottom - stroke / 2);
 
                     if(section.getValue() > 0){
+
+                        if(!section.isTranslucent()) {
+                            this.mPaint.setColor(Color.WHITE);
+                            this.mPaint.setStrokeWidth(stroke);
+                            this.mPaint.setStyle(Paint.Style.FILL);
+                            canvas.drawRect(mRectangle, this.mPaint);
+                        }
+
                         // Draw bar stroke
                         this.mPaint.setColor(section.getStrokeColor());
                         this.mPaint.setStrokeWidth(stroke);
@@ -219,9 +228,9 @@ public class StackBarGraph extends View {
                         canvas.drawRect(mRectangle, this.mPaint);
 
                         this.mPaint.setColor(section.getColor());
-                        this.mPaint.setAlpha(80);
+                        this.mPaint.setAlpha(100);
                         this.mPaint.setStyle(Paint.Style.FILL);
-                        mRectangle.set(left + stroke, top + stroke, right, bottom);
+                        mRectangle.set(left + stroke, top + stroke, right - stroke, bottom - stroke);
                         canvas.drawRect(mRectangle, this.mPaint);
 
                         // Create selection region

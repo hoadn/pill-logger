@@ -59,6 +59,11 @@ public class ProfessionalTheme implements ITheme {
     }
 
     @Override
+    public boolean isChartTranslucent() {
+        return false;
+    }
+
+    @Override
     public int getDefaultChartColourResourceId() {
         return R.color.default_chart_professional;
     }

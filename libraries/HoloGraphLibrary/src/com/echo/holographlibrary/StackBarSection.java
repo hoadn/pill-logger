@@ -14,6 +14,7 @@ public class StackBarSection {
 
     private Path mPath = null;
     private Region mRegion = null;
+    private boolean _translucent;
 
     public int getColor() {
         return mColor;
@@ -55,5 +56,13 @@ public class StackBarSection {
     }
     public void setRegion(Region region) {
         this.mRegion = region;
+    }
+
+    public boolean isTranslucent() {
+        return _translucent;
+    }
+
+    public void setTranslucent(boolean translucent) {
+        _translucent = translucent;
     }
 }
