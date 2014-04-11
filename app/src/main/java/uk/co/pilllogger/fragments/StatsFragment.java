@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.echo.holographlibrary.PieGraph;
 
@@ -110,6 +111,29 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
         _totalConsumptions = (TextView)v.findViewById(R.id.stats_total_consumption);
         _longestStreak = (TextView) v.findViewById(R.id.stats_longest_streak);
         _currentStreak = (TextView) v.findViewById(R.id.stats_current_streak);
+
+        View total = v.findViewById(R.id.stats_total);
+        View longestConsecutive = v.findViewById(R.id.stats_longest_consecutive);
+        View currentConsecutive = v.findViewById(R.id.stats_current_consecutive);
+        final Activity activity = getActivity();
+        total.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(activity, activity.getResources().getString(R.string.stats_total_explanation), Toast.LENGTH_LONG).show();
+            }
+        });
+        longestConsecutive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(activity, activity.getResources().getString(R.string.stats_longest_consecutive_explanation), Toast.LENGTH_LONG).show();
+            }
+        });
+        currentConsecutive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(activity, activity.getResources().getString(R.string.stats_current_consecutive_explanation), Toast.LENGTH_LONG).show();
+            }
+        });
 
         new GetPillsTask(getActivity(), this).execute();
         setFont();
