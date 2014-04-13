@@ -1,6 +1,5 @@
 package uk.co.pilllogger.activities;
 
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -18,6 +17,7 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.WidgetListAdapter;
 import uk.co.pilllogger.listeners.WidgetPillsClickListener;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.widget.MyAppWidgetProvider;
 
@@ -30,7 +30,7 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPil
     public static String PILL_ID = "uk.co.pilllogger.activities.AppWidgetConfigure.PILL_ID";
     int _appWidgetId = -1;
     Pill _chosenPill;
-    Typeface _openSans;
+    Typeface _typeface;
     TextView _selectedPillName, _selectedPillSize;
     ListView _pillsList;
     View _selectedPillLayout;
@@ -40,7 +40,7 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPil
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_widget_configure);
 
-        _openSans = Typeface.createFromAsset(this.getAssets(), "fonts/OpenSans-Light.ttf");
+        _typeface = State.getSingleton().getTypeface();
 
         this.setResult(RESULT_CANCELED);
         new GetPillsTask(this, this).execute();
@@ -58,8 +58,8 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPil
 
         _selectedPillName = (TextView) findViewById(R.id.widget_configure_selected_pill_name);
         _selectedPillSize = (TextView) findViewById(R.id.widget_configure_selected_pill_size);
-        _selectedPillName.setTypeface(_openSans);
-        _selectedPillSize.setTypeface(_openSans);
+        _selectedPillName.setTypeface(_typeface);
+        _selectedPillSize.setTypeface(_typeface);
 
 
         _newIntent = new Intent(this, MyAppWidgetProvider.class);

@@ -10,23 +10,30 @@
     android:layout_width="70dp"
     android:layout_height="70dp"
     android:orientation="vertical"
-    android:paddingTop="3dp"
-    android:paddingLeft="3dp"
-    android:paddingRight="3dp"
-    android:paddingBottom="3dp"
-    android:background="@drawable/container_dropshadow"
+    android:background="@android:color/transparent"
     >
-
-    <TextView
-        android:id="@+id/widget_text"
+      <TextView
+          android:id="@+id/widget_text"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:textColor="@color/text_grey"
+          android:textSize="22dp"
+          android:layout_marginRight="2dp"
+          android:layout_marginBottom="2dp"
+          android:layout_marginLeft="2dp"
+          android:layout_marginTop="15dp"
+          android:gravity="center"
+          android:clickable="true"
+          android:text="Paracetamol"
+          android:background="@color/white"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/widget_colour"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_grey"
-        android:textSize="11dp"
-        android:gravity="top"
-        android:clickable="true"
-        android:text="Paracetamol"
-        android:background="?android:attr/selectableItemBackground"/>
+        android:layout_height="15dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/text_grey"/>
+
       <TextView
       android:id="@+id/widget_size"
       android:layout_width="wrap_content"

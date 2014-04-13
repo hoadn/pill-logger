@@ -47,14 +47,12 @@ public class WidgetListAdapter extends ArrayAdapter{
         ViewHolder holder = new ViewHolder();
         holder.name = (TextView) v.findViewById(R.id.pill_list_name);
         holder.size = (TextView) v.findViewById(R.id.pill_list_size);
-        holder.units = (TextView) v.findViewById(R.id.pill_list_units);
         holder.favourite = v.findViewById(R.id.pill_list_favourite);
         holder.colour = (ColourIndicator) v.findViewById(R.id.pill_list_colour);
         holder.pickerContainer = (ViewGroup) v.findViewById(R.id.pill_list_colour_picker_container);
 
         holder.name.setTypeface(State.getSingleton().getTypeface());
         holder.size.setTypeface(State.getSingleton().getTypeface());
-        holder.units.setTypeface(State.getSingleton().getTypeface());
         v.setTag(holder);
     }
 
@@ -76,7 +74,7 @@ public class WidgetListAdapter extends ArrayAdapter{
             final Pill pill = _data.get(position);
             if (pill != null) {
                 holder.name.setText(pill.getName());
-                holder.size.setText(String.valueOf(pill.getSize()));
+                holder.size.setText(String.valueOf(pill.getSize()) + pill.getUnits());
 
                 int visibility = pill.isFavourite() ? View.VISIBLE : View.INVISIBLE;
                 if (holder.favourite != null)

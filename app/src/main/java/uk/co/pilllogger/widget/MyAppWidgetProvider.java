@@ -78,13 +78,13 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
             _views.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
 
-            int pillId = bundle.getInt(AppWidgetConfigure.PILL_ID);
-            Pill pill = PillRepository.getSingleton(context).get(pillId);
-            if (pill != null) {
-                _views.setTextViewText(R.id.widget_size, String.valueOf(pill.getSize() + "mg"));
-                _views.setInt(R.id.widget_size,"setBackgroundColor", pill.getColour());
-                _views.setTextViewText(R.id.widget_text, pill.getName().substring(0,1));
-            }
+//            int pillId = bundle.getInt(AppWidgetConfigure.PILL_ID);
+//            Pill pill = PillRepository.getSingleton(context).get(pillId);
+//            if (pill != null) {
+//                _views.setTextViewText(R.id.widget_size, String.valueOf(pill.getSize() + "mg"));
+//                _views.setInt(R.id.widget_size,"setBackgroundColor", pill.getColour());
+//               _views.setTextViewText(R.id.widget_text, pill.getName().substring(0,1));
+//            }
             AppWidgetManager.getInstance(context).updateAppWidget(intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS), _views);
         }
 
