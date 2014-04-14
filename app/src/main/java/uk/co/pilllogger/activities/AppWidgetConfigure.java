@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -88,11 +89,7 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPil
 
                     Intent intent = new Intent(activity, MyAppWidgetProvider.class);
                     intent.setAction(CLICK_ACTION);
-
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(AppWidgetConfigure.PILL_ID, pill.getId());
-
-                    intent.putExtras(bundle);
+                    intent.putExtra(AppWidgetConfigure.PILL_ID, pill.getId());
 
                     //Create a pending intent from our intent
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, new Date().hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -106,6 +103,8 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPil
                     views.setInt(R.id.widget_size,"setBackgroundColor", pill.getColour());
                     views.setTextViewText(R.id.widget_text, pill.getName());
                     appWidgetManager.updateAppWidget(_appWidgetId, views);
+
+                    activity.getSharedPreferences("widgets", Context.MODE_MULTI_PROCESS).edit().putInt("widget" + _appWidgetId, pill.getId()).commit();
 
                     Intent resultValue = new Intent();
                     resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, _appWidgetId);
