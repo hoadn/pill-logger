@@ -6,12 +6,15 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -37,6 +40,7 @@ import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.fragments.StatsFragment;
+import uk.co.pilllogger.helpers.FeedbackHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -156,13 +160,34 @@ public class MainActivity extends PillLoggerActivityBase implements
         _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_colourBackground, this));
 
         Observer.getSingleton().registerPillsUpdatedObserver(this);
+
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+
+            int version = pInfo.versionCode;
+            int seenVersion = PreferenceManager.getDefaultSharedPreferences(this).getInt(getString(R.string.seenVersionKey), 0);
+
+            if(version > seenVersion)
+                showChangesDialog();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
     }
+
 
     @Override
     protected void onPostResume() {
         new GetPillsTask(this, this).execute();
         SetupTutorial();
         super.onPostResume();
+    }
+
+    private void showChangesDialog(){
+        Intent composeIntent = new Intent(this, WebViewActivity.class);
+        composeIntent.putExtra(getString(R.string.key_show_feedback_button), true);
+        composeIntent.putExtra(getString(R.string.key_web_address), "file:///android_asset/html/changelog.html");
+
+        startActivity(composeIntent);
     }
 
     private void setBackgroundColour(){
@@ -337,14 +362,7 @@ public class MainActivity extends PillLoggerActivityBase implements
     }
 
     private void sendFeedbackIntent(){
-        Intent send = new Intent(Intent.ACTION_SENDTO);
-        String uriText = "mailto:" + Uri.encode("support@allendev.co") +
-                "?subject=" + Uri.encode("Pill Logger Feedback") +
-                "&body=" + Uri.encode("");
-        Uri uri = Uri.parse(uriText);
-
-        send.setData(uri);
-        startActivity(Intent.createChooser(send, "Send feedback..."));
+        FeedbackHelper.sendFeedbackIntent(this);
     }
 
     private void startAddConsumptionActivity(){
