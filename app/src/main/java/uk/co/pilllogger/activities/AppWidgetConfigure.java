@@ -1,5 +1,6 @@
 package uk.co.pilllogger.activities;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -7,10 +8,12 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
+import java.util.Date;
 import java.util.List;
 
 import uk.co.pilllogger.R;
@@ -69,12 +72,50 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPil
     @Override
     public void pillsReceived(List<Pill> pills) {
         ListView pillsList = (ListView) findViewById(R.id.widget_configure_pill_list);
+
+        final Activity activity = this;
         if (pillsList != null) {
             WidgetListAdapter adapter = new WidgetListAdapter(this, R.layout.pill_list_item, pills);
             pillsList.setAdapter(adapter);
             pillsList.setOnItemClickListener(new WidgetPillsClickListener(this));
+            pillsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Pill pill = (Pill)parent.getItemAtPosition(position);
+
+                    if(pill == null)
+                        return;
+
+                    Intent intent = new Intent(activity, MyAppWidgetProvider.class);
+                    intent.setAction(CLICK_ACTION);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(AppWidgetConfigure.PILL_ID, pill.getId());
+
+                    intent.putExtras(bundle);
+
+                    //Create a pending intent from our intent
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, new Date().hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(activity);
+
+                    RemoteViews views = new RemoteViews(activity.getPackageName(),
+                            R.layout.appwidget);
+                    views.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
+                    views.setTextViewText(R.id.widget_size, String.valueOf(pill.getSize() + "mg"));
+                    views.setInt(R.id.widget_size,"setBackgroundColor", pill.getColour());
+                    views.setTextViewText(R.id.widget_text, pill.getName());
+                    appWidgetManager.updateAppWidget(_appWidgetId, views);
+
+                    Intent resultValue = new Intent();
+                    resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, _appWidgetId);
+                    setResult(RESULT_OK, resultValue);
+                    finish();
+                }
+            });
         }
     }
+
 
     public void setChosenPill(Pill pill) {
         _chosenPill = pill;
