@@ -4,6 +4,13 @@
    Author's custom styles
    ========================================================================== */
 
+body {
+	padding: 10px;
+}
+
+article {
+	margin-bottom: 20px;
+}
 
 
 

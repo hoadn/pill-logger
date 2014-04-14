@@ -40,7 +40,22 @@ public class SettingsFragment extends PreferenceFragment{
                     @Override
                     public boolean onPreferenceClick(Preference arg0) {
                         Intent composeIntent = new Intent(arg0.getContext(), WebViewActivity.class);
-                        composeIntent.putExtra(getString(R.string.key_web_address), "file:///android_asset/html/licenses/index.html");
+                        composeIntent.putExtra(getString(R.string.key_web_address), "file:///android_asset/html/licenses.html");
+
+                        startActivity(composeIntent);
+                        return true;
+                    }
+                });
+            }
+
+            Preference changes = findPreference(getString(R.string.pref_key_recent_changes));
+            if(changes != null){
+                changes.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference arg0) {
+                        Intent composeIntent = new Intent(arg0.getContext(), WebViewActivity.class);
+                        composeIntent.putExtra(getString(R.string.key_web_address), "file:///android_asset/html/changelog.html");
+                        composeIntent.putExtra(getString(R.string.key_show_feedback_button), true);
 
                         startActivity(composeIntent);
                         return true;
