@@ -12,38 +12,37 @@
     android:orientation="vertical"
     android:background="@android:color/transparent"
     >
+<ImageView
+    android:layout_width="30dp"
+    android:layout_height="30dp"
+    android:id="@+id/widget_colour_indicator"
+    android:layout_centerHorizontal="true"
+    />
       <TextView
           android:id="@+id/widget_text"
           android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:textColor="@color/text_grey"
-          android:textSize="22dp"
+          android:layout_height="wrap_content"
+          android:textColor="@color/white"
+          android:textSize="14dp"
           android:layout_marginRight="2dp"
           android:layout_marginBottom="2dp"
           android:layout_marginLeft="2dp"
-          android:layout_marginTop="15dp"
-          android:gravity="center"
+          android:layout_marginTop="2dp"
           android:clickable="true"
+          android:gravity="center_horizontal"
           android:text="Default"
-          android:background="@color/white"/>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:id="@+id/widget_colour"
-        android:layout_width="match_parent"
-        android:layout_height="15dp"
-        android:layout_alignParentTop="true"
-        android:background="@color/text_grey"/>
+          android:layout_below="@id/widget_colour_indicator"/>
+
 
       <TextView
       android:id="@+id/widget_size"
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginLeft="3dp"
-      android:textColor="@color/text_grey"
+      android:textColor="@color/white"
       android:layout_below="@id/widget_text"
-      android:layout_alignParentRight="true"
       android:textSize="10dp"
-      android:gravity="right"
+      android:gravity="center_horizontal"
       android:clickable="true"
       android:text="200mg"/>
 
