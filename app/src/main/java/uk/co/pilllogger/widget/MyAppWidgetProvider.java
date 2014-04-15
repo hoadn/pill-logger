@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Date;
@@ -17,11 +18,13 @@ import java.util.Date;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.AppWidgetConfigure;
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.views.ColourIndicator;
+import uk.co.pilllogger.views.WidgetIndicator;
 
 /**
  * Created by nick on 31/10/13.
@@ -63,17 +66,17 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(),
                 R.layout.appwidget);
         views.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
-        views.setTextViewText(R.id.widget_size, String.valueOf(pill.getSize() + "mg"));
+        views.setTextViewText(R.id.widget_size, String.valueOf(NumberHelper.getNiceFloatString(pill.getSize()) + "mg"));
         views.setInt(R.id.widget_size, "setBackgroundColor", pill.getColour());
         views.setTextViewText(R.id.widget_text, pill.getName().substring(0, 2));
 
-        ColourIndicator indicator = new ColourIndicator(context);
+        WidgetIndicator indicator = new WidgetIndicator(context);
         indicator.setColour(pill.getColour(), true);
         indicator.measure(90, 90);
         indicator.layout(0, 0, 90, 90);
         indicator.setDrawingCacheEnabled(true);
-        //Bitmap bitmap = indicator.getDrawingCache();
-        //views.setImageViewBitmap(R.id.widget_colour_indicator, bitmap);
+        Bitmap bitmap = indicator.getDrawingCache();
+        views.setImageViewBitmap(R.id.widget_colour_indicator, bitmap);
 
         appWidgetManager.updateAppWidget(id, views);
     }
