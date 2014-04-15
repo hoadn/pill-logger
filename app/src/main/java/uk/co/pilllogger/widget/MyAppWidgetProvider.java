@@ -126,8 +126,8 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
                 indicator.measure(90, 90);
                 indicator.layout(0, 0, 90, 90);
                 indicator.setDrawingCacheEnabled(true);
-                Bitmap bitmap = indicator.getDrawingCache();
-                views.setImageViewBitmap(R.id.widget_colour_indicator, bitmap);
+                //Bitmap bitmap = indicator.getDrawingCache();
+                //views.setImageViewBitmap(R.id.widget_colour_indicator, bitmap);
 
                 appWidgetManager.updateAppWidget(id, views);
             }

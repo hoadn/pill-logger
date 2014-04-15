@@ -7,43 +7,39 @@
     >
   <RelativeLayout
     android:id="@+id/widget_layout"
-    android:layout_width="70dp"
-    android:layout_height="70dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@android:color/transparent"
+    android:background="@drawable/white_gradient"
     >
-<ImageView
-    android:layout_width="30dp"
-    android:layout_height="30dp"
-    android:id="@+id/widget_colour_indicator"
-    android:layout_centerHorizontal="true"
-    />
       <TextView
           android:id="@+id/widget_text"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:textColor="@color/white"
-          android:textSize="14dp"
-          android:layout_marginRight="2dp"
+          android:layout_width="52dp"
+          android:layout_height="52dp"
+          android:textColor="@color/pill_colour1"
+          android:textSize="16dp"
+          android:layout_marginRight="9dp"
           android:layout_marginBottom="2dp"
-          android:layout_marginLeft="2dp"
-          android:layout_marginTop="2dp"
+          android:layout_marginLeft="9dp"
+          android:layout_marginTop="8dp"
+          android:padding="2dp"
           android:clickable="true"
-          android:gravity="center_horizontal"
-          android:text="Default"
-          android:layout_below="@id/widget_colour_indicator"/>
+          android:gravity="center"
+          android:background="@drawable/circle_background"
+          android:text="Default"/>
 
 
       <TextView
       android:id="@+id/widget_size"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginLeft="3dp"
       android:textColor="@color/white"
-      android:layout_below="@id/widget_text"
+      android:layout_alignParentBottom="true"
       android:textSize="10dp"
+      android:padding="2dp"
       android:gravity="center_horizontal"
       android:clickable="true"
+      android:background="@color/pill_colour1"
       android:text="200mg"/>
 
 
