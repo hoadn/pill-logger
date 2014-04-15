@@ -1,9 +1,10 @@
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_layout_container"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:background="@android:color/transparent"
+    android:orientation="vertical"
     >
   <RelativeLayout
     android:id="@+id/widget_layout"
@@ -11,44 +12,36 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/white_gradient"
+    android:layout_weight="1"
     >
       <TextView
           android:id="@+id/widget_text"
-          android:layout_width="52dp"
-          android:layout_height="52dp"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_margin="10dp"
           android:textColor="@color/pill_colour1"
           android:textSize="16dp"
-          android:layout_marginRight="9dp"
-          android:layout_marginBottom="2dp"
-          android:layout_marginLeft="9dp"
-          android:layout_marginTop="8dp"
           android:padding="2dp"
           android:clickable="true"
+          android:layout_centerInParent="true"
           android:gravity="center"
           android:background="@drawable/circle_background"
           android:text="Default"/>
 
 
-      <TextView
-      android:id="@+id/widget_size"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:textColor="@color/white"
-      android:layout_alignParentBottom="true"
-      android:textSize="10dp"
-      android:padding="2dp"
-      android:gravity="center_horizontal"
-      android:clickable="true"
-      android:background="@color/pill_colour1"
-      android:text="200mg"/>
-
-
-    <TextView
-        android:id="@+id/widget_pill_id"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:visibility="gone"/>
 
 </RelativeLayout>
 
-    </FrameLayout>
+    <TextView
+        android:id="@+id/widget_size"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="10dp"
+        android:padding="2dp"
+        android:gravity="center_horizontal"
+        android:clickable="true"
+        android:background="@color/pill_colour1"
+        android:text="200mg"/>
+
+    </LinearLayout>

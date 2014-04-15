@@ -30,42 +30,52 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
     private static final String TAG = "MyAppWidgetProvider";
     public static String CLICK_ACTION = "ClickAction";
-    public RemoteViews _views;
-
 
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
         // Perform this loop procedure for each App Widget that belongs to this provider
         for(int id : appWidgetIds){
-
-            Logger.d(TAG, "WidgetId: " + id);
-            int pillId = PreferenceManager.getDefaultSharedPreferences(context).getInt("widget" + id, -1);
-
-            Logger.d(TAG, "PillId: " + pillId);
-            if(pillId == -1){
-                continue;
-            }
-
-            Pill pill = PillRepository.getSingleton(context).get(pillId);
-
-            if(pill == null)
-                return;
-
-            Intent intent = new Intent(context, MyAppWidgetProvider.class);
-            intent.setAction(CLICK_ACTION);
-            intent.putExtra(AppWidgetConfigure.PILL_ID, pill.getId());
-
-            //Create a pending intent from our intent
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, new Date().hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            RemoteViews views = new RemoteViews(context.getPackageName(),
-                    R.layout.appwidget);
-            views.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
-            views.setTextViewText(R.id.widget_size, String.valueOf(pill.getSize() + "mg"));
-            views.setInt(R.id.widget_size,"setBackgroundColor", pill.getColour());
-            views.setTextViewText(R.id.widget_text, pill.getName());
-            appWidgetManager.updateAppWidget(id, views);
+            updateWidget(context, id, appWidgetManager);
         }
+    }
+
+    public static void updateWidget(Context context, int id, AppWidgetManager appWidgetManager){
+        Logger.d(TAG, "WidgetId: " + id);
+        int pillId = context.getSharedPreferences("widgets", Context.MODE_MULTI_PROCESS).getInt("widget" + id, -1);
+
+        Logger.d(TAG, "PillId: " + pillId);
+        if(pillId == -1){
+            return;
+        }
+
+        Pill pill = PillRepository.getSingleton(context).get(pillId);
+
+        if(pill == null)
+            return;
+
+        Intent newIntent = new Intent(context, MyAppWidgetProvider.class);
+        newIntent.setAction(CLICK_ACTION);
+        newIntent.putExtra(AppWidgetConfigure.PILL_ID, pill.getId());
+
+        //Create a pending intent from our intent
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, pill.getId(), newIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        RemoteViews views = new RemoteViews(context.getPackageName(),
+                R.layout.appwidget);
+        views.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
+        views.setTextViewText(R.id.widget_size, String.valueOf(pill.getSize() + "mg"));
+        views.setInt(R.id.widget_size, "setBackgroundColor", pill.getColour());
+        views.setTextViewText(R.id.widget_text, pill.getName().substring(0, 2));
+
+        ColourIndicator indicator = new ColourIndicator(context);
+        indicator.setColour(pill.getColour(), true);
+        indicator.measure(90, 90);
+        indicator.layout(0, 0, 90, 90);
+        indicator.setDrawingCacheEnabled(true);
+        //Bitmap bitmap = indicator.getDrawingCache();
+        //views.setImageViewBitmap(R.id.widget_colour_indicator, bitmap);
+
+        appWidgetManager.updateAppWidget(id, views);
     }
 
     @Override
@@ -94,42 +104,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             }
 
             for(int id : appWidgetIds){
-                Logger.d(TAG, "WidgetId: " + id);
-                int pillId = context.getSharedPreferences("widgets", Context.MODE_MULTI_PROCESS).getInt("widget" + id, -1);
-
-                Logger.d(TAG, "PillId: " + pillId);
-                if(pillId == -1){
-                    continue;
-                }
-
-                Pill pill = PillRepository.getSingleton(context).get(pillId);
-
-                if(pill == null)
-                    return;
-
-                Intent newIntent = new Intent(context, MyAppWidgetProvider.class);
-                newIntent.setAction(CLICK_ACTION);
-                newIntent.putExtra(AppWidgetConfigure.PILL_ID, pill.getId());
-
-                //Create a pending intent from our intent
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, pill.getId(), newIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                RemoteViews views = new RemoteViews(context.getPackageName(),
-                        R.layout.appwidget);
-                views.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
-                views.setTextViewText(R.id.widget_size, String.valueOf(pill.getSize() + "mg"));
-                views.setInt(R.id.widget_size, "setBackgroundColor", pill.getColour());
-                views.setTextViewText(R.id.widget_text, pill.getName());
-
-                ColourIndicator indicator = new ColourIndicator(context);
-                indicator.setColour(pill.getColour(), true);
-                indicator.measure(90, 90);
-                indicator.layout(0, 0, 90, 90);
-                indicator.setDrawingCacheEnabled(true);
-                //Bitmap bitmap = indicator.getDrawingCache();
-                //views.setImageViewBitmap(R.id.widget_colour_indicator, bitmap);
-
-                appWidgetManager.updateAppWidget(id, views);
+                updateWidget(context, id, appWidgetManager);
             }
         }
 
@@ -146,37 +121,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         }
 
         for(int id : appWidgetIds){
-            Logger.d(TAG, "WidgetId: " + id);
-            int pillId = PreferenceManager.getDefaultSharedPreferences(context).getInt("widget" + id, -1);
-
-            Logger.d(TAG, "PillId: " + pillId);
-            if(pillId == -1){
-                continue;
-            }
-
-            Pill pill = PillRepository.getSingleton(context).get(pillId);
-
-            if(pill == null)
-                return;
-
-            Intent intent = new Intent(context, MyAppWidgetProvider.class);
-            intent.setAction(CLICK_ACTION);
-            intent.putExtra(AppWidgetConfigure.PILL_ID, pill.getId());
-
-            //Create a pending intent from our intent
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, new Date().hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            RemoteViews views = new RemoteViews(context.getPackageName(),
-                    R.layout.appwidget);
-            views.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
-            views.setTextViewText(R.id.widget_size, String.valueOf(pill.getSize() + "mg"));
-            views.setInt(R.id.widget_size,"setBackgroundColor", pill.getColour());
-            views.setTextViewText(R.id.widget_text, pill.getName());
-            appWidgetManager.updateAppWidget(id, views);
+            updateWidget(context, id, appWidgetManager);
         }
-    }
-
-    private void setUpWidget(Context context) {
-
     }
 }

@@ -96,15 +96,10 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPil
 
                     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(activity);
 
-                    RemoteViews views = new RemoteViews(activity.getPackageName(),
-                            R.layout.appwidget);
-                    views.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
-                    views.setTextViewText(R.id.widget_size, String.valueOf(pill.getSize() + "mg"));
-                    //views.setInt(R.id.widget_size,"setBackgroundColor", pill.getColour());
-                    views.setTextViewText(R.id.widget_text, pill.getName().substring(0,2));
-                    appWidgetManager.updateAppWidget(_appWidgetId, views);
 
                     activity.getSharedPreferences("widgets", Context.MODE_MULTI_PROCESS).edit().putInt("widget" + _appWidgetId, pill.getId()).commit();
+
+                    MyAppWidgetProvider.updateWidget(activity, _appWidgetId, appWidgetManager);
 
                     Intent resultValue = new Intent();
                     resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, _appWidgetId);
