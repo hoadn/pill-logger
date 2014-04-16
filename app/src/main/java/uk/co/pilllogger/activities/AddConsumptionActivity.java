@@ -245,7 +245,7 @@ public class AddConsumptionActivity extends Activity implements
         });
 
         _unitSpinner = (Spinner) this.findViewById(R.id.units_spinner);
-        String[] units = { "mg", "ml", "mcg" };
+        String[] units = getResources().getStringArray(R.array.units_array);
         UnitAdapter adapter = new UnitAdapter(this, android.R.layout.simple_spinner_item, units);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _unitSpinner.setAdapter(adapter);
