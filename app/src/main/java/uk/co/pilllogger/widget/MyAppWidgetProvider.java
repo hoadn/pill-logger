@@ -65,7 +65,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
         RemoteViews views = new RemoteViews(context.getPackageName(),
                 R.layout.appwidget);
-        views.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
+        views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
         views.setTextViewText(R.id.widget_size, String.valueOf(NumberHelper.getNiceFloatString(pill.getSize()) + "mg"));
         views.setInt(R.id.widget_size, "setBackgroundColor", pill.getColour());
         views.setTextViewText(R.id.widget_text, pill.getName().substring(0, 2));
