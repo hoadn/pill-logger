@@ -82,7 +82,7 @@ public class WidgetIndicator extends ImageView {
         GradientDrawable background = (GradientDrawable) this.getDrawable();
 
         if (background != null) {
-            background.setColor(getContext().getResources().getColor(R.color.translucent_whiter));
+            //background.setColor(getContext().getResources().getColor(R.color.translucent_whiter));
             background.setStroke(6, colour);
         }
 

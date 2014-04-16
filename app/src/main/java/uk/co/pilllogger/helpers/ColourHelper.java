@@ -21,4 +21,13 @@ public class ColourHelper {
 
         return Color.HSVToColor(hsv);
     }
+
+    public static boolean isColourLight(int colour) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(colour, hsv);
+
+        if (hsv[2] > 0.9)
+            return true;
+        return false;
+    }
 }

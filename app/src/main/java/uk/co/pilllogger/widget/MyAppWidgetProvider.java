@@ -17,6 +17,7 @@ import java.util.Date;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.AppWidgetConfigure;
+import uk.co.pilllogger.helpers.ColourHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Consumption;
@@ -72,11 +73,14 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
         WidgetIndicator indicator = new WidgetIndicator(context);
         indicator.setColour(pill.getColour(), true);
-        indicator.measure(90, 90);
-        indicator.layout(0, 0, 90, 90);
+        indicator.measure(180, 180);
+        indicator.layout(0, 0, 180, 180);
         indicator.setDrawingCacheEnabled(true);
         Bitmap bitmap = indicator.getDrawingCache();
         views.setImageViewBitmap(R.id.widget_colour_indicator, bitmap);
+
+        if (ColourHelper.isColourLight(pill.getColour()))
+            views.setInt(R.id.widget_size, "setTextColor", context.getResources().getColor(R.color.text_grey));
 
         appWidgetManager.updateAppWidget(id, views);
     }
