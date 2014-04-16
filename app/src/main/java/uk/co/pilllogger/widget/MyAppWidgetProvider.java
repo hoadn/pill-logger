@@ -70,7 +70,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
         views.setTextViewText(R.id.widget_size, String.valueOf(NumberHelper.getNiceFloatString(pill.getSize()) + "mg"));
         views.setInt(R.id.widget_size, "setBackgroundColor", pill.getColour());
-        views.setTextViewText(R.id.widget_text, pill.getName().substring(0, 2));
+        views.setTextViewText(R.id.widget_text, pill.getName().substring(0, 3));
 
         WidgetIndicator indicator = new WidgetIndicator(context);
         indicator.setColour(pill.getColour(), true);
