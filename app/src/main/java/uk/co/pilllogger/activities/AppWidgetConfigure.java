@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RemoteViews;
@@ -35,13 +36,13 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPil
     int _appWidgetId = -1;
     Pill _chosenPill;
     Typeface _typeface;
-    TextView _selectedPillName, _selectedPillSize;
     ListView _pillsList;
     View _selectedPillLayout;
     Intent _newIntent;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_app_widget_configure);
 
         _typeface = State.getSingleton().getTypeface();
@@ -56,14 +57,6 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPil
                     AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
         }
-
-        View finishButton = findViewById(R.id.widget_finish);
-        finishButton.setOnClickListener(new finishConfigureClickListener(this));
-
-        _selectedPillName = (TextView) findViewById(R.id.widget_configure_selected_pill_name);
-        _selectedPillSize = (TextView) findViewById(R.id.widget_configure_selected_pill_size);
-        _selectedPillName.setTypeface(_typeface);
-        _selectedPillSize.setTypeface(_typeface);
 
 
         _newIntent = new Intent(this, MyAppWidgetProvider.class);
@@ -110,59 +103,4 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPil
         }
     }
 
-
-    public void setChosenPill(Pill pill) {
-        _chosenPill = pill;
-        _selectedPillName.setText(pill.getName());
-        _selectedPillSize.setText(String.valueOf(pill.getSize()));
-        _selectedPillLayout = findViewById(R.id.widget_configure_selected_pill);
-
-
-        _pillsList = (ListView)findViewById(R.id.widget_configure_pill_list);
-        _pillsList.setVisibility(View.GONE);
-        _selectedPillLayout.setVisibility(View.VISIBLE);
-
-        Bundle bundle = new Bundle();
-        bundle.putInt(AppWidgetConfigure.PILL_ID, _chosenPill.getId());
-        _newIntent.putExtras(bundle);
-    }
-
-    public void cancelPillSelection(View view) {
-        _pillsList.setVisibility(View.VISIBLE);
-        _selectedPillLayout.setVisibility(View.GONE);
-    }
-
-    public class finishConfigureClickListener implements View.OnClickListener {
-
-        Context _context;
-
-        public finishConfigureClickListener(Context context) {
-            _context = context;
-        }
-
-        @Override
-        public void onClick(View view) {
-            _newIntent.setAction(CLICK_ACTION);
-            Bundle bundle = _newIntent.getExtras();
-            int pillId = bundle.getInt(AppWidgetConfigure.PILL_ID);
-            //Create a pending intent from our intent
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(_context, 0, _newIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(_context);
-
-            RemoteViews views = new RemoteViews(_context.getPackageName(),
-                    R.layout.appwidget);
-            views.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
-            views.setTextViewText(R.id.widget_size, String.valueOf(_chosenPill.getSize() + "mg"));
-            views.setInt(R.id.widget_size,"setBackgroundColor", _chosenPill.getColour());
-            views.setTextViewText(R.id.widget_text, _chosenPill.getName().substring(0,1));
-            appWidgetManager.updateAppWidget(_appWidgetId, views);
-
-
-            Intent resultValue = new Intent();
-            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, _appWidgetId);
-            setResult(RESULT_OK, resultValue);
-            finish();
-        }
-    }
 }
