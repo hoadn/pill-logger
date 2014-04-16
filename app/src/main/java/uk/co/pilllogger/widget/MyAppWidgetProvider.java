@@ -18,6 +18,7 @@ import java.util.Date;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.AppWidgetConfigure;
 import uk.co.pilllogger.helpers.ColourHelper;
+import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
@@ -74,8 +75,9 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
         WidgetIndicator indicator = new WidgetIndicator(context);
         indicator.setColour(pill.getColour(), true);
-        indicator.measure(180, 180);
-        indicator.layout(0, 0, 180, 180);
+        int widgetSize = (int)LayoutHelper.dpToPx(context, 60);
+        indicator.measure(widgetSize, widgetSize);
+        indicator.layout(0, 0, widgetSize, widgetSize);
         indicator.setDrawingCacheEnabled(true);
         Bitmap bitmap = indicator.getDrawingCache();
         views.setImageViewBitmap(R.id.widget_colour_indicator, bitmap);
@@ -103,8 +105,6 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             Toast.makeText(context, pill.getName() + " added", Toast.LENGTH_SHORT).show();
         }
         else {
-            Toast.makeText(context,"Testing", Toast.LENGTH_LONG).show();
-
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             int[] appWidgetIds = new int[0];
             if (appWidgetManager != null) {
