@@ -20,6 +20,7 @@ import uk.co.pilllogger.activities.AppWidgetConfigure;
 import uk.co.pilllogger.helpers.ColourHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.NumberHelper;
+import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
@@ -98,6 +99,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
                 Consumption consumption = new Consumption(pill, new Date());
                 new InsertConsumptionTask(context, consumption).execute();
             }
+            TrackerHelper.widgetClickedEvent(context, "MyAppWidgetProvider");
             Toast.makeText(context, pill.getName() + " added", Toast.LENGTH_SHORT).show();
         }
         else {

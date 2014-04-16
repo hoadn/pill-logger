@@ -20,6 +20,7 @@ import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.WidgetListAdapter;
+import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.listeners.WidgetPillsClickListener;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
@@ -97,6 +98,7 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPil
                     Intent resultValue = new Intent();
                     resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, _appWidgetId);
                     setResult(RESULT_OK, resultValue);
+                    TrackerHelper.widgetCreatedEvent(AppWidgetConfigure.this, "AppWidgetConfigure");
                     finish();
                 }
             });
