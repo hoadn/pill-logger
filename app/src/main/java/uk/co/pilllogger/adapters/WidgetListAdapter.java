@@ -48,7 +48,7 @@ public class WidgetListAdapter extends ArrayAdapter{
         holder.name = (TextView) v.findViewById(R.id.pill_list_name);
         holder.size = (TextView) v.findViewById(R.id.pill_list_size);
         holder.favourite = v.findViewById(R.id.pill_list_favourite);
-        holder.colour = (ColourIndicator) v.findViewById(R.id.pill_list_colour);
+        holder.colour = (ColourIndicator) v.findViewById(R.id.add_consumption_pill_colour);
         holder.pickerContainer = (ViewGroup) v.findViewById(R.id.pill_list_colour_picker_container);
 
         holder.name.setTypeface(State.getSingleton().getTypeface());

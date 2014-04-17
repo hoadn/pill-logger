@@ -6,9 +6,11 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +49,9 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
     public static void updateWidget(Context context, int id, AppWidgetManager appWidgetManager){
         Logger.d(TAG, "WidgetId: " + id);
-        int pillId = context.getSharedPreferences("widgets", Context.MODE_MULTI_PROCESS).getInt("widget" + id, -1);
+        SharedPreferences preferences = context.getSharedPreferences("widgets", Context.MODE_MULTI_PROCESS);
+        int pillId = preferences.getInt("widgetPill" + id, -1);
+        int quantity = preferences.getInt("widgetQuantity" + id, 1);
 
         Logger.d(TAG, "PillId: " + pillId);
         if(pillId == -1){
@@ -58,6 +62,9 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
         if(pill == null)
             return;
+
+        String indicatorChar = context.getString(R.string.widget_quantity_indicator);
+        String indicatorOverloadChar = context.getString(R.string.widget_quantity_overload_indicator);
 
         Intent newIntent = new Intent(context, MyAppWidgetProvider.class);
         newIntent.setAction(CLICK_ACTION);
@@ -72,6 +79,26 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         views.setTextViewText(R.id.widget_size, String.valueOf(NumberHelper.getNiceFloatString(pill.getSize()) + "mg"));
         views.setInt(R.id.widget_size, "setBackgroundColor", pill.getColour());
         views.setTextViewText(R.id.widget_text, pill.getName().substring(0, 3));
+
+        quantity = 4;
+        String quantityIndicator = "";
+
+        if(quantity > 3)
+            quantityIndicator = String.format("%s %s %s", indicatorChar, indicatorChar, indicatorOverloadChar);
+        else{
+            for(int i = 0; i < quantity; i++) {
+                if(i > 0)
+                    quantityIndicator += " ";
+
+                quantityIndicator += indicatorChar;
+            }
+        }
+
+        views.setTextViewText(R.id.widget_quantity_indicator, quantityIndicator);
+        if(quantity > 10)
+            views.setInt(R.id.widget_quantity, "setVisibility", View.VISIBLE);
+        else
+            views.setInt(R.id.widget_quantity, "setVisibility", View.GONE);
 
         WidgetIndicator indicator = new WidgetIndicator(context);
         indicator.setColour(pill.getColour(), true);

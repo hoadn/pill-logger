@@ -17,33 +17,63 @@
           android:layout_width="60dp"
           android:layout_height="60dp"
           android:id="@+id/widget_colour_indicator"
-          android:layout_centerHorizontal="true"
+          android:layout_centerInParent="true"
           />
       <TextView
-          android:id="@+id/widget_text"
+          android:layout_height="wrap_content"
+          android:layout_width="wrap_content"
+          android:id="@+id/widget_quantity"
+          android:layout_marginTop="3dp"
+          android:text="x2"
+          android:textColor="@color/white"
+          android:textStyle="bold"
+          android:layout_marginRight="2dp"
+          android:textSize="8dp"
+          android:layout_alignParentBottom="true"
+          android:layout_alignParentRight="true"
+          android:layout_below="@+id/widget_text_container"/>
+      <LinearLayout
+          android:id="@+id/widget_text_container"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:textColor="@color/white"
-          android:textSize="16dp"
-          android:layout_marginTop="10dp"
-          android:padding="1dp"
-          android:clickable="false"
-          android:layout_centerHorizontal="true"
-          android:gravity="center"
-          android:textStyle="bold"
-          android:text="Pa"/>
-      <TextView
-          android:id="@+id/widget_size"
-          android:layout_width="60dp"
-          android:layout_height="wrap_content"
-          android:textColor="@color/white"
-          android:textSize="10dp"
-          android:layout_below="@id/widget_text"
-          android:gravity="center_horizontal"
-          android:layout_centerHorizontal="true"
-          android:clickable="false"
-          android:text="200mg"/>
-
+          android:orientation="vertical"
+          android:layout_centerInParent="true"
+          android:baselineAligned="false">
+          <TextView
+              android:id="@+id/widget_text"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textColor="@color/white"
+              android:textSize="16dp"
+              android:layout_marginTop="0dp"
+              android:layout_gravity="center_horizontal"
+              android:padding="1dp"
+              android:clickable="false"
+              android:gravity="center"
+              android:textStyle="bold"
+              android:text="Par"/>
+          <TextView
+              android:id="@+id/widget_size"
+              android:layout_width="60dp"
+              android:layout_height="wrap_content"
+              android:textColor="@color/white"
+              android:textSize="10dp"
+              android:layout_gravity="center_horizontal"
+              android:gravity="center_horizontal"
+              android:clickable="false"
+              android:text="200mg"/>
+          <TextView
+              android:id="@+id/widget_quantity_indicator"
+              android:layout_width="60dp"
+              android:layout_height="wrap_content"
+              android:textColor="@color/white"
+              android:textStyle="bold"
+              android:textSize="10dp"
+              android:layout_gravity="center_horizontal"
+              android:gravity="center"
+              android:clickable="false"
+              android:text="+ • •"/>
+      </LinearLayout>
 
 </RelativeLayout>
 

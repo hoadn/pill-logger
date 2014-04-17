@@ -132,4 +132,6 @@
     <string name="pref_title_recent_changes">Recent changes</string>
     <string name="support_subject">Pill Logger Feedback</string>
     <string name="feedback_chooser_title">Send feedback...</string>
+    <string name="widget_quantity_indicator">●</string>
+    <string name="widget_quantity_overload_indicator">+</string>
 </resources>

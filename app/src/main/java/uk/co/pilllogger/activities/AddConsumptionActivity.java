@@ -67,7 +67,8 @@ public class AddConsumptionActivity extends Activity implements
         InsertPillTask.ITaskComplete,
         DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener,
-        GetTutorialSeenTask.ITaskComplete {
+        GetTutorialSeenTask.ITaskComplete,
+        AddConsumptionPillListAdapter.IConsumptionSelected {
 
     private static final String TAG = "AddConsumptionActivity";
     public static String DATE_FORMAT = "E, MMM dd, yyyy";
@@ -472,7 +473,7 @@ public class AddConsumptionActivity extends Activity implements
             }
         });
 
-        _adapter = new AddConsumptionPillListAdapter(this, R.layout.add_consumption_pill_list, pills);
+        _adapter = new AddConsumptionPillListAdapter(this, this, R.layout.add_consumption_pill_list, pills);
          _pillsList.setAdapter(_adapter);
         _pillsList.setOnItemClickListener(new AddConsumptionPillItemClickListener(this, (AddConsumptionPillListAdapter)_pillsList.getAdapter()));
 
