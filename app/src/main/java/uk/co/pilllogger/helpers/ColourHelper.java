@@ -23,11 +23,13 @@ public class ColourHelper {
     }
 
     public static boolean isColourLight(int colour) {
-        float[] hsv = new float[3];
-        Color.colorToHSV(colour, hsv);
+        int red = Color.red(colour);
+        int blue = Color.blue(colour);
+        int green = Color.green(colour);
 
-        if (hsv[2] > 0.9)
-            return true;
-        return false;
+        return (int)Math.sqrt(
+                red * red * .241 +
+                        green * green * .691 +
+                        blue * blue * .068) > 130;
     }
 }

@@ -119,8 +119,11 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         Bitmap bitmap = indicator.getDrawingCache();
         views.setImageViewBitmap(R.id.widget_colour_indicator, bitmap);
 
-        if (ColourHelper.isColourLight(pill.getColour()))
-            views.setInt(R.id.widget_size, "setTextColor", context.getResources().getColor(R.color.text_grey));
+        int sizeTextColour = R.color.white;
+        if (ColourHelper.isColourLight(pill.getColour())) {
+            sizeTextColour = R.color.text_grey;
+        }
+        views.setInt(R.id.widget_size, "setTextColor", context.getResources().getColor(sizeTextColour));
 
         appWidgetManager.updateAppWidget(id, views);
     }
