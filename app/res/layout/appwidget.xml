@@ -1,5 +1,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget_layout_container"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
@@ -12,26 +13,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    tools:layout_width="60dp"
+    tools:layout_height="60dp"
     >
       <ImageView
           android:layout_width="60dp"
           android:layout_height="60dp"
           android:id="@+id/widget_colour_indicator"
           android:layout_centerInParent="true"
+          tools:background="@drawable/circle_background"
           />
-      <TextView
-          android:layout_height="wrap_content"
-          android:layout_width="wrap_content"
-          android:id="@+id/widget_quantity"
-          android:layout_marginTop="3dp"
-          android:text="x2"
-          android:textColor="@color/white"
-          android:textStyle="bold"
-          android:layout_marginRight="2dp"
-          android:textSize="8dp"
-          android:layout_alignParentBottom="true"
-          android:layout_alignParentRight="true"
-          android:layout_below="@+id/widget_text_container"/>
       <LinearLayout
           android:id="@+id/widget_text_container"
           android:layout_width="wrap_content"
@@ -45,7 +36,7 @@
               android:layout_height="wrap_content"
               android:textColor="@color/white"
               android:textSize="16dp"
-              android:layout_marginTop="0dp"
+              android:layout_marginTop="5dp"
               android:layout_gravity="center_horizontal"
               android:padding="1dp"
               android:clickable="false"

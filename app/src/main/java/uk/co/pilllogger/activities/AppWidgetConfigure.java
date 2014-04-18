@@ -38,11 +38,9 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPil
 
     public static String CLICK_ACTION = "ClickAction";
     public static String PILL_ID = "uk.co.pilllogger.activities.AppWidgetConfigure.PILL_ID";
+    public static String PILL_QUANTITY = "uk.co.pilllogger.activities.AppWidgetConfigure.PILL_QUANTITY";
     int _appWidgetId = -1;
-    Pill _chosenPill;
     Typeface _typeface;
-    ListView _pillsList;
-    View _selectedPillLayout;
     Intent _newIntent;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -72,7 +70,6 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPil
     public void pillsReceived(List<Pill> pills) {
         ListView pillsList = (ListView) findViewById(R.id.widget_configure_pill_list);
 
-        final Activity activity = this;
         if (pillsList != null) {
             final AddConsumptionPillListAdapter adapter = new AddConsumptionPillListAdapter(this, this, R.layout.add_consumption_pill_list, pills);
             pillsList.setAdapter(adapter);
@@ -83,49 +80,42 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPil
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int i = 0;
-                    for (Pill pill : adapter.getPillsConsumed()) {
-                        Toast.makeText(activity, pill.getName() + " " + i++, Toast.LENGTH_SHORT).show();
-                    };
+                    List<Pill> pillsConsumed = adapter.getPillsConsumed();
+                    if(pillsConsumed.size() == 0)
+                        return;
 
+                    int quantity = pillsConsumed.size();
+                    Pill pill = pillsConsumed.get(0);
+
+                    addWidget(pill, quantity);
                 }
             });
-
-            //pillsList.setOnItemClickListener(new WidgetPillsClickListener(this));
-//            pillsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                    Pill pill = (Pill)parent.getItemAtPosition(position);
-//
-//                    if(pill == null)
-//                        return;
-//
-//                    Intent intent = new Intent(activity, MyAppWidgetProvider.class);
-//                    intent.setAction(CLICK_ACTION);
-//                    intent.putExtra(AppWidgetConfigure.PILL_ID, pill.getId());
-//
-//                    //Create a pending intent from our intent
-//                    PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, new Date().hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//                    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(activity);
-//
-//
-//                    SharedPreferences.Editor editor = activity.getSharedPreferences("widgets", Context.MODE_MULTI_PROCESS).edit();
-//                    editor.putInt("widgetPill" + _appWidgetId, pill.getId());
-//                    editor.putInt("widgetQuantity" + _appWidgetId, 3);
-//                    editor.commit();
-//
-//
-//                    MyAppWidgetProvider.updateWidget(activity, _appWidgetId, appWidgetManager);
-//
-//                    Intent resultValue = new Intent();
-//                    resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, _appWidgetId);
-//                    setResult(RESULT_OK, resultValue);
-//                    TrackerHelper.widgetCreatedEvent(AppWidgetConfigure.this, "AppWidgetConfigure");
-//                    finish();
-//                }
-//            });
         }
+    }
+
+    private void addWidget(Pill pill, int quantity){
+        if(pill == null)
+            return;
+
+        Intent intent = new Intent(this, MyAppWidgetProvider.class);
+        intent.setAction(CLICK_ACTION);
+        intent.putExtra(AppWidgetConfigure.PILL_ID, pill.getId());
+        intent.putExtra(AppWidgetConfigure.PILL_QUANTITY, quantity);
+
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+
+        SharedPreferences.Editor editor = this.getSharedPreferences("widgets", Context.MODE_MULTI_PROCESS).edit();
+        editor.putInt("widgetPill" + _appWidgetId, pill.getId());
+        editor.putInt("widgetQuantity" + _appWidgetId, quantity);
+        editor.commit();
+
+        MyAppWidgetProvider.updateWidget(this, _appWidgetId, appWidgetManager);
+
+        Intent resultValue = new Intent();
+        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, _appWidgetId);
+        setResult(RESULT_OK, resultValue);
+        TrackerHelper.widgetCreatedEvent(AppWidgetConfigure.this, "AppWidgetConfigure");
+        finish();
     }
 
     @Override

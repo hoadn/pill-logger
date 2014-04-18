@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Date;
+import java.util.UUID;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.AppWidgetConfigure;
@@ -69,6 +70,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         Intent newIntent = new Intent(context, MyAppWidgetProvider.class);
         newIntent.setAction(CLICK_ACTION);
         newIntent.putExtra(AppWidgetConfigure.PILL_ID, pill.getId());
+        newIntent.putExtra(AppWidgetConfigure.PILL_QUANTITY, quantity);
 
         //Create a pending intent from our intent
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, pill.getId(), newIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -80,7 +82,6 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         views.setInt(R.id.widget_size, "setBackgroundColor", pill.getColour());
         views.setTextViewText(R.id.widget_text, pill.getName().substring(0, 3));
 
-        quantity = 4;
         String quantityIndicator = "";
 
         if(quantity > 3)
@@ -95,10 +96,6 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         }
 
         views.setTextViewText(R.id.widget_quantity_indicator, quantityIndicator);
-        if(quantity > 10)
-            views.setInt(R.id.widget_quantity, "setVisibility", View.VISIBLE);
-        else
-            views.setInt(R.id.widget_quantity, "setVisibility", View.GONE);
 
         WidgetIndicator indicator = new WidgetIndicator(context);
         indicator.setColour(pill.getColour(), true);
@@ -123,13 +120,19 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         if (intent.getAction().equals(CLICK_ACTION)) {
 
             int pillId = intent.getIntExtra(AppWidgetConfigure.PILL_ID, 0);
+            int quantity = intent.getIntExtra(AppWidgetConfigure.PILL_QUANTITY, 1);
             Pill pill = PillRepository.getSingleton(context).get(pillId);
+
+            String group = UUID.randomUUID().toString();
+            Date d = new Date();
             if (pill != null) {
-                Consumption consumption = new Consumption(pill, new Date());
-                new InsertConsumptionTask(context, consumption).execute();
+                for(int i = 0; i < quantity; i++) {
+                    Consumption consumption = new Consumption(pill, d, group);
+                    new InsertConsumptionTask(context, consumption).execute();
+                }
             }
             TrackerHelper.widgetClickedEvent(context, "MyAppWidgetProvider");
-            Toast.makeText(context, pill.getName() + " added", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, quantity + " " + pill.getName() + " added", Toast.LENGTH_SHORT).show();
         }
         else {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
