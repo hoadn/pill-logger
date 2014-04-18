@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
 
-import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 
@@ -18,7 +17,6 @@ public class Observer {
     private WeakHashMap<IPillsUpdated, WeakReference<IPillsUpdated>> _pillsUpdatedArrayList = new WeakHashMap<IPillsUpdated, WeakReference<IPillsUpdated>>();
     private WeakHashMap<IConsumptionAdded, WeakReference<IConsumptionAdded>> _consumptionAddedListeners = new WeakHashMap<IConsumptionAdded, WeakReference<IConsumptionAdded>>();
     private WeakHashMap<IConsumptionDeleted, WeakReference<IConsumptionDeleted>> _consumptionDeletedListeners = new WeakHashMap<IConsumptionDeleted, WeakReference<IConsumptionDeleted>>();
-
 
     public static Observer getSingleton() {
         if(_instance == null)

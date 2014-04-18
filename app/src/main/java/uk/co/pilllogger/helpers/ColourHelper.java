@@ -21,4 +21,15 @@ public class ColourHelper {
 
         return Color.HSVToColor(hsv);
     }
+
+    public static boolean isColourLight(int colour) {
+        int red = Color.red(colour);
+        int blue = Color.blue(colour);
+        int green = Color.green(colour);
+
+        return (int)Math.sqrt(
+                red * red * .241 +
+                        green * green * .691 +
+                        blue * blue * .068) > 130;
+    }
 }

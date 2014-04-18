@@ -36,7 +36,8 @@ public class
         AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
 
     private List<Pill> _pills;
-    private AddConsumptionActivity _activity;
+    private IConsumptionSelected _activity;
+    private Context _context;
     private int _resourceId;
 
 
@@ -53,12 +54,14 @@ public class
 
     public void clearOpenPillsList() {
         State.getSingleton().clearOpenPillsList();
+        State.getSingleton().clearConsumpedPills();
         _activity.setDoneEnabled(false);
     }
 
-    public AddConsumptionPillListAdapter(AddConsumptionActivity activity, int textViewResourceId, List<Pill> pills) {
-        super(activity, textViewResourceId, pills);
+    public AddConsumptionPillListAdapter(Context context, IConsumptionSelected activity, int textViewResourceId, List<Pill> pills) {
+        super(context, textViewResourceId, pills);
         _activity = activity;
+        _context = context;
         _pills = pills;
         _resourceId = textViewResourceId;
     }
@@ -79,7 +82,7 @@ public class
         View v = convertView;
         ViewHolder holder = null;
         if (v == null) {
-            LayoutInflater inflater = (LayoutInflater)_activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater)_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(_resourceId, null);
             if(v != null){
                 holder = new ViewHolder();
@@ -129,12 +132,12 @@ public class
 
             Consumption latest = pill.getLatestConsumption();
             if(latest != null){
-                String prefix = _activity.getString(R.string.last_taken_message_prefix);
-                String lastTaken = DateHelper.getRelativeDateTime(_activity, latest.getDate());
+                String prefix = _context.getString(R.string.last_taken_message_prefix);
+                String lastTaken = DateHelper.getRelativeDateTime(_context, latest.getDate());
                 holder.lastTaken.setText(prefix + " " + lastTaken);
             }
             else{
-                holder.lastTaken.setText(_activity.getString(R.string.no_consumptions_message));
+                holder.lastTaken.setText(_context.getString(R.string.no_consumptions_message));
             }
         }
         TextView add = (TextView)v.findViewById(R.id.add_consumption_add);
@@ -145,7 +148,7 @@ public class
     }
 
     private View open(View v) {
-        int backgroundColor = _activity.getResources().getColor(R.color.pill_selection_background);
+        int backgroundColor = _context.getResources().getColor(R.color.pill_selection_background);
         v.setBackgroundColor(backgroundColor);
         View view = v.findViewById(R.id.add_consumption_after_click_layout);
         if(view != null){
@@ -154,13 +157,13 @@ public class
             rightLayout.setBackgroundColor(backgroundColor);
             ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
             if(layoutParams != null)
-                layoutParams.width = (int) LayoutHelper.dpToPx(_activity, 125);
+                layoutParams.width = (int) LayoutHelper.dpToPx(_context, 125);
         }
         return v;
     }
 
     private View close(View v) {
-        int backgroundColor = _activity.getResources().getColor(android.R.color.transparent);
+        int backgroundColor = _context.getResources().getColor(android.R.color.transparent);
         v.setBackgroundColor(backgroundColor);
         View view = v.findViewById(R.id.add_consumption_after_click_layout);
         if(view != null){
@@ -169,7 +172,7 @@ public class
             rightLayout.setBackgroundColor(backgroundColor);
             ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
             if(layoutParams != null)
-                layoutParams.width = (int) LayoutHelper.dpToPx(_activity, 0);
+                layoutParams.width = (int) LayoutHelper.dpToPx(_context, 0);
         }
         return v;
     }
@@ -253,6 +256,10 @@ public class
                 }
             }
         }
+    }
+
+    public interface IConsumptionSelected{
+        void setDoneEnabled(boolean enabled);
     }
 }
 

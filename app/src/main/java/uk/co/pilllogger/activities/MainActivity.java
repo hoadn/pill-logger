@@ -3,6 +3,8 @@ package uk.co.pilllogger.activities;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -56,6 +58,7 @@ import uk.co.pilllogger.tutorial.TutorialPage;
 import uk.co.pilllogger.tutorial.TutorialService;
 import uk.co.pilllogger.views.ColourIndicator;
 import uk.co.pilllogger.views.MyViewPager;
+import uk.co.pilllogger.widget.MyAppWidgetProvider;
 
 /**
  * Created by nick on 22/10/13.
@@ -445,6 +448,12 @@ public class MainActivity extends PillLoggerActivityBase implements
                 }
             }
         });
+
+        Intent intent = new Intent(this, MyAppWidgetProvider.class);
+        intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
+        int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), MyAppWidgetProvider.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
+        sendBroadcast(intent);
     }
 
     @Override
