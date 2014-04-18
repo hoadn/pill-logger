@@ -48,6 +48,19 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         }
     }
 
+    public static void updateAllWidgets(Context context){
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        int[] appWidgetIds = new int[0];
+        if (appWidgetManager != null) {
+            appWidgetIds = appWidgetManager.getAppWidgetIds(
+                    new ComponentName(context, MyAppWidgetProvider.class));
+        }
+
+        for(int id : appWidgetIds){
+            updateWidget(context, id, appWidgetManager);
+        }
+    }
+
     public static void updateWidget(Context context, int id, AppWidgetManager appWidgetManager){
         Logger.d(TAG, "WidgetId: " + id);
         SharedPreferences preferences = context.getSharedPreferences("widgets", Context.MODE_MULTI_PROCESS);
@@ -135,19 +148,8 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             Toast.makeText(context, quantity + " " + pill.getName() + " added", Toast.LENGTH_SHORT).show();
         }
         else {
-            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            int[] appWidgetIds = new int[0];
-            if (appWidgetManager != null) {
-                appWidgetIds = appWidgetManager.getAppWidgetIds(
-                        new ComponentName(context, this.getClass()));
-            }
-
-            for(int id : appWidgetIds){
-                updateWidget(context, id, appWidgetManager);
-            }
+            updateAllWidgets(context);
         }
-
-
     }
 
     @Override
