@@ -21,7 +21,6 @@
           android:layout_height="60dp"
           android:id="@+id/widget_colour_indicator"
           android:layout_centerInParent="true"
-          tools:background="@drawable/circle_background"
           />
       <LinearLayout
           android:id="@+id/widget_text_container"
@@ -52,7 +51,8 @@
               android:layout_gravity="center_horizontal"
               android:gravity="center_horizontal"
               android:clickable="false"
-              android:text="200mg"/>
+              android:text="200mg"
+              android:background="@android:color/transparent"/>
           <TextView
               android:id="@+id/widget_quantity_indicator"
               android:layout_width="60dp"
