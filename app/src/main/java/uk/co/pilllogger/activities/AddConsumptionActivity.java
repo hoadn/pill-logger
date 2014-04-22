@@ -450,7 +450,6 @@ public class AddConsumptionActivity extends FragmentActivity implements
                                     DateFormat.is24HourFormat(AddConsumptionActivity.this));
 
                     timePickerDialog.show(getSupportFragmentManager(), FRAG_TAG_TIME_PICKER);
-
                 }
             }
         };
