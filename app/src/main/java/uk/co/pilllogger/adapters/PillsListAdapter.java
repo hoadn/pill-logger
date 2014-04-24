@@ -2,13 +2,16 @@ package uk.co.pilllogger.adapters;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.view.ActionMode;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.analytics.tracking.android.Tracker;
@@ -17,8 +20,10 @@ import java.util.Date;
 import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.dialogs.ChangePillInfoDialog;
 import uk.co.pilllogger.dialogs.InfoDialog;
 import uk.co.pilllogger.dialogs.PillInfoDialog;
+import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -32,7 +37,7 @@ import uk.co.pilllogger.views.ColourIndicator;
 /**
  * Created by nick on 22/10/13.
  */
-public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDialog.PillInfoDialogListener {
+public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDialog.PillInfoDialogListener, ChangePillInfoDialog.ChangePillInfoDialogListener {
 
     private static final String TAG = "PillsListAdapter";
     private Pill _selectedPill;
@@ -209,5 +214,18 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
     public void onDialogChangePillColour(Pill pill, InfoDialog dialog) {
         new UpdatePillTask(_activity, pill).execute();
         dialog.dismiss();
+    }
+
+    @Override
+    public void onDialogChangeNameDosage(Pill pill, InfoDialog dialog) {
+        DialogFragment editDialog = new ChangePillInfoDialog(_activity, pill, this);
+        if (editDialog != null)
+            editDialog.show(_activity.getFragmentManager(), pill.getName());
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onDialogInfomationChanged(Pill pill, ChangePillInfoDialog dialog) {
+        new UpdatePillTask(_activity, pill).execute();
     }
 }

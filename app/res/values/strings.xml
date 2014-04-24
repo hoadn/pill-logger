@@ -136,4 +136,5 @@
     <string name="widget_quantity_overload_indicator">+</string>
     <string name="confirm_delete_title">Confirm Delete</string>
     <string name="confirm_delete_message">This will delete all history for this medication</string>
+    <string name="info_dialog_change_name_dosage">Change name or dosage</string>
 </resources>

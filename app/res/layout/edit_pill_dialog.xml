@@ -1,0 +1,53 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <TextView
+        android:text="Edit Pill Info"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:scaleType="center"
+        android:gravity="center" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#888" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+            <TextView
+                android:text="Name: "
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"/>
+            <EditText
+                android:id="@+id/edit_pill_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:text="Size: "
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"/>
+        <EditText
+            android:id="@+id/edit_pill_size"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="4dp"/>
+        <Spinner
+            android:id="@+id/units_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="0"
+            android:layout_gravity="center_vertical"
+            />
+    </LinearLayout>
+</LinearLayout>
