@@ -43,16 +43,23 @@ public class ChangePillInfoDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        if (_activity == null) {
-            dismiss();
+
+        Activity activity = getActivity();
+        if(activity == null)
             return null;
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(_activity);
-        LayoutInflater inflater = _activity.getLayoutInflater();
+
+        // Use the Builder class for convenient dialog construction
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        LayoutInflater inflater = activity.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.edit_pill_dialog, null);
         final EditText editPillName = (EditText) dialogView.findViewById(R.id.edit_pill_name);
         final EditText editPillSize = (EditText) dialogView.findViewById(R.id.edit_pill_size);
         final Spinner spinner = (Spinner) dialogView.findViewById(R.id.units_spinner);
+
+        if (_pill == null) {
+            dismiss();
+            return builder.create();
+        }
 
         editPillName.setText(_pill.getName());
         editPillSize.setText(String.valueOf(_pill.getSize()));
