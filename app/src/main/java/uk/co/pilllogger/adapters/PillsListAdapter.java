@@ -75,8 +75,8 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
         final String deleteTrackerType1 = deleteTrackerType;
         if (pill1 != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(_activity);
-            builder.setTitle("Confirm Delete");
-            builder.setMessage("This will delete all history for this medication");
+            builder.setTitle(_activity.getString(R.string.confirm_delete_title));
+            builder.setMessage(_activity.getString(R.string.confirm_delete_message));
             builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

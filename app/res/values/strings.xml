@@ -134,4 +134,6 @@
     <string name="feedback_chooser_title">Send feedback...</string>
     <string name="widget_quantity_indicator">●</string>
     <string name="widget_quantity_overload_indicator">+</string>
+    <string name="confirm_delete_title">Confirm Delete</string>
+    <string name="confirm_delete_message">This will delete all history for this medication</string>
 </resources>
