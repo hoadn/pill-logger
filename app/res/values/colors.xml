@@ -37,6 +37,7 @@
     <color name="pill_favourite">#80FFFFFF</color>
     <color name="tutorial_white">#FFFFFF</color>
     <color name="divider_white">#40FFFFFF</color>
+    <color name="divider_grey">#60000000</color>
 
     <!-- Pill colours are in pill_colours.xml -->
 </resources>

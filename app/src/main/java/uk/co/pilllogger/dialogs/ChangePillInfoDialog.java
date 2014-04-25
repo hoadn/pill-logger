@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.DeletePillTask;
 import uk.co.pilllogger.tasks.UpdatePillTask;
 
@@ -49,12 +51,24 @@ public class ChangePillInfoDialog extends DialogFragment {
             return null;
 
         // Use the Builder class for convenient dialog construction
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity, AlertDialog.THEME_HOLO_LIGHT);
         LayoutInflater inflater = activity.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.edit_pill_dialog, null);
+        final TextView editPillTitle = (TextView) dialogView.findViewById(R.id.edit_pill_title);
+        final TextView editPillInformation = (TextView) dialogView.findViewById(R.id.edit_pill_information);
         final EditText editPillName = (EditText) dialogView.findViewById(R.id.edit_pill_name);
         final EditText editPillSize = (EditText) dialogView.findViewById(R.id.edit_pill_size);
+        final TextView editPillNameLabel = (TextView) dialogView.findViewById(R.id.edit_pill_name_label);
+        final TextView editPillSizeLabel = (TextView) dialogView.findViewById(R.id.edit_pill_size_label);
         final Spinner spinner = (Spinner) dialogView.findViewById(R.id.units_spinner);
+
+        Typeface typeface = State.getSingleton().getTypeface();
+        editPillName.setTypeface(typeface);
+        editPillSize.setTypeface(typeface);
+        editPillNameLabel.setTypeface(typeface);
+        editPillSizeLabel.setTypeface(typeface);
+        editPillTitle.setTypeface(typeface);
+        editPillInformation.setTypeface(typeface);
 
         if (_pill == null) {
             dismiss();
