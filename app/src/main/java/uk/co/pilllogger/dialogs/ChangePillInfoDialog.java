@@ -93,12 +93,16 @@ public class ChangePillInfoDialog extends DialogFragment {
                 _pill.setSize(Float.valueOf(editPillSize.getText().toString()));
                 _pill.setUnits(spinner.getSelectedItem().toString());
                 _listener.onDialogInfomationChanged(_pill, ChangePillInfoDialog.this);
+                InputMethodManager im = (InputMethodManager)_activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                im.hideSoftInputFromWindow(editPillName.getWindowToken(), 0);
                 dialog.dismiss();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                InputMethodManager im = (InputMethodManager)_activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                im.hideSoftInputFromWindow(editPillName.getWindowToken(), 0);
                 dialog.dismiss();
             }
         });
@@ -117,7 +121,7 @@ public class ChangePillInfoDialog extends DialogFragment {
 
     @Override
     public void dismiss() {
-        LayoutHelper.hideKeyboard(this.getActivity());
+
         super.dismiss();
     }
 

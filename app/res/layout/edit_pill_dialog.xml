@@ -52,6 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_grey_medium"
+                android:textCursorDrawable="@null"
                 android:textSize="18sp"
                 android:layout_margin="4dp" />
     </LinearLayout>
@@ -76,6 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="@color/text_grey_medium"
+            android:textCursorDrawable="@null"
             android:textSize="18sp"
             android:layout_margin="4dp"/>
         <Spinner
