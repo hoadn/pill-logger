@@ -91,7 +91,9 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(),
                 R.layout.appwidget);
         views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
-        views.setTextViewText(R.id.widget_size, String.valueOf(NumberHelper.getNiceFloatString(pill.getSize()) + "mg"));
+        if(pill.getSize() > 0) {
+            views.setTextViewText(R.id.widget_size, String.valueOf(NumberHelper.getNiceFloatString(pill.getSize()) + "mg"));
+        }
         //views.setInt(R.id.widget_size, "setBackgroundColor", pill.getColour());
         views.setTextViewText(R.id.widget_text, pill.getName().substring(0, 3));
 
@@ -112,7 +114,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
         WidgetIndicator indicator = new WidgetIndicator(context);
         indicator.setColour(pill.getColour(), true);
-        int widgetSize = (int)LayoutHelper.dpToPx(context, 60);
+        int widgetSize = context.getResources().getDimensionPixelSize(R.dimen.widget_size);
         indicator.measure(widgetSize, widgetSize);
         indicator.layout(0, 0, widgetSize, widgetSize);
         indicator.setDrawingCacheEnabled(true);
@@ -123,7 +125,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         if (ColourHelper.isColourLight(pill.getColour())) {
             sizeTextColour = R.color.text_grey;
         }
-        views.setInt(R.id.widget_size, "setTextColor", context.getResources().getColor(sizeTextColour));
+        views.setTextColor(R.id.widget_size, context.getResources().getColor(sizeTextColour));
 
         appWidgetManager.updateAppWidget(id, views);
     }

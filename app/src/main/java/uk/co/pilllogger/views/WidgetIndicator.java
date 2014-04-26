@@ -135,7 +135,7 @@ public class WidgetIndicator extends ImageView {
                 bitmap.getWidth() / 2, paint);
 
         final Paint backgroundPaint = new Paint();
-        backgroundPaint.setColor(getContext().getResources().getColor(R.color.translucent_whiter));
+        backgroundPaint.setColor(getContext().getResources().getColor(R.color.widget_background));
 
         _beltPaint.setStyle(Paint.Style.FILL);
         float top = LayoutHelper.dpToPx(getContext(), 30);
