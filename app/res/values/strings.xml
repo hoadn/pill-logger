@@ -61,7 +61,7 @@
     <string name="tick_description">Tick</string>
     <string name="finish_create_pill">Create</string>
     <string name="graph_title">Pill Consumption over the past 7 days</string>
-    <string name="no_consumptions_text">You\'re consumptions will be visible here when you have some!</string>
+    <string name="no_consumptions_text">Your consumption history will be visible here!</string>
     <string name="pill_fragment_title">Your Medicine</string>
     <string name="consumption_fragment_title">Your Consumption History</string>
     <string name="graph_fragment_title">Charts</string>
