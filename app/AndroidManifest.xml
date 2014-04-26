@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="uk.co.pilllogger"
-    android:versionCode="15"
-    android:versionName="1.2.3" >
+    android:versionCode="18"
+    android:versionName="1.3.2" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -32,7 +32,14 @@
         </activity>
         <activity android:name=".activities.AddConsumptionActivity" />
         <activity android:name=".activities.SettingsActivity" />
-        <activity android:name=".activities.WebViewActivity" />
+        <activity android:name=".activities.WebViewActivity" android:theme="@style/Theme.Transparent"/>
+        <activity android:name="uk.co.pilllogger.activities.AppWidgetConfigure">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
+            </intent-filter>
+        </activity>
         <receiver
             android:name="uk.co.pilllogger.receivers.ReminderReceiver"
             android:exported="false" >
@@ -53,6 +60,13 @@
             <intent-filter>
                 <action android:name="uk.co.pilllogger.TAKE_AGAIN" />
             </intent-filter>
+        </receiver>
+        <receiver android:name="uk.co.pilllogger.widget.MyAppWidgetProvider" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/appwidget_info" />
         </receiver>
         <meta-data android:name="com.crashlytics.ApiKey" android:value="8adaae49f35bf4067ceaafdec4ff241f25b32838"/>
         <!--<receiver android:name=".widget.MyAppWidgetProvider" >-->

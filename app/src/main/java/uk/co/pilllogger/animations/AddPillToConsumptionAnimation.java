@@ -1,6 +1,6 @@
 package uk.co.pilllogger.animations;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
@@ -12,13 +12,13 @@ public class AddPillToConsumptionAnimation extends Animation {
     private int _targetWidth;
     private View _view;
     private boolean _expand;
-    private Activity _activity;
+    private Context _context;
 
-    public AddPillToConsumptionAnimation(View view, int targetWidth, boolean expand, Activity activity) {
+    public AddPillToConsumptionAnimation(View view, int targetWidth, boolean expand, Context context) {
         _view = view;
         _targetWidth = targetWidth;
         _expand = expand;
-        _activity = activity;
+        _context = context;
     }
 
     @Override

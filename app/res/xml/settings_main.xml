@@ -26,6 +26,9 @@
 
     <PreferenceCategory android:title="About" android:key="about">
         <Preference
+            android:title="@string/pref_title_recent_changes"
+            android:key="@string/pref_key_recent_changes"/>
+        <Preference
             android:title="@string/pref_title_licenses"
             android:key="@string/pref_key_licenses"/>
     </PreferenceCategory>

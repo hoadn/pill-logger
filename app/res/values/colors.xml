@@ -39,6 +39,8 @@
     <color name="pill_favourite">#80FFFFFF</color>
     <color name="tutorial_white">#FFFFFF</color>
     <color name="divider_white">#40FFFFFF</color>
+    <color name="divider_grey">#60000000</color>
+    <color name="widget_background">#80dddddd</color>
     <color name="consumption_background">#7800E9FF</color>
     <color name="pill_background">#78CC339A</color>
     <color name="stats_background">#78515151</color>

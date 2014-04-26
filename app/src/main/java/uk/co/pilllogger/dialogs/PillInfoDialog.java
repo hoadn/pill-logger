@@ -38,12 +38,14 @@ public class PillInfoDialog extends InfoDialog {
         TextView delete = (TextView) view.findViewById(R.id.info_dialog_delete);
         final TextView changeColour = (TextView) view.findViewById(R.id.info_dialog_change_colour);
         TextView favourite = (TextView) view.findViewById(R.id.info_dialog_set_favourite);
+        TextView changeNameDosage = (TextView) view.findViewById(R.id.info_dialog_set_name_dosage);
 
         Typeface typeface = State.getSingleton().getTypeface();
         addConsumption.setTypeface(typeface);
         delete.setTypeface(typeface);
         changeColour.setTypeface(typeface);
         favourite.setTypeface(typeface);
+        changeNameDosage.setTypeface(typeface);
 
         if(_pill == null) {
             dismiss();
@@ -63,6 +65,12 @@ public class PillInfoDialog extends InfoDialog {
             @Override
             public void onClick(View v) {
                 _listener.onDialogDelete(_pill, PillInfoDialog.this);
+            }
+        });
+        changeNameDosage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _listener.onDialogChangeNameDosage(_pill, PillInfoDialog.this);
             }
         });
         favourite.setOnClickListener(new View.OnClickListener() {
@@ -117,5 +125,6 @@ public class PillInfoDialog extends InfoDialog {
         public void onDialogDelete(Pill pill, InfoDialog dialog);
         public void setDialogFavourite(Pill pill, InfoDialog dialog);
         public void onDialogChangePillColour(Pill pill, InfoDialog dialog);
+        public void onDialogChangeNameDosage(Pill pill, InfoDialog dialog);
     }
 }

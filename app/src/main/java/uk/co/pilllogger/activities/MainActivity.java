@@ -3,10 +3,14 @@ package uk.co.pilllogger.activities;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -39,6 +43,7 @@ import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.fragments.StatsFragment;
+import uk.co.pilllogger.helpers.FeedbackHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -57,6 +62,7 @@ import uk.co.pilllogger.tutorial.TutorialPage;
 import uk.co.pilllogger.tutorial.TutorialService;
 import uk.co.pilllogger.views.ColourIndicator;
 import uk.co.pilllogger.views.MyViewPager;
+import uk.co.pilllogger.widget.MyAppWidgetProvider;
 
 /**
  * Created by nick on 22/10/13.
@@ -173,28 +179,34 @@ public class MainActivity extends PillLoggerActivityBase implements
         Observer.getSingleton().registerPillsUpdatedObserver(this);
 
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
-    }
 
-    @Override
-    protected void onResume(){
-        super.onResume();
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 
+            int version = pInfo.versionCode;
+            int seenVersion = PreferenceManager.getDefaultSharedPreferences(this).getInt(getString(R.string.seenVersionKey), 0);
 
-
-        if(_themeChanged){
-            finish();
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            if(version > seenVersion)
+                showChangesDialog();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
     }
+
 
     @Override
     protected void onPostResume() {
         new GetPillsTask(this, this).execute();
         SetupTutorial();
         super.onPostResume();
+    }
+
+    private void showChangesDialog(){
+        Intent composeIntent = new Intent(this, WebViewActivity.class);
+        composeIntent.putExtra(getString(R.string.key_show_feedback_button), true);
+        composeIntent.putExtra(getString(R.string.key_web_address), "file:///android_asset/html/changelog.html");
+
+        startActivity(composeIntent);
     }
 
     private void setBackgroundColour(){
@@ -369,14 +381,7 @@ public class MainActivity extends PillLoggerActivityBase implements
     }
 
     private void sendFeedbackIntent(){
-        Intent send = new Intent(Intent.ACTION_SENDTO);
-        String uriText = "mailto:" + Uri.encode("support@allendev.co") +
-                "?subject=" + Uri.encode("Pill Logger Feedback") +
-                "&body=" + Uri.encode("");
-        Uri uri = Uri.parse(uriText);
-
-        send.setData(uri);
-        startActivity(Intent.createChooser(send, "Send feedback..."));
+        FeedbackHelper.sendFeedbackIntent(this);
     }
 
     private void startAddConsumptionActivity(){
@@ -459,6 +464,12 @@ public class MainActivity extends PillLoggerActivityBase implements
                 }
             }
         });
+
+        Intent intent = new Intent(this, MyAppWidgetProvider.class);
+        intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
+        int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), MyAppWidgetProvider.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
+        sendBroadcast(intent);
     }
 
     @Override

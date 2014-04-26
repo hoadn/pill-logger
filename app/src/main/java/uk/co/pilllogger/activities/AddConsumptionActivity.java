@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
@@ -28,7 +30,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
+import com.doomonafireball.betterpickers.datepicker.DatePickerBuilder;
+import com.doomonafireball.betterpickers.datepicker.DatePickerDialogFragment;
+import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
+import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
+
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,19 +67,23 @@ import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.tasks.InsertPillTask;
 import uk.co.pilllogger.tasks.SetTutorialSeenTask;
 import uk.co.pilllogger.views.ColourIndicator;
+import android.support.v4.app.FragmentManager;
 
 /**
  * Created by nick on 24/10/13.
  */
-public class AddConsumptionActivity extends Activity implements
+public class AddConsumptionActivity extends FragmentActivity implements
         GetPillsTask.ITaskComplete,
         InsertPillTask.ITaskComplete,
         DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener,
-        GetTutorialSeenTask.ITaskComplete {
+        GetTutorialSeenTask.ITaskComplete,
+        AddConsumptionPillListAdapter.IConsumptionSelected{
 
     private static final String TAG = "AddConsumptionActivity";
     public static String DATE_FORMAT = "E, MMM dd, yyyy";
+    private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
+    private static final String FRAG_TAG_TIME_PICKER = "fragent_time_picker_name";
 
     ListView _pillsList;
     Activity _activity;
@@ -248,7 +261,7 @@ public class AddConsumptionActivity extends Activity implements
         });
 
         _unitSpinner = (Spinner) this.findViewById(R.id.units_spinner);
-        String[] units = { "mg", "ml" };
+        String[] units = getResources().getStringArray(R.array.units_array);
         UnitAdapter adapter = new UnitAdapter(this, android.R.layout.simple_spinner_item, units);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _unitSpinner.setAdapter(adapter);
@@ -348,32 +361,35 @@ public class AddConsumptionActivity extends Activity implements
                     date = _reminderDate;
                 }
 
-                final Date finalDate = date;
+                final MutableDateTime finalDate = new MutableDateTime(date);
                 final Spinner finalSpinner = dateSpinner;
 
                 if (finalSpinner != null && finalSpinner.isEnabled()) {
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(finalDate);
-                    int year = cal.get(Calendar.YEAR);
-                    int month = cal.get(Calendar.MONTH);
-                    int day = cal.get(Calendar.DAY_OF_MONTH);
-                    DatePickerDialog dateDialog = new DatePickerDialog(AddConsumptionActivity.this, new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                            Calendar cal = Calendar.getInstance();
-                            cal.set(year, monthOfYear, dayOfMonth);
+                    FragmentManager fm = getSupportFragmentManager();
 
-                            Date date = cal.getTime();
+                    CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog
+                            .newInstance(new CalendarDatePickerDialog.OnDateSetListener() {
+                                             @Override
+                                             public void onDateSet(CalendarDatePickerDialog calendarDatePickerDialog, int year, int monthOfYear, int dayOfMonth) {
+                                                 finalDate.setYear(year);
+                                                 finalDate.setMonthOfYear(monthOfYear + 1);
+                                                 finalDate.setDayOfMonth(dayOfMonth);
 
-                            finalDate.setTime(date.getTime());
+                                                 String dateString = DateFormat.format(DATE_FORMAT, finalDate.toDate().getTime()).toString();
+                                                 String[] dates = new String[]{dateString};
+                                                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, dates );
+                                                 finalSpinner.setAdapter(adapter);
 
-                            String dateString = DateFormat.format(DATE_FORMAT, cal.getTime()).toString();
-                            String[] dates = new String[]{dateString};
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, dates );
-                            finalSpinner.setAdapter(adapter);
-                        }
-                    }, year, month, day);
-                    dateDialog.show();
+                                                 if(consumptionDate){
+                                                     _consumptionDate.setTime(finalDate.toDate().getTime());
+                                                 }
+                                                 else if (consumptionReminder){
+                                                     _reminderDate.setTime(finalDate.toDate().getTime());
+                                                 }
+                                             }
+                                         }, finalDate.getYear(), finalDate.getMonthOfYear() - 1,
+                                    finalDate.getDayOfMonth());
+                    calendarDatePickerDialog.show(fm, FRAG_TAG_DATE_PICKER);
                 }
             }
         };
@@ -390,7 +406,7 @@ public class AddConsumptionActivity extends Activity implements
 
         View.OnClickListener timeListener = new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
 
                 Spinner timeSpinner = null;
                 Date date = null;
@@ -404,34 +420,39 @@ public class AddConsumptionActivity extends Activity implements
                     date = _reminderDate;
                 }
 
-                final Date finalDate = date;
+                final MutableDateTime finalDate = new MutableDateTime(date);
                 final Spinner finalSpinner = timeSpinner;
 
-
                 if (finalSpinner != null && finalSpinner.isEnabled()) {
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(finalDate);
-                    int hour = cal.get(Calendar.HOUR_OF_DAY);
-                    int minute = cal.get(Calendar.MINUTE);
-                    TimePickerDialog timeDialog = new TimePickerDialog(AddConsumptionActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                        @Override
-                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-                            Date dt = new DateTime(finalDate)
-                                    .withHourOfDay(hourOfDay)
-                                    .withMinuteOfHour(minute)
-                                    .toDate();
-                            java.text.DateFormat timeFormat = DateFormat.getTimeFormat(context);
+                    RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
+                            .newInstance(new RadialTimePickerDialog.OnTimeSetListener() {
+                                             @Override
+                                             public void onTimeSet(RadialPickerLayout radialPickerLayout, int hourOfDay, int minute) {
+                                                 Date dt = new DateTime(finalDate)
+                                                         .withHourOfDay(hourOfDay)
+                                                         .withMinuteOfHour(minute)
+                                                         .toDate();
+                                                 java.text.DateFormat timeFormat = DateFormat.getTimeFormat(context);
 
-                            String[] times = new String[]{ timeFormat.format(dt) };
+                                                 String[] times = new String[]{ timeFormat.format(dt) };
 
-                            finalDate.setTime(dt.getTime());
+                                                 finalDate.setTime(dt.getTime());
 
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, times );
-                            finalSpinner.setAdapter(adapter);
-                        }
-                    }, hour, minute, DateFormat.is24HourFormat(context));
-                    timeDialog.show();
+                                                 if(view.getId() == R.id.add_consumption_time_container){
+                                                     _consumptionDate.setTime(dt.getTime());
+                                                 }
+                                                 else if (view.getId() == R.id.add_consumption_reminder_time_container){
+                                                     _reminderDate.setTime(dt.getTime());
+                                                 }
+
+                                                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, times );
+                                                 finalSpinner.setAdapter(adapter);
+                                             }
+                                         }, finalDate.getHourOfDay(), finalDate.getMinuteOfHour(),
+                                    DateFormat.is24HourFormat(AddConsumptionActivity.this));
+
+                    timePickerDialog.show(getSupportFragmentManager(), FRAG_TAG_TIME_PICKER);
                 }
             }
         };
@@ -475,7 +496,7 @@ public class AddConsumptionActivity extends Activity implements
             }
         });
 
-        _adapter = new AddConsumptionPillListAdapter(this, R.layout.add_consumption_pill_list, pills);
+        _adapter = new AddConsumptionPillListAdapter(this, this, R.layout.add_consumption_pill_list, pills);
          _pillsList.setAdapter(_adapter);
         _pillsList.setOnItemClickListener(new AddConsumptionPillItemClickListener(this, (AddConsumptionPillListAdapter)_pillsList.getAdapter()));
 

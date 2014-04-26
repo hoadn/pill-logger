@@ -53,4 +53,12 @@ public class TrackerHelper {
     public static void filterGraphEvent(Context context, String source){
         sendEvent(context, "Usage", "FilterGraph", source);
     }
+
+    public static void widgetClickedEvent(Context context, String source) {
+        sendEvent(context, "Usage", "WidgetClicked", source);
+    }
+
+    public static void widgetCreatedEvent(Context context, String source) {
+        sendEvent(context, "Usage", "WidgetCreated", source);
+    }
 }

@@ -1,12 +1,17 @@
 package uk.co.pilllogger.adapters;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.view.ActionMode;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.analytics.tracking.android.Tracker;
@@ -15,8 +20,10 @@ import java.util.Date;
 import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.dialogs.ChangePillInfoDialog;
 import uk.co.pilllogger.dialogs.InfoDialog;
 import uk.co.pilllogger.dialogs.PillInfoDialog;
+import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -30,10 +37,11 @@ import uk.co.pilllogger.views.ColourIndicator;
 /**
  * Created by nick on 22/10/13.
  */
-public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDialog.PillInfoDialogListener {
+public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDialog.PillInfoDialogListener, ChangePillInfoDialog.ChangePillInfoDialogListener {
 
     private static final String TAG = "PillsListAdapter";
     private Pill _selectedPill;
+    private boolean _cancelDelete = false;
 
     public PillsListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
         super(activity, textViewResourceId, R.menu.pills_list_item_menu, pills);
@@ -55,10 +63,8 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
                 return true;
 
             case R.id.pill_list_item_menu_delete:
-                int index = _data.indexOf(_selectedPill);
-                removeAtPosition(index); //remove() doesn't like newly created pills, so remove manually
-
-                new DeletePillTask(_activity, _selectedPill).execute();
+                AlertDialog cancel = createCancelDialog(_selectedPill, "ActionBar");
+                cancel.show();
                 TrackerHelper.deletePillEvent(_activity, "ActionBar");
                 notifyDataSetChanged();
                 mode.finish();
@@ -67,6 +73,33 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
             default:
                 return false;
         }
+    }
+
+    private AlertDialog createCancelDialog(Pill pill, String deleteTrackerType) {
+        final Pill pill1 = pill;
+        final String deleteTrackerType1 = deleteTrackerType;
+        if (pill1 != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(_activity);
+            builder.setTitle(_activity.getString(R.string.confirm_delete_title));
+            builder.setMessage(_activity.getString(R.string.confirm_delete_message));
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    new DeletePillTask(_activity, pill1).execute();
+                    TrackerHelper.deletePillEvent(_activity, deleteTrackerType1);
+                    notifyDataSetChanged();
+                    dialog.dismiss();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            return builder.create();
+        }
+        return null;
     }
 
     @Override
@@ -160,11 +193,8 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
 
     @Override
     public void onDialogDelete(Pill pill, InfoDialog dialog) {
-        if (pill != null) {
-            new DeletePillTask(_activity, pill).execute();
-            TrackerHelper.deletePillEvent(_activity, "DialogDelete");
-            notifyDataSetChanged();
-        }
+        AlertDialog cancelDialog = createCancelDialog(pill, "DialogDelete");
+        cancelDialog.show();
         dialog.dismiss();
     }
 
@@ -184,5 +214,18 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
     public void onDialogChangePillColour(Pill pill, InfoDialog dialog) {
         new UpdatePillTask(_activity, pill).execute();
         dialog.dismiss();
+    }
+
+    @Override
+    public void onDialogChangeNameDosage(Pill pill, InfoDialog dialog) {
+        DialogFragment editDialog = new ChangePillInfoDialog(_activity, pill, this);
+        if (editDialog != null)
+            editDialog.show(_activity.getFragmentManager(), pill.getName());
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onDialogInfomationChanged(Pill pill, ChangePillInfoDialog dialog) {
+        new UpdatePillTask(_activity, pill).execute();
     }
 }
