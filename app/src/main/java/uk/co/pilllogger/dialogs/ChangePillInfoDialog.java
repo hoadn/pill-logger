@@ -19,6 +19,7 @@ import android.widget.Toast;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.helpers.LayoutHelper;
+import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
@@ -76,7 +77,7 @@ public class ChangePillInfoDialog extends DialogFragment {
         }
 
         editPillName.setText(_pill.getName());
-        editPillSize.setText(String.valueOf(_pill.getSize()));
+        editPillSize.setText(NumberHelper.getNiceFloatString(_pill.getSize()));
 
         String[] units = getActivity().getResources().getStringArray(R.array.units_array);
         UnitAdapter adapter = new UnitAdapter(getActivity(), android.R.layout.simple_spinner_item, units);
@@ -90,7 +91,10 @@ public class ChangePillInfoDialog extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 _pill.setName(editPillName.getText().toString());
-                _pill.setSize(Float.valueOf(editPillSize.getText().toString()));
+
+                String pillSize = editPillSize.getText().toString();
+                float size = pillSize.trim().length() > 0 ? Float.valueOf(pillSize) : 0;
+                _pill.setSize(size);
                 _pill.setUnits(spinner.getSelectedItem().toString());
                 _listener.onDialogInfomationChanged(_pill, ChangePillInfoDialog.this);
                 InputMethodManager im = (InputMethodManager)_activity.getSystemService(Context.INPUT_METHOD_SERVICE);
