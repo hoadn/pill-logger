@@ -193,6 +193,18 @@ public class MainActivity extends PillLoggerActivityBase implements
         }
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        if(_themeChanged){
+            finish();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+    }
 
     @Override
     protected void onPostResume() {

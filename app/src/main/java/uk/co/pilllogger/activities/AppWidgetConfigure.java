@@ -46,6 +46,9 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPil
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        setTheme(State.getSingleton().getTheme().getStyleResourceId());
+
         setContentView(R.layout.activity_app_widget_configure);
 
         _typeface = State.getSingleton().getTypeface();
@@ -61,9 +64,7 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPil
                     AppWidgetManager.INVALID_APPWIDGET_ID);
         }
 
-
         _newIntent = new Intent(this, MyAppWidgetProvider.class);
-
     }
 
     @Override

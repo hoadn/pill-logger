@@ -140,10 +140,11 @@
     <string name="edit_pill_size_label">Size: </string>
     <string name="edit_pill_name_label">Name: </string>
     <string name="edit_pill_dialog_title">Edit Medicine Info</string>
-    <string name="rainbowTheme">Rainbow</string>
+    <string name="rainbowTheme">Colours</string>
     <string name="professionalTheme">Professional</string>
     <string name="pref_key_theme_list">themeList</string>
     <string name="pref_key_theme">themes</string>
     <string name="pref_title_theme">Theme</string>
     <string name="chooseTheme">Choose theme</string>
+    <string name="add_widget_title">Select medicine to use for this widget</string>
 </resources>
