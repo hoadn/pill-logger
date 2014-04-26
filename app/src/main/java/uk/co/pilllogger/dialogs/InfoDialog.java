@@ -79,7 +79,12 @@ public abstract class InfoDialog extends DialogFragment {
             String dosage24 = NumberHelper.getNiceFloatString(_pill.getTotalSize(24));
             int quantity24 = _pill.getTotalQuantity(24);
 
-            dosage.setText(dosage.getText() + " " + dosage24 + _pill.getUnits() + " (" + quantity24 + " x " + _pill.getFormattedSize() + _pill.getUnits() + ")");
+            String dosageText = dosage.getText().toString();
+            if(_pill.getSize() > 0)
+                dosageText += " " + dosage24 + _pill.getUnits() + " (" + quantity24 + " x " + _pill.getFormattedSize() + _pill.getUnits() + ")";
+            else
+                dosageText += " " + quantity24;
+            dosage.setText(dosageText);
         }
         setupMenu(view);
 
