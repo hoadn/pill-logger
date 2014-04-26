@@ -13,6 +13,7 @@ import uk.co.pilllogger.animations.AddPillToConsumptionAnimation;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.State;
 
 /**
  * Created by nick on 25/10/13.
@@ -64,7 +65,7 @@ public class AddConsumptionPillItemClickListener implements ListView.OnItemClick
         }
 
         view.setBackgroundColor(_context.getResources().getColor(color));
-        addButtonLayout.setBackgroundColor(_activity.getResources().getColor(State.getSingleton().getTheme().getSelectedBackgroundColourResourceId()));
+        addButtonLayout.setBackgroundColor(_context.getResources().getColor(State.getSingleton().getTheme().getSelectedBackgroundColourResourceId()));
         View rightLayout = view.findViewById(R.id.add_consumption_right_info);
         rightLayout.setBackgroundColor(_context.getResources().getColor(color));
         animation.setDuration(150);
