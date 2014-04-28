@@ -22,8 +22,8 @@
     <string name="placeholder_pill_text">Paracetamol</string>
     <string name="placeholder_pill_size">500</string>
     <string name="drawer_settings">Settings</string>
-    <string name="favourite">Favourite</string>
-    <string name="unfavourite">Unfavourite</string>
+    <string name="favourite">Favorite</string>
+    <string name="unfavourite">Unfavorite</string>
     <string name="delete">Delete</string>
     <string name="create_a_pill_title">Add new Medicine</string>
     <string name="create_a_pill_name_hint">Name</string>
@@ -66,12 +66,12 @@
     <string name="consumption_fragment_title">Your Consumption History</string>
     <string name="graph_fragment_title">Charts</string>
 
-    <string name="consumptionlist_tut_1">This page shows all of your consumptions so far</string>
+    <string name="consumptionlist_tut_1">This page will show your medication history</string>
     <string name="consumptionlist_tut_2">Tap here to log when you take medicine</string>
     <string name="consumptionlist_tut_3">Favourite medicine will be shown in this menu</string>
     <string name="pillslist_tut_0">This page shows your saved medication</string>
     <string name="pillslist_tut_1">Use this box to add new medicine</string>
-    <string name="pillslist_tut_2">Your medicine will appear here. Long press it for more options</string>
+    <string name="pillslist_tut_2">Your medicine will appear here. Tap for more options</string>
     <string name="add_consumption_reminder_title">Set Reminder</string>
     <string name="reminder_hours">Hours</string>
     <string name="add_consumption_reminder_select_specific_label">Select Date and Time</string>
@@ -98,9 +98,9 @@
     <string name="add_consumption_reminder_toast_prefix">Reminder set for </string>
     <string name="info_dialog_delete">Delete</string>
     <string name="info_dialog_take_now">Take now</string>
-    <string name="info_dialog_set_favourite">Set as favourite</string>
-    <string name="info_dialog_unset_favourite">Remove from favourites</string>
-    <string name="info_dialog_change_colour">Change colour</string>
+    <string name="info_dialog_set_favourite">Set as favorite</string>
+    <string name="info_dialog_unset_favourite">Remove from favorites</string>
+    <string name="info_dialog_change_colour">Change color</string>
     <string name="info_dialog_last_taken">Last taken: </string>
     <string name="info_dialog_dosage">In the last 24 hours:</string>
     <string name="consumption_info_dialog_increase">Increase quantity</string>
@@ -140,4 +140,5 @@
     <string name="edit_pill_size_label">Size: </string>
     <string name="edit_pill_name_label">Name: </string>
     <string name="edit_pill_dialog_title">Edit Medicine Info</string>
+    <string name="color">Color</string>
 </resources>
