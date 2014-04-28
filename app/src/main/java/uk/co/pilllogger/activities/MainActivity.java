@@ -7,6 +7,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -164,17 +165,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         Observer.getSingleton().registerPillsUpdatedObserver(this);
 
-        try {
-            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 
-            int version = pInfo.versionCode;
-            int seenVersion = PreferenceManager.getDefaultSharedPreferences(this).getInt(getString(R.string.seenVersionKey), 0);
-
-            if(version > seenVersion)
-                showChangesDialog();
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -375,9 +366,23 @@ public class MainActivity extends PillLoggerActivityBase implements
 
     @Override
     public void pillsReceived(List<Pill> pills) {
-        if(pills.size() == 0)
-        {
-            startAddConsumptionActivity();
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+
+            int version = pInfo.versionCode;
+
+            SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            if(pills.size() > 0) { // if they've setup a pill (ie. they are using the app). Show recent changes
+                int seenVersion = defaultSharedPreferences.getInt(getString(R.string.seenVersionKey), 0);
+
+                if (version > seenVersion)
+                    showChangesDialog();
+            }
+            else{
+                defaultSharedPreferences.edit().putInt(getString(R.string.seenVersionKey), version).apply();
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
