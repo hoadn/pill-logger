@@ -141,10 +141,14 @@
     <string name="edit_pill_name_label">Name: </string>
     <string name="edit_pill_dialog_title">Edit Medicine Info</string>
     <string name="rainbowTheme">Colours</string>
-    <string name="professionalTheme">Professional</string>
+    <string name="professionalTheme">Simple</string>
     <string name="pref_key_theme_list">themeList</string>
     <string name="pref_key_theme">themes</string>
     <string name="pref_title_theme">Theme</string>
     <string name="chooseTheme">Choose theme</string>
     <string name="add_widget_title">Select medicine to use for this widget</string>
+    <string name="dialog_change_theme">We have introduced a new \"Simple\" theme in this update, would you like to try it? \n\nIf you would like to switch back to the current theme, you can do so from the settings page.</string>
+    <string name="dialog_change_theme_yes">Yes, use new theme</string>
+    <string name="dialog_change_theme_no">No, use current theme</string>
+    <string name="dialog_change_theme_title">New Theme</string>
 </resources>

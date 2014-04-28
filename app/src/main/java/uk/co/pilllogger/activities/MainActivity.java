@@ -39,6 +39,7 @@ import java.util.List;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.SlidePagerAdapter;
 import uk.co.pilllogger.animations.FadeBackgroundPageTransformer;
+import uk.co.pilllogger.dialogs.ThemeChoiceDialog;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
@@ -184,7 +185,7 @@ public class MainActivity extends PillLoggerActivityBase implements
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 
             int version = pInfo.versionCode;
-            int seenVersion = PreferenceManager.getDefaultSharedPreferences(this).getInt(getString(R.string.seenVersionKey), 0);
+            int seenVersion = defaultSharedPreferences.getInt(getString(R.string.seenVersionKey), 0);
 
             if(version > seenVersion)
                 showChangesDialog();
@@ -403,9 +404,16 @@ public class MainActivity extends PillLoggerActivityBase implements
 
     @Override
     public void pillsReceived(List<Pill> pills) {
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if(pills.size() == 0)
         {
+            defaultSharedPreferences.edit().putString(getString(R.string.pref_key_theme_list), getString(R.string.professionalTheme)).commit();
             startAddConsumptionActivity();
+        }
+        else{
+            if(defaultSharedPreferences.getString(getString(R.string.pref_key_theme_list), "").equals("")) {
+                new ThemeChoiceDialog(this).show(getFragmentManager(), "ThemeChoiceDialog");
+            }
         }
     }
 
@@ -418,7 +426,7 @@ public class MainActivity extends PillLoggerActivityBase implements
         if(item == null)
             item = _menu.add(Menu.NONE, pill.getId(), Menu.NONE, "Take " + pill.getName());
 
-        item.setTitleCondensed(pill.getName().substring(0,1));
+        item.setTitleCondensed(pill.getName().substring(0, 1));
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         LayoutInflater layoutInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -560,7 +568,6 @@ public class MainActivity extends PillLoggerActivityBase implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
         _themeChanged = updateTheme(key);
     }
 }
