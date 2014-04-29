@@ -141,4 +141,5 @@
     <string name="edit_pill_name_label">Name: </string>
     <string name="edit_pill_dialog_title">Edit Medicine Info</string>
     <string name="color">Color</string>
+    <string name="stats_no_information_text">Once you\'ve input information this page will show a collection of useful statistics</string>
 </resources>

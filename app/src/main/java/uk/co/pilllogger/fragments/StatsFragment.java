@@ -63,6 +63,8 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
     private TextView _totalConsumptions;
     private TextView _longestStreak;
     private TextView _currentStreak;
+    private TextView _noInformation;
+    private View _statsOuter;
 
 
     @Override
@@ -72,6 +74,9 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
         View v = inflater.inflate(R.layout.stats_fragment, container, false);
         v.setTag(R.id.tag_page_colour, Color.argb(120, 81, 81, 81));
         v.setTag(R.id.tag_tab_icon_position, 2);
+
+        _noInformation = (TextView) v.findViewById(R.id.stats_no_information);
+        _statsOuter = v.findViewById(R.id.stats_outer);
 
         _medicineMostTakenIndicator1st = (ColourIndicator) v.findViewById(R.id.stats_most_taken_indicator_1st);
         _medicineMostTakenIndicator2nd = (ColourIndicator) v.findViewById(R.id.stats_most_taken_indicator_2nd);
@@ -157,6 +162,7 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
     @Override
     public void consumptionsReceived(List<Consumption> consumptions) {
         if (consumptions != null && consumptions.size() > 0) {
+            setNoInformation(false);
             handleMostTaken(consumptions);
             handleMostTakenHour(consumptions);
             handleMostTakenDay(consumptions);
@@ -168,6 +174,20 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
             _totalConsumptions.setText(String.valueOf(Statistics.getInstance(context).getTotalConsumptions(consumptions)));
             _longestStreak.setText(String.valueOf(Statistics.getInstance(context).getLongestStreak(consumptions)));
             _currentStreak.setText(String.valueOf(Statistics.getInstance(context).getCurrentStreak(consumptions)));
+        }
+        else {
+            setNoInformation(true);
+        }
+    }
+
+    private void setNoInformation(boolean noInformation) {
+        if (noInformation) {
+            _statsOuter.setVisibility(View.GONE);
+            _noInformation.setVisibility(View.VISIBLE);
+        }
+        else {
+            _statsOuter.setVisibility(View.VISIBLE);
+            _noInformation.setVisibility(View.GONE);
         }
     }
 
@@ -248,6 +268,7 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
         _averageTimeBetweenTitle.setTypeface(State.getSingleton().getTypeface());
         _longestTimeBetweenTitle.setTypeface(State.getSingleton().getTypeface());
         _statsTitle.setTypeface(State.getSingleton().getTypeface());
+        _noInformation.setTypeface(State.getSingleton().getTypeface());
     }
 
     @Override
