@@ -51,7 +51,9 @@ public class ThemeChoiceDialog extends DialogFragment {
                 .setNegativeButton(R.string.dialog_change_theme_no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // use current theme
-
+                        Context context = _activity;
+                        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                        defaultSharedPreferences.edit().putString(context.getString(R.string.pref_key_theme_list), context.getString(R.string.rainbowTheme)).commit();
                         dialog.dismiss();
                     }
                 });

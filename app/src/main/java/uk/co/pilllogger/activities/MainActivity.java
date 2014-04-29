@@ -403,13 +403,20 @@ public class MainActivity extends PillLoggerActivityBase implements
 
                 if (version > seenVersion)
                     showChangesDialog();
+
+                if(defaultSharedPreferences.getString(getString(R.string.pref_key_theme_list), "").equals("")) {
+                    new ThemeChoiceDialog(this).show(getFragmentManager(), "ThemeChoiceDialog");
+                }
             }
             else{
-                defaultSharedPreferences.edit().putInt(getString(R.string.seenVersionKey), version).apply();
-		if(defaultSharedPreferences.getString(getString(R.string.pref_key_theme_list), "").equals("")) {
-                	new ThemeChoiceDialog(this).show(getFragmentManager(), "ThemeChoiceDialog");
-            	}
+                SharedPreferences.Editor editor = defaultSharedPreferences.edit();
+                editor.putInt(getString(R.string.seenVersionKey), version);
+                editor.putString(getString(R.string.pref_key_theme_list), getString(R.string.professionalTheme));
+
+                editor.apply();
             }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -537,8 +544,8 @@ public class MainActivity extends PillLoggerActivityBase implements
     private boolean updateTheme(String key){
         if(key.equals(getString(R.string.pref_key_theme_list))) {
 
-            String themeKey = PreferenceManager.getDefaultSharedPreferences(this).getString(key, getString(R.string.rainbowTheme));
-            ITheme theme = new RainbowTheme();
+            String themeKey = PreferenceManager.getDefaultSharedPreferences(this).getString(key, getString(R.string.professionalTheme));
+            ITheme theme = new ProfessionalTheme();
 
             if (themeKey.equals(getString(R.string.rainbowTheme))) {
                 theme = new RainbowTheme();
