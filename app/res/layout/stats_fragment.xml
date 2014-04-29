@@ -13,7 +13,17 @@
         android:textSize="20sp"
         android:padding="5dp"
         android:textAllCaps="true"/>
+    <TextView
+        android:id="@+id/stats_no_information"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/stats_no_information_text"
+        android:textSize="20sp"
+        android:visibility="gone"
+        android:padding="20dp"
+        android:gravity="center"/>
 <ScrollView
+    android:id="@+id/stats_outer"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1">

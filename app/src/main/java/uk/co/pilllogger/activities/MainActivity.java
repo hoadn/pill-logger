@@ -179,19 +179,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         Observer.getSingleton().registerPillsUpdatedObserver(this);
 
-        defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-        try {
-            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-
-            int version = pInfo.versionCode;
-            int seenVersion = defaultSharedPreferences.getInt(getString(R.string.seenVersionKey), 0);
-
-            if(version > seenVersion)
-                showChangesDialog();
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -404,15 +392,23 @@ public class MainActivity extends PillLoggerActivityBase implements
 
     @Override
     public void pillsReceived(List<Pill> pills) {
-        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if(pills.size() == 0)
-        {
-            defaultSharedPreferences.edit().putString(getString(R.string.pref_key_theme_list), getString(R.string.professionalTheme)).commit();
-            startAddConsumptionActivity();
-        }
-        else{
-            if(defaultSharedPreferences.getString(getString(R.string.pref_key_theme_list), "").equals("")) {
-                new ThemeChoiceDialog(this).show(getFragmentManager(), "ThemeChoiceDialog");
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+
+            int version = pInfo.versionCode;
+
+            SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            if(pills.size() > 0) { // if they've setup a pill (ie. they are using the app). Show recent changes
+                int seenVersion = defaultSharedPreferences.getInt(getString(R.string.seenVersionKey), 0);
+
+                if (version > seenVersion)
+                    showChangesDialog();
+            }
+            else{
+                defaultSharedPreferences.edit().putInt(getString(R.string.seenVersionKey), version).apply();
+		if(defaultSharedPreferences.getString(getString(R.string.pref_key_theme_list), "").equals("")) {
+                	new ThemeChoiceDialog(this).show(getFragmentManager(), "ThemeChoiceDialog");
+            	}
             }
         }
     }
