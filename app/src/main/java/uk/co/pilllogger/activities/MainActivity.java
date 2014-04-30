@@ -180,6 +180,8 @@ public class MainActivity extends PillLoggerActivityBase implements
         Observer.getSingleton().registerPillsUpdatedObserver(this);
 
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+        new GetPillsTask(this, this).execute();
     }
 
     @Override
@@ -197,7 +199,6 @@ public class MainActivity extends PillLoggerActivityBase implements
 
     @Override
     protected void onPostResume() {
-        new GetPillsTask(this, this).execute();
         SetupTutorial();
         super.onPostResume();
     }
