@@ -2,7 +2,8 @@ language: java
 jdk: oraclejdk7
 notifications:
   webhooks: https://allendev.slack.com/services/hooks/travis?token=sqsS19111P1uvMWJJE8DDCjm
-env:
+env: 
+  - TERM=dumb
   matrix:
     - ANDROID_SDKS=android-19,sysimg-19  ANDROID_TARGET=android-19  ANDROID_ABI=armeabi-v7a
 before_install:
