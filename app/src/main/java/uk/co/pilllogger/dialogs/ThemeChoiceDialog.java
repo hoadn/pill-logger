@@ -40,12 +40,6 @@ public class ThemeChoiceDialog extends DialogFragment {
                         defaultSharedPreferences.edit().putString(context.getString(R.string.pref_key_theme_list), context.getString(R.string.professionalTheme)).commit();
 
                         dialog.dismiss();
-
-                        _activity.finish();
-                        Intent intent = new Intent(_activity, _activity.getClass());
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
                     }
                 })
                 .setNegativeButton(R.string.dialog_change_theme_no, new DialogInterface.OnClickListener() {
@@ -55,6 +49,12 @@ public class ThemeChoiceDialog extends DialogFragment {
                         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
                         defaultSharedPreferences.edit().putString(context.getString(R.string.pref_key_theme_list), context.getString(R.string.rainbowTheme)).commit();
                         dialog.dismiss();
+
+                        _activity.finish();
+                        Intent intent = new Intent(_activity, _activity.getClass());
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
                     }
                 });
         // Create the AlertDialog object and return it
