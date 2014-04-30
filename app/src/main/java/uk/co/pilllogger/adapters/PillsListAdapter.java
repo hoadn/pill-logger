@@ -41,38 +41,9 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
 
     private static final String TAG = "PillsListAdapter";
     private Pill _selectedPill;
-    private boolean _cancelDelete = false;
 
     public PillsListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
-        super(activity, textViewResourceId, R.menu.pills_list_item_menu, pills);
-    }
-
-    @Override
-    protected boolean actionItemClicked(ActionMode mode, MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.pill_list_item_menu_favourite:
-            case R.id.pill_list_item_menu_unfavourite:
-                boolean setFavourite = item.getItemId() == R.id.pill_list_item_menu_favourite;
-                if (_selectedPill != null)
-                    _selectedPill.setFavourite(setFavourite);
-
-                new UpdatePillTask(_activity, _selectedPill).execute();
-
-                notifyDataSetChanged();
-                mode.finish(); // Action picked, so close the CAB
-                return true;
-
-            case R.id.pill_list_item_menu_delete:
-                AlertDialog cancel = createCancelDialog(_selectedPill, "ActionBar");
-                cancel.show();
-                TrackerHelper.deletePillEvent(_activity, "ActionBar");
-                notifyDataSetChanged();
-                mode.finish();
-                return true;
-
-            default:
-                return false;
-        }
+        super(activity, textViewResourceId, pills);
     }
 
     private AlertDialog createCancelDialog(Pill pill, String deleteTrackerType) {
@@ -100,16 +71,6 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
             return builder.create();
         }
         return null;
-    }
-
-    @Override
-    protected boolean onClickListenerSet(View view, Menu menu) {
-        ViewHolder viewHolder = (ViewHolder) view.getTag();
-        _selectedPill = viewHolder.pill;
-        menu.findItem(R.id.pill_list_item_menu_favourite).setVisible(!_selectedPill.isFavourite());
-        menu.findItem(R.id.pill_list_item_menu_unfavourite).setVisible(_selectedPill.isFavourite());
-
-        return true;
     }
 
     @Override

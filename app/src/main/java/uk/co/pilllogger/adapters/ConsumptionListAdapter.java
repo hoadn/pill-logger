@@ -70,7 +70,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
     private List<Pill> _pills;
 
     public ConsumptionListAdapter(Activity activity, Fragment fragment, int textViewResourceId, List<Consumption> consumptions) {
-        super(activity, textViewResourceId, R.menu.consumption_list_item_menu, consumptions);
+        super(activity, textViewResourceId, consumptions);
         _activity = activity;
         _fragment = fragment;
         _consumptions = consumptions;
@@ -134,27 +134,6 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
     }
 
     @Override
-    protected boolean actionItemClicked(ActionMode mode, MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.pill_list_item_menu_delete:
-                int index = _data.indexOf(_selectedConsumption);
-                removeAtPosition(index); //remove() doesn't like newly created pills, so remove manually
-
-                new DeleteConsumptionTask(_activity, _selectedConsumption, true).execute();
-                if (_fragment instanceof ConsumptionListFragment) {
-                    new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete)_fragment, false).execute();
-                }
-                TrackerHelper.deleteConsumptionEvent(_activity, "ActionBar");
-                notifyDataSetChanged();
-                mode.finish();
-                return true;
-
-            default:
-                return false;
-        }
-    }
-
-    @Override
     protected void initViewHolder(View v) {
         ViewHolder holder = new ViewHolder();
         holder.name = (TextView) v.findViewById(R.id.consumption_list_name);
@@ -169,14 +148,6 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
             holder.size.setTypeface(State.getSingleton().getTypeface());
         }
         v.setTag(holder);
-    }
-
-    @Override
-    protected boolean onClickListenerSet(View view, Menu menu) {
-        ViewHolder viewHolder = (ConsumptionListAdapter.ViewHolder) view.getTag();
-        _selectedConsumption = viewHolder.consumption;
-
-        return true;
     }
 
     @Override
@@ -385,15 +356,6 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         Days totalDays = Days.daysBetween(aWeekAgo.withTimeAtStartOfDay(), new DateTime().withTimeAtStartOfDay());
         return totalDays.getDays();
     }
-
-//    public void replotGraph(){
-//        int dayCount = getGraphDays();
-//
-//        View view = _mainLayout.findViewById(R.id.main_graph);
-//
-//        Map<Pill, SparseIntArray> xPoints = (Map<Pill, SparseIntArray>) view.getTag();
-//        plotGraph(xPoints, dayCount, view);
-//    }
 
     public void plotGraph(Map<Pill, SparseIntArray> data, int dayCount, View view){
         int lineColour = _activity.getResources().getColor(State.getSingleton().getTheme().getStackBarGraphLineColourResourceId());

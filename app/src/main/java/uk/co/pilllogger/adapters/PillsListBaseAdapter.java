@@ -22,13 +22,8 @@ import uk.co.pilllogger.views.ColourIndicator;
  */
 public class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
 
-    public PillsListBaseAdapter(Activity activity, int textViewResourceId, int menu, List<Pill> pills) {
-        super(activity, textViewResourceId, menu, pills);
-    }
-
-    @Override
-    protected boolean actionItemClicked(ActionMode mode, MenuItem item) {
-        return false;
+    public PillsListBaseAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
+        super(activity, textViewResourceId, pills);
     }
 
     public static class ViewHolder {
@@ -56,12 +51,6 @@ public class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
         holder.size.setTypeface(State.getSingleton().getTypeface());
         v.setTag(holder);
     }
-
-    @Override
-    protected boolean onClickListenerSet(View view, Menu menu) {
-        return false;
-    }
-
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
