@@ -179,7 +179,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         Observer.getSingleton().registerPillsUpdatedObserver(this);
 
-
+        defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
