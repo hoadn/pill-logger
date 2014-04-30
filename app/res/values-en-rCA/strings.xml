@@ -8,4 +8,5 @@
     <string name="info_dialog_unset_favourite">Remove from favourites</string>
     <string name="info_dialog_change_colour">Change colour</string>
     <string name="color">Colour</string>
+    <string name="rainbowTheme">Colours</string>
 </resources>
