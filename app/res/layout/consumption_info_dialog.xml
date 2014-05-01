@@ -1,61 +1,87 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="#FFFFFF"
-    android:padding="10dp">
+    android:padding="0dp">
     <include layout="@layout/info_dialog_top"/>
     <TextView
         android:id="@+id/consumption_info_dialog_take"
         android:text="@string/consumption_info_dialog_take"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dialog_item_height"
+        android:gravity="center_vertical"
         android:textSize="18sp"
         android:textColor="@color/text_grey"
-        android:layout_marginTop="6dp"
-        android:paddingTop="8dp"
-        android:paddingLeft="4dp"
+        android:paddingLeft="@dimen/dialog_item_padding_left"
         android:paddingRight="4dp"
-        android:paddingBottom="8dp"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"/>
-    <TextView
-        android:id="@+id/consumption_info_dialog_increase"
-        android:text="@string/consumption_info_dialog_increase"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textColor="@color/text_grey"
-        android:paddingTop="8dp"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
-        android:paddingBottom="8dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"/>
-    <TextView
-    android:id="@+id/consumption_info_dialog_decrease"
-    android:text="@string/consumption_info_dialog_decrease"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textSize="18sp"
-    android:textColor="@color/text_grey_light"
-    android:paddingTop="8dp"
-    android:paddingLeft="4dp"
-    android:paddingRight="4dp"
-    android:paddingBottom="8dp"
-    android:background="?android:attr/selectableItemBackground"
-    android:clickable="false"/>
+        android:layout_height="1dp"
+        android:background="@color/grey_divider_light" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dialog_item_height"
+        android:orientation="horizontal"
+        android:paddingRight="4dp">
+        <TextView
+            android:id="@+id/consumption_info_quantity_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/take_again_quantity_prefix"
+            android:textSize="18sp"
+            android:textColor="@color/text_grey"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/dialog_item_padding_left"
+            android:gravity="center_vertical"/>
+        <ImageView
+            android:id="@+id/consumption_info_dialog_decrease"
+            android:text="@string/consumption_info_dialog_decrease"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:clickable="false"
+            android:src="@drawable/chevron_down_red"
+            android:padding="16dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_gravity="center_vertical"/>
+        <TextView
+            android:id="@+id/consumption_info_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            tools:text="2"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:textColor="@color/text_grey"/>
+        <ImageView
+            android:id="@+id/consumption_info_dialog_increase"
+            android:text="@string/consumption_info_dialog_increase"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:padding="16dp"
+            android:src="@drawable/chevron_up_green"
+            android:background="?android:attr/selectableItemBackground"/>
+        </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_divider_light" />
     <TextView
         android:id="@+id/info_dialog_delete"
         android:text="@string/info_dialog_delete"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dialog_item_height"
         android:textSize="18sp"
         android:textColor="@color/text_grey"
-        android:paddingTop="8dp"
-        android:paddingLeft="4dp"
+        android:paddingLeft="@dimen/dialog_item_padding_left"
         android:paddingRight="4dp"
-        android:paddingBottom="8dp"
+        android:gravity="center_vertical"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"/>
 </LinearLayout>

@@ -106,7 +106,7 @@
     <string name="consumption_info_dialog_increase">Increase quantity</string>
     <string name="consumption_info_dialog_decrease">Decrease quantity</string>
     <string name="consumption_info_dialog_take">Take again</string>
-    <string name="consumption_info_dialog_take_again_prefix">Take </string>
+    <string name="consumption_info_dialog_take_again_prefix">Take another</string>
     <string name="consumption_info_dialog_take_again_suffix"> now</string>
     <string name="medicine_taken_most_often_title">Medicine Taken Most Often</string>
     <string name="day_with_most_consumptions_title">Day of Week with Most Consumptions</string>
@@ -153,4 +153,8 @@
     <string name="dialog_change_theme_yes">Yes, use new theme</string>
     <string name="dialog_change_theme_no">No, use old theme</string>
     <string name="dialog_change_theme_title">New Theme</string>
+    <string name="take_again_insert">more</string>
+    <string name="take_again_quantity_prefix">Quantity</string>
+    <string name="consumption_info_dialog_increase_toast">Quantity increased</string>
+    <string name="consumption_info_dialog_decrease_toast">Quantity decreased</string>
 </resources>

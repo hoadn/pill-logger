@@ -107,6 +107,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         newC.setQuantity(1);
         new InsertConsumptionTask(_activity, newC).execute();
         TrackerHelper.addConsumptionEvent(_activity, "DialogIncrease");
+        Toast.makeText(_activity, R.string.consumption_info_dialog_increase_toast, Toast.LENGTH_SHORT).show();
         dialog.dismiss();
     }
 
@@ -114,6 +115,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
     public void onDialogDecrease(Consumption consumption, InfoDialog dialog) {
         new DeleteConsumptionTask(_activity, consumption, false).execute();
         TrackerHelper.deleteConsumptionEvent(_activity, "DialogDecrease");
+        Toast.makeText(_activity, R.string.consumption_info_dialog_decrease_toast, Toast.LENGTH_SHORT).show();
         dialog.dismiss();
     }
 

@@ -23,4 +23,6 @@
     <dimen name="tutorial_font_size">18sp</dimen>
     <dimen name="numeric_stat_font_size">40sp</dimen>
     <dimen name="widget_size">60dp</dimen>
+    <dimen name="dialog_item_height">45dp</dimen>
+    <dimen name="dialog_item_padding_left">12dp</dimen>
 </resources>

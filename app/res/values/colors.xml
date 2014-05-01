@@ -3,6 +3,7 @@
     <color name="background_grey">#dedede</color>
     <color name="text_grey">#333333</color>
     <color name="grey_divider">#555555</color>
+    <color name="grey_divider_light">#DDDDDD</color>
     <color name="pill_default_color">#FFBBBBBB</color>
     <color name="text_grey_light">#CCCCCC</color>
     <color name="text_grey_medium">#8F8F8F</color>

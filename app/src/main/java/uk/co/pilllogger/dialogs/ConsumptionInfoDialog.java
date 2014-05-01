@@ -3,6 +3,7 @@ package uk.co.pilllogger.dialogs;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import uk.co.pilllogger.R;
@@ -39,14 +40,16 @@ public class ConsumptionInfoDialog extends InfoDialog {
     protected void setupMenu(View view) {
 
         TextView takeAgain = (TextView) view.findViewById(R.id.consumption_info_dialog_take);
-        TextView increase = (TextView) view.findViewById(R.id.consumption_info_dialog_increase);
-        TextView decrease = (TextView) view.findViewById(R.id.consumption_info_dialog_decrease);
+        TextView quantityText = (TextView) view.findViewById(R.id.consumption_info_quantity_text);
+        TextView quantity = (TextView) view.findViewById(R.id.consumption_info_quantity);
+        View increase = view.findViewById(R.id.consumption_info_dialog_increase);
+        ImageView decrease = (ImageView) view.findViewById(R.id.consumption_info_dialog_decrease);
         TextView delete = (TextView) view.findViewById(R.id.info_dialog_delete);
 
         Typeface typeface = State.getSingleton().getTypeface();
         takeAgain.setTypeface(typeface);
-        increase.setTypeface(typeface);
-        decrease.setTypeface(typeface);
+        quantityText.setTypeface(typeface);
+        quantity.setTypeface(typeface);
         delete.setTypeface(typeface);
 
         if(_consumption == null) {
@@ -54,16 +57,23 @@ public class ConsumptionInfoDialog extends InfoDialog {
             return;
         }
 
-        takeAgain.setText(String.format("%s %d %s %s", _context.getString(R.string.consumption_info_dialog_take_again_prefix), _consumption.getQuantity(), _consumption.getPill().getName(), _context.getString(R.string.consumption_info_dialog_take_again_suffix)));
+        quantity.setText("" + _consumption.getQuantity());
+
+        String takeAgainText =  _context.getString(R.string.consumption_info_dialog_take_again_prefix);
+        if(_consumption.getQuantity() > 1)
+            takeAgainText += " " + _consumption.getQuantity();
+        takeAgainText += String.format(" %s %s", _consumption.getPill().getName(), _context.getString(R.string.consumption_info_dialog_take_again_suffix));
+        takeAgain.setText(takeAgainText);
 
         if(_consumption.getQuantity() > 1){
             decrease.setClickable(true);
             decrease.setEnabled(true);
-            decrease.setTextColor(_context.getResources().getColor(R.color.text_grey));
+            decrease.setImageResource(R.drawable.chevron_down_red);
         }
         else {
             decrease.setClickable(false);
             decrease.setEnabled(false);
+            decrease.setImageResource(R.drawable.chevron_down_grey);
         }
 
         takeAgain.setOnClickListener(new View.OnClickListener() {
