@@ -142,16 +142,18 @@ public class WidgetIndicator extends ImageView {
         float bottom = LayoutHelper.dpToPx(getContext(), 45);
 
         canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2,
-                (bitmap.getWidth() / 2) -4, backgroundPaint);
+                (bitmap.getWidth() / 2) -3, backgroundPaint);
 
         canvas.drawRect(0, top, getWidth(), bottom, _beltPaint);
 
         _beltPaint.setStyle(Paint.Style.STROKE);
-        _beltPaint.setStrokeWidth(6);
+        _beltPaint.setStrokeWidth(8);
         _beltPaint.setAntiAlias(true);
 
+        _beltPaint.setAlpha(255);
+
         canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2,
-                (bitmap.getWidth() / 2) - 4, _beltPaint);
+                (bitmap.getWidth() / 2), _beltPaint);
 
         paint.setAlpha(255);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
