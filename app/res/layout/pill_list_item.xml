@@ -66,6 +66,5 @@
     <View
         android:id="@+id/shadow"
         android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="@drawable/consumption_shadow" />
+        style="?attr/ContainerShadow" />
 </LinearLayout>
