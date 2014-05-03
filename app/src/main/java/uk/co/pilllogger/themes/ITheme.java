@@ -9,7 +9,9 @@ public interface ITheme {
     int getPillListBackgroundResourceId();
     int getStatsBackgroundResourceId();
     int getTabMaskColourResourceId();
-    int getConsumptionListItemBackgroundResourceId();
+    int getListItemBackgroundResourceId();
+    boolean isListItemShadowed();
+    int getGradientBackgroundResourceId();
 
     int getStackBarGraphLineColourResourceId();
 

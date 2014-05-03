@@ -41,7 +41,6 @@ import uk.co.pilllogger.adapters.SlidePagerAdapter;
 import uk.co.pilllogger.animations.FadeBackgroundPageTransformer;
 import uk.co.pilllogger.dialogs.ThemeChoiceDialog;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
-import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.fragments.StatsFragment;
 import uk.co.pilllogger.helpers.FeedbackHelper;
@@ -267,18 +266,8 @@ public class MainActivity extends PillLoggerActivityBase implements
                             .setCustomView(R.layout.tab_icon_charts)
                             .setTabListener(tabListener));
 
-            // force embedded tabs
-//            try {
-//                final Method setHasEmbeddedTabsMethod = actionBar.getClass()
-//                        .getDeclaredMethod("setHasEmbeddedTabs", boolean.class);
-//                setHasEmbeddedTabsMethod.setAccessible(true);
-//                setHasEmbeddedTabsMethod.invoke(actionBar, true);
-//            }
-//            catch(final Exception e) {
-//                // Handle issues as needed: log, warn user, fallback etc
-//                // Alternatively, ignore this and default tab behaviour will apply.
-//            }
-
+            View view = findViewById(R.id.main_gradient);
+            view.setBackgroundResource(State.getSingleton().getTheme().getGradientBackgroundResourceId());
         }
     }
 
@@ -492,7 +481,7 @@ public class MainActivity extends PillLoggerActivityBase implements
         Intent intent = new Intent(this, MyAppWidgetProvider.class);
         intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
         int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), MyAppWidgetProvider.class));
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         sendBroadcast(intent);
     }
 

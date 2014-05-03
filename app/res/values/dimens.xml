@@ -25,4 +25,5 @@
     <dimen name="widget_size">60dp</dimen>
     <dimen name="dialog_item_height">45dp</dimen>
     <dimen name="dialog_item_padding_left">12dp</dimen>
+    <dimen name="list_item_padding">10dp</dimen>
 </resources>

@@ -27,15 +27,24 @@ public class ProfessionalTheme implements ITheme {
         return R.color.professional_background;
     }
 
-
     @Override
     public int getTabMaskColourResourceId() {
         return R.color.tab_mask_professional;
     }
 
     @Override
-    public int getConsumptionListItemBackgroundResourceId() {
-        return R.drawable.list_selector_professional;
+    public int getListItemBackgroundResourceId() {
+        return R.drawable.consumption_background;
+    }
+
+    @Override
+    public boolean isListItemShadowed() {
+        return true;
+    }
+
+    @Override
+    public int getGradientBackgroundResourceId() {
+        return android.R.color.transparent;
     }
 
     @Override

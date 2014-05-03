@@ -33,8 +33,18 @@ public class RainbowTheme implements ITheme {
     }
 
     @Override
-    public int getConsumptionListItemBackgroundResourceId() {
+    public int getListItemBackgroundResourceId() {
         return R.drawable.list_selector;
+    }
+
+    @Override
+    public boolean isListItemShadowed() {
+        return false;
+    }
+
+    @Override
+    public int getGradientBackgroundResourceId() {
+        return R.drawable.orange_gradient;
     }
 
     @Override

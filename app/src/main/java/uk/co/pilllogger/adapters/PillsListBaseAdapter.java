@@ -26,7 +26,7 @@ public class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
         super(activity, textViewResourceId, pills);
     }
 
-    public static class ViewHolder {
+    public static class ViewHolder extends ActionBarArrayAdapter.ViewHolder {
         public Pill pill;
         public TextView name;
         public TextView size;
@@ -37,9 +37,8 @@ public class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
         public boolean open;
     }
 
-
     @Override
-    protected void initViewHolder(View v) {
+    protected ActionBarArrayAdapter.ViewHolder initViewHolder(View v) {
         ViewHolder holder = new ViewHolder();
         holder.name = (TextView) v.findViewById(R.id.pill_list_name);
         holder.size = (TextView) v.findViewById(R.id.pill_list_size);
@@ -50,6 +49,8 @@ public class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
         holder.name.setTypeface(State.getSingleton().getTypeface());
         holder.size.setTypeface(State.getSingleton().getTypeface());
         v.setTag(holder);
+
+        return holder;
     }
 
     @Override

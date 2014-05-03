@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -126,7 +127,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         dialog.dismiss();
     }
 
-    public static class ViewHolder {
+    public static class ViewHolder extends ActionBarArrayAdapter.ViewHolder{
         public TextView name;
         public TextView date;
         public TextView quantity;
@@ -136,7 +137,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
     }
 
     @Override
-    protected void initViewHolder(View v) {
+    protected ActionBarArrayAdapter.ViewHolder initViewHolder(View v) {
         ViewHolder holder = new ViewHolder();
         holder.name = (TextView) v.findViewById(R.id.consumption_list_name);
         holder.date = (TextView) v.findViewById(R.id.consumption_list_date);
@@ -150,6 +151,8 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
             holder.size.setTypeface(State.getSingleton().getTypeface());
         }
         v.setTag(holder);
+
+        return holder;
     }
 
     @Override
@@ -207,15 +210,20 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                     holder.consumption = consumption;
 
                     RelativeLayout container = (RelativeLayout) v.findViewById(R.id.selector_container);
-                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) container.getLayoutParams();
+                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) container.getLayoutParams();
                     TextView dayText = (TextView) v.findViewById(R.id.day_text);
                     DateTime currentDate = new DateTime(consumption.getDate());
 
                     dayText.setText("");
 
                     if(params != null){
-                        params.topMargin = 0;
+                        params.topMargin = 10;
+                        params.bottomMargin = 0;
+
                         boolean setText = false;
+
+                        int padding = _activity.getResources().getDimensionPixelSize(R.dimen.list_item_padding);
+                        container.setPadding(padding,padding,padding,padding);
 
                         if(position == 0)
                         {
@@ -235,7 +243,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                         if(setText){
                             dayText.setText(DateHelper.getPrettyDayOfMonth(currentDate));
 
-                            params.topMargin = (int) (dayText.getLineHeight() * 1.5f);
+                            params.topMargin = params.topMargin + (int) (dayText.getLineHeight() * 1.5f);
                         }
                     }
                 }
