@@ -38,11 +38,6 @@ public class ProfessionalTheme implements ITheme {
     }
 
     @Override
-    public boolean isListItemShadowed() {
-        return true;
-    }
-
-    @Override
     public int getGradientBackgroundResourceId() {
         return android.R.color.transparent;
     }

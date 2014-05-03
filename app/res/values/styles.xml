@@ -91,6 +91,13 @@
 
     <style name="AddConsumptionBackground"/>
 
+    <style name="ContainerBackground"/>
+
+    <style name="ContainerShadow">
+        <item name="android:layout_height">5dp</item>
+        <item name="android:background">@drawable/consumption_shadow</item>
+    </style>
+
     <style name="Rainbow" parent="AppTheme">
         <item name="android:textViewStyle">@style/RainbowTextView</item>
         <item name="ConsumptionListItem">@style/ConsumptionListItem.Rainbow</item>
@@ -102,6 +109,8 @@
         <item name="DefaultText">@style/DefaultText.Rainbow</item>
         <item name="SecondaryText">@style/SecondaryText.Rainbow</item>
         <item name="AddConsumptionBackground">@style/AddConsumptionBackground.Rainbow</item>
+        <item name="ContainerBackground">@style/ContainerBackground.Rainbow</item>
+        <item name="ContainerShadow">@style/ContainerShadow.Rainbow</item>
     </style>
 
     <style name="RainbowTextView">
@@ -144,6 +153,14 @@
         <item name="android:background">@drawable/back</item>
     </style>
 
+    <style name="ContainerBackground.Rainbow">
+        <item name="android:background">@drawable/container</item>
+    </style>
+
+    <style name="ContainerShadow.Rainbow">
+        <item name="android:visibility">gone</item>
+    </style>
+
     <style name="Professional" parent="AppThemeLight">
         <item name="android:textViewStyle">@style/ProfessionalTextView</item>
         <item name="ConsumptionListItem">@style/ConsumptionListItem.Professional</item>
@@ -156,6 +173,8 @@
         <item name="SecondaryText">@style/SecondaryText.Professional</item>
         <item name="AddConsumptionBackground">@style/AddConsumptionBackground.Professional</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.Example.Professional</item>
+        <item name="ContainerBackground">@style/ContainerBackground.Professional</item>
+        <item name="ContainerShadow">@style/ContainerShadow</item>
     </style>
 
     <style name="ProfessionalTextView">
@@ -196,6 +215,10 @@
 
     <style name="AddConsumptionBackground.Professional">
         <item name="android:background">@color/professional_background</item>
+    </style>
+
+    <style name="ContainerBackground.Professional">
+        <item name="android:background">@drawable/consumption_background</item>
     </style>
 
     <style name="PopupMenu.Example.Professional" parent="@android:style/Widget.Holo.Light.ListPopupWindow">

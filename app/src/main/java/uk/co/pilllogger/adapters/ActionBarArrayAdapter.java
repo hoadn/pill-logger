@@ -53,8 +53,8 @@ public abstract class ActionBarArrayAdapter<T> extends ArrayAdapter<T>{
         ViewHolder holder = (ViewHolder) v.getTag();
         selector.setBackgroundResource(State.getSingleton().getTheme().getListItemBackgroundResourceId());
 
-        if(holder != null && holder.shadow != null)
-            holder.shadow.setVisibility(State.getSingleton().getTheme().isListItemShadowed() ? View.VISIBLE : View.GONE);
+        //if(holder != null && holder.shadow != null)
+            //holder.shadow.setVisibility(State.getSingleton().getTheme().isListItemShadowed() ? View.VISIBLE : View.GONE);
 
         return v;
     }

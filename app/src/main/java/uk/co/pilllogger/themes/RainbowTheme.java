@@ -38,11 +38,6 @@ public class RainbowTheme implements ITheme {
     }
 
     @Override
-    public boolean isListItemShadowed() {
-        return false;
-    }
-
-    @Override
     public int getGradientBackgroundResourceId() {
         return R.drawable.orange_gradient;
     }

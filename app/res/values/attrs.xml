@@ -13,4 +13,6 @@
     <attr name="ConsumptionPillName" format="reference" />
     <attr name="ConsumptionDate" format="reference"/>
     <attr name="ConsumptionSize" format="reference"/>
+    <attr name="ContainerBackground" format="reference" />
+    <attr name="ContainerShadow" format="reference"/>
 </resources>
