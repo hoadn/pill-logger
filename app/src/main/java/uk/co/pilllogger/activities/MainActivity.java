@@ -181,6 +181,8 @@ public class MainActivity extends PillLoggerActivityBase implements
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         new GetPillsTask(this, this).execute();
+
+        getWindow().setBackgroundDrawable(null);
     }
 
     @Override

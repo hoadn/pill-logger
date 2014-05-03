@@ -109,7 +109,7 @@ public class StackBarGraph extends View {
             float density = mContext.getResources().getDisplayMetrics().density;
             mFullImage = Bitmap.createBitmap(getWidth(), getHeight(), Config.ARGB_8888);
             Canvas canvas = new Canvas(mFullImage);
-            canvas.drawColor(Color.TRANSPARENT);
+
             if (_noData) {
                 Paint textPaint = new Paint();
                 textPaint.setTextSize(16 * density);
