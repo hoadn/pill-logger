@@ -20,15 +20,20 @@
         android:textAllCaps="true"/>
     <LinearLayout
         android:id="@+id/pill_fragment_quick_create"
+        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/translucent_white"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="15dp"
-        android:layout_below="@id/pill_fragment_title">
+        android:layout_below="@id/pill_fragment_title"
+        style="?attr/ContainerBackground">
         <include layout="@layout/add_new_medicine"
             />
+        <View
+            android:id="@+id/shadow"
+            android:layout_width="match_parent"
+            style="?attr/ContainerShadow"/>
     </LinearLayout>
     <ListView
         android:id="@+id/pill_list"

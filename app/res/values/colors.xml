@@ -68,7 +68,7 @@
     <color name="consumption_date_professional">@color/consumption_secondary_professional</color>
     <color name="consumption_size_professional">@color/consumption_secondary_professional</color>
 
-    <color name="professional_background">#FFcccccc</color>
+    <color name="professional_background">#FFE3E3E3</color>
     <color name="default_text_professional">#000000</color>
     <color name="secondary_text_professional">#444444</color>
     <color name="tab_mask_professional">#000000</color>
