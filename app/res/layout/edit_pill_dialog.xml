@@ -79,7 +79,8 @@
             android:textColor="@color/text_grey_medium"
             android:textCursorDrawable="@null"
             android:textSize="18sp"
-            android:layout_margin="4dp"/>
+            android:layout_margin="4dp"
+            android:inputType="numberDecimal"/>
         <Spinner
             android:id="@+id/units_spinner"
             android:layout_width="wrap_content"
