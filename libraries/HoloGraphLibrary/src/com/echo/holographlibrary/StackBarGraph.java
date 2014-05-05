@@ -285,45 +285,6 @@ public class StackBarGraph extends View {
         ca.drawBitmap(mFullImage, 0, 0, null);
         
     }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        Point point = new Point();
-        point.x = (int) event.getX();
-        point.y = (int) event.getY();
-        
-        int count = 0;
-        for (StackBar bar : mBars){
-            for(StackBarSection section : bar.getSections()){
-                if(section.getValue() == 0) continue;
-
-                Region r = new Region();
-                r.setPath(section.getPath(), section.getRegion());
-                if (r.contains(point.x, point.y) && event.getAction() == MotionEvent.ACTION_DOWN){
-                    mIndexSelected = count;
-                } else if (event.getAction() == MotionEvent.ACTION_UP){
-                    if (r.contains(point.x,point.y) && mListener != null){
-                        if (mIndexSelected > -1) mListener.onClick(mIndexSelected);
-                        mIndexSelected = -1;
-                    }
-                }
-                else if(event.getAction() == MotionEvent.ACTION_CANCEL)
-                    mIndexSelected = -1;
-
-                count++;
-            }
-        }
-        
-        if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL){
-            mShouldUpdate = true;
-            postInvalidate();
-        }
-        
-        
-
-        return true;
-    }
     
     @Override
     protected void onDetachedFromWindow()
