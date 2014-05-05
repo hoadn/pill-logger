@@ -46,6 +46,67 @@
     android:background="?android:attr/selectableItemBackground"
     android:clickable="false"/>
     <TextView
+        android:id="@+id/consumption_info_dialog_time_text"
+        android:text="@string/consumption_info_dialog_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/text_grey"
+        android:paddingTop="8dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingBottom="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="false"/>
+    <LinearLayout
+        android:id="@+id/consumption_info_dialog_pickers_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/add_consumption_set_reminder_title"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:paddingBottom="10dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:id="@+id/add_consumption_date_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Spinner
+                android:id="@+id/consumption_info_dialog_date"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="10dp"
+                android:clickable="false"
+                android:textSize="18sp"
+                android:textColor="@color/text_grey"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/add_consumption_time_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Spinner
+                android:id="@+id/consumption_info_dialog_time"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:clickable="false"
+                android:textSize="18sp"
+                android:textColor="@color/text_grey"/>
+        </LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="right"
+            android:src="@drawable/tick"/>
+    </LinearLayout>
+    <TextView
         android:id="@+id/info_dialog_delete"
         android:text="@string/info_dialog_delete"
         android:layout_width="match_parent"

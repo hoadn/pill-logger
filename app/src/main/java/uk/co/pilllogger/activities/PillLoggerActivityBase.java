@@ -2,6 +2,7 @@ package uk.co.pilllogger.activities;
 
 import android.app.Activity;
 import android.content.pm.ApplicationInfo;
+import android.support.v4.app.FragmentActivity;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
@@ -12,7 +13,7 @@ import uk.co.pilllogger.state.State;
 /**
  * Created by alex on 25/01/2014.
  */
-public class PillLoggerActivityBase extends Activity {
+public class PillLoggerActivityBase extends FragmentActivity {
     @Override
     protected void onStart(){
         super.onStart();

@@ -153,4 +153,5 @@
     <string name="dialog_change_theme_yes">Yes, use new theme</string>
     <string name="dialog_change_theme_no">No, use current theme</string>
     <string name="dialog_change_theme_title">New Theme</string>
+    <string name="consumption_info_dialog_time">Change date/time</string>
 </resources>
