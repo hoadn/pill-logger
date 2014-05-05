@@ -140,7 +140,6 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
             }
         });
 
-        new GetPillsTask(getActivity(), this).execute();
         setFont();
 
         Observer.getSingleton().registerPillsUpdatedObserver(this);
@@ -148,6 +147,12 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
         Observer.getSingleton().registerConsumptionDeletedObserver(this);
 
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        new GetPillsTask(getActivity(), this).execute();
     }
 
     @Override
@@ -166,6 +171,9 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
 
     @Override
     public void consumptionsReceived(List<Consumption> consumptions) {
+        if(!isAdded())
+            return;
+
         if (consumptions != null && consumptions.size() > 0) {
             setNoInformation(false);
             handleMostTaken(consumptions);
