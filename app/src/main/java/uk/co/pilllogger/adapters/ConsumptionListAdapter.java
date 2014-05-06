@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
@@ -121,9 +123,9 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
     }
 
     @Override
-    public void onDialogDelete(Consumption consumption, InfoDialog dialog) {
-        new DeleteConsumptionTask(_activity, consumption, true).execute();
-        TrackerHelper.deleteConsumptionEvent(_activity, "DialogDelete");
+    public void onDialogDelete(Consumption consumption, InfoDialog dialog, int position) {
+        if (_fragment instanceof ConsumptionListFragment)
+            ((ConsumptionListFragment) _fragment).deleteAnimation(position, consumption);
         dialog.dismiss();
     }
 
@@ -158,6 +160,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
+        final int pos = position;
         if (getItemViewType(position) == 0) {
             if (v == null) {
                 LayoutInflater inflater = (LayoutInflater) _activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -187,7 +190,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                     v.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                InfoDialog dialog = new ConsumptionInfoDialog(_activity, consumption, ConsumptionListAdapter.this);
+                                InfoDialog dialog = new ConsumptionInfoDialog(_activity, consumption, ConsumptionListAdapter.this, pos);
                                 TrackerHelper.showInfoDialogEvent(_activity, TAG);
                                 dialog.show(_activity.getFragmentManager(), consumption.getPill().getName());
                         }

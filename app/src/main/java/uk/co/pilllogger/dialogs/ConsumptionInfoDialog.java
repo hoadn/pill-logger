@@ -18,17 +18,19 @@ public class ConsumptionInfoDialog extends InfoDialog {
     private Context _context;
     private Consumption _consumption;
     private ConsumptionInfoDialogListener _listener;
+    private int _position;
 
 
     public ConsumptionInfoDialog(){
         super();
     }
 
-    public ConsumptionInfoDialog(Context context, Consumption consumption, ConsumptionInfoDialogListener listener) {
+    public ConsumptionInfoDialog(Context context, Consumption consumption, ConsumptionInfoDialogListener listener, int position) {
         super(consumption.getPill());
         _context = context;
         _consumption = consumption;
         _listener = listener;
+        _position = position;
     }
 
     @Override
@@ -97,7 +99,7 @@ public class ConsumptionInfoDialog extends InfoDialog {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _listener.onDialogDelete(_consumption, ConsumptionInfoDialog.this);
+                _listener.onDialogDelete(_consumption, ConsumptionInfoDialog.this, _position);
             }
         });
     }
@@ -106,6 +108,6 @@ public class ConsumptionInfoDialog extends InfoDialog {
         public void onDialogTakeAgain(Consumption consumption, InfoDialog dialog);
         public void onDialogIncrease(Consumption consumption, InfoDialog dialog);
         public void onDialogDecrease(Consumption consumption, InfoDialog dialog);
-        public void onDialogDelete(Consumption consumption, InfoDialog dialog);
+        public void onDialogDelete(Consumption consumption, InfoDialog dialog, int position);
     }
 }

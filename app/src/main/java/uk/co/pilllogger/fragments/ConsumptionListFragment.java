@@ -13,9 +13,13 @@ import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Transformation;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +41,7 @@ import java.util.Map;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.ConsumptionListAdapter;
 import uk.co.pilllogger.adapters.GraphPillListAdapter;
+import uk.co.pilllogger.animations.HeightAnimation;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
@@ -46,6 +51,7 @@ import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.stats.Statistics;
+import uk.co.pilllogger.tasks.DeleteConsumptionTask;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.InitTestDbTask;
@@ -355,5 +361,33 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         };
 
         executeRunnable(runnable);
+    }
+
+    public void deleteAnimation(int position, Consumption consumption) {
+        final Consumption consumption1 = consumption;
+        final View rowView = _listView.getChildAt(position);
+        int height = rowView.getHeight();
+        Animation a = new HeightAnimation(rowView, height, false, _activity);
+        a.setFillAfter(true);
+        a.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                rowView.getLayoutParams().height = 0;
+                //new DeleteConsumptionTask(_activity, consumption1, true).execute();
+                //TrackerHelper.deleteConsumptionEvent(_activity, "DialogDelete");
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        a.setDuration(150);
+        rowView.startAnimation(a);
     }
 }

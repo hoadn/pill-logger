@@ -24,12 +24,17 @@ public class HeightAnimation extends Animation {
     @Override
     protected void applyTransformation(float interpolatedTime, Transformation t) {
         int newHeight;
+        float alpha;
         if (_expand) {
             newHeight = (int) (_tartgetHeight * interpolatedTime);
+            alpha = interpolatedTime;
+
         } else {
             newHeight = (int) (_tartgetHeight * (1 - interpolatedTime));
+            alpha = (1 - interpolatedTime);
         }
         _view.getLayoutParams().height = newHeight;
+        _view.setAlpha(alpha);
         _view.requestLayout();
     }
 
