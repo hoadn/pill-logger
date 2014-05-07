@@ -34,7 +34,7 @@ public class HeightAnimation extends Animation {
             alpha = (1 - interpolatedTime);
         }
         _view.getLayoutParams().height = newHeight;
-        _view.setAlpha(alpha);
+        //_view.setAlpha(alpha);
         _view.requestLayout();
     }
 

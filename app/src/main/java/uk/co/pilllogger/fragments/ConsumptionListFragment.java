@@ -16,7 +16,9 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -27,6 +29,8 @@ import com.echo.holographlibrary.BarGraph;
 import com.echo.holographlibrary.LineGraph;
 import com.echo.holographlibrary.PieGraph;
 import com.echo.holographlibrary.StackBarGraph;
+import com.nhaarman.listviewanimations.itemmanipulation.AnimateDismissAdapter;
+import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -181,11 +185,26 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                 noConsumption.setVisibility(View.GONE);
             }
             //List<Consumption> grouped = ConsumptionRepository.getSingleton(activity).groupConsumptions(consumptions);
-            ConsumptionListAdapter adapter;
+            final ConsumptionListAdapter adapter;
 
             adapter = new ConsumptionListAdapter(activity, this, R.layout.consumption_list_item, consumptions, _pills);
 
-            _listView.setAdapter(adapter);
+            OnDismissCallback myOnDismissCallback = new OnDismissCallback() {
+
+                @Override
+                public void onDismiss(AbsListView listView, int[] reverseSortedPositions){
+                    for (int position: reverseSortedPositions) {
+                        Logger.d(TAG, "" + position);
+                        adapter.remove(position - 1);
+                    }
+                }
+            };
+
+            AnimateDismissAdapter mAnimateDismissAdapter = new AnimateDismissAdapter(adapter, myOnDismissCallback);
+
+            mAnimateDismissAdapter.setAbsListView(_listView);
+
+            _listView.setAdapter(mAnimateDismissAdapter);
             _listView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -363,31 +382,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         executeRunnable(runnable);
     }
 
-    public void deleteAnimation(int position, Consumption consumption) {
-        final Consumption consumption1 = consumption;
-        final View rowView = _listView.getChildAt(position);
-        int height = rowView.getHeight();
-        Animation a = new HeightAnimation(rowView, height, false, _activity);
-        a.setFillAfter(true);
-        a.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                rowView.getLayoutParams().height = 0;
-                //new DeleteConsumptionTask(_activity, consumption1, true).execute();
-                //TrackerHelper.deleteConsumptionEvent(_activity, "DialogDelete");
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        a.setDuration(150);
-        rowView.startAnimation(a);
+    public void deleteAnimation(final int position, Consumption consumption) {
+        AnimateDismissAdapter adapter = (AnimateDismissAdapter) _listView.getAdapter();
+        adapter.animateDismiss(position);
     }
 }

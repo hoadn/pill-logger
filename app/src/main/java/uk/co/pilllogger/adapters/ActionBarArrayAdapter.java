@@ -59,7 +59,7 @@ public abstract class ActionBarArrayAdapter<T> extends ArrayAdapter<T>{
         return v;
     }
 
-    public void removeAtPosition(int pos) {
+    public void remove(int pos) {
         if (_data == null || pos > _data.size() || pos < 0)
             return;
 
