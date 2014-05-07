@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -182,7 +183,9 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         new GetPillsTask(this, this).execute();
 
-        getWindow().setBackgroundDrawable(null);
+        Integer gradientBackgroundResourceId = State.getSingleton().getTheme().getWindowBackgroundResourceId();
+        Drawable background = gradientBackgroundResourceId == null ? null : getResources().getDrawable(gradientBackgroundResourceId);
+        getWindow().setBackgroundDrawable(background);
     }
 
     @Override
@@ -269,7 +272,8 @@ public class MainActivity extends PillLoggerActivityBase implements
                             .setTabListener(tabListener));
 
             View view = findViewById(R.id.main_gradient);
-            view.setBackgroundResource(State.getSingleton().getTheme().getGradientBackgroundResourceId());
+            if(view != null)
+                view.setBackgroundResource(State.getSingleton().getTheme().getGradientBackgroundResourceId());
         }
     }
 

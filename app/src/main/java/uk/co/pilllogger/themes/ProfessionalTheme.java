@@ -38,8 +38,13 @@ public class ProfessionalTheme implements ITheme {
     }
 
     @Override
+    public Integer getWindowBackgroundResourceId() {
+        return null;
+    }
+
+    @Override
     public int getGradientBackgroundResourceId() {
-        return android.R.color.transparent;
+        return R.color.transparent;
     }
 
     @Override

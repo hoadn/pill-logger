@@ -38,6 +38,11 @@ public class RainbowTheme implements ITheme {
     }
 
     @Override
+    public Integer getWindowBackgroundResourceId() {
+        return R.drawable.back;
+    }
+
+    @Override
     public int getGradientBackgroundResourceId() {
         return R.drawable.orange_gradient;
     }

@@ -13,7 +13,6 @@
             android:id="@+id/main_gradient"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/orange_gradient"
             android:paddingTop="@dimen/action_bar_height"
             android:paddingBottom="@dimen/action_bar_bottom_padding">
             <uk.co.pilllogger.views.MyViewPager
