@@ -24,10 +24,12 @@ import uk.co.pilllogger.dialogs.ChangePillInfoDialog;
 import uk.co.pilllogger.dialogs.InfoDialog;
 import uk.co.pilllogger.dialogs.PillInfoDialog;
 import uk.co.pilllogger.helpers.LayoutHelper;
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
+import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.stats.Statistics;
 import uk.co.pilllogger.tasks.DeletePillTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
@@ -76,7 +78,6 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = super.getView(position, convertView, parent);
-
 
         final View listItem = v;
         if (v != null) {

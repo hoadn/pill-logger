@@ -24,14 +24,24 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/pill_list_item_height"
             android:padding="10dp">
-            <TextView
-                android:textSize="20dp"
-                android:id="@+id/pill_list_name"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                tools:text="@string/placeholder_pill_text"/>
-
+                android:orientation="vertical">
+                <TextView
+                    android:textSize="20dp"
+                    android:id="@+id/pill_list_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/placeholder_pill_text"/>
+                <TextView
+                    android:id="@+id/pill_list_last_taken"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Last taken 3 hours ago"
+                    style="?attr/SecondaryText"/>
+            </LinearLayout>
 
                 <uk.co.pilllogger.views.ColourIndicator
                     android:id="@+id/pill_list_colour"
@@ -50,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@id/pill_list_colour"
-                android:layout_alignBaseline="@id/pill_list_name"
+                android:layout_centerVertical="true"
                 tools:text="@string/placeholder_pill_size"/>
         </RelativeLayout>
     <LinearLayout
