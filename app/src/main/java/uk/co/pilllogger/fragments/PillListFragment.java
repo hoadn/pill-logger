@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,6 +25,7 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillsListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.helpers.LayoutHelper;
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Observer;
@@ -36,14 +38,14 @@ import uk.co.pilllogger.views.ColourIndicator;
 public class PillListFragment extends PillLoggerFragmentBase implements
         GetPillsTask.ITaskComplete,
         InsertPillTask.ITaskComplete,
-        Observer.IPillsUpdated{
+        Observer.IPillsUpdated,
+        SharedPreferences.OnSharedPreferenceChangeListener{
 
     public static final String TAG = "PillListFragment";
     private ListView _list;
     private EditText _addPillName;
     private EditText _addPillSize;
     private Spinner _unitSpinner;
-    private String _sortOrder = "";
     ColourIndicator _colour;
 
 	public PillListFragment() {
@@ -66,15 +68,6 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         super.onDestroy();
 
         Observer.getSingleton().unregisterPillsUpdatedObserver(this);
-    }
-
-    @Override
-    public void onResume() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String sortOrder = preferences.getString(getActivity().getResources().getString(R.string.pref_key_medication_list_order), "");
-        if (!_sortOrder.equals(sortOrder))
-            new GetPillsTask(getActivity(), this).execute();
-        super.onResume();
     }
 
     @Override
@@ -186,6 +179,9 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _unitSpinner.setAdapter(adapter);
 
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
         return v;
     }
 
@@ -205,9 +201,9 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     @Override
     public void pillsReceived(List<Pill> pills) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        _sortOrder = preferences.getString(getActivity().getResources().getString(R.string.pref_key_medication_list_order), "");
+        String sortOrder = preferences.getString(getActivity().getResources().getString(R.string.pref_key_medication_list_order), "");
         Comparator<Pill> comparator;
-        if (_sortOrder.equals(getActivity().getResources().getString(R.string.alphabetical))) {
+        if (sortOrder.equals(getActivity().getResources().getString(R.string.alphabetical))) {
             comparator = new Comparator<Pill>() {
                 @Override
                 public int compare(Pill pill1, Pill pill2) {
@@ -215,7 +211,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
                 }
             };
         }
-        else if (_sortOrder.equals(getActivity().getResources().getString(R.string.reverse_order_created))) {
+        else if (sortOrder.equals(getActivity().getResources().getString(R.string.reverse_order_created))) {
             comparator = new Comparator<Pill>() {
                 @Override
                 public int compare(Pill pill1, Pill pill2) {
@@ -272,6 +268,12 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     @Override
     public void pillsUpdated(Pill pill) {
         new GetPillsTask(this.getActivity(), this).execute();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getActivity().getResources().getString(R.string.pref_key_medication_list_order)))
+            new GetPillsTask(getActivity(), this).execute();
     }
 
     private class AddPillClickListener implements View.OnClickListener {
