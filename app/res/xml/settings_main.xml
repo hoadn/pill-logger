@@ -24,6 +24,17 @@
             android:persistent="true"/>
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/pref_title_display" android:key="@string/pref_key_display">
+        <ListPreference
+            android:title="@string/medicationListOrder"
+            android:dialogTitle="@string/medicationListOrder"
+            android:entries="@array/display"
+            android:entryValues="@array/display"
+            android:defaultValue="@string/order_created"
+            android:key="@string/pref_key_medication_list_order"
+            android:persistent="true"/>
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="About" android:key="about">
         <Preference
             android:title="@string/pref_title_recent_changes"

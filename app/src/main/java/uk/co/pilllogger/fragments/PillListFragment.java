@@ -1,9 +1,11 @@
 package uk.co.pilllogger.fragments;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import uk.co.pilllogger.R;
@@ -39,6 +43,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     private EditText _addPillName;
     private EditText _addPillSize;
     private Spinner _unitSpinner;
+    private String _sortOrder = "";
     ColourIndicator _colour;
 
 	public PillListFragment() {
@@ -61,6 +66,15 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         super.onDestroy();
 
         Observer.getSingleton().unregisterPillsUpdatedObserver(this);
+    }
+
+    @Override
+    public void onResume() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String sortOrder = preferences.getString(getActivity().getResources().getString(R.string.pref_key_medication_list_order), "");
+        if (!_sortOrder.equals(sortOrder))
+            new GetPillsTask(getActivity(), this).execute();
+        super.onResume();
     }
 
     @Override
@@ -190,6 +204,35 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     @Override
     public void pillsReceived(List<Pill> pills) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        _sortOrder = preferences.getString(getActivity().getResources().getString(R.string.pref_key_medication_list_order), "");
+        Comparator<Pill> comparator;
+        if (_sortOrder.equals(getActivity().getResources().getString(R.string.alphabetical))) {
+            comparator = new Comparator<Pill>() {
+                @Override
+                public int compare(Pill pill1, Pill pill2) {
+                    return pill1.getName().compareTo(pill2.getName());
+                }
+            };
+        }
+        else if (_sortOrder.equals(getActivity().getResources().getString(R.string.reverse_order_created))) {
+            comparator = new Comparator<Pill>() {
+                @Override
+                public int compare(Pill pill1, Pill pill2) {
+                    return pill2.getId() - pill1.getId();
+                }
+            };
+        }
+        else {
+            comparator = new Comparator<Pill>() {
+                @Override
+                public int compare(Pill pill1, Pill pill2) {
+                    return pill1.getId() - pill2.getId();
+                }
+            };
+        }
+        Collections.sort(pills, comparator);
+
         if (_list.getAdapter() == null){ //we need to init the adapter
             Activity activity = getActivity();
 
