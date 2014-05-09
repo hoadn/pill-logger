@@ -55,10 +55,18 @@ public class DateHelper {
     }
 
     public static String getRelativeDateTime(Context context, Date date){
-        return getRelativeDateTime(context, new DateTime(date));
+        return getRelativeDateTime(context, date, false);
+    }
+
+    public static String getRelativeDateTime(Context context, Date date, boolean isPrefixed){
+        return getRelativeDateTime(context, new DateTime(date), isPrefixed);
     }
 
     public static String getRelativeDateTime(Context context, DateTime date){
+        return getRelativeDateTime(context, date, false);
+    }
+
+    public static String getRelativeDateTime(Context context, DateTime date, boolean isPrefixed){
 
         String dateString;
         if (isDateInFuture(date)) {
@@ -94,6 +102,10 @@ public class DateHelper {
         }
         else{
             dateString = setAsDateAndTime(context, date);
+        }
+
+        if(isPrefixed){
+            dateString = dateString.substring(0, 1).toLowerCase() + dateString.substring(1);
         }
 
         return dateString;
