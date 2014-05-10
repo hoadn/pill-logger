@@ -243,8 +243,10 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getActivity().getResources().getString(R.string.pref_key_medication_list_order)) || key.equals(getActivity().getResources().getString(R.string.pref_key_reverse_order)))
-            new GetPillsTask(getActivity(), this).execute();
+        if(isAdded() && getActivity() != null) {
+            if (key.equals(getActivity().getResources().getString(R.string.pref_key_medication_list_order)) || key.equals(getActivity().getResources().getString(R.string.pref_key_reverse_order)))
+                new GetPillsTask(getActivity(), this).execute();
+        }
     }
 
     private class AddPillClickListener implements View.OnClickListener {

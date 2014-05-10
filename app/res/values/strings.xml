@@ -142,9 +142,8 @@
     <string name="edit_pill_dialog_title">Edit Medicine Info</string>
     <string name="color">Color</string>
     <string name="stats_no_information_text">Once you\'ve input information this page will show a collection of useful statistics</string>
-    <string name="order_created">Order Created</string>
-    <string name="reverse_order_created">Reverse Order Created</string>
-    <string name="alphabetical">Alphabetical</string>
+    <string name="order_created">Date Created</string>
+    <string name="alphabetical">Name</string>
     <string name="rainbowTheme">Colors</string>
     <string name="professionalTheme">Simple</string>
     <string name="pref_key_theme_list">themeList</string>

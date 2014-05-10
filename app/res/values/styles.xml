@@ -49,6 +49,7 @@
         <item name="android:backgroundSplit">#60000000</item>
         <item name="android:backgroundStacked">#00000000</item>
     </style>
+
     <style name="PartiallyTransparentActionBarTab"
                    parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
         <item name="android:background">#00000000</item>

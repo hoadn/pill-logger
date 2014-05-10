@@ -10,8 +10,7 @@
         android:text="@string/stats_fragment_title"
         style="?attr/FragmentTitle"/>
     <TextView
-        android:id="@+id/stats_no_inf
-        ormation"
+        android:id="@+id/stats_no_information"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/stats_no_information_text"
