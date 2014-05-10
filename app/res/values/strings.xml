@@ -131,7 +131,7 @@
     <string name="pref_key_recent_changes">recent_changes</string>
     <string name="pref_title_recent_changes">Recent changes</string>
     <string name="support_subject">Pill Logger Feedback</string>
-    <string name="feedback_chooser_title">Send feedback...</string>
+    <string name="feedback_chooser_title">Send feedback…</string>
     <string name="widget_quantity_indicator">●</string>
     <string name="widget_quantity_overload_indicator">+</string>
     <string name="confirm_delete_title">Confirm Delete</string>
@@ -142,8 +142,8 @@
     <string name="edit_pill_dialog_title">Edit Medicine Info</string>
     <string name="color">Color</string>
     <string name="stats_no_information_text">Once you\'ve input information this page will show a collection of useful statistics</string>
-    <string name="order_created">Order created (oldest at the top)</string>
-    <string name="reverse_order_created">Reverse order created (newest at the top)</string>
+    <string name="order_created">Order Created</string>
+    <string name="reverse_order_created">Reverse Order Created</string>
     <string name="alphabetical">Alphabetical</string>
     <string name="rainbowTheme">Colors</string>
     <string name="professionalTheme">Simple</string>
@@ -153,8 +153,8 @@
     <string name="pref_key_display">displays</string>
     <string name="pref_title_theme">Theme</string>
     <string name="pref_title_display">Display</string>
-    <string name="chooseTheme">Choose theme</string>
-    <string name="medicationListOrder">Change medication list order</string>
+    <string name="chooseTheme">Theme</string>
+    <string name="medicationListOrder">Medicine Sort Order</string>
     <string name="add_widget_title">Select medicine to use for this widget</string>
     <string name="dialog_change_theme">We have introduced a new \"Simple\" theme in this update, would you like to try it? \n\nIf you would like to switch back to the old theme, you can do so from the settings page.</string>
     <string name="dialog_change_theme_yes">Yes, use new theme</string>

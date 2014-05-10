@@ -13,9 +13,9 @@
         <item>@string/rainbowTheme</item>
         <item>@string/professionalTheme</item>
     </string-array>
-    <string-array name="display">
-        <item>@string/order_created</item>
-        <item>@string/reverse_order_created</item>
+    <string-array name="medicineSortOrder">
         <item>@string/alphabetical</item>
+        <item>@string/reverse_order_created</item>
+        <item>@string/order_created</item>
     </string-array>
 </resources>

@@ -13,7 +13,7 @@
             android:key="@string/pref_key_reminder_vibrate"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_title_theme" android:key="@string/pref_key_theme">
+    <PreferenceCategory android:title="@string/pref_title_display" android:key="@string/pref_key_display">
         <ListPreference
             android:title="@string/chooseTheme"
             android:dialogTitle="@string/chooseTheme"
@@ -22,14 +22,11 @@
             android:defaultValue="@string/rainbowTheme"
             android:key="@string/pref_key_theme_list"
             android:persistent="true"/>
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/pref_title_display" android:key="@string/pref_key_display">
         <ListPreference
             android:title="@string/medicationListOrder"
             android:dialogTitle="@string/medicationListOrder"
-            android:entries="@array/display"
-            android:entryValues="@array/display"
+            android:entries="@array/medicineSortOrder"
+            android:entryValues="@array/medicineSortOrder"
             android:defaultValue="@string/order_created"
             android:key="@string/pref_key_medication_list_order"
             android:persistent="true"/>
