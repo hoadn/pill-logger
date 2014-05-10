@@ -215,7 +215,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             comparator = new Comparator<Pill>() {
                 @Override
                 public int compare(Pill pill1, Pill pill2) {
-                    return pill2.getId() - pill1.getId();
+                    return ((Integer)pill1.getId()).compareTo(pill2.getId());
                 }
             };
         }
@@ -223,7 +223,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             comparator = new Comparator<Pill>() {
                 @Override
                 public int compare(Pill pill1, Pill pill2) {
-                    return pill1.getId() - pill2.getId();
+                    return ((Integer)pill2.getId()).compareTo(pill1.getId());
                 }
             };
         }
