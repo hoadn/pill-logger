@@ -30,6 +30,9 @@
             android:defaultValue="@string/order_created"
             android:key="@string/pref_key_medication_list_order"
             android:persistent="true"/>
+        <CheckBoxPreference
+            android:title="@string/pref_title_reverse_order"
+            android:key="@string/pref_key_reverse_order"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="About" android:key="about">

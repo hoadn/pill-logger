@@ -164,4 +164,6 @@
     <string name="take_again_quantity_prefix">Quantity</string>
     <string name="consumption_info_dialog_increase_toast">Quantity increased</string>
     <string name="consumption_info_dialog_decrease_toast">Quantity decreased</string>
+    <string name="pref_title_reverse_order">Reverse Medicine Sort Order</string>
+    <string name="pref_key_reverse_order">reverse_order_key</string>
 </resources>

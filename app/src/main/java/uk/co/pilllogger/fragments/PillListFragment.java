@@ -200,35 +200,6 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     @Override
     public void pillsReceived(List<Pill> pills) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String sortOrder = preferences.getString(getActivity().getResources().getString(R.string.pref_key_medication_list_order), "");
-        Comparator<Pill> comparator;
-        if (sortOrder.equals(getActivity().getResources().getString(R.string.alphabetical))) {
-            comparator = new Comparator<Pill>() {
-                @Override
-                public int compare(Pill pill1, Pill pill2) {
-                    return pill1.getName().compareTo(pill2.getName());
-                }
-            };
-        }
-        else if (sortOrder.equals(getActivity().getResources().getString(R.string.reverse_order_created))) {
-            comparator = new Comparator<Pill>() {
-                @Override
-                public int compare(Pill pill1, Pill pill2) {
-                    return ((Integer)pill1.getId()).compareTo(pill2.getId());
-                }
-            };
-        }
-        else {
-            comparator = new Comparator<Pill>() {
-                @Override
-                public int compare(Pill pill1, Pill pill2) {
-                    return ((Integer)pill2.getId()).compareTo(pill1.getId());
-                }
-            };
-        }
-        Collections.sort(pills, comparator);
-
         if (_list.getAdapter() == null){ //we need to init the adapter
             Activity activity = getActivity();
 
@@ -272,7 +243,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getActivity().getResources().getString(R.string.pref_key_medication_list_order)))
+        if (key.equals(getActivity().getResources().getString(R.string.pref_key_medication_list_order)) || key.equals(getActivity().getResources().getString(R.string.pref_key_reverse_order)))
             new GetPillsTask(getActivity(), this).execute();
     }
 

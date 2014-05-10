@@ -2,15 +2,20 @@ package uk.co.pilllogger.repositories;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
 import android.util.SparseIntArray;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import uk.co.pilllogger.R;
 import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
@@ -210,11 +215,44 @@ public class PillRepository extends BaseRepository<Pill>{
 
     @Override
     public List<Pill> getAll() {
+        List<Pill> pills;
         if(_cache != null && _cache.size() > 0 && _getAllCalled)
-            return new ArrayList<Pill>(_cache.values());
+            pills = new ArrayList<Pill>(_cache.values());
+        else {
+            _getAllCalled = true;
+            pills = getList(null, null);
+        }
 
-        _getAllCalled = true;
-        return getList(null, null);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(_context);
+        String sortOrder = preferences.getString(_context.getResources().getString(R.string.pref_key_medication_list_order), "");
+        Boolean reverseOrder = preferences.getBoolean(_context.getResources().getString(R.string.pref_key_reverse_order), false);
+        Comparator<Pill> comparator = null;
+        if (sortOrder.equals(_context.getResources().getString(R.string.alphabetical))) {
+            comparator = new Comparator<Pill>() {
+                @Override
+                public int compare(Pill pill1, Pill pill2) {
+                    return pill1.getName().compareTo(pill2.getName());
+                }
+            };
+        }
+        else if (sortOrder.equals(_context.getResources().getString(R.string.order_created))) {
+            comparator = new Comparator<Pill>() {
+                @Override
+                public int compare(Pill pill1, Pill pill2) {
+                    return ((Integer)pill2.getId()).compareTo(pill1.getId());
+                }
+            };
+        }
+
+        if(comparator != null) {
+            Collections.sort(pills, comparator);
+
+            if(reverseOrder){
+                Collections.reverse(pills);
+            }
+        }
+
+        return pills;
     }
 
     private void notifyUpdated(Pill pill){
