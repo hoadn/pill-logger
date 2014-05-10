@@ -12,12 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_alignParentTop="true"
-        android:textStyle="bold"
         android:text="@string/pill_fragment_title"
-        android:gravity="center_horizontal"
-        android:textSize="20sp"
-        android:padding="5dp"
-        android:textAllCaps="true"/>
+        style="?attr/FragmentTitle"/>
     <LinearLayout
         android:id="@+id/pill_fragment_quick_create"
         android:orientation="vertical"

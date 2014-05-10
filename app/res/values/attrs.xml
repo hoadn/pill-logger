@@ -15,4 +15,5 @@
     <attr name="ConsumptionSize" format="reference"/>
     <attr name="ContainerBackground" format="reference" />
     <attr name="ContainerShadow" format="reference"/>
+    <attr name="FragmentTitle" format="reference"/>
 </resources>

@@ -7,14 +7,11 @@
         android:id="@+id/stats_fragment_title"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:textStyle="bold"
         android:text="@string/stats_fragment_title"
-        android:gravity="center_horizontal"
-        android:textSize="20sp"
-        android:padding="5dp"
-        android:textAllCaps="true"/>
+        style="?attr/FragmentTitle"/>
     <TextView
-        android:id="@+id/stats_no_information"
+        android:id="@+id/stats_no_inf
+        ormation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/stats_no_information_text"

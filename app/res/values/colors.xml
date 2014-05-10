@@ -71,7 +71,7 @@
     <color name="professional_background">#FFE3E3E3</color>
     <color name="default_text_professional">#000000</color>
     <color name="secondary_text_professional">#444444</color>
-    <color name="tab_mask_professional">#000000</color>
+    <color name="tab_mask_professional">@color/light_blue</color>
     <color name="stackbar_graph_line_professional">#DDDDDD</color>
     <color name="default_chart_professional">@color/pill_colour1</color>
     <color name="list_item_background_secondary_professional">#dedede</color>
