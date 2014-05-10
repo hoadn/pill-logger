@@ -15,6 +15,7 @@
     </string-array>
     <string-array name="medicineSortOrder">
         <item>@string/alphabetical</item>
+        <item>@string/last_taken</item>
         <item>@string/order_created</item>
     </string-array>
 </resources>
