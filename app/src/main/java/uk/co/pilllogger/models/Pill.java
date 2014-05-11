@@ -6,6 +6,7 @@ package uk.co.pilllogger.models;
 import android.util.Log;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
 	private float _size;
     private int _colour = R.color.pill_default_color;
     private boolean _favourite = false;
+    private Consumption _latest = null;
+    private Consumption _first = null;
 
     private List<Consumption> _consumptions = new ArrayList<Consumption>();
 
@@ -118,17 +121,42 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
     }
 
     public Consumption getLatestConsumption(){
-
         if(_consumptions.isEmpty())
             return null;
 
-        Consumption latest = _consumptions.get(0);
-        for(Consumption c : _consumptions){
-            if(c.getDate().getTime() > latest.getDate().getTime())
-                latest = c;
+        if(_latest == null) {
+            updateLatestFirst();
+        }
+        return _latest;
+    }
+
+    public Consumption getFirstConsumption(){
+        if(_consumptions.isEmpty())
+            return null;
+
+        if(_first == null){
+            updateLatestFirst();
         }
 
-        return latest;
+        return _first;
+    }
+
+    private void updateLatestFirst(){
+        if(_consumptions.isEmpty())
+            return;
+
+        _latest = _consumptions.get(0);
+        _first = _consumptions.get(0);
+        for (Consumption c : _consumptions) {
+            long time = c.getDate().getTime();
+            long latestTime = _latest.getDate().getTime();
+            long firstTime = _first.getDate().getTime();
+
+            if (time > latestTime)
+                _latest = c;
+            if(time < firstTime)
+                _first = c;
+        }
     }
 
     public float getTotalSize(int hours){
@@ -143,7 +171,7 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
 
         for (Consumption consumption : _consumptions) {
             Date consumptionDate = consumption.getDate();
-            if (consumptionDate.compareTo(back) >= 0 && consumptionDate.compareTo(currentDate) <= 0) {
+            if (hours < 0 || consumptionDate.compareTo(back) >= 0 && consumptionDate.compareTo(currentDate) <= 0) {
                 total += (consumption.getQuantity());
             }
         }
@@ -194,6 +222,9 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
         if (consumption != null) {
             if (consumption.getPillId() == _id && !_consumptions.contains(consumption)) {
                 _consumptions.add(consumption);
+
+                if(_latest == null || consumption.getDate().getTime() > _latest.getDate().getTime())
+                    _latest = consumption;
             }
         }
     }
@@ -203,6 +234,9 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
         if (consumption != null) {
             if (consumption.getPillId() == _id && _consumptions.contains(consumption)) {
                 _consumptions.remove(consumption);
+
+                if(_latest != null && consumption.getId() == _latest.getId())
+                    _latest = null;
             }
         }
     }
@@ -221,8 +255,29 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
 
             if(c.getGroup().equals(group) && c.getPillId() == pillId)
                 toRemove.add(c);
+
+            if(_latest != null && c.getId() == _latest.getId())
+                _latest = null;
         }
 
         _consumptions.removeAll(toRemove);
+    }
+
+    public float getDailyAverage(){
+        Consumption first = getFirstConsumption();
+        if(first == null)
+            return 0;
+
+        DateTime firstDt = new DateTime(first.getDate());
+        DateTime now = new DateTime();
+
+        int days = Days.daysBetween(firstDt.withTimeAtStartOfDay(), now.withTimeAtStartOfDay()).getDays();
+        return getDailyAverage(days);
+    }
+
+    public float getDailyAverage(int days){
+        int total = getTotalQuantity(days * 24);
+
+        return total / (float)days;
     }
 }

@@ -247,6 +247,10 @@ public class PillRepository extends BaseRepository<Pill>{
             comparator = new Comparator<Pill>() {
                 @Override
                 public int compare(Pill pill1, Pill pill2) {
+                    if(pill1.getLatestConsumption() == null)
+                        return 1;
+                    if(pill2.getLatestConsumption() == null)
+                        return -1;
                     return pill2.getLatestConsumption().getDate().compareTo(pill1.getLatestConsumption().getDate());
                 }
             };
