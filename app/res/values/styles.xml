@@ -109,6 +109,7 @@
 
     <style name="CardTitle"/>
     <style name="NewMedicineTitle" />
+    <style name="AddConsumptionGradient" />
 
     <style name="Rainbow" parent="AppTheme">
         <item name="android:textViewStyle">@style/RainbowTextView</item>
@@ -124,6 +125,7 @@
         <item name="ContainerBackground">@style/ContainerBackground.Rainbow</item>
         <item name="ContainerShadow">@style/ContainerShadow.Rainbow</item>
         <item name="FragmentTitle">@style/FragmentTitle.Rainbow</item>
+        <item name="AddConsumptionGradient">@style/AddConsumptionGradient.Rainbow</item>
     </style>
 
     <style name="RainbowTextView">
@@ -176,6 +178,10 @@
 
     <style name="FragmentTitle.Rainbow">
         <item name="android:textColor">@color/default_text</item>
+    </style>
+
+    <style name="AddConsumptionGradient.Rainbow">
+        <item name="android:background">@drawable/orange_gradient</item>
     </style>
 
     <style name="Professional" parent="AppThemeLight">

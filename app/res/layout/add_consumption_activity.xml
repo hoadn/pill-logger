@@ -11,7 +11,7 @@
         android:id="@+id/main_gradient"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/orange_gradient">
+        style="?attr/AddConsumptionGradient">
     <LinearLayout
         android:id="@+id/add_consumption_top_buttons"
         android:layout_height="50dp"

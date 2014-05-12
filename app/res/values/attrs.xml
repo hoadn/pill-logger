@@ -18,4 +18,5 @@
     <attr name="FragmentTitle" format="reference"/>
     <attr name="CardTitle" format="reference" />
     <attr name="NewMedicineTitle" format="reference" />
+    <attr name="AddConsumptionGradient" format="reference" />
 </resources>
