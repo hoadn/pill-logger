@@ -16,4 +16,6 @@
     <attr name="ContainerBackground" format="reference" />
     <attr name="ContainerShadow" format="reference"/>
     <attr name="FragmentTitle" format="reference"/>
+    <attr name="CardTitle" format="reference" />
+    <attr name="NewMedicineTitle" format="reference" />
 </resources>

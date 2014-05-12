@@ -107,6 +107,9 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="CardTitle"/>
+    <style name="NewMedicineTitle" />
+
     <style name="Rainbow" parent="AppTheme">
         <item name="android:textViewStyle">@style/RainbowTextView</item>
         <item name="ConsumptionListItem">@style/ConsumptionListItem.Rainbow</item>
@@ -190,6 +193,8 @@
         <item name="ContainerBackground">@style/ContainerBackground.Professional</item>
         <item name="ContainerShadow">@style/ContainerShadow</item>
         <item name="FragmentTitle">@style/FragmentTitle.Professional</item>
+        <item name="CardTitle">@style/CardTitle.Professional</item>
+        <item name="NewMedicineTitle">@style/NewMedicineTitle.Professional</item>
     </style>
 
     <style name="ProfessionalTextView">
@@ -197,7 +202,7 @@
     </style>
 
     <style name="ConsumptionPillName.Professional">
-        <item name="android:textColor">@color/consumption_professional</item>
+        <item name="android:textColor">@color/title_blue</item>
     </style>
 
     <style name="ConsumptionDate.Professional">
@@ -238,6 +243,14 @@
 
     <style name="FragmentTitle.Professional">
         <item name="android:textColor">@color/light_blue</item>
+    </style>
+
+    <style name="CardTitle.Professional">
+        <item name="android:textColor">@color/title_blue</item>
+    </style>
+
+    <style name="NewMedicineTitle.Professional">
+        <item name="android:textColor">@color/text_grey_medium</item>
     </style>
 
     <style name="PopupMenu.Example.Professional" parent="@android:style/Widget.Holo.Light.ListPopupWindow">

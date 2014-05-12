@@ -14,7 +14,9 @@
         android:text="@string/create_a_pill_title"
         android:textSize="20sp"
         android:padding="5dp"
-        android:textAllCaps="false"/>
+        style="?attr/NewMedicineTitle"
+        android:layout_marginLeft="5dp"
+        android:textAllCaps="true"/>
     <RelativeLayout
         android:id="@+id/pill_fragment_name_outer"
         android:layout_width="match_parent"
