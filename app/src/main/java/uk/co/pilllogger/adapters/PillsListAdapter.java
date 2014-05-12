@@ -39,13 +39,15 @@ import uk.co.pilllogger.views.ColourIndicator;
 /**
  * Created by nick on 22/10/13.
  */
-public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDialog.PillInfoDialogListener, ChangePillInfoDialog.ChangePillInfoDialogListener {
+public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDialog.PillInfoDialogListener, ChangePillInfoDialog.ChangePillInfoDialogListener, Observer.IConsumptionAdded, Observer.IConsumptionDeleted {
 
     private static final String TAG = "PillsListAdapter";
     private Pill _selectedPill;
 
     public PillsListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
         super(activity, textViewResourceId, pills);
+        Observer.getSingleton().registerConsumptionAddedObserver(this);
+        Observer.getSingleton().registerConsumptionDeletedObserver(this);
     }
 
     private AlertDialog createCancelDialog(Pill pill, String deleteTrackerType) {
@@ -189,5 +191,27 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
     @Override
     public void onDialogInfomationChanged(Pill pill, ChangePillInfoDialog dialog) {
         new UpdatePillTask(_activity, pill).execute();
+    }
+
+    @Override
+    public void consumptionAdded(Consumption consumption) {
+        Pill pill = consumption.getPill();
+        new UpdatePillTask(_activity, pill).execute();
+    }
+
+    @Override
+    public void consumptionDeleted(Consumption consumption) {
+        Pill pill = consumption.getPill();
+        new UpdatePillTask(_activity, pill).execute();
+    }
+
+    @Override
+    public void consumptionPillGroupDeleted(String group, int pillId) {
+        for (Pill pill : _data) {
+            if (pill.getId() == pillId) {
+                new UpdatePillTask(_activity, pill).execute();
+                return; //is this worth doing?
+            }
+        }
     }
 }
