@@ -255,6 +255,30 @@ public class PillRepository extends BaseRepository<Pill>{
                 }
             };
         }
+        else if (sortOrder.equals(_context.getResources().getString(R.string.most_taken))) {
+            comparator = new Comparator<Pill>() {
+                @Override
+                public int compare(Pill pill1, Pill pill2) {
+                    if(pill1.getLatestConsumption() == null)
+                        return 1;
+                    if(pill2.getLatestConsumption() == null)
+                        return -1;
+                    return (((Integer)pill2.getConsumptions().size()).compareTo(pill1.getConsumptions().size()));
+                }
+            };
+        }
+        else if (sortOrder.equals(_context.getResources().getString(R.string.taken_most_recently))) {
+            comparator = new Comparator<Pill>() {
+                @Override
+                public int compare(Pill pill1, Pill pill2) {
+                    if(pill1.getLatestConsumption() == null)
+                        return 1;
+                    if(pill2.getLatestConsumption() == null)
+                        return -1;
+                    return (pill2.getLatestConsumption().getDate().compareTo(pill1.getLatestConsumption().getDate()));
+                }
+            };
+        }
 
         if(comparator != null) {
             Collections.sort(pills, comparator);
