@@ -18,6 +18,5 @@
         <item>@string/last_taken</item>
         <item>@string/order_created</item>
         <item>@string/most_taken</item>
-        <item>@string/taken_most_recently</item>
     </string-array>
 </resources>
