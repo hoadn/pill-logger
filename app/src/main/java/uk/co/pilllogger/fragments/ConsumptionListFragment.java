@@ -198,8 +198,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         }
 
         String usageStats = "UsageStats";
-        TrackerHelper.sendEvent(activity, usageStats, "Pills", "", (long) _pills.size());
-        TrackerHelper.sendEvent(activity, usageStats, "Consumptions", "", (long) _consumptions.size());
+
+        TrackerHelper.updateUserProfile(activity, _pills.size(), _consumptions);
 
         Statistics.getInstance(activity).refreshConsumptionCaches(consumptions);
     }

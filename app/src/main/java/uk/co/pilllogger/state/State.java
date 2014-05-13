@@ -2,6 +2,8 @@ package uk.co.pilllogger.state;
 
 import android.graphics.Typeface;
 
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +28,7 @@ public class State {
     private List<Pill> _consumptionPills = new ArrayList<Pill>();
     private boolean _appVisible = false;
     private ITheme _theme = new ProfessionalTheme();
+    private MixpanelAPI _mixpanelAPI = null;
 
     private State() {
     }
@@ -34,6 +37,14 @@ public class State {
         if (_instance == null)
             _instance = new State();
         return _instance;
+    }
+
+    public MixpanelAPI getMixpanelAPI() {
+        return _mixpanelAPI;
+    }
+
+    public void setMixpanelAPI(MixpanelAPI mixpanelAPI) {
+        _mixpanelAPI = mixpanelAPI;
     }
 
     public Typeface getTypeface() {
