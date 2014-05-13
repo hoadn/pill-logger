@@ -110,6 +110,9 @@
     <style name="CardTitle"/>
     <style name="NewMedicineTitle" />
     <style name="AddConsumptionGradient" />
+    <style name="InfoDialogTopTextColour">
+        <item name ="android:textColor">@color/text_grey</item>
+    </style>
 
     <style name="Rainbow" parent="AppTheme">
         <item name="android:textViewStyle">@style/RainbowTextView</item>
@@ -126,6 +129,7 @@
         <item name="ContainerShadow">@style/ContainerShadow.Rainbow</item>
         <item name="FragmentTitle">@style/FragmentTitle.Rainbow</item>
         <item name="AddConsumptionGradient">@style/AddConsumptionGradient.Rainbow</item>
+        <item name="InfoDialogTopTextColour">@style/InfoDialogTopTextColour</item>
     </style>
 
     <style name="RainbowTextView">
@@ -201,6 +205,7 @@
         <item name="FragmentTitle">@style/FragmentTitle.Professional</item>
         <item name="CardTitle">@style/CardTitle.Professional</item>
         <item name="NewMedicineTitle">@style/NewMedicineTitle.Professional</item>
+        <item name="InfoDialogTopTextColour">@style/InfoDialogTopTextColour</item>
     </style>
 
     <style name="ProfessionalTextView">

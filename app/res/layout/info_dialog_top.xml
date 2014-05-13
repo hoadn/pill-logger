@@ -95,6 +95,7 @@
                 android:layout_height="wrap_content"
                 android:text="2"
                 android:textSize="@dimen/numeric_pill_stat_font_size"
+                style="?attr/InfoDialogTopTextColour"
                 android:layout_gravity="center_horizontal"
                 android:textStyle="bold"/>
                 <ImageView
@@ -110,6 +111,7 @@
                 android:layout_height="wrap_content"
                 android:text="7d"
                 android:layout_gravity="center_horizontal"
+                style="?attr/InfoDialogTopTextColour"
                 android:gravity="center"
                 android:textSize="14sp"/>
         </LinearLayout>
@@ -130,6 +132,7 @@
                 android:layout_height="wrap_content"
                 android:text="1.8"
                 android:textSize="@dimen/numeric_pill_stat_font_size"
+                style="?attr/InfoDialogTopTextColour"
                 android:layout_gravity="center"
                 android:textStyle="bold"/>
                 <ImageView
@@ -144,6 +147,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="30d"
+                style="?attr/InfoDialogTopTextColour"
                 android:textSize="14sp"
                 android:layout_gravity="center"/>
         </LinearLayout>
@@ -158,6 +162,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1.9"
+                style="?attr/InfoDialogTopTextColour"
                 android:textSize="@dimen/numeric_pill_stat_font_size"
                 android:layout_gravity="center"
                 android:textStyle="bold"/>
@@ -165,6 +170,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="All time"
+                style="?attr/InfoDialogTopTextColour"
                 android:textSize="14sp"
                 android:layout_gravity="center"/>
         </LinearLayout>
