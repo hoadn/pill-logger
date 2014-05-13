@@ -94,7 +94,7 @@ public class TrackerHelper {
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         MixpanelAPI.People people = State.getSingleton().getMixpanelAPI().getPeople();
-        people.setOnce("First seen", new Date());
+        people.setOnce("First Seen", new Date());
         people.set("Medicines", pills);
 
         int totalConsumptions = Statistics.getInstance(context).getTotalConsumptions(consumptions);
