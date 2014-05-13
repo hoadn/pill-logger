@@ -20,7 +20,7 @@ public class TrackerHelper {
                         .createEvent(category,     // Event category (required)
                                 action,            // Event action (required)
                                 label,             // Event label
-                                null)              // Event value
+                                value)              // Event value
                         .build()
         );
 
