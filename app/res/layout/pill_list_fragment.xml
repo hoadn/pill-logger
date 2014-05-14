@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             style="?attr/ContainerShadow"/>
     </LinearLayout>
-    <ListView
+    <com.haarman.listviewanimations.view.DynamicListView
         android:id="@+id/pill_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

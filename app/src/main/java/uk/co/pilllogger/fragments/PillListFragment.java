@@ -17,6 +17,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.haarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
+import com.haarman.listviewanimations.view.DynamicListView;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -42,7 +45,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         SharedPreferences.OnSharedPreferenceChangeListener{
 
     public static final String TAG = "PillListFragment";
-    private ListView _list;
+    private DynamicListView _list;
     private EditText _addPillName;
     private EditText _addPillSize;
     private Spinner _unitSpinner;
@@ -82,7 +85,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         v.setTag(R.id.tag_page_colour, color);
         v.setTag(R.id.tag_tab_icon_position, 1);
 
-        _list = (ListView) v.findViewById(R.id.pill_list);
+        _list = (DynamicListView) v.findViewById(R.id.pill_list);
         //_list.setOnItemClickListener(new PillItemClickListener(getActivity()));
 
         new GetPillsTask(getActivity(), this).execute();
@@ -207,8 +210,9 @@ public class PillListFragment extends PillLoggerFragmentBase implements
                 return;
 
             PillsListAdapter adapter = new PillsListAdapter(activity, R.layout.pill_list_item, pills);
-
-            _list.setAdapter(adapter);
+            AlphaInAnimationAdapter animAdapter = new AlphaInAnimationAdapter(adapter);
+            animAdapter.setAbsListView(_list);
+            _list.setAdapter(animAdapter);
         }
         else
         {

@@ -214,4 +214,9 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
             }
         }
     }
+
+    @Override
+    public boolean hasStableIds() {
+        return true;
+    }
 }
