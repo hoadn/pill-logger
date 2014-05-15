@@ -253,7 +253,7 @@
     </style>
 
     <style name="FragmentTitle.Professional">
-        <item name="android:textColor">@color/light_blue</item>
+        <item name="android:textColor">@color/title_blue</item>
     </style>
 
     <style name="CardTitle.Professional">
