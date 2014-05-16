@@ -12,6 +12,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.util.UUID;
 
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.state.State;
 
 /**
@@ -36,8 +37,9 @@ public class PillLoggerActivityBase extends Activity {
         EasyTracker.getInstance(this).activityStart(this);
 
         MixpanelAPI mixpanelAPI = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
+        Logger.v("PillLoggerActivityBase", "DistinctId PillLoggerActivityBase: " + mixpanelAPI.getDistinctId());
         State.getSingleton().setMixpanelAPI(mixpanelAPI);
-        mixpanelAPI.getPeople().identify(getUniqueId());
+        mixpanelAPI.identify(getUniqueId());
 
     }
 
