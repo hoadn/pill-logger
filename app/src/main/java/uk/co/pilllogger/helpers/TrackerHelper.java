@@ -50,6 +50,7 @@ public class TrackerHelper {
         }
 
         MixpanelAPI mixpanelAPI = State.getSingleton().getMixpanelAPI();
+        Logger.v("TrackerHelper", "DistinctId TrackerHelper: " + mixpanelAPI.getDistinctId());
         if(mixpanelAPI != null)
             mixpanelAPI.track(action, props);
     }
@@ -111,5 +112,6 @@ public class TrackerHelper {
         Boolean reversedOrder = defaultSharedPreferences.getBoolean(context.getString(R.string.pref_key_reverse_order), false);
 
         people.set("Reversed Sort Order", reversedOrder);
+        Logger.v("TrackerHelper", "DistinctId ProfileUpdate: " + people.getDistinctId());
     }
 }
