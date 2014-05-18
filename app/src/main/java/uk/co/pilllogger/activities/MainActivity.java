@@ -105,7 +105,6 @@ public class MainActivity extends PillLoggerActivityBase implements
         this.setTitle("Consumption");
         _colourBackground = findViewById(R.id.colour_background);
 
-        // Typeface ttf = Typeface.createFromAsset(this.getAssets(), "fonts/OpenSans-Light.ttf");
         Typeface ttf = Typeface.create("sans-serif-condensed", Typeface.NORMAL);
 
         State.getSingleton().setTypeface(ttf);
@@ -118,6 +117,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         final MainActivity activity = this;
 
+        _fragmentPager.setOffscreenPageLimit(2);
         _fragmentPager.setOnPageChangeListener(
                 new ViewPager.SimpleOnPageChangeListener() {
                     @Override
