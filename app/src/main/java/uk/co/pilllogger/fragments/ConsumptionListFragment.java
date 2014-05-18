@@ -189,16 +189,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                     return false;
                 }
             });
-//            int dayCount = getGraphDays();
-//
-//            Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(consumptions, dayCount);
-//
-//            View view = _mainLayout.findViewById(R.id.main_graph);
-//            plotGraph(xPoints, dayCount, view);
         }
-
-        String usageStats = "UsageStats";
-
         TrackerHelper.updateUserProfile(activity, _pills.size(), _consumptions);
 
         Statistics.getInstance(activity).refreshConsumptionCaches(consumptions);

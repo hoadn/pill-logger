@@ -401,7 +401,7 @@ public class MainActivity extends PillLoggerActivityBase implements
                     showChangesDialog();
 
                 if(defaultSharedPreferences.getString(getString(R.string.pref_key_theme_list), "").equals("")) {
-                    new ThemeChoiceDialog(this).show(getFragmentManager(), "ThemeChoiceDialog");
+                    new ThemeChoiceDialog().show(getFragmentManager(), "ThemeChoiceDialog");
                 }
             }
             else{
