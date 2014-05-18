@@ -353,10 +353,6 @@ public class MainActivity extends PillLoggerActivityBase implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
-        //
-        // here we need to decide how we are going to launch new activities.
-        // I think we need to replace the whole fragment (view pager included), not sure how to do that atm.
-        //
         switch (item.getItemId()) {
             case R.id.add_consumption:
                 startAddConsumptionActivity();
@@ -416,10 +412,6 @@ public class MainActivity extends PillLoggerActivityBase implements
         }
     }
 
-    public void updateMenuWithFavouritePills(List<Pill> favouritePills) {
-
-    }
-
     private void addPillToMenu(Pill pill){
         MenuItem item = _menu.findItem(pill.getId());
         if(item == null)
@@ -453,7 +445,6 @@ public class MainActivity extends PillLoggerActivityBase implements
                     return false;
                 }
             });
-
         }
     }
 
@@ -463,8 +454,6 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         TrackerHelper.addConsumptionEvent(MainActivity.this, "FavouriteMenu");
 
-        //if (_consumptionFragment.isResumed())
-        //    new GetConsumptionsTask(MainActivity.this, (GetConsumptionsTask.ITaskComplete)_consumptionFragment, true).execute();
         Toast.makeText(MainActivity.this, "Added consumption of " + pill.getName(), Toast.LENGTH_SHORT).show();
     }
 
