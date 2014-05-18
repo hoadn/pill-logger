@@ -264,6 +264,10 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
     }
 
     public float getDailyAverage(){
+        return getDailyAverage(0);
+    }
+
+    public float getDailyAverage(int days){
         Consumption first = getFirstConsumption();
         if(first == null)
             return 0;
@@ -271,12 +275,22 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
         DateTime firstDt = new DateTime(first.getDate());
         DateTime now = new DateTime();
 
-        int days = Days.daysBetween(firstDt.withTimeAtStartOfDay(), now.withTimeAtStartOfDay()).getDays();
-        return getDailyAverage(days);
-    }
+        int totalDays = Days.daysBetween(firstDt.withTimeAtStartOfDay(), now.withTimeAtStartOfDay()).getDays();
 
-    public float getDailyAverage(int days){
-        int total = getTotalQuantity(days * 24);
+        if(days == 0)
+            days = totalDays;
+
+        if(days > totalDays)
+            days = totalDays;
+
+        int hours = days * 24;
+        if(totalDays == 0)
+            hours = 24;
+
+        int total = getTotalQuantity(hours);
+
+        if(days == 0)
+            return total;
 
         return total / (float)days;
     }
