@@ -2,10 +2,13 @@
 <resources>
     <color name="background_grey">#dedede</color>
     <color name="text_grey">#333333</color>
+    <color name="grey_divider">#555555</color>
+    <color name="grey_divider_light">#DDDDDD</color>
     <color name="pill_default_color">#FFBBBBBB</color>
     <color name="text_grey_light">#CCCCCC</color>
     <color name="text_grey_medium">#8F8F8F</color>
     <color name="light_blue">#3CA7DE</color>
+    <color name="title_blue">#D03086B2</color>
     <color name="light_green">#7DC71D</color>
     <color name="drawer_item_background">#161617</color>
     <color name="drawer_item_grey">#222222</color>
@@ -27,13 +30,52 @@
     <color name="saturday">#7DC71D</color>
     <color name="sunday">#FFBAD2</color>
 
-    <color name="selector_background">#20000000</color>
+    <!-- Rainbow Style -->
+
+    <color name="selector_background">#30000000</color>
     <color name="translucent_white">#20FFFFFF</color>
+    <color name="translucent_whiter">#80FFFFFF</color>
     <color name="selector_background_pressed">#20FFFFFF</color>
     <color name="popup_menu">#B0000000</color>
     <color name="pill_favourite">#80FFFFFF</color>
     <color name="tutorial_white">#FFFFFF</color>
     <color name="divider_white">#40FFFFFF</color>
+    <color name="divider_grey">#60000000</color>
+    <color name="widget_background">#80dddddd</color>
+    <color name="consumption_background">#7800E9FF</color>
+    <color name="pill_background">#78CC339A</color>
+    <color name="stats_background">#78515151</color>
+    <color name="consumption_date">@color/secondary_text</color>
+    <color name="consumption_size">@color/secondary_text</color>
+    <color name="default_text">#FFFFFF</color>
+    <color name="secondary_text">#BBBBBB</color>
+    <color name="tab_mask">#FFFFFF</color>
+    <color name="stackbar_graph_line">#32FFFFFF</color>
+    <color name="default_chart">@color/pill_colour6</color>
+    <color name="list_item_background_secondary">@color/done_cancel_grey</color>
+
+    <!-- Professional Style -->
+    <color name="selector_background_professional">#10000000</color>
+    <color name="translucent_white_professional">#20FFFFFF</color>
+    <color name="translucent_whiter_professional">#80FFFFFF</color>
+    <color name="selector_background_pressed_professional">#20FFFFFF</color>
+    <color name="popup_menu_professional">#9f9f9f</color>
+    <color name="pill_favourite_professional">#80FFFFFF</color>
+    <color name="tutorial_white_professional">#FFFFFF</color>
+    <color name="divider_white_professional">#40FFFFFF</color>
+    <color name="consumption_professional">#000000</color>
+    <color name="consumption_secondary_professional">#555555</color>
+    <color name="consumption_date_professional">@color/consumption_secondary_professional</color>
+    <color name="consumption_size_professional">@color/consumption_secondary_professional</color>
+
+    <color name="professional_background">#FFE3E3E3</color>
+    <color name="default_text_professional">#000000</color>
+    <color name="secondary_text_professional">#444444</color>
+    <color name="tab_mask_professional">#000000</color>
+    <color name="stackbar_graph_line_professional">#DDDDDD</color>
+    <color name="default_chart_professional">@color/pill_colour1</color>
+    <color name="list_item_background_secondary_professional">#dedede</color>
+    <color name="selected_list_background_professional">#DDDDDD</color>
 
     <!-- Pill colours are in pill_colours.xml -->
 </resources>

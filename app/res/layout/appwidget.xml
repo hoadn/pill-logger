@@ -1,52 +1,88 @@
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget_layout_container"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:background="@android:color/transparent"
+    android:orientation="vertical"
+    tools:layout_height="500dp"
     >
   <RelativeLayout
     android:id="@+id/widget_layout"
-    android:layout_width="70dp"
-    android:layout_height="70dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="3dp"
-    android:paddingLeft="3dp"
-    android:paddingRight="3dp"
-    android:paddingBottom="3dp"
-    android:background="@drawable/container_dropshadow"
+    android:gravity="center_horizontal"
+    tools:layout_width="@dimen/widget_size"
+    tools:layout_height="@dimen/widget_size"
     >
-
-    <TextView
-        android:id="@+id/widget_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_grey"
-        android:textSize="11dp"
-        android:gravity="top"
-        android:clickable="true"
-        android:text="Paracetamol"
-        android:background="?android:attr/selectableItemBackground"/>
-      <TextView
-      android:id="@+id/widget_size"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginLeft="3dp"
-      android:textColor="@color/text_grey"
-      android:layout_below="@id/widget_text"
-      android:layout_alignParentRight="true"
-      android:textSize="10dp"
-      android:gravity="right"
-      android:clickable="true"
-      android:text="200mg"/>
-
-
-    <TextView
-        android:id="@+id/widget_pill_id"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:visibility="gone"/>
+      <ImageView
+          android:layout_width="@dimen/widget_size"
+          android:layout_height="@dimen/widget_size"
+          android:id="@+id/widget_colour_indicator"
+          android:layout_centerHorizontal="true"
+          />
+      <LinearLayout
+          android:id="@+id/widget_text_container"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          android:layout_centerHorizontal="true"
+          android:baselineAligned="false">
+          <TextView
+              android:id="@+id/widget_text"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textColor="@color/white"
+              android:textSize="16dp"
+              android:layout_marginTop="5dp"
+              android:layout_gravity="center_horizontal"
+              android:padding="1dp"
+              android:clickable="false"
+              android:gravity="center"
+              android:textStyle="bold"
+              android:text="Par"
+              android:shadowColor="@color/text_grey"
+              android:shadowRadius="6"/>
+          <TextView
+              android:id="@+id/widget_size"
+              android:layout_width="@dimen/widget_size"
+              android:layout_height="wrap_content"
+              android:textColor="@color/white"
+              android:textSize="10dp"
+              android:layout_gravity="center_horizontal"
+              android:gravity="center_horizontal"
+              android:clickable="false"
+              android:layout_marginTop="2dp"
+              android:background="@android:color/transparent"/>
+          <TextView
+              android:id="@+id/widget_quantity_indicator"
+              android:layout_width="@dimen/widget_size"
+              android:layout_height="wrap_content"
+              android:textColor="@color/white"
+              android:textStyle="bold"
+              android:textSize="10dp"
+              android:layout_gravity="center_horizontal"
+              android:gravity="center"
+              android:clickable="false"
+              android:text="+ • •"
+              android:shadowColor="@color/text_grey"
+              android:shadowRadius="6"/>
+      </LinearLayout>
 
 </RelativeLayout>
 
-    </FrameLayout>
+    <!--<TextView
+        android:id="@+id/widget_size"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="10dp"
+        android:padding="2dp"
+        android:gravity="center_horizontal"
+        android:clickable="true"
+        android:background="@color/pill_colour1"
+        android:text="200mg"/>-->
+
+    </LinearLayout>

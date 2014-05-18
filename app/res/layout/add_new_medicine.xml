@@ -12,10 +12,11 @@
         android:layout_alignParentTop="true"
         android:textStyle="bold"
         android:text="@string/create_a_pill_title"
-        android:textColor="@android:color/white"
         android:textSize="20sp"
         android:padding="5dp"
-        android:textAllCaps="false"/>
+        style="?attr/NewMedicineTitle"
+        android:layout_marginLeft="5dp"
+        android:textAllCaps="true"/>
     <RelativeLayout
         android:id="@+id/pill_fragment_name_outer"
         android:layout_width="match_parent"
@@ -38,7 +39,6 @@
                 android:layout_weight="1"
                 android:hint="@string/create_a_pill_name_hint"
                 android:textColorHint="@color/text_grey_light"
-                android:textColor="@android:color/white"
                 android:background="@null"
                 android:inputType="textCapWords"
                 android:imeOptions="actionNext"/>
@@ -54,11 +54,12 @@
 
             <TextView
                 android:id="@+id/pill_fragment_add_pill_colour"
-                android:layout_width="50dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:textSize="22sp"
-                android:text="Color"/>
+                android:text="@string/color"
+                android:layout_gravity="center_vertical"/>
 
             <uk.co.pilllogger.views.ColourIndicator
                 android:id="@+id/pill_fragment_colour"
@@ -104,8 +105,7 @@
             android:textSize="22sp"
             android:hint="@string/create_a_pill_size_hint"
             android:textColorHint="@color/text_grey_light"
-            android:textColor="@android:color/white"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:background="@null"
             android:imeOptions="actionDone"/>
 
@@ -113,7 +113,9 @@
             android:id="@+id/units_spinner"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_weight="0"/>
+            android:layout_weight="0"
+            android:layout_gravity="center_vertical"
+            />
 
         <View
             android:layout_width="1dp"
@@ -143,7 +145,7 @@
             <ImageView
                 android:layout_height="40dp"
                 android:layout_width="40dp"
-                android:src="@drawable/tick_light"
+                style="?Tick"
                 android:padding="5dp"
                 android:layout_weight="0"
                 android:contentDescription="@string/tick_description"/>

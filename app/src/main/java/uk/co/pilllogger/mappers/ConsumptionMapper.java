@@ -19,6 +19,10 @@ public class ConsumptionMapper {
 
     public static Map<Pill, SparseIntArray> mapByPillAndDate(List<Consumption> consumptions, int days){
 
+        if (consumptions.size() == 0) {
+            return null;
+        }
+
         DateTime to = new DateTime();
         DateTime from = to.minusDays(days);
 
@@ -33,6 +37,9 @@ public class ConsumptionMapper {
         HashMap<Pill, SparseIntArray> xPoints = new HashMap<Pill, SparseIntArray>();
 
         for (Consumption c : consumptions) {
+            if (c == null)
+                return null;
+
             Pill pill = c.getPill();
             DateTime consumptionDate = new DateTime(c.getDate());
 

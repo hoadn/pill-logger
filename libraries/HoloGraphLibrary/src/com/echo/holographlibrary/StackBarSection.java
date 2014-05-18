@@ -8,11 +8,13 @@ import android.graphics.Region;
  */
 public class StackBarSection {
     private int mColor;
+    private int mStrokeColor;
     private float mValue;
     private String mValueString = null;
 
     private Path mPath = null;
     private Region mRegion = null;
+    private boolean _translucent;
 
     public int getColor() {
         return mColor;
@@ -20,6 +22,8 @@ public class StackBarSection {
     public void setColor(int color) {
         this.mColor = color;
     }
+    public int getStrokeColor(){return mStrokeColor;}
+    public void setStrokeColor(int strokeColor){this.mStrokeColor = strokeColor;}
     public float getValue() {
         return mValue;
     }
@@ -52,5 +56,13 @@ public class StackBarSection {
     }
     public void setRegion(Region region) {
         this.mRegion = region;
+    }
+
+    public boolean isTranslucent() {
+        return _translucent;
+    }
+
+    public void setTranslucent(boolean translucent) {
+        _translucent = translucent;
     }
 }

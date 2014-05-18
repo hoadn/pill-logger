@@ -1,6 +1,7 @@
 package uk.co.pilllogger.helpers;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.SparseIntArray;
 
 import com.echo.holographlibrary.Bar;
@@ -17,12 +18,16 @@ import com.echo.holographlibrary.StackBarSection;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
+import uk.co.pilllogger.stats.PillAmount;
+import uk.co.pilllogger.themes.ITheme;
 
 /**
  * Created by alex on 25/11/2013.
@@ -102,19 +107,19 @@ public class GraphHelper {
     private static String getDayOfWeek(int dayOfWeek, Context context){
         switch(dayOfWeek){
             case 1:
-                return context.getString(R.string.monday);
+                return context.getString(R.string.monday_short);
             case 2:
-                return context.getString(R.string.tuesday);
+                return context.getString(R.string.tuesday_short);
             case 3:
-                return context.getString(R.string.wednesday);
+                return context.getString(R.string.wednesday_short);
             case 4:
-                return context.getString(R.string.thursday);
+                return context.getString(R.string.thursday_short);
             case 5:
-                return context.getString(R.string.friday);
+                return context.getString(R.string.friday_short);
             case 6:
-                return context.getString(R.string.saturday);
+                return context.getString(R.string.saturday_short);
             case 7:
-                return context.getString(R.string.sunday);
+                return context.getString(R.string.sunday_short);
         }
 
         return "";
@@ -146,6 +151,9 @@ public class GraphHelper {
                 break;
         }
 
+        if(context == null)
+            return Color.WHITE;
+
         return context.getResources().getColor(resId);
     }
 
@@ -168,11 +176,30 @@ public class GraphHelper {
             PieSlice ps = new PieSlice();
             ps.setValue(sliceValue);
             ps.setColor(pill.getColour());
+            ps.setStrokeColor(ColourHelper.getLighter(pill.getColour()));
             pie.addSlice(ps);
         }
     }
 
-    public static void plotStackBarGraph(Map<Pill, SparseIntArray> data, int days, StackBarGraph view) {
+    public static void plotPieChart(List<PillAmount> pills, PieGraph pie){
+        pie.getSlices().clear();
+
+        for(PillAmount pa : pills){
+            PieSlice ps = new PieSlice();
+            ps.setValue(pa.getAmount());
+            ps.setColor(pa.getPill().getColour());
+            int strokeColor = (State.getSingleton().getTheme().getGraphHighlightMode() == ITheme.GraphHighlightMode.Lighten)
+                    ? ColourHelper.getLighter(pa.getPill().getColour())
+                    : ColourHelper.getDarker(pa.getPill().getColour());
+            ps.setStrokeColor(strokeColor);
+            pie.addSlice(ps);
+        }
+    }
+
+    public static void plotStackBarGraph(Map<Pill, SparseIntArray> data, int days, StackBarGraph view, int lineColour) {
+        view.setNoData(data.size() == 0);
+
+        view.setLineColour(lineColour);
 
         List<StackBar> bars = new ArrayList<StackBar>();
 
@@ -181,7 +208,31 @@ public class GraphHelper {
             DateTime dateTime = new DateTime().plusDays((7-i) * -1);
             sb.setName(dateTime.dayOfWeek().getAsShortText());
 
-            for(Pill pill : data.keySet()){
+
+            List<Pill> pills = new ArrayList<Pill>(data.keySet());
+
+            Collections.sort(pills, new Comparator<Pill>() {
+                public int compare(Pill pill1, Pill pill2) {
+                    if(pill1 == null && pill2 == null)
+                        return 0;
+
+                    if(pill1 == null && pill2 != null)
+                        return 1;
+
+                    if(pill1 != null && pill2 == null)
+                        return -1;
+
+                    if(pill1.getSortOrder() < pill2.getSortOrder())
+                        return -1;
+
+                    if(pill1.getSortOrder() > pill2.getSortOrder())
+                        return 1;
+
+                    return 0;
+                }
+            });
+
+            for(Pill pill : pills){
                 if(State.getSingleton().isPillExcluded(pill))
                     continue;
 
@@ -193,7 +244,9 @@ public class GraphHelper {
 
                 StackBarSection sbs = new StackBarSection();
                 sbs.setColor(pill.getColour());
+                sbs.setStrokeColor(ColourHelper.getDarker(pill.getColour()));
                 sbs.setValue(value);
+                sbs.setTranslucent(State.getSingleton().getTheme().isChartTranslucent());
 
                 sb.getSections().add(sbs);
             }

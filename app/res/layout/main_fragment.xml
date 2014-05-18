@@ -13,13 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_alignParentTop="true"
-        android:textStyle="bold"
         android:text="@string/consumption_fragment_title"
-        android:gravity="center_horizontal"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
-        android:padding="5dp"
-        android:textAllCaps="true"/>
+        style="?attr/FragmentTitle"/>
 
     <TextView
         android:id="@+id/no_consumption_text"

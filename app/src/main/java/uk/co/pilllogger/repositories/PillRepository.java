@@ -2,12 +2,20 @@ package uk.co.pilllogger.repositories;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
+import android.util.SparseIntArray;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import uk.co.pilllogger.R;
 import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
@@ -20,8 +28,8 @@ import uk.co.pilllogger.state.Observer;
 public class PillRepository extends BaseRepository<Pill>{
     private static final String TAG = "PillRepository";
     private static PillRepository _instance;
-    private boolean _invalidateCache;
-    private List<Pill> _cache = new ArrayList<Pill>();
+    private Map<Integer, Pill> _cache = new HashMap<Integer, Pill>();
+    private boolean _getAllCalled = false;
 
     private PillRepository(Context context){
         super(context);
@@ -65,7 +73,7 @@ public class PillRepository extends BaseRepository<Pill>{
         Pill pill = new Pill();
         pill.setId(getInt(c, DatabaseContract.Pills._ID));
         pill.setName(getString(c, DatabaseContract.Pills.COLUMN_NAME));
-        pill.setSize(getInt(c, DatabaseContract.Pills.COLUMN_SIZE));
+        pill.setSize(getFloat(c, DatabaseContract.Pills.COLUMN_SIZE));
         pill.setColour(getInt(c, DatabaseContract.Pills.COLUMN_COLOUR));
         pill.setUnits(getString(c, DatabaseContract.Pills.COLUMN_UNITS));
 
@@ -74,6 +82,8 @@ public class PillRepository extends BaseRepository<Pill>{
 
         List<Consumption> consumptions = ConsumptionRepository.getSingleton(_context).getForPill(pill);
         pill.getConsumptions().addAll(consumptions);
+
+        _cache.put(pill.getId(), pill);
 
         return pill;
     }
@@ -135,12 +145,17 @@ public class PillRepository extends BaseRepository<Pill>{
         for (Consumption consumption : pillConsumptions) {
             ConsumptionRepository.getSingleton(_context).delete(consumption);
         }
-        notifyUpdated(pill);
+        notifyUpdated(pill, true);
     }
 
 
     @Override
     public Pill get(int id) {
+        if(_cache != null
+                && _cache.size() > 0
+                && _cache.containsKey(id))
+            return _cache.get(id);
+
         String selection = getTableName() + "." + DatabaseContract.Pills._ID + " =?";
         String[] selectionArgs = { String.valueOf(id) };
 
@@ -174,8 +189,8 @@ public class PillRepository extends BaseRepository<Pill>{
             }
             //sql.append(" group by ");
             //sql.append(getTableName()).append(".").append(DatabaseContract.Pills._ID);
-            //sql.append(" order by ");
-            //sql.append(DatabaseContract.Consumptions.TABLE_NAME + "." + DatabaseContract.Consumptions.COLUMN_DATE_TIME);
+            sql.append(" order by ");
+            sql.append(DatabaseContract.Pills._ID + " ASC");
             //sql.append(" desc ");
             Cursor c = db.rawQuery(sql.toString(), selectionArgs);
 
@@ -200,16 +215,80 @@ public class PillRepository extends BaseRepository<Pill>{
 
     @Override
     public List<Pill> getAll() {
-        if(!_invalidateCache && _cache != null && _cache.size() > 0)
-            return _cache;
+        List<Pill> pills;
+        if(_cache != null && _cache.size() > 0 && _getAllCalled)
+            pills = new ArrayList<Pill>(_cache.values());
+        else {
+            _getAllCalled = true;
+            pills = getList(null, null);
+        }
 
-        _cache = getList(null, null);
-        return _cache;
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(_context);
+        String sortOrder = preferences.getString(_context.getResources().getString(R.string.pref_key_medication_list_order), "");
+        Boolean reverseOrder = preferences.getBoolean(_context.getResources().getString(R.string.pref_key_reverse_order), false);
+        Comparator<Pill> comparator = null;
+        if (sortOrder.equals(_context.getResources().getString(R.string.alphabetical))) {
+            comparator = new Comparator<Pill>() {
+                @Override
+                public int compare(Pill pill1, Pill pill2) {
+                    return pill1.getName().compareTo(pill2.getName());
+                }
+            };
+        }
+        else if (sortOrder.equals(_context.getResources().getString(R.string.order_created))) {
+            comparator = new Comparator<Pill>() {
+                @Override
+                public int compare(Pill pill1, Pill pill2) {
+                    return ((Integer)pill2.getId()).compareTo(pill1.getId());
+                }
+            };
+        }
+        else if (sortOrder.equals(_context.getResources().getString(R.string.last_taken))) {
+            comparator = new Comparator<Pill>() {
+                @Override
+                public int compare(Pill pill1, Pill pill2) {
+                    if(pill1.getLatestConsumption() == null)
+                        return 1;
+                    if(pill2.getLatestConsumption() == null)
+                        return -1;
+                    return pill2.getLatestConsumption().getDate().compareTo(pill1.getLatestConsumption().getDate());
+                }
+            };
+        }
+        else if (sortOrder.equals(_context.getResources().getString(R.string.most_taken))) {
+            comparator = new Comparator<Pill>() {
+                @Override
+                public int compare(Pill pill1, Pill pill2) {
+                    if(pill1.getLatestConsumption() == null)
+                        return 1;
+                    if(pill2.getLatestConsumption() == null)
+                        return -1;
+                    return (((Integer)pill2.getConsumptions().size()).compareTo(pill1.getConsumptions().size()));
+                }
+            };
+        }
+
+        if(comparator != null) {
+            Collections.sort(pills, comparator);
+
+            if(reverseOrder){
+                Collections.reverse(pills);
+            }
+        }
+
+        return pills;
     }
 
     private void notifyUpdated(Pill pill){
-        _invalidateCache = true;
-        ConsumptionRepository.getSingleton(_context).notifyUpdated();
+        notifyUpdated(pill, false);
+    }
+
+    private void notifyUpdated(Pill pill, boolean remove){
+        if(remove)
+            _cache.remove(pill.getId());
+        else
+            _cache.put(pill.getId(), pill);
+
         Observer.getSingleton().notifyPillsUpdated(pill);
     }
 }

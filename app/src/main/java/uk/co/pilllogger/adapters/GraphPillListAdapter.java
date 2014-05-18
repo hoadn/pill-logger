@@ -72,7 +72,8 @@ public class GraphPillListAdapter extends ArrayAdapter<Pill> {
         Pill pill = _pills.get(position);
         if (pill != null && holder != null) {
             holder.name.setText(pill.getName());
-            holder.size.setText(String.valueOf(pill.getSize()));
+            holder.size.setText(pill.getFormattedSize());
+            holder.units.setText(pill.getUnits());
             holder.color.setBackgroundColor(pill.getColour());
 
             boolean included = !State.getSingleton().isPillExcluded(pill);

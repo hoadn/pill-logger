@@ -19,6 +19,5 @@ public class WidgetPillsClickListener implements AdapterView.OnItemClickListener
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Pill pill = (Pill)adapterView.getItemAtPosition(i);
-        _activity.setChosenPill(pill);
     }
 }

@@ -80,8 +80,20 @@ public class Consumption implements Comparable {
 
         if (this.getDate().before(consumption.getDate()))
             return 1;
-        else
-            return -1;
+        else {
+            if (!this.getGroup().equals("")) {
+                if (this.getGroup().equals(consumption.getGroup())) {
+                    return ((Integer) this.getPillId()).compareTo(consumption.getPillId());
+                }
+            }
+            else{
+                if(this.getDate().getTime() == consumption.getDate().getTime()){
+                    return ((Integer) this.getPillId()).compareTo(consumption.getPillId());
+                }
+            }
+        }
+
+        return -1;
     }
 
     public String getGroup() {
@@ -95,7 +107,7 @@ public class Consumption implements Comparable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || ((Object) this).getClass() != o.getClass()) return false;
 
         Consumption that = (Consumption) o;
 

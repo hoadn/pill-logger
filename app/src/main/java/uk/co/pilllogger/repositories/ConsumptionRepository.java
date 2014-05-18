@@ -8,10 +8,14 @@ import android.database.sqlite.SQLiteDatabase;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import uk.co.pilllogger.database.DatabaseContract;
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Observer;
@@ -21,8 +25,9 @@ import uk.co.pilllogger.state.Observer;
  */
 public class ConsumptionRepository extends BaseRepository<Consumption>{
     private static ConsumptionRepository _instance;
-    private List<Consumption> _cache = new ArrayList<Consumption>();
-    private boolean _invalidateCache = false;
+    private Map<Integer, Map<Integer, Consumption>> _cache = new HashMap<Integer, Map<Integer, Consumption>>();
+    private Map<Integer, Consumption> _consumptionsCache = new HashMap<Integer, Consumption>();
+    private Map<String, Map<Integer, Consumption>> _groupConsumptionCache = new HashMap<String, Map<Integer, Consumption>>();
 
     private ConsumptionRepository(Context context) {
         super(context);
@@ -58,7 +63,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
     @Override
     protected Consumption getFromCursor(Cursor c) {
-        return getFromCursor(c, true);
+        return getFromCursor(c, null);
     }
 
     @Override
@@ -66,19 +71,45 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         return DatabaseContract.Consumptions.TABLE_NAME;
     }
 
-    private Consumption getFromCursor(Cursor c, boolean getPill) {
+    private Consumption getFromCursor(Cursor c, Pill pill) {
         Consumption consumption = new Consumption();
         consumption.setId(c.getInt(c.getColumnIndex(DatabaseContract.Consumptions._ID)));
         consumption.setDate(new Date(c.getLong(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_DATE_TIME))));
         consumption.setGroup(c.getString(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_GROUP)));
         int pillId = c.getInt(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_PILL_ID));
 
-        if(getPill){
-            Pill pill = PillRepository.getSingleton(_context).get(pillId);
-            consumption.setPill(pill);
+        if(pill == null){
+            pill = PillRepository.getSingleton(_context).get(pillId);
         }
 
+        consumption.setPill(pill);
+
+        updateCaches(consumption);
+
         return consumption;
+    }
+
+    private void updateCaches(Consumption consumption){
+
+        Map<Integer, Consumption> consumptionCache = new HashMap<Integer, Consumption>();
+        if(_cache.containsKey(consumption.getPillId())) {
+            consumptionCache = _cache.get(consumption.getPillId());
+        }
+        else{
+            _cache.put(consumption.getPillId(), consumptionCache);
+        }
+        consumptionCache.put(consumption.getId(), consumption);
+
+        Map<Integer, Consumption> groupCache = new HashMap<Integer, Consumption>();
+        if(_groupConsumptionCache.containsKey(consumption.getGroup())) {
+            groupCache = _groupConsumptionCache.get(consumption.getGroup());
+        }
+        else{
+            _groupConsumptionCache.put(consumption.getGroup(), groupCache);
+        }
+        groupCache.put(consumption.getId(), consumption);
+
+        _consumptionsCache.put(consumption.getId(), consumption);
     }
 
     @Override
@@ -95,6 +126,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         }
         consumption.setId((int) newRowId);
         notifyUpdated(consumption);
+        updateCaches(consumption);
         return newRowId;
     }
 
@@ -176,11 +208,17 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     }
 
     public List<Consumption> getForPill(Pill pill) {
+        if(_cache != null
+            && _cache.size() > 0
+            && _cache.containsKey(pill.getId())){
+            return new ArrayList<Consumption>(_cache.get(pill.getId()).values());
+        }
+
         SQLiteDatabase db = _dbCreator.getReadableDatabase();
 
         String[] projection = getProjection();
 
-        String sortOrder = DatabaseContract.Consumptions.COLUMN_DATE_TIME + " DESC";
+        String sortOrder = getSortOrder();
         String selection = pill == null ? null : DatabaseContract.Consumptions.COLUMN_PILL_ID + " =?";
         String[] selectionArgs = pill == null ? null : new String[] { String.valueOf(pill.getId()) };
         List<Consumption> consumptions = new ArrayList<Consumption>();
@@ -197,7 +235,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
             c.moveToFirst();
             while (!c.isAfterLast()) {
-                Consumption consumption = getFromCursor(c, false); // we don't want to recursively cause ourselves trouble, we already have the pill
+                Consumption consumption = getFromCursor(c, pill); // we don't want to recursively cause ourselves trouble, we already have the pill
                 consumption.setPill(pill);
                 consumptions.add(consumption);
                 c.moveToNext();
@@ -209,11 +247,18 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     }
 
     public List<Consumption> getForGroup(String group) {
+        if(_groupConsumptionCache != null
+                && _groupConsumptionCache.size() > 0
+                && _groupConsumptionCache.containsKey(group)) {
+            return new ArrayList<Consumption>(_groupConsumptionCache.get(group).values());
+        }
+
+
         SQLiteDatabase db = _dbCreator.getReadableDatabase();
 
         String[] projection = getProjection();
 
-        String sortOrder = DatabaseContract.Consumptions.COLUMN_DATE_TIME + " DESC";
+        String sortOrder = getSortOrder();
         String selection = group == null ? null : DatabaseContract.Consumptions.COLUMN_GROUP + " =?";
         String[] selectionArgs = group == null ? null : new String[] { group };
         List<Consumption> consumptions = new ArrayList<Consumption>();
@@ -230,7 +275,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
             c.moveToFirst();
             while (!c.isAfterLast()) {
-                Consumption consumption = getFromCursor(c, true); // we don't want to recursively cause ourselves trouble, we already have the pill
+                Consumption consumption = getFromCursor(c, null); // we don't want to recursively cause ourselves trouble, we already have the pill
                 consumptions.add(consumption);
                 c.moveToNext();
             }
@@ -240,16 +285,23 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         return consumptions;
     }
 
+    private String getSortOrder(){
+        return DatabaseContract.Consumptions.COLUMN_DATE_TIME + " DESC" + ", " + DatabaseContract.Consumptions.COLUMN_PILL_ID + " ASC";
+    }
+
     @Override
     public List<Consumption> getAll() {
-        if(!_invalidateCache && _cache != null && _cache.size() > 0)
-            return _cache;
+        if(_consumptionsCache != null && _consumptionsCache.size() > 0) {
+            ArrayList<Consumption> consumptions = new ArrayList<Consumption>(_consumptionsCache.values());
+            Collections.sort(consumptions);
+            return consumptions;
+        }
 
         SQLiteDatabase db = _dbCreator.getReadableDatabase();
 
         String[] projection = getProjection();
 
-        String sortOrder = DatabaseContract.Consumptions.COLUMN_DATE_TIME + " DESC";
+        String sortOrder = getSortOrder();
         List<Consumption> consumptions = new ArrayList<Consumption>();
         if (db != null) {
             Cursor c = db.query(
@@ -262,20 +314,22 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                     sortOrder
             );
 
-            c.moveToFirst();
-            while (!c.isAfterLast()) {
-                Consumption consumption = getFromCursor(c);
-                consumptions.add(consumption);
-                c.moveToNext();
+            if (c.moveToFirst() != false) {
+                while (!c.isAfterLast()) {
+                    Consumption consumption = getFromCursor(c);
+                    consumptions.add(consumption);
+                    c.moveToNext();
+                }
             }
             c.close();
         }
 
-        _cache = consumptions;
         return consumptions;
     }
 
     public List<Consumption> groupConsumptions(List<Consumption> consumptions){
+        if (consumptions.size() == 0)
+            return consumptions;
         List<Consumption> grouped = new ArrayList<Consumption>();
 
         Consumption groupedConsumption = null;
@@ -305,22 +359,34 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         return grouped;
     }
 
-    void notifyUpdated(){
-        _invalidateCache = true;
-    }
-
     public void notifyUpdated(Consumption consumption) {
-        notifyUpdated();
+        _consumptionsCache.put(consumption.getId(), consumption);
+        if (_cache.size() > 0) {
+            Map map = _cache.get(consumption.getPillId());
+            if (map != null)
+              map.put(consumption.getId(), consumption);
+        }
         Observer.getSingleton().notifyConsumptionAdded(consumption);
     }
 
     private void notifyDeleted(Consumption consumption) {
-        notifyUpdated();
+        _consumptionsCache.remove(consumption.getId());
+        _cache.get(consumption.getPillId()).remove(consumption.getId());
         Observer.getSingleton().notifyConsumptionDeleted(consumption);
     }
 
     private void notifyDeletedGroupPill(Consumption consumption){
-        notifyUpdated();
+        Map<Integer, Consumption> remove = _groupConsumptionCache.remove(consumption.getGroup());
+
+        if(remove != null) {
+            for (int key : remove.keySet()) {
+                Consumption c = remove.get(key);
+                _consumptionsCache.remove(key);
+
+                _cache.get(c.getPillId()).remove(key);
+            }
+        }
+        _consumptionsCache.remove(consumption.getId());
         Observer.getSingleton().notifyConsumptionPillGroupDeleted(consumption.getGroup(), consumption.getPillId());
     }
 }

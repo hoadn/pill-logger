@@ -42,9 +42,6 @@ public abstract class NotificationHelper {
 
     public static void Notification(Context context, boolean showText, String sound, boolean lights, boolean vibrate, List<Consumption> consumptions, String group){
         Log.d(TAG, "Notification triggered");
-        if(State.getSingleton().isAppVisible() || consumptions == null || consumptions.size() == 0) {
-            return; //don't notify if the app is already in front
-        }
 
         String title = context.getString(R.string.notification_reminder_title);
         String content = context.getString(R.string.notification_reminder_content_prefix);

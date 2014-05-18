@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favourite">Favourite</string>
+    <string name="unfavourite">Unfavourite</string>
+
+    <string name="consumptionlist_tut_3">Favourite medicine will be shown in this menu</string>
+    <string name="info_dialog_set_favourite">Set as favourite</string>
+    <string name="info_dialog_unset_favourite">Remove from favourites</string>
+    <string name="info_dialog_change_colour">Change colour</string>
+    <string name="color">Colour</string>
+    <string name="rainbowTheme">Colours</string>
+</resources>

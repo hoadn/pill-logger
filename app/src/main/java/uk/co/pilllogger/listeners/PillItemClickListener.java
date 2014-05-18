@@ -35,7 +35,7 @@ public class PillItemClickListener implements ListView.OnItemClickListener {
 //            arguments.putInt(PillDetailFragment.ARG_ITEM_ID, id);
 //            PillDetailFragment fragment = new PillDetailFragment();
 //            fragment.setArguments(arguments);
-//            _activity.getSupportFragmentManager().beginTransaction()
+//            _context.getSupportFragmentManager().beginTransaction()
 //                    .replace(R.id.fragment_container, fragment)
 //                    .addToBackStack(fragment.toString())
 //                    .commit();

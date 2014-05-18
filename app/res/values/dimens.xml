@@ -8,7 +8,7 @@
     <dimen name="horizontal_action_bar_height">40dp</dimen>
     <dimen name="action_bar_bottom_padding">0dp</dimen>
     <dimen name="list_divider_height">3dp</dimen>
-    <dimen name="pill_list_item_height">50dp</dimen>
+    <dimen name="pill_list_item_height">70dp</dimen>
     <dimen name="tutorial_text_left_margin">11dp</dimen>
     <dimen name="tutorial_text_top_margin">60dp</dimen>
     <dimen name="tutorial_arrow_height">10dp</dimen>
@@ -21,4 +21,10 @@
 
     <dimen name="pillslist_tut_1_texttop">125dp</dimen>
     <dimen name="tutorial_font_size">18sp</dimen>
+    <dimen name="numeric_stat_font_size">40sp</dimen>
+    <dimen name="numeric_pill_stat_font_size">20sp</dimen>
+    <dimen name="widget_size">60dp</dimen>
+    <dimen name="dialog_item_height">45dp</dimen>
+    <dimen name="dialog_item_padding_left">12dp</dimen>
+    <dimen name="list_item_padding">10dp</dimen>
 </resources>

@@ -1,9 +1,11 @@
 package uk.co.pilllogger.fragments;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +15,18 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillsListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.helpers.LayoutHelper;
+import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
@@ -31,7 +38,8 @@ import uk.co.pilllogger.views.ColourIndicator;
 public class PillListFragment extends PillLoggerFragmentBase implements
         GetPillsTask.ITaskComplete,
         InsertPillTask.ITaskComplete,
-        Observer.IPillsUpdated{
+        Observer.IPillsUpdated,
+        SharedPreferences.OnSharedPreferenceChangeListener{
 
     public static final String TAG = "PillListFragment";
     private ListView _list;
@@ -67,7 +75,11 @@ public class PillListFragment extends PillLoggerFragmentBase implements
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.pill_list_fragment, container, false);
-        v.setTag(R.id.tag_page_colour, Color.argb(120, 204, 51, 153));
+        if(getActivity() == null || v == null){
+            return null;
+        }
+        int color = getActivity().getResources().getColor(State.getSingleton().getTheme().getPillListBackgroundResourceId());
+        v.setTag(R.id.tag_page_colour, color);
         v.setTag(R.id.tag_tab_icon_position, 1);
 
         _list = (ListView) v.findViewById(R.id.pill_list);
@@ -162,10 +174,13 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         });
 
         _unitSpinner = (Spinner) v.findViewById(R.id.units_spinner);
-        String[] units = { "mg", "ml" };
+        String[] units = getActivity().getResources().getStringArray(R.array.units_array);
         UnitAdapter adapter = new UnitAdapter(getActivity(), android.R.layout.simple_spinner_item, units);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _unitSpinner.setAdapter(adapter);
+
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         return v;
     }
@@ -226,6 +241,14 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         new GetPillsTask(this.getActivity(), this).execute();
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(isAdded() && getActivity() != null) {
+            if (key.equals(getActivity().getResources().getString(R.string.pref_key_medication_list_order)) || key.equals(getActivity().getResources().getString(R.string.pref_key_reverse_order)))
+                new GetPillsTask(getActivity(), this).execute();
+        }
+    }
+
     private class AddPillClickListener implements View.OnClickListener {
 
         GetPillsTask.ITaskComplete _listener;
@@ -250,13 +273,15 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             newPill.setName(pillName);
             newPill.setColour(_colour.getColour());
 
-            int pillSize = 0;
+            float pillSize = 0f;
             if (!_addPillSize.getText().toString().matches("")) {
-                pillSize = Integer.parseInt(_addPillSize.getText().toString());
+                pillSize = Float.parseFloat(_addPillSize.getText().toString());
             }
             newPill.setSize(pillSize);
 
             new InsertPillTask(getActivity(), newPill, this).execute();
+
+            TrackerHelper.createPillEvent(getActivity(), TAG);
         }
     }
 

@@ -2,34 +2,91 @@
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#FFFFFF"
-    android:padding="10dp">
+    android:background="#FFFFFF">
     <include layout="@layout/info_dialog_top"/>
     <TextView
         android:id="@+id/info_dialog_add_consumption"
         android:text="@string/info_dialog_take_now"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dialog_item_height"
         android:textSize="18sp"
         android:textColor="@color/text_grey"
-        android:layout_marginTop="6dp"
-        android:paddingTop="8dp"
-        android:paddingLeft="4dp"
+        android:paddingLeft="@dimen/dialog_item_padding_left"
         android:paddingRight="4dp"
-        android:paddingBottom="8dp"
         android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"/>
+        android:clickable="true"
+        android:gravity="center_vertical"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_divider_light" />
+    <TextView
+        android:id="@+id/info_dialog_change_colour"
+        android:text="@string/info_dialog_change_colour"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dialog_item_height"
+        android:textSize="18sp"
+        android:textColor="@color/text_grey"
+        android:paddingLeft="@dimen/dialog_item_padding_left"
+        android:paddingRight="4dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:gravity="center_vertical"/>
+    <LinearLayout
+        android:id="@+id/info_dialog_colour_picker_container"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="12dp"
+        android:layout_gravity="center_horizontal">
+        <include layout="@layout/colour_picker_small"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_divider_light" />
+    <TextView
+        android:id="@+id/info_dialog_set_name_dosage"
+        android:text="@string/info_dialog_change_name_dosage"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dialog_item_height"
+        android:textSize="18sp"
+        android:textColor="@color/text_grey"
+        android:paddingLeft="@dimen/dialog_item_padding_left"
+        android:paddingRight="4dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:gravity="center_vertical"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_divider_light" />
+    <TextView
+        android:id="@+id/info_dialog_set_favourite"
+        android:text="@string/info_dialog_set_favourite"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dialog_item_height"
+        android:textSize="18sp"
+        android:textColor="@color/text_grey"
+        android:paddingLeft="@dimen/dialog_item_padding_left"
+        android:paddingRight="4dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:gravity="center_vertical"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_divider_light" />
     <TextView
         android:id="@+id/info_dialog_delete"
         android:text="@string/info_dialog_delete"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dialog_item_height"
         android:textSize="18sp"
         android:textColor="@color/text_grey"
-        android:paddingTop="8dp"
-        android:paddingLeft="4dp"
+        android:paddingLeft="@dimen/dialog_item_padding_left"
         android:paddingRight="4dp"
-        android:paddingBottom="8dp"
         android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"/>
+        android:clickable="true"
+        android:gravity="center_vertical"/>
 </LinearLayout>

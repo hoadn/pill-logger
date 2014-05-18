@@ -24,6 +24,7 @@
 package com.echo.holographlibrary;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -46,6 +47,7 @@ public class PieGraph extends View {
 
 	private ArrayList<PieSlice> slices = new ArrayList<PieSlice>();
 	private Paint paint = new Paint();
+    private Paint strokePaint = new Paint();
 	private Path path = new Path();
 	
 	private int indexSelected = -1;
@@ -66,6 +68,11 @@ public class PieGraph extends View {
 		paint.setAntiAlias(true);
 		float midX, midY, radius, innerRadius;
 		path.reset();
+
+        paint.setStyle(Paint.Style.FILL);
+        strokePaint.setStyle(Paint.Style.STROKE);
+        strokePaint.setAntiAlias(true);
+        strokePaint.setStrokeWidth(3);
 		
 		float currentAngle = 270;
 		float currentSweep = 0;
@@ -90,14 +97,22 @@ public class PieGraph extends View {
 		for (PieSlice slice : slices){
 			Path p = new Path();
 			paint.setColor(slice.getColor());
+            strokePaint.setColor(slice.getStrokeColor());
 			currentSweep = (slice.getValue()/totalValue)*(360);
+            List<Paint> paints = new ArrayList<Paint>();
+            paints.add(paint);
+            paints.add(strokePaint);
+
 			p.arcTo(new RectF(midX-radius, midY-radius, midX+radius, midY+radius), currentAngle+padding, currentSweep - padding);
 			p.arcTo(new RectF(midX-innerRadius, midY-innerRadius, midX+innerRadius, midY+innerRadius), (currentAngle+padding) + (currentSweep - padding), -(currentSweep-padding));
 			p.close();
 			
 			slice.setPath(p);
 			slice.setRegion(new Region((int)(midX-radius), (int)(midY-radius), (int)(midX+radius), (int)(midY+radius)));
-			canvas.drawPath(p, paint);
+
+            for(Paint paint : paints) {
+                canvas.drawPath(p, paint);
+            }
 			
 			if (indexSelected == count && listener != null){
 				path.reset();

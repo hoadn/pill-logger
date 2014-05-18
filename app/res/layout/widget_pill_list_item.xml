@@ -11,7 +11,8 @@
                   android:id="@+id/pill_list_name"
                   android:layout_width="wrap_content"
                   android:layout_height="match_parent"
-                    tools:text="@string/placeholder_pill_text"/>
+                  android:textColor="@color/text_grey_medium"
+                  tools:text="@string/placeholder_pill_text"/>
 
         <TextView
             android:id="@+id/pill_list_units"
@@ -20,6 +21,7 @@
             android:layout_alignBaseline="@id/pill_list_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_grey_medium"
             android:text="@string/pill_units"/>
         <TextView
             android:textSize="18dip"
@@ -28,6 +30,7 @@
             android:layout_height="match_parent"
             android:layout_toLeftOf="@id/pill_list_units"
             android:layout_alignBaseline="@id/pill_list_name"
+            android:textColor="@color/text_grey_medium"
             tools:text="@string/placeholder_pill_size"/>
 
 </RelativeLayout>

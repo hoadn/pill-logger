@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingRight="5dp"
-    tools:layout_height="50dp"
-    android:background="@drawable/list_selector">
+    style="?ListItemBackgroundSecondary"
+    tools:layout_height="50dp">
 
     <LinearLayout
         android:id="@+id/graph_list_pill_colour"
@@ -34,7 +34,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:textColor="@color/text_grey_light"
         android:paddingLeft="5dp"
         android:layout_toRightOf="@id/graph_list_pill_colour"
         tools:text="Ibuprofen"/>
@@ -52,16 +51,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textColor="@color/text_grey_light"
-            tools:text="200"/>
+            tools:text="200"
+            style="?SecondaryText"/>
         <TextView
             android:id="@+id/pill_list_units"
             android:textSize="12dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textColor="@color/text_grey_light"
-            android:text="@string/pill_units"/>
+            android:text="@string/pill_units"
+            style="?SecondaryText"/>
     </LinearLayout>
 
 </RelativeLayout>

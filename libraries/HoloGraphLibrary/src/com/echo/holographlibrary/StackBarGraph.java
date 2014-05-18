@@ -56,6 +56,8 @@ public class StackBarGraph extends View {
     private Bitmap mFullImage;
     private boolean mShouldUpdate = false;
     private int rightPadding = 50;
+    private boolean _noData;
+    private int _lineColour;
 
     public boolean getShouldDrawGrid() {
         return mShouldDrawGridHorizontal;
@@ -94,20 +96,44 @@ public class StackBarGraph extends View {
         return this.mBars;
     }
 
+    public void setNoData(boolean noData) {
+        _noData = noData;
+    }
+
+    public void setLineColour(int lineColour){
+        _lineColour = lineColour;
+    }
+
     public void onDraw(Canvas ca) {
-    	
         if (mFullImage == null || mShouldUpdate) {
             float density = mContext.getResources().getDisplayMetrics().density;
             mFullImage = Bitmap.createBitmap(getWidth(), getHeight(), Config.ARGB_8888);
             Canvas canvas = new Canvas(mFullImage);
-            canvas.drawColor(Color.TRANSPARENT);
+
+            if (_noData) {
+                Paint textPaint = new Paint();
+                textPaint.setTextSize(16 * density);
+                textPaint.setColor(Color.WHITE);
+                textPaint.setAntiAlias(true);
+                String noConsumptions = "No Consumptions in the past 7 days";
+                float textWidth = textPaint.measureText(noConsumptions);
+                Rect bounds = new Rect();
+                textPaint.getTextBounds("a", 0, 1, bounds);
+                canvas.drawText(
+                        noConsumptions,
+                        ((getWidth() - textWidth) /2),
+                        ((getHeight() - (textPaint.descent() + textPaint.ascent())) /2),
+                        textPaint);
+                ca.drawBitmap(mFullImage, 0, 0, null);
+                return;
+            }
             NinePatchDrawable popup = (NinePatchDrawable)this.getResources().getDrawable(R.drawable.popup_black);
 
             float maxValue = 0;
             float padding = 1 * mContext.getResources().getDisplayMetrics().density;
             int selectPadding = (int) (4 * mContext.getResources().getDisplayMetrics().density);
             float bottomPadding = 20 * mContext.getResources().getDisplayMetrics().density;
-            float leftPadding = bottomPadding;
+            float leftPadding = padding;
 
             float usableHeight;
             if (mShowBarText) {
@@ -119,6 +145,8 @@ public class StackBarGraph extends View {
                 usableHeight = getHeight()-(bottomPadding*2);
             }
 
+            this.mTextPaint.setTextSize(VALUE_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
+            this.mTextPaint.setAntiAlias(true);
             // Maximum y value = sum of all values.
             for (final StackBar bar : mBars) {
                 if (bar.getTotalValue() > maxValue) {
@@ -133,6 +161,35 @@ public class StackBarGraph extends View {
             float barWidth = (getWidth() - (padding*2)*mBars.size() - (leftPadding + rightPadding))/mBars.size();
 
             mRectangle = new Rect();
+
+            mPaint.setColor(_lineColour);
+            mPaint.setStrokeWidth(padding);
+
+            mPaint.setAntiAlias(true);
+            mTextPaint.setColor(Color.argb(150, 0, 0, 0));
+
+            if(mShouldDrawGridHorizontal){
+                float singleItemHeight = usableHeight / maxValue;
+                for(int i = 0; i <= maxValue; i++){
+                    if(maxValue > 10){
+                        if(i % 5 > 0){
+                            continue;
+                        }
+                    }
+
+                    float y = getHeight() - (bottomPadding + ((singleItemHeight) * i) + (padding * i) - density) - (padding * 0.75f);
+                    canvas.drawLine(0, y, getWidth() - rightPadding, y, mPaint);
+
+                    Rect textBounds = new Rect();
+                    String value = String.valueOf(i);
+                    mTextPaint.getTextBounds(value, 0, value.length(), textBounds);
+
+                    canvas.drawText(String.valueOf(i),
+                            (getWidth() - rightPadding) + (rightPadding/2 - textBounds.width()/2f),
+                            y + textBounds.height()/2f,
+                            mTextPaint);
+                }
+            }
 
             int count = 0;
             for (final StackBar bar : mBars) {
@@ -151,19 +208,27 @@ public class StackBarGraph extends View {
                            top -= padding * (section.getValue() - 1);
                     }
 
-                    int stroke = (int)padding * 3;
+                    int stroke = (int)(padding * 1.5f);
 
                     mRectangle.set(left + stroke / 2, top + stroke / 2, right - stroke / 2, bottom - stroke / 2);
 
                     if(section.getValue() > 0){
+
+                        if(!section.isTranslucent()) {
+                            this.mPaint.setColor(Color.WHITE);
+                            this.mPaint.setStrokeWidth(stroke);
+                            this.mPaint.setStyle(Paint.Style.FILL);
+                            canvas.drawRect(mRectangle, this.mPaint);
+                        }
+
                         // Draw bar stroke
-                        this.mPaint.setColor(section.getColor());
+                        this.mPaint.setColor(section.getStrokeColor());
                         this.mPaint.setStrokeWidth(stroke);
                         this.mPaint.setStyle(Paint.Style.STROKE);
-                        //this.mPaint.setAlpha(255);
                         canvas.drawRect(mRectangle, this.mPaint);
 
-                        this.mPaint.setAlpha(50);
+                        this.mPaint.setColor(section.getColor());
+                        this.mPaint.setAlpha(100);
                         this.mPaint.setStyle(Paint.Style.FILL);
                         mRectangle.set(left + stroke, top + stroke, right - stroke, bottom - stroke);
                         canvas.drawRect(mRectangle, this.mPaint);
@@ -175,16 +240,8 @@ public class StackBarGraph extends View {
                         section.setRegion(new Region(mRectangle.left-selectPadding, mRectangle.top-selectPadding, mRectangle.right+selectPadding, mRectangle.bottom+selectPadding));
                     }
 
-                    // Draw x-axis label text
-                    mTextPaint.setColor(Color.argb(100, 255, 255, 255));
-                    this.mTextPaint.setTextSize(AXIS_LABEL_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
-                    int x = (int)(((mRectangle.left+mRectangle.right)/2)-(this.mTextPaint.measureText(bar.getName())/2));
-                    int y = (int) (getHeight()-6 * mContext.getResources().getDisplayMetrics().scaledDensity);
-                    canvas.drawText(bar.getName(), x, y, this.mTextPaint);
-
                     // Draw value text
                     if (mShowBarText && section.getValue() > 0){
-                        this.mTextPaint.setTextSize(VALUE_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
                         this.mTextPaint.setColor(Color.WHITE);
                         Rect r2 = new Rect();
                         this.mTextPaint.getTextBounds(section.getValueString(), 0, 1, r2);
@@ -212,80 +269,21 @@ public class StackBarGraph extends View {
                     if(section.getValue() > 0)
                         currentTop += padding;
                 }
+
+                // Draw x-axis label text
+                mTextPaint.setColor(Color.argb(150, 0, 0, 0));
+                this.mTextPaint.setTextSize(AXIS_LABEL_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
+                int x = (int)(((mRectangle.left+mRectangle.right)/2)-(this.mTextPaint.measureText(bar.getName())/2));
+                int y = (int) (getHeight()-6 * mContext.getResources().getDisplayMetrics().scaledDensity);
+                canvas.drawText(bar.getName(), x, y, this.mTextPaint);
                 count++;
             }
-            mPaint.setColor(Color.argb(50, 255, 255, 255));
-            mPaint.setStrokeWidth(padding);
 
-            mPaint.setAntiAlias(true);
-            mTextPaint.setColor(Color.argb(150, 255, 255, 255));
-
-            if(mShouldDrawGridHorizontal){
-                float singleItemHeight = usableHeight / maxValue;
-                for(int i = 0; i <= maxValue; i++){
-                    if(maxValue > 10){
-                        if(i % 5 > 0){
-                            continue;
-                        }
-                    }
-
-                    float y = getHeight() - (bottomPadding + ((singleItemHeight) * i) + (padding * i) - density);
-                    canvas.drawLine(0, y, getWidth() - rightPadding, y, mPaint);
-
-                    Rect textBounds = new Rect();
-                    String value = String.valueOf(i);
-                    mTextPaint.getTextBounds(value, 0, value.length(), textBounds);
-
-                    canvas.drawText(String.valueOf(i),
-                            (getWidth() - rightPadding) + (rightPadding/2 - textBounds.width()/2f),
-                            y + textBounds.height()/2f,
-                            mTextPaint);
-                }
-            }
             mShouldUpdate = false;
         }
         
         ca.drawBitmap(mFullImage, 0, 0, null);
         
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        Point point = new Point();
-        point.x = (int) event.getX();
-        point.y = (int) event.getY();
-        
-        int count = 0;
-        for (StackBar bar : mBars){
-            for(StackBarSection section : bar.getSections()){
-                if(section.getValue() == 0) continue;
-
-                Region r = new Region();
-                r.setPath(section.getPath(), section.getRegion());
-                if (r.contains(point.x, point.y) && event.getAction() == MotionEvent.ACTION_DOWN){
-                    mIndexSelected = count;
-                } else if (event.getAction() == MotionEvent.ACTION_UP){
-                    if (r.contains(point.x,point.y) && mListener != null){
-                        if (mIndexSelected > -1) mListener.onClick(mIndexSelected);
-                        mIndexSelected = -1;
-                    }
-                }
-                else if(event.getAction() == MotionEvent.ACTION_CANCEL)
-                    mIndexSelected = -1;
-
-                count++;
-            }
-        }
-        
-        if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL){
-            mShouldUpdate = true;
-            postInvalidate();
-        }
-        
-        
-
-        return true;
     }
     
     @Override

@@ -1,80 +1,85 @@
 package uk.co.pilllogger.adapters;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.view.ActionMode;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.analytics.tracking.android.Tracker;
 
 import java.util.Date;
 import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.dialogs.ChangePillInfoDialog;
 import uk.co.pilllogger.dialogs.InfoDialog;
 import uk.co.pilllogger.dialogs.PillInfoDialog;
+import uk.co.pilllogger.helpers.LayoutHelper;
+import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
+import uk.co.pilllogger.state.Observer;
+import uk.co.pilllogger.stats.Statistics;
 import uk.co.pilllogger.tasks.DeletePillTask;
+import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.tasks.UpdatePillTask;
 import uk.co.pilllogger.views.ColourIndicator;
 
 /**
  * Created by nick on 22/10/13.
  */
-public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDialog.PillInfoDialogListener {
+public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDialog.PillInfoDialogListener, ChangePillInfoDialog.ChangePillInfoDialogListener, Observer.IConsumptionAdded, Observer.IConsumptionDeleted {
 
+    private static final String TAG = "PillsListAdapter";
     private Pill _selectedPill;
 
     public PillsListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
-        super(activity, textViewResourceId, R.menu.pills_list_item_menu, pills);
+        super(activity, textViewResourceId, pills);
+        Observer.getSingleton().registerConsumptionAddedObserver(this);
+        Observer.getSingleton().registerConsumptionDeletedObserver(this);
     }
 
-    @Override
-    protected boolean actionItemClicked(ActionMode mode, MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.pill_list_item_menu_favourite:
-            case R.id.pill_list_item_menu_unfavourite:
-                boolean setFavourite = item.getItemId() == R.id.pill_list_item_menu_favourite;
-                if (_selectedPill != null)
-                    _selectedPill.setFavourite(setFavourite);
-
-                new UpdatePillTask(_activity, _selectedPill).execute();
-
-                notifyDataSetChanged();
-                mode.finish(); // Action picked, so close the CAB
-                return true;
-
-            case R.id.pill_list_item_menu_delete:
-                int index = _data.indexOf(_selectedPill);
-                removeAtPosition(index); //remove() doesn't like newly created pills, so remove manually
-
-                new DeletePillTask(_activity, _selectedPill).execute();
-                notifyDataSetChanged();
-                mode.finish();
-                return true;
-
-            default:
-                return false;
+    private AlertDialog createCancelDialog(Pill pill, String deleteTrackerType) {
+        final Pill pill1 = pill;
+        final String deleteTrackerType1 = deleteTrackerType;
+        if (pill1 != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(_activity);
+            builder.setTitle(_activity.getString(R.string.confirm_delete_title));
+            builder.setMessage(_activity.getString(R.string.confirm_delete_message));
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    new DeletePillTask(_activity, pill1).execute();
+                    TrackerHelper.deletePillEvent(_activity, deleteTrackerType1);
+                    notifyDataSetChanged();
+                    dialog.dismiss();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            return builder.create();
         }
-    }
-
-    @Override
-    protected boolean onClickListenerSet(View view, Menu menu) {
-        ViewHolder viewHolder = (ViewHolder) view.getTag();
-        _selectedPill = viewHolder.pill;
-        menu.findItem(R.id.pill_list_item_menu_favourite).setVisible(!_selectedPill.isFavourite());
-        menu.findItem(R.id.pill_list_item_menu_unfavourite).setVisible(_selectedPill.isFavourite());
-
-        return true;
+        return null;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = super.getView(position, convertView, parent);
-
 
         final View listItem = v;
         if (v != null) {
@@ -86,6 +91,7 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
                 public void onClick(View v) {
                     if (pill != null) {
                         InfoDialog dialog = new PillInfoDialog(pill, PillsListAdapter.this);
+                        TrackerHelper.showInfoDialogEvent(_activity, TAG);
                         dialog.show(_activity.getFragmentManager(), pill.getName());
                     }
                 }
@@ -120,6 +126,8 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
 
                                             new UpdatePillTask(_activity, pill).execute();
 
+                                            TrackerHelper.updatePillColourEvent(_activity, TAG);
+
                                             notifyDataSetChanged();
                                             viewholder.pickerContainer.setVisibility(View.GONE);
                                         }
@@ -140,7 +148,8 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
     public void onDialogAddConsumption(Pill pill, InfoDialog dialog) {
         if (pill != null) {
             Consumption consumption = new Consumption(pill, new Date());
-            ConsumptionRepository.getSingleton(_activity).insert(consumption);
+            new InsertConsumptionTask(_activity, consumption).execute();
+            TrackerHelper.addConsumptionEvent(_activity, "PillDialog");
             Toast.makeText(_activity, "Added consumption of " + pill.getName(), Toast.LENGTH_SHORT).show();
         }
         dialog.dismiss();
@@ -148,10 +157,61 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
 
     @Override
     public void onDialogDelete(Pill pill, InfoDialog dialog) {
+        AlertDialog cancelDialog = createCancelDialog(pill, "DialogDelete");
+        cancelDialog.show();
+        dialog.dismiss();
+    }
+
+    @Override
+    public void setDialogFavourite(Pill pill, InfoDialog dialog) {
         if (pill != null) {
-            new DeletePillTask(_activity, pill).execute();
-            notifyDataSetChanged();
+            if (pill.isFavourite())
+                pill.setFavourite(false);
+            else
+                pill.setFavourite(true);
+            new UpdatePillTask(_activity, pill).execute();
         }
         dialog.dismiss();
+    }
+
+    @Override
+    public void onDialogChangePillColour(Pill pill, InfoDialog dialog) {
+        new UpdatePillTask(_activity, pill).execute();
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onDialogChangeNameDosage(Pill pill, InfoDialog dialog) {
+        DialogFragment editDialog = new ChangePillInfoDialog(_activity, pill, this);
+        if (editDialog != null)
+            editDialog.show(_activity.getFragmentManager(), pill.getName());
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onDialogInfomationChanged(Pill pill, ChangePillInfoDialog dialog) {
+        new UpdatePillTask(_activity, pill).execute();
+    }
+
+    @Override
+    public void consumptionAdded(Consumption consumption) {
+        Pill pill = consumption.getPill();
+        new UpdatePillTask(_activity, pill).execute();
+    }
+
+    @Override
+    public void consumptionDeleted(Consumption consumption) {
+        Pill pill = consumption.getPill();
+        new UpdatePillTask(_activity, pill).execute();
+    }
+
+    @Override
+    public void consumptionPillGroupDeleted(String group, int pillId) {
+        for (Pill pill : _data) {
+            if (pill.getId() == pillId) {
+                new UpdatePillTask(_activity, pill).execute();
+                return; //is this worth doing?
+            }
+        }
     }
 }

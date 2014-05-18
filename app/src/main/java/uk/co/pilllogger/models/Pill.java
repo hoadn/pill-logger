@@ -6,6 +6,7 @@ package uk.co.pilllogger.models;
 import android.util.Log;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.state.Observer;
 
 /**
@@ -28,9 +30,11 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
     private int _id;
 	private String _name = "";
     private String _units = "mg";
-	private int _size;
+	private float _size;
     private int _colour = R.color.pill_default_color;
     private boolean _favourite = false;
+    private Consumption _latest = null;
+    private Consumption _first = null;
 
     private List<Consumption> _consumptions = new ArrayList<Consumption>();
 
@@ -39,7 +43,7 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
         Observer.getSingleton().registerConsumptionDeletedObserver(this);
     }
 
-    public Pill(CharSequence name, int size) {
+    public Pill(CharSequence name, float size) {
         this();
         _name = String.valueOf(name);
         _size = size;
@@ -67,14 +71,14 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
 	/**
 	 * @return the size
 	 */
-	public int getSize() {
+	public float getSize() {
 		return _size;
 	}
 
 	/**
 	 * @param size the size to set
 	 */
-	public void setSize(int size) {
+	public void setSize(float size) {
 		_size = size;
 	}
 
@@ -103,32 +107,59 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
     }
 
     public String getUnits() {
-        return _units;
+        return _size > 0 ? _units : "";
     }
 
     public void setUnits(String _units) {
         this._units = _units;
     }
 
+    public int getSortOrder(){return _id;}
+
     public List<Consumption> getConsumptions() {
         return _consumptions;
     }
 
     public Consumption getLatestConsumption(){
-
         if(_consumptions.isEmpty())
             return null;
 
-        Consumption latest = _consumptions.get(0);
-        for(Consumption c : _consumptions){
-            if(c.getDate().getTime() > latest.getDate().getTime())
-                latest = c;
+        if(_latest == null) {
+            updateLatestFirst();
         }
-
-        return latest;
+        return _latest;
     }
 
-    public int getTotalSize(int hours){
+    public Consumption getFirstConsumption(){
+        if(_consumptions.isEmpty())
+            return null;
+
+        if(_first == null){
+            updateLatestFirst();
+        }
+
+        return _first;
+    }
+
+    private void updateLatestFirst(){
+        if(_consumptions.isEmpty())
+            return;
+
+        _latest = _consumptions.get(0);
+        _first = _consumptions.get(0);
+        for (Consumption c : _consumptions) {
+            long time = c.getDate().getTime();
+            long latestTime = _latest.getDate().getTime();
+            long firstTime = _first.getDate().getTime();
+
+            if (time > latestTime)
+                _latest = c;
+            if(time < firstTime)
+                _first = c;
+        }
+    }
+
+    public float getTotalSize(int hours){
         return getTotalQuantity(hours) * getSize();
     }
 
@@ -140,12 +171,18 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
 
         for (Consumption consumption : _consumptions) {
             Date consumptionDate = consumption.getDate();
-            if (consumptionDate.compareTo(back) >= 0 && consumptionDate.compareTo(currentDate) <= 0) {
+            if (hours < 0 || consumptionDate.compareTo(back) >= 0 && consumptionDate.compareTo(currentDate) <= 0) {
                 total += (consumption.getQuantity());
             }
         }
 
         return total;
+    }
+
+    public String getFormattedSize(){
+        if(_size <= 0)
+            return "";
+        return NumberHelper.getNiceFloatString(_size);
     }
 
     @Override
@@ -156,7 +193,7 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || this.getClass() != o.getClass()) return false;
+        if (o == null || ((Object) this).getClass() != o.getClass()) return false;
 
         Pill pill = (Pill) o;
 
@@ -173,7 +210,8 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
     public int hashCode() {
         int result = _id;
         result = 31 * result + _name.hashCode();
-        result = 31 * result + _size;
+        result = 31 * result + _units.hashCode();
+        result = 31 * result + (_size != +0.0f ? Float.floatToIntBits(_size) : 0);
         result = 31 * result + _colour;
         result = 31 * result + (_favourite ? 1 : 0);
         return result;
@@ -184,6 +222,9 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
         if (consumption != null) {
             if (consumption.getPillId() == _id && !_consumptions.contains(consumption)) {
                 _consumptions.add(consumption);
+
+                if(_latest == null || consumption.getDate().getTime() > _latest.getDate().getTime())
+                    _latest = consumption;
             }
         }
     }
@@ -193,6 +234,9 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
         if (consumption != null) {
             if (consumption.getPillId() == _id && _consumptions.contains(consumption)) {
                 _consumptions.remove(consumption);
+
+                if(_latest != null && consumption.getId() == _latest.getId())
+                    _latest = null;
             }
         }
     }
@@ -211,8 +255,43 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
 
             if(c.getGroup().equals(group) && c.getPillId() == pillId)
                 toRemove.add(c);
+
+            if(_latest != null && c.getId() == _latest.getId())
+                _latest = null;
         }
 
         _consumptions.removeAll(toRemove);
+    }
+
+    public float getDailyAverage(){
+        return getDailyAverage(0);
+    }
+
+    public float getDailyAverage(int days){
+        Consumption first = getFirstConsumption();
+        if(first == null)
+            return 0;
+
+        DateTime firstDt = new DateTime(first.getDate());
+        DateTime now = new DateTime();
+
+        int totalDays = Days.daysBetween(firstDt.withTimeAtStartOfDay(), now.withTimeAtStartOfDay()).getDays();
+
+        if(days == 0)
+            days = totalDays;
+
+        if(days > totalDays)
+            days = totalDays;
+
+        int hours = days * 24;
+        if(totalDays == 0)
+            hours = 24;
+
+        int total = getTotalQuantity(hours);
+
+        if(days == 0)
+            return total;
+
+        return total / (float)days;
     }
 }

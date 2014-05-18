@@ -33,8 +33,9 @@ public class PieSlice {
 	private String title;
 	private Path path;
 	private Region region;
+    private int _strokeColor;
 
-	public String getTitle() {
+    public String getTitle() {
 		return title;
 	}
 	public void setTitle(String title) {
@@ -64,5 +65,12 @@ public class PieSlice {
 	public void setRegion(Region region) {
 		this.region = region;
 	}
-	
+
+    public int getStrokeColor() {
+        return _strokeColor;
+    }
+
+    public void setStrokeColor(int strokeColor) {
+        _strokeColor = strokeColor;
+    }
 }

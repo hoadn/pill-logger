@@ -2,6 +2,8 @@ package uk.co.pilllogger.state;
 
 import android.graphics.Typeface;
 
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +11,9 @@ import java.util.Map;
 
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.themes.ITheme;
+import uk.co.pilllogger.themes.ProfessionalTheme;
+import uk.co.pilllogger.themes.RainbowTheme;
 
 /**
  * Created by nick on 28/10/13.
@@ -17,12 +22,14 @@ public class State {
 
     private static State _instance;
     private Map<Pill, Integer> _openPills = new HashMap<Pill, Integer>();
-    private List<Integer> _graphExcludePills;
+    private List<Integer> _graphExcludePills = new ArrayList<Integer>();
     private Typeface _typeface;
     private Typeface _scriptTypeface;
     private List<Pill> _consumptionPills = new ArrayList<Pill>();
     private boolean _appVisible = false;
     private List<Feature.InAppId> _enabledFeatures = new ArrayList<Feature.InAppId>();
+    private ITheme _theme = new ProfessionalTheme();
+    private MixpanelAPI _mixpanelAPI = null;
 
     private State() {
     }
@@ -31,6 +38,14 @@ public class State {
         if (_instance == null)
             _instance = new State();
         return _instance;
+    }
+
+    public MixpanelAPI getMixpanelAPI() {
+        return _mixpanelAPI;
+    }
+
+    public void setMixpanelAPI(MixpanelAPI mixpanelAPI) {
+        _mixpanelAPI = mixpanelAPI;
     }
 
     public Typeface getTypeface() {
@@ -95,18 +110,15 @@ public class State {
     public void addOpenPill(Pill pill) {
         if (!(_openPills.containsKey(pill)))
             _openPills.put(pill, 1);
-        Logger.v("TEST", "pill: open in activity, size = " + _openPills.size());
     }
 
     public void removeOpenPill(Pill pill) {
         if (_openPills.containsKey(pill))
             _openPills.remove(pill);
-        Logger.v("TEST", "removeOpenPill called");
     }
 
     public void clearOpenPillsList() {
         _openPills.clear();
-        Logger.v("TEST", "clearOpenPillsList called");
     }
 
     public Map<Pill, Integer> getOpenPills() {
@@ -117,6 +129,14 @@ public class State {
 
     public void setAppVisible(boolean appVisible) {
         _appVisible = appVisible;
+    }
+
+        public ITheme getTheme() {
+        return _theme;
+    }
+
+    public void setTheme(ITheme theme) {
+        _theme = theme;
     }
 
     public List<Feature.InAppId> getEnabledFeatures(){

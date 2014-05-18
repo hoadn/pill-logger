@@ -9,6 +9,8 @@ import org.joda.time.DateTime;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import uk.co.pilllogger.R;
+
 /**
  * Created by alex on 13/11/2013.
  */
@@ -23,6 +25,9 @@ public class DateHelper {
         if(dayOfMonth.endsWith("3")) suffix= "rd";
         if(dayOfMonth.endsWith("0") || dayOfMonth.endsWith("4") || dayOfMonth.endsWith("5") || dayOfMonth.endsWith("6")
                 || dayOfMonth.endsWith("7") || dayOfMonth.endsWith("8") || dayOfMonth.endsWith("9")) suffix = "th";
+
+        if(dayOfMonth.length() > 1 && dayOfMonth.charAt(dayOfMonth.length() - 2) == '1')
+            suffix = "th";
 
         return dateTime.toString("EEEE") + " " + dayOfMonth + suffix + " " + dateTime.toString("MMMM");
     }
@@ -50,10 +55,18 @@ public class DateHelper {
     }
 
     public static String getRelativeDateTime(Context context, Date date){
-        return getRelativeDateTime(context, new DateTime(date));
+        return getRelativeDateTime(context, date, false);
+    }
+
+    public static String getRelativeDateTime(Context context, Date date, boolean isPrefixed){
+        return getRelativeDateTime(context, new DateTime(date), isPrefixed);
     }
 
     public static String getRelativeDateTime(Context context, DateTime date){
+        return getRelativeDateTime(context, date, false);
+    }
+
+    public static String getRelativeDateTime(Context context, DateTime date, boolean isPrefixed){
 
         String dateString;
         if (isDateInFuture(date)) {
@@ -65,12 +78,19 @@ public class DateHelper {
             long minutes = timeMs / 1000 / 60;
             String minutePlural = (minutes == 1) ? "minute" : "minutes";
             dateString = String.valueOf(minutes) + " " + minutePlural + " ago";
+
+            if(minutes == 0)
+                dateString = context.getString(R.string.just_now);
+
             if (minutes > 60) {
                 long hours = minutes / 60;
                 long leftOverMinutes = minutes % 60;
                 String hourPlural = (hours == 1) ? "hour" : "hours";
                 minutePlural = (leftOverMinutes == 1) ? "minute" : "minutes";
-                dateString = String.valueOf(hours) + " " + hourPlural + " " + leftOverMinutes + " " + minutePlural + " ago";
+                dateString = String.valueOf(hours) + " " + hourPlural + " ";
+                if(minutes > 0)
+                    dateString += leftOverMinutes + " " + minutePlural;
+                dateString += " ago";
             }
         }
         else if(date.plusDays(2).isAfterNow()){
@@ -82,6 +102,10 @@ public class DateHelper {
         }
         else{
             dateString = setAsDateAndTime(context, date);
+        }
+
+        if(isPrefixed){
+            dateString = dateString.substring(0, 1).toLowerCase() + dateString.substring(1);
         }
 
         return dateString;
@@ -118,5 +142,47 @@ public class DateHelper {
     public static String formatDateAndTime(Context context, Date date) {
         java.text.DateFormat df = DateFormat.getDateFormat(context);
         return df.format(date);
+    }
+
+    public static String getDayOfWeek(int dayOfWeek, Context context){
+        switch(dayOfWeek){
+            case 1:
+                return context.getString(R.string.monday);
+            case 2:
+                return context.getString(R.string.tuesday);
+            case 3:
+                return context.getString(R.string.wednesday);
+            case 4:
+                return context.getString(R.string.thursday);
+            case 5:
+                return context.getString(R.string.friday);
+            case 6:
+                return context.getString(R.string.saturday);
+            case 7:
+                return context.getString(R.string.sunday);
+        }
+
+        return "";
+    }
+
+    public static String getShortDayOfWeek(int dayOfWeek, Context context){
+        switch(dayOfWeek){
+            case 1:
+                return context.getString(R.string.monday_short);
+            case 2:
+                return context.getString(R.string.tuesday_short);
+            case 3:
+                return context.getString(R.string.wednesday_short);
+            case 4:
+                return context.getString(R.string.thursday_short);
+            case 5:
+                return context.getString(R.string.friday_short);
+            case 6:
+                return context.getString(R.string.saturday_short);
+            case 7:
+                return context.getString(R.string.sunday_short);
+        }
+
+        return "";
     }
 }

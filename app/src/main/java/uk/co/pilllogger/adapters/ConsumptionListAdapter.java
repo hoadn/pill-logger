@@ -3,7 +3,9 @@ package uk.co.pilllogger.adapters;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.util.SparseIntArray;
 import android.view.ActionMode;
@@ -18,9 +20,11 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.echo.holographlibrary.BarGraph;
 import com.echo.holographlibrary.LineGraph;
@@ -41,10 +45,13 @@ import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.helpers.NumberHelper;
+import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
+import uk.co.pilllogger.stats.Statistics;
 import uk.co.pilllogger.tasks.DeleteConsumptionTask;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
@@ -66,7 +73,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
     private List<Pill> _pills;
 
     public ConsumptionListAdapter(Activity activity, Fragment fragment, int textViewResourceId, List<Consumption> consumptions) {
-        super(activity, textViewResourceId, R.menu.consumption_list_item_menu, consumptions);
+        super(activity, textViewResourceId, consumptions);
         _activity = activity;
         _fragment = fragment;
         _consumptions = consumptions;
@@ -92,6 +99,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
             new InsertConsumptionTask(_activity, newC).execute();
         }
 
+        TrackerHelper.addConsumptionEvent(_activity, "DialogTakeAgain");
         dialog.dismiss();
     }
 
@@ -99,23 +107,29 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
     public void onDialogIncrease(Consumption consumption, InfoDialog dialog) {
         Consumption newC = new Consumption(consumption);
         newC.setId(0);
+        newC.setQuantity(1);
         new InsertConsumptionTask(_activity, newC).execute();
+        TrackerHelper.addConsumptionEvent(_activity, "DialogIncrease");
+        Toast.makeText(_activity, R.string.consumption_info_dialog_increase_toast, Toast.LENGTH_SHORT).show();
         dialog.dismiss();
     }
 
     @Override
     public void onDialogDecrease(Consumption consumption, InfoDialog dialog) {
         new DeleteConsumptionTask(_activity, consumption, false).execute();
+        TrackerHelper.deleteConsumptionEvent(_activity, "DialogDecrease");
+        Toast.makeText(_activity, R.string.consumption_info_dialog_decrease_toast, Toast.LENGTH_SHORT).show();
         dialog.dismiss();
     }
 
     @Override
     public void onDialogDelete(Consumption consumption, InfoDialog dialog) {
         new DeleteConsumptionTask(_activity, consumption, true).execute();
+        TrackerHelper.deleteConsumptionEvent(_activity, "DialogDelete");
         dialog.dismiss();
     }
 
-    public static class ViewHolder {
+    public static class ViewHolder extends ActionBarArrayAdapter.ViewHolder{
         public TextView name;
         public TextView date;
         public TextView quantity;
@@ -125,27 +139,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
     }
 
     @Override
-    protected boolean actionItemClicked(ActionMode mode, MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.pill_list_item_menu_delete:
-                int index = _data.indexOf(_selectedConsumption);
-                removeAtPosition(index); //remove() doesn't like newly created pills, so remove manually
-
-                new DeleteConsumptionTask(_activity, _selectedConsumption, true).execute();
-                if (_fragment instanceof ConsumptionListFragment) {
-                    new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete)_fragment, false).execute();
-                }
-                notifyDataSetChanged();
-                mode.finish();
-                return true;
-
-            default:
-                return false;
-        }
-    }
-
-    @Override
-    protected void initViewHolder(View v) {
+    protected ActionBarArrayAdapter.ViewHolder initViewHolder(View v) {
         ViewHolder holder = new ViewHolder();
         holder.name = (TextView) v.findViewById(R.id.consumption_list_name);
         holder.date = (TextView) v.findViewById(R.id.consumption_list_date);
@@ -159,14 +153,8 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
             holder.size.setTypeface(State.getSingleton().getTypeface());
         }
         v.setTag(holder);
-    }
 
-    @Override
-    protected boolean onClickListenerSet(View view, Menu menu) {
-        ViewHolder viewHolder = (ConsumptionListAdapter.ViewHolder) view.getTag();
-        _selectedConsumption = viewHolder.consumption;
-
-        return true;
+        return holder;
     }
 
     @Override
@@ -179,14 +167,15 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
 
                 int dayCount = getGraphDays();
 
-                Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(_consumptions, dayCount);
-
                 View view = v.findViewById(R.id.main_graph);
                 setUpSlidingPane(v);
                 setUpGraphPillsList(v);
 
-
-                plotGraph(xPoints, dayCount, view);
+                if (_consumptions.size() > 0) {
+                    Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(_consumptions, dayCount);
+                    if (xPoints != null)
+                        plotGraph(xPoints, dayCount, view);
+                }
             }
         }
         else {
@@ -201,13 +190,21 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                         @Override
                         public void onClick(View v) {
                                 InfoDialog dialog = new ConsumptionInfoDialog(_activity, consumption, ConsumptionListAdapter.this);
+                                TrackerHelper.showInfoDialogEvent(_activity, TAG);
                                 dialog.show(_activity.getFragmentManager(), consumption.getPill().getName());
                         }
                     });
 
                     if(consumption.getPill() != null){
                         holder.name.setText(consumption.getPill().getName());
-                        holder.size.setText(consumption.getPill().getSize() + consumption.getPill().getUnits());
+
+                        if(consumption.getPill().getSize() == 0) {
+                            holder.size.setVisibility(View.INVISIBLE);
+                        }
+                        else {
+                            holder.size.setText(NumberHelper.getNiceFloatString(consumption.getPill().getSize()) + consumption.getPill().getUnits());
+                            holder.size.setVisibility(View.VISIBLE);
+                        }
                         holder.colour.setColour(consumption.getPill().getColour());
                     }
                     holder.date.setText(DateHelper.getRelativeDateTime(_fragment.getActivity(), consumption.getDate()));
@@ -215,17 +212,20 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                     holder.consumption = consumption;
 
                     RelativeLayout container = (RelativeLayout) v.findViewById(R.id.selector_container);
-                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) container.getLayoutParams();
+                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) container.getLayoutParams();
                     TextView dayText = (TextView) v.findViewById(R.id.day_text);
                     DateTime currentDate = new DateTime(consumption.getDate());
 
                     dayText.setText("");
 
                     if(params != null){
-                        params.topMargin = 0;
-                        int marginWithTextHeight = 75;
+                        params.topMargin = 10;
+                        params.bottomMargin = 0;
 
                         boolean setText = false;
+
+                        int padding = _activity.getResources().getDimensionPixelSize(R.dimen.list_item_padding);
+                        container.setPadding(padding,padding,padding,padding);
 
                         if(position == 0)
                         {
@@ -243,8 +243,9 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                         }
 
                         if(setText){
-                            params.topMargin = marginWithTextHeight;
                             dayText.setText(DateHelper.getPrettyDayOfMonth(currentDate));
+
+                            params.topMargin = params.topMargin + (int) (dayText.getLineHeight() * 1.5f);
                         }
                     }
                 }
@@ -284,7 +285,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                                 graphPills.add(pill.getId());
                             }
                         }
-                        //new GetConsumptionsTask(_activity, (GetConsumptionsTask.ITaskComplete) _fragment, true).execute();
+                        TrackerHelper.filterGraphEvent(_activity, TAG);
                         ((ConsumptionListFragment)_fragment).replotGraph();
                     }
                 });
@@ -368,16 +369,9 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         return totalDays.getDays();
     }
 
-//    public void replotGraph(){
-//        int dayCount = getGraphDays();
-//
-//        View view = _mainLayout.findViewById(R.id.main_graph);
-//
-//        Map<Pill, SparseIntArray> xPoints = (Map<Pill, SparseIntArray>) view.getTag();
-//        plotGraph(xPoints, dayCount, view);
-//    }
-
     public void plotGraph(Map<Pill, SparseIntArray> data, int dayCount, View view){
+        int lineColour = _activity.getResources().getColor(State.getSingleton().getTheme().getStackBarGraphLineColourResourceId());
+
         if(view instanceof LineGraph)
             GraphHelper.plotLineGraph(data, dayCount, (LineGraph) view);
 
@@ -388,7 +382,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
             GraphHelper.plotPieChart(data, dayCount, (PieGraph)view);
 
         if(view instanceof StackBarGraph)
-            GraphHelper.plotStackBarGraph(data, dayCount, (StackBarGraph)view);
+            GraphHelper.plotStackBarGraph(data, dayCount, (StackBarGraph)view, lineColour);
 
         view.setTag(data);
     }

@@ -4,4 +4,6 @@
     <item name="tag_page_colour" type="id">2</item>
     <item name="activity_layout_wrapper" type="id"/>
     <item name="notification_consumption_reminder" type="id"/>
+    <item name="rainbowTheme" type="id"/>
+    <item name="professionalTheme" type="id"/>
 </resources>

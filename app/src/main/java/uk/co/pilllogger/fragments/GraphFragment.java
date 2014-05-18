@@ -76,11 +76,14 @@ public class GraphFragment extends PillLoggerFragmentBase implements GetConsumpt
 
     @Override
     public void consumptionsReceived(List<Consumption> consumptions) {
+        if (consumptions.size() == 0)
+            return;
 
         int days = 7;
         Map<Pill, SparseIntArray> lastMonthOfConsumptions = ConsumptionMapper.mapByPillAndDate(consumptions, days);
 
-        GraphHelper.plotStackBarGraph(lastMonthOfConsumptions, days, _graph1);
+        int lineColour = getActivity().getResources().getColor(State.getSingleton().getTheme().getStackBarGraphLineColourResourceId());
+        GraphHelper.plotStackBarGraph(lastMonthOfConsumptions, days, _graph1, lineColour);
         GraphHelper.plotLineGraph(lastMonthOfConsumptions, days, _graph2);
         GraphHelper.plotPieChart(lastMonthOfConsumptions, days, _graph3);
 
