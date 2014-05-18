@@ -475,10 +475,13 @@ public class AddConsumptionActivity extends FragmentActivity implements
          */
         Collections.sort(pills, new Comparator<Pill>() {
             public int compare(Pill pill1, Pill pill2) {
+                if(pill1.getId() == pill2.getId())
+                    return 0;
+
                 if (_addedPills.contains(pill1) && !_addedPills.contains(pill2)) { //if pill has been added during this Add Consumption it should be top
                     return -1;
                 }
-                if (_addedPills.contains(pill1) && !_addedPills.contains(pill2)) {
+                if (_addedPills.contains(pill2) && !_addedPills.contains(pill1)) {
                     return 1;
                 }
                 Consumption pill1Consumption = pill1.getLatestConsumption();
