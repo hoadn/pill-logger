@@ -28,7 +28,9 @@ public class Observer {
     public void notifyPillsUpdated(Pill pill){
         List<WeakReference<IPillsUpdated>> deadrefs = new ArrayList<WeakReference<IPillsUpdated>>();
 
-        for(WeakReference<IPillsUpdated> reference : _pillsUpdatedArrayList.values()){
+        List<WeakReference<IPillsUpdated>> tempObservers = new ArrayList<WeakReference<IPillsUpdated>>(_pillsUpdatedArrayList.values());
+
+        for(WeakReference<IPillsUpdated> reference : tempObservers){
             IPillsUpdated observer = reference.get();
             if(observer != null)
                 observer.pillsUpdated(pill);
