@@ -11,16 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.pilllogger.helpers.Logger;
-import uk.co.pilllogger.models.Pill;
-import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.services.BillingServiceConnection;
 import uk.co.pilllogger.state.Feature;
+import uk.co.pilllogger.state.FeatureType;
 import uk.co.pilllogger.state.State;
 
 /**
  * Created by Alex on 07/03/14.
  */
-public class GetPurchasedItemsTask extends AsyncTask<Void, Void, List<Feature.InAppId>>{
+public class GetPurchasedItemsTask extends AsyncTask<Void, Void, List<FeatureType>>{
 
     private static final String TAG = "GetPurchasedItemsTask";
     Context _context;
@@ -33,8 +32,8 @@ public class GetPurchasedItemsTask extends AsyncTask<Void, Void, List<Feature.In
         _listener = listener;
     }
     @Override
-    protected List<Feature.InAppId> doInBackground(Void... voids) {
-        List<Feature.InAppId> features = new ArrayList<Feature.InAppId>();
+    protected List<FeatureType> doInBackground(Void... voids) {
+        List<FeatureType> features = new ArrayList<FeatureType>();
 
         IInAppBillingService billingService = _billingServiceConnection.getBillingService();
 
@@ -57,7 +56,7 @@ public class GetPurchasedItemsTask extends AsyncTask<Void, Void, List<Feature.In
                     String signature = signatureList.get(i);
                     String sku = ownedSkus.get(i);
 
-                    features.add(Enum.valueOf(Feature.InAppId.class, sku));
+                    features.add(Enum.valueOf(FeatureType.class, sku));
                 }
             }
 
@@ -70,16 +69,16 @@ public class GetPurchasedItemsTask extends AsyncTask<Void, Void, List<Feature.In
     }
 
     @Override
-    protected void onPostExecute(List<Feature.InAppId> features) {
+    protected void onPostExecute(List<FeatureType> features) {
         _listener.purchasedItemsReceived(features);
-        List<Feature.InAppId> enabledFeatures = State.getSingleton().getEnabledFeatures();
-        for (Feature.InAppId feature : features) {
+        List<FeatureType> enabledFeatures = State.getSingleton().getEnabledFeatures();
+        for (FeatureType feature : features) {
             enabledFeatures.add(feature);
         }
 
     }
 
     public interface ITaskComplete{
-        public void purchasedItemsReceived(List<Feature.InAppId> features);
+        public void purchasedItemsReceived(List<FeatureType> features);
     }
 }

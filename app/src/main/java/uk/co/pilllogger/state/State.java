@@ -9,11 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.themes.ITheme;
 import uk.co.pilllogger.themes.ProfessionalTheme;
-import uk.co.pilllogger.themes.RainbowTheme;
 
 /**
  * Created by nick on 28/10/13.
@@ -27,7 +25,7 @@ public class State {
     private Typeface _scriptTypeface;
     private List<Pill> _consumptionPills = new ArrayList<Pill>();
     private boolean _appVisible = false;
-    private List<Feature.InAppId> _enabledFeatures = new ArrayList<Feature.InAppId>();
+    private List<FeatureType> _enabledFeatures = new ArrayList<FeatureType>();
     private ITheme _theme = new ProfessionalTheme();
     private MixpanelAPI _mixpanelAPI = null;
 
@@ -139,11 +137,11 @@ public class State {
         _theme = theme;
     }
 
-    public List<Feature.InAppId> getEnabledFeatures(){
+    public List<FeatureType> getEnabledFeatures(){
         return _enabledFeatures;
     }
 
-    public boolean hasFeature(Feature feature){
+    public boolean hasFeature(FeatureType feature){
         return _enabledFeatures.contains(feature);
     }
 }

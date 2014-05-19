@@ -15,7 +15,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -32,6 +31,9 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -40,15 +42,23 @@ import java.util.List;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.SlidePagerAdapter;
 import uk.co.pilllogger.animations.FadeBackgroundPageTransformer;
+import uk.co.pilllogger.billing.IabException;
+import uk.co.pilllogger.billing.IabHelper;
+import uk.co.pilllogger.billing.IabResult;
+import uk.co.pilllogger.billing.Inventory;
+import uk.co.pilllogger.billing.Purchase;
+import uk.co.pilllogger.billing.SkuDetails;
 import uk.co.pilllogger.dialogs.ThemeChoiceDialog;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.fragments.StatsFragment;
 import uk.co.pilllogger.helpers.FeedbackHelper;
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.services.BillingServiceConnection;
+import uk.co.pilllogger.state.FeatureType;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetFavouritePillsTask;
@@ -88,6 +98,7 @@ public class MainActivity extends PillLoggerActivityBase implements
     private TutorialService _tutorialService;
     BillingServiceConnection _billingServiceConnection = new BillingServiceConnection();
     private boolean _themeChanged;
+    private IabHelper _billingHelper;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,18 +200,76 @@ public class MainActivity extends PillLoggerActivityBase implements
         Drawable background = gradientBackgroundResourceId == null ? null : getResources().getDrawable(gradientBackgroundResourceId);
         getWindow().setBackgroundDrawable(background);
 
-	bindService(new
-                        Intent("com.android.vending.billing.InAppBillingService.BIND"),
+        setupBilling();
+    }
+
+    private void setupBilling(){
+
+        String billingKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjs+wAJzNtDwMFWgfw5J/Q8DNw7BNSdJ4lS1+dk2Zdtvg1lg257GcXzEz1lK4LpVrhReD3pS9xyV9qDIMA2vr2SW1pmZZbwOUy/lW9vC00WaTQcgIwM5VdcjHKO0sPiccLhF2kGI9JNyK32cc2p9pkJO2bIQPhyXQvp3GUW0wlbsQz918fSkHv7DondBhvTe0kYViJ2XmQh4anguLiUOhE3I1HislrynXDEKHr/Pp4UOQQKyU44P9RCm0P8HflmMCFgrgj8t+n0DFXdnCbneP3kRzweVPgajvh1Zk5PxzC926gmbWlDOBt89vORPMkaZTkWJWA94siYXFLDAyUsfeJQIDAQAB";
+
+        _billingHelper = new IabHelper(this, billingKey);
+        bindService(new Intent("com.android.vending.billing.InAppBillingService.BIND"),
                 _billingServiceConnection, Context.BIND_AUTO_CREATE
         );
+
+        _billingHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+            @Override
+            public void onIabSetupFinished(IabResult result) {
+                if (!result.isSuccess()) {
+                    // Oh noes, there was a problem.
+                    Logger.d(TAG, "Problem setting up In-app Billing: " + result);
+                }
+                // Hooray, IAB is fully set up!
+                final List<String> features = new ArrayList<String>();
+                for (FeatureType featureType : FeatureType.values()) {
+                    features.add(featureType.toString());
+                }
+                _billingHelper.queryInventoryAsync(true, features, new IabHelper.QueryInventoryFinishedListener() {
+                    @Override
+                    public void onQueryInventoryFinished(IabResult result, Inventory inv) {
+                        if(result.isFailure()){
+                            Logger.e(TAG, "Querying billing inventory failed: " + result.getMessage());
+                        }
+
+                        for (String feature : features) {
+
+                            SkuDetails skuDetails = inv.getSkuDetails(feature);
+                            if (skuDetails == null) {
+                                continue;
+                            }
+                            Toast.makeText(MainActivity.this, "Price of " + feature + ": " + skuDetails.getPrice(), Toast.LENGTH_LONG).show();
+                        }
+
+                        _billingHelper.launchPurchaseFlow(MainActivity.this, FeatureType.test.toString(), 10001, new IabHelper.OnIabPurchaseFinishedListener() {
+                            @Override
+                            public void onIabPurchaseFinished(IabResult result, Purchase info) {
+                                if (result.isFailure()) {
+                                    Log.d(TAG, "Error purchasing: " + result);
+                                    return;
+                                }
+                                Logger.d(TAG, info.getDeveloperPayload());
+                                Logger.d(TAG, info.getOrderId());
+                                Logger.d(TAG, info.getPackageName());
+                                Logger.d(TAG, info.getSku());
+
+                            }
+                        }, getUniqueId());
+                    }
+                });
+
+            }
+        });
+
+
+
     }
 
     @Override
     protected void onDestroy(){
-        if(_billingServiceConnection != null &&
-                _billingServiceConnection.getBillingService() != null){
-            unbindService(_billingServiceConnection);
+        if (_billingHelper != null) {
+            _billingHelper.dispose();
         }
+        _billingHelper = null;
     }
 
     @Override

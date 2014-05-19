@@ -33,6 +33,7 @@ android {
     buildTypes {
         debug{
             versionNameSuffix "-dev"
+            signingConfig signingConfigs.debug
         }
         release{
             runProguard false

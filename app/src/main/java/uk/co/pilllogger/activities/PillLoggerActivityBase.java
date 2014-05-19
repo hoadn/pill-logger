@@ -66,7 +66,7 @@ public class PillLoggerActivityBase extends Activity {
         State.getSingleton().setAppVisible(false);
     }
 
-    private synchronized String getUniqueId() {
+    protected synchronized String getUniqueId() {
         if (uniqueID == null) {
             SharedPreferences sharedPrefs = getSharedPreferences(
                     PREF_UNIQUE_ID, Context.MODE_PRIVATE);

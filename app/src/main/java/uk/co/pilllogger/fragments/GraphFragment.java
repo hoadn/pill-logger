@@ -24,6 +24,7 @@ import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Feature;
+import uk.co.pilllogger.state.FeatureType;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 
@@ -60,10 +61,6 @@ public class GraphFragment extends PillLoggerFragmentBase implements GetConsumpt
     }
 
     private void managePaidCharts(View layout){
-        if(!State.getSingleton().hasFeature(Feature.CHARTS) && false){
-            return;
-        }
-
         View graph2Cover = layout.findViewById(R.id.line_graph_lock);
         View graph3Cover = layout.findViewById(R.id.pie_graph_lock);
         View graph4Cover = layout.findViewById(R.id.week_graph_lock);
