@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.models.Consumption;
@@ -23,6 +24,12 @@ import uk.co.pilllogger.stats.Statistics;
  * Created by Alex on 09/03/14.
  */
 public class TrackerHelper {
+
+    public static final String MIXPANEL_TOKEN = "7490c73ddbe4deb70b216f00c5497bc3";
+
+    private static String _uniqueId = null;
+    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
+
     public static void sendEvent(Context context, String category, String action, String label){
         sendEvent(context, category, action, label, null);
     }
@@ -50,9 +57,10 @@ public class TrackerHelper {
         }
 
         MixpanelAPI mixpanelAPI = State.getSingleton().getMixpanelAPI();
-        Logger.v("TrackerHelper", "DistinctId TrackerHelper: " + mixpanelAPI.getDistinctId());
-        if(mixpanelAPI != null)
-            mixpanelAPI.track(action, props);
+        if(mixpanelAPI == null)
+            mixpanelAPI = initMixPanel(context);
+
+        mixpanelAPI.track(action, props);
     }
 
     public static void addConsumptionEvent(Context context, String source){
@@ -113,5 +121,29 @@ public class TrackerHelper {
 
         people.set("Reversed Sort Order", reversedOrder);
         Logger.v("TrackerHelper", "DistinctId ProfileUpdate: " + people.getDistinctId());
+    }
+
+    public static MixpanelAPI initMixPanel(Context context){
+        MixpanelAPI mixpanelAPI = MixpanelAPI.getInstance(context, MIXPANEL_TOKEN);
+        Logger.v("PillLoggerActivityBase", "DistinctId PillLoggerActivityBase: " + mixpanelAPI.getDistinctId());
+        State.getSingleton().setMixpanelAPI(mixpanelAPI);
+        mixpanelAPI.identify(getUniqueId(context));
+
+        return mixpanelAPI;
+    }
+
+    public static synchronized String getUniqueId(Context context) {
+        if (_uniqueId == null) {
+            SharedPreferences sharedPrefs = context.getSharedPreferences(
+                    PREF_UNIQUE_ID, Context.MODE_PRIVATE);
+            _uniqueId = sharedPrefs.getString(PREF_UNIQUE_ID, null);
+            if (_uniqueId == null) {
+                _uniqueId = UUID.randomUUID().toString();
+                SharedPreferences.Editor editor = sharedPrefs.edit();
+                editor.putString(PREF_UNIQUE_ID, _uniqueId);
+                editor.commit();
+            }
+        }
+        return _uniqueId;
     }
 }

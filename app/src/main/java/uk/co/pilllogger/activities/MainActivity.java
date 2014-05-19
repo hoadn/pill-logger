@@ -253,7 +253,7 @@ public class MainActivity extends PillLoggerActivityBase implements
                                 Logger.d(TAG, info.getSku());
 
                             }
-                        }, getUniqueId());
+                        }, TrackerHelper.getUniqueId(MainActivity.this));
                     }
                 });
 

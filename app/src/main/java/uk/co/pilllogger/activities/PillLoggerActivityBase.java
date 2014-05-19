@@ -13,6 +13,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import java.util.UUID;
 
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.state.State;
 
 /**
@@ -20,27 +21,18 @@ import uk.co.pilllogger.state.State;
  */
 public class PillLoggerActivityBase extends Activity {
 
-    public static final String MIXPANEL_TOKEN = "7490c73ddbe4deb70b216f00c5497bc3";
-
-    private static String uniqueID = null;
-    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
-
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
 
-        boolean isDebuggable = ( 0 != ( getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
+        boolean isDebuggable = (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
 
-        if(isDebuggable)
+        if (isDebuggable)
             EasyTracker.getInstance(this).set(Fields.EX_DESCRIPTION, "Dev");
 
         EasyTracker.getInstance(this).activityStart(this);
 
-        MixpanelAPI mixpanelAPI = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
-        Logger.v("PillLoggerActivityBase", "DistinctId PillLoggerActivityBase: " + mixpanelAPI.getDistinctId());
-        State.getSingleton().setMixpanelAPI(mixpanelAPI);
-        mixpanelAPI.identify(getUniqueId());
-
+        TrackerHelper.initMixPanel(this);
     }
 
     @Override
@@ -64,20 +56,5 @@ public class PillLoggerActivityBase extends Activity {
         super.onPause();
 
         State.getSingleton().setAppVisible(false);
-    }
-
-    protected synchronized String getUniqueId() {
-        if (uniqueID == null) {
-            SharedPreferences sharedPrefs = getSharedPreferences(
-                    PREF_UNIQUE_ID, Context.MODE_PRIVATE);
-            uniqueID = sharedPrefs.getString(PREF_UNIQUE_ID, null);
-            if (uniqueID == null) {
-                uniqueID = UUID.randomUUID().toString();
-                SharedPreferences.Editor editor = sharedPrefs.edit();
-                editor.putString(PREF_UNIQUE_ID, uniqueID);
-                editor.commit();
-            }
-        }
-        return uniqueID;
     }
 }
