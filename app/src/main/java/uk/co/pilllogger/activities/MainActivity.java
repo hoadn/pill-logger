@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -234,14 +235,14 @@ public class MainActivity extends PillLoggerActivityBase implements
     }
 
     private void setupChrome(){
-        ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getActionBar();
         if(actionBar != null){
             //actionBar.setDisplayShowHomeEnabled(false);
             actionBar.setDisplayShowTitleEnabled(false);
 
             // Specify that tabs should be displayed in the action bar.
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
+            final ActionBar actionBar1 = actionBar;
             // Create a tab listener that is called when the user changes tabs.
             ActionBar.TabListener tabListener = new ActionBar.TabListener() {
                 public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
@@ -249,7 +250,6 @@ public class MainActivity extends PillLoggerActivityBase implements
                 }
 
                 public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                    // hide the given tab
                 }
 
                 public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
