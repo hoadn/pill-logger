@@ -235,23 +235,21 @@ public class MainActivity extends PillLoggerActivityBase implements
     }
 
     private void setupChrome(){
-        ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getActionBar();
         if(actionBar != null){
             //actionBar.setDisplayShowHomeEnabled(false);
             actionBar.setDisplayShowTitleEnabled(false);
 
             // Specify that tabs should be displayed in the action bar.
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
+            final ActionBar actionBar1 = actionBar;
             // Create a tab listener that is called when the user changes tabs.
             ActionBar.TabListener tabListener = new ActionBar.TabListener() {
                 public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
                     _fragmentPager.setCurrentItem(tab.getPosition());
-                    setTabAlpha(tab, 1f);
                 }
 
                 public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                    setTabAlpha(tab, 0.25f);
                 }
 
                 public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
@@ -277,12 +275,6 @@ public class MainActivity extends PillLoggerActivityBase implements
             if(view != null)
                 view.setBackgroundResource(State.getSingleton().getTheme().getGradientBackgroundResourceId());
         }
-    }
-
-    private void setTabAlpha(ActionBar.Tab tab, float alpha) {
-        View tabCustomView = tab.getCustomView();
-        ImageView tabImage = (ImageView) tabCustomView.findViewById(R.id.tab_icon_image);
-        tabImage.setAlpha(alpha);
     }
 
     private ViewGroup setContentViewWithWrapper(int resContent) {
