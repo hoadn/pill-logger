@@ -127,7 +127,9 @@ public class TrackerHelper {
         MixpanelAPI mixpanelAPI = MixpanelAPI.getInstance(context, MIXPANEL_TOKEN);
         Logger.v("PillLoggerActivityBase", "DistinctId PillLoggerActivityBase: " + mixpanelAPI.getDistinctId());
         State.getSingleton().setMixpanelAPI(mixpanelAPI);
-        mixpanelAPI.identify(getUniqueId(context));
+        String uniqueId = getUniqueId(context);
+        mixpanelAPI.getPeople().identify(uniqueId);
+        mixpanelAPI.identify(uniqueId);
 
         return mixpanelAPI;
     }
