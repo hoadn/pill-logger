@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -246,10 +247,11 @@ public class MainActivity extends PillLoggerActivityBase implements
             ActionBar.TabListener tabListener = new ActionBar.TabListener() {
                 public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
                     _fragmentPager.setCurrentItem(tab.getPosition());
+                    setTabAlpha(tab, 1f);
                 }
 
                 public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                    // hide the given tab
+                    setTabAlpha(tab, 0.25f);
                 }
 
                 public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
@@ -275,6 +277,12 @@ public class MainActivity extends PillLoggerActivityBase implements
             if(view != null)
                 view.setBackgroundResource(State.getSingleton().getTheme().getGradientBackgroundResourceId());
         }
+    }
+
+    private void setTabAlpha(ActionBar.Tab tab, float alpha) {
+        View tabCustomView = tab.getCustomView();
+        ImageView tabImage = (ImageView) tabCustomView.findViewById(R.id.tab_icon_image);
+        tabImage.setAlpha(alpha);
     }
 
     private ViewGroup setContentViewWithWrapper(int resContent) {
