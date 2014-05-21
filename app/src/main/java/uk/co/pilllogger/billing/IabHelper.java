@@ -326,15 +326,16 @@ public class IabHelper {
                 result = new IabResult(response, "Unable to buy item");
                 if (listener != null) listener.onIabPurchaseFinished(result, null);
             }
-
-            PendingIntent pendingIntent = buyIntentBundle.getParcelable(RESPONSE_BUY_INTENT);
-            logDebug("Launching buy intent for " + sku + ". Request code: " + requestCode);
-            mRequestCode = requestCode;
-            mPurchaseListener = listener;
-            act.startIntentSenderForResult(pendingIntent.getIntentSender(),
-                                           requestCode, new Intent(),
-                                           Integer.valueOf(0), Integer.valueOf(0),
-                                           Integer.valueOf(0));
+            else {
+                PendingIntent pendingIntent = buyIntentBundle.getParcelable(RESPONSE_BUY_INTENT);
+                logDebug("Launching buy intent for " + sku + ". Request code: " + requestCode);
+                mRequestCode = requestCode;
+                mPurchaseListener = listener;
+                act.startIntentSenderForResult(pendingIntent.getIntentSender(),
+                        requestCode, new Intent(),
+                        Integer.valueOf(0), Integer.valueOf(0),
+                        Integer.valueOf(0));
+            }
         }
         catch (SendIntentException e) {
             logError("SendIntentException while launching purchase flow for sku " + sku);
@@ -557,26 +558,33 @@ public class IabHelper {
      */
     void consume(Purchase itemInfo) throws IabException {
         checkSetupDone("consume");
+        String token = itemInfo.getToken();
+        String sku = itemInfo.getSku();
+
+        consume(token, sku, itemInfo);
+    }
+
+    public void consume(String token) throws IabException {
+        consume(token, null, null);
+    }
+
+    public void consume(String token, String sku, Purchase itemInfo) throws IabException {
         try {
-            String token = itemInfo.getToken();
-            String sku = itemInfo.getSku();
             if (token == null || token.equals("")) {
-               logError("Can't consume "+ sku + ". No token.");
-               throw new IabException(IABHELPER_MISSING_TOKEN, "PurchaseInfo is missing token for sku: "
-                   + sku + " " + itemInfo);
+                logError("Can't consume " + sku + ". No token.");
+                throw new IabException(IABHELPER_MISSING_TOKEN, "PurchaseInfo is missing token for sku: "
+                        + sku + " " + itemInfo);
             }
 
             logDebug("Consuming sku: " + sku + ", token: " + token);
             int response = mService.consumePurchase(3, mContext.getPackageName(), token);
             if (response == BILLING_RESPONSE_RESULT_OK) {
-               logDebug("Successfully consumed sku: " + sku);
+                logDebug("Successfully consumed sku: " + sku);
+            } else {
+                logDebug("Error consuming consuming sku " + sku + ". " + getResponseDesc(response));
+                throw new IabException(response, "Error consuming sku " + sku);
             }
-            else {
-               logDebug("Error consuming consuming sku " + sku + ". " + getResponseDesc(response));
-               throw new IabException(response, "Error consuming sku " + sku);
-            }
-        }
-        catch (RemoteException e) {
+        } catch (RemoteException e) {
             throw new IabException(IABHELPER_REMOTE_EXCEPTION, "Remote exception while consuming. PurchaseInfo: " + itemInfo, e);
         }
     }

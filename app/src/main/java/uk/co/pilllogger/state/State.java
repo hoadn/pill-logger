@@ -6,9 +6,12 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import uk.co.pilllogger.billing.SkuDetails;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.themes.ITheme;
 import uk.co.pilllogger.themes.ProfessionalTheme;
@@ -25,7 +28,8 @@ public class State {
     private Typeface _scriptTypeface;
     private List<Pill> _consumptionPills = new ArrayList<Pill>();
     private boolean _appVisible = false;
-    private List<FeatureType> _enabledFeatures = new ArrayList<FeatureType>();
+    private HashMap<FeatureType, SkuDetails> _availableFeatures = new HashMap<FeatureType, SkuDetails>();
+    private Set<FeatureType> _enabledFeatures = new HashSet<FeatureType>();
     private ITheme _theme = new ProfessionalTheme();
     private MixpanelAPI _mixpanelAPI = null;
 
@@ -137,7 +141,9 @@ public class State {
         _theme = theme;
     }
 
-    public List<FeatureType> getEnabledFeatures(){
+    public HashMap<FeatureType, SkuDetails> getAvailableFeatures() { return _availableFeatures; }
+
+    public Set<FeatureType> getEnabledFeatures(){
         return _enabledFeatures;
     }
 
