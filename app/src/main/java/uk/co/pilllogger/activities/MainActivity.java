@@ -45,12 +45,14 @@ import uk.co.pilllogger.dialogs.ThemeChoiceDialog;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.fragments.StatsFragment;
+import uk.co.pilllogger.helpers.ExportHelper;
 import uk.co.pilllogger.helpers.FeedbackHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
+import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetFavouritePillsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.GetTutorialSeenTask;
@@ -74,7 +76,7 @@ public class MainActivity extends PillLoggerActivityBase implements
         Observer.IPillsUpdated,
         GetFavouritePillsTask.ITaskComplete,
         GetTutorialSeenTask.ITaskComplete,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+        SharedPreferences.OnSharedPreferenceChangeListener, GetConsumptionsTask.ITaskComplete {
 
     private static final String TAG = "MainActivity";
     private MyViewPager _fragmentPager;
@@ -363,9 +365,15 @@ public class MainActivity extends PillLoggerActivityBase implements
             case R.id.action_feedback:
                 sendFeedbackIntent();
                 return true;
+            case R.id.action_export:
+                startExport();
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void startExport() {
+        new GetConsumptionsTask(this, this, true).execute();
     }
 
     private void startSettingsActivity() {
@@ -557,5 +565,11 @@ public class MainActivity extends PillLoggerActivityBase implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         _themeChanged = updateTheme(key);
+    }
+
+    @Override
+    public void consumptionsReceived(List<Consumption> consumptions) {
+        ExportHelper export = ExportHelper.getSingleton(this);
+        export.exportToCsv(consumptions);
     }
 }
