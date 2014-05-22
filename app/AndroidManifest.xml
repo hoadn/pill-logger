@@ -76,6 +76,16 @@
             </intent-filter>
         </receiver>
         <meta-data android:name="com.crashlytics.ApiKey" android:value="8adaae49f35bf4067ceaafdec4ff241f25b32838"/>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="uk.co.pilllogger.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/fileprovider" />
+        </provider>
         <!--<receiver android:name=".widget.MyAppWidgetProvider" >-->
             <!--<intent-filter>-->
                 <!--<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->

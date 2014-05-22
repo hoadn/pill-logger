@@ -1,9 +1,12 @@
 package uk.co.pilllogger.helpers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.app.ShareCompat;
+import android.support.v4.content.FileProvider;
 import android.widget.Toast;
 
 import java.io.File;
@@ -21,16 +24,17 @@ import uk.co.pilllogger.models.Consumption;
 public class ExportHelper {
     private static final String TAG = "ExportHelper";
     private static final String FILE_NAME = "Pill_Logger_Export.csv";
-    private Context _context;
+    char NEW_LINE = '\n';
+    private Activity _context;
     private static ExportHelper _instance;
 
-    private ExportHelper(Context context) {
+    private ExportHelper(Activity context) {
         _context = context;
     }
 
-    public static ExportHelper getSingleton(Context context) {
+    public static ExportHelper getSingleton(Activity activity) {
         if (_instance == null)
-            return new ExportHelper(context);
+            return new ExportHelper(activity);
         return _instance;
     }
 
@@ -39,18 +43,17 @@ public class ExportHelper {
     }
 
     public void exportToCsv(List<Consumption> consumptions) {
-        File folder = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOCUMENTS);
 
+        String folderName = "export/";
+        File folder = new File(_context.getCacheDir(), folderName);
 
-
-        if (!folder.exists())
+        if(!folder.exists())
             folder.mkdir();
 
-        final String filename = folder.toString() + "/" + FILE_NAME;
+        File file = new File(_context.getCacheDir(), folderName + FILE_NAME);
 
         try {
-            FileWriter fileWriter = new FileWriter(filename);
+            FileWriter fileWriter = new FileWriter(file);
 
             fileWriter.append("Medication, ");
             fileWriter.append("Dosage, ");
@@ -58,38 +61,34 @@ public class ExportHelper {
             fileWriter.append("Units, ");
             fileWriter.append("Quantity, ");
             fileWriter.append("Date, ");
-            fileWriter.append('\n');
+            fileWriter.append(NEW_LINE);
 
             for (Consumption consumption : consumptions) {
                 if (consumption.getPill() != null) {
-                    fileWriter.append(consumption.getPill().getName() + ", ");
-                    fileWriter.append(String.valueOf(consumption.getPill().getSize()) + ", ");
-                    fileWriter.append(String.valueOf(consumption.getQuantity() * consumption.getPill().getSize()) + ", ");
-                    fileWriter.append(consumption.getPill().getUnits() + ", ");
-                    fileWriter.append(String.valueOf(consumption.getQuantity()) + ", ");
-                    fileWriter.append(DateHelper.formatDateAndTime(_context, consumption.getDate()).toString() + ", ");
-                    fileWriter.append('\n');
+                    fileWriter.append(consumption.getPill().getName()).append(", ");
+                    fileWriter.append(String.valueOf(consumption.getPill().getSize())).append(", ");
+                    fileWriter.append(String.valueOf(consumption.getQuantity() * consumption.getPill().getSize())).append(", ");
+                    fileWriter.append(consumption.getPill().getUnits()).append(", ");
+                    fileWriter.append(String.valueOf(consumption.getQuantity())).append(", ");
+                    fileWriter.append(DateHelper.formatDateAndTime(_context, consumption.getDate())).append(", ");
+                    fileWriter.append(NEW_LINE);
                 }
             }
             fileWriter.flush();
             fileWriter.close();
-            Toast.makeText(_context, FILE_NAME + " has been sucessfully created on your SD card", Toast.LENGTH_LONG).show();
 
-            Intent emailIntent = new Intent(
-                    android.content.Intent.ACTION_SEND);
+            final Uri uri = FileProvider.getUriForFile(_context, "uk.co.pilllogger.fileprovider", file);
 
-            emailIntent.setType("plain/text");
-            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
-                    new String[] { "nicholas.allen88@gmail.com" });
-            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-                    "Pill Logger Export");
-            Uri uri = Uri.parse(filename);
-            if (uri != null)
-                emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            emailIntent
-                    .putExtra(android.content.Intent.EXTRA_TEXT, "Here's your pill logger export");
-            _context.startActivity(Intent.createChooser(emailIntent,
-                    "Sending email..."));
+            final Intent intent = ShareCompat.IntentBuilder.from(_context)
+                    .setType("text/csv")
+                    .setSubject("Pill Logger Consumption Export")
+                    .setStream(uri)
+                    .setChooserTitle("Choose an action")
+                    .createChooserIntent()
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
+                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            _context.startActivity(intent);
         }
         catch (IOException e) {
             Logger.e(TAG, "IO Execption with FileWriter " + e.getMessage());
