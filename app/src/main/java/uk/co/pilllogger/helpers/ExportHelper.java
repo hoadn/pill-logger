@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import uk.co.pilllogger.R;
 import uk.co.pilllogger.models.Consumption;
 
 /**
@@ -81,9 +82,9 @@ public class ExportHelper {
 
             final Intent intent = ShareCompat.IntentBuilder.from(_context)
                     .setType("text/csv")
-                    .setSubject("Pill Logger Consumption Export")
+                    .setSubject(_context.getString(R.string.share_export_subject))
                     .setStream(uri)
-                    .setChooserTitle("Choose an action")
+                    .setChooserTitle(_context.getString(R.string.share_export_chooser_title))
                     .createChooserIntent()
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
                     .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);

@@ -171,4 +171,6 @@
     <string name="most_taken">Most Taken</string>
     <string name="taken_most_recently">Taken Most Recently</string>
     <string name="action_export">Export</string>
+    <string name="share_export_chooser_title">Choose an action</string>
+    <string name="share_export_subject">Pill Logger Consumption Export</string>
 </resources>

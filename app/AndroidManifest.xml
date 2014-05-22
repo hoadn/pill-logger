@@ -33,6 +33,7 @@
         <activity android:name=".activities.AddConsumptionActivity" />
         <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.WebViewActivity" android:theme="@style/Theme.Transparent"/>
+        <activity android:name=".activities.ExportActivity" android:theme="@style/Theme.Transparent"/>
         <activity android:name="uk.co.pilllogger.activities.AppWidgetConfigure">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>

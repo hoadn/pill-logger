@@ -373,7 +373,9 @@ public class MainActivity extends PillLoggerActivityBase implements
     }
 
     private void startExport() {
-        new GetConsumptionsTask(this, this, true).execute();
+        Intent intent = new Intent(this, ExportActivity.class);
+        startActivity(intent);
+        //new GetConsumptionsTask(this, this, true).execute();
     }
 
     private void startSettingsActivity() {
