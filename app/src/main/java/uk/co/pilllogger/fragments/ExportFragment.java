@@ -2,6 +2,8 @@ package uk.co.pilllogger.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -33,48 +35,25 @@ public class ExportFragment extends PillLoggerFragmentBase {
 
         if(view != null){
             _pillSelector = (Button) view.findViewById(R.id.export_select_pills);
+            _pillSelector.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ExportSelectPillsFragment selectPillsFragment = new ExportSelectPillsFragment();
+                    FragmentManager fm = ExportFragment.this.getActivity().getFragmentManager();
+                    FragmentTransaction transaction = fm.beginTransaction();
+                    transaction.setCustomAnimations(R.anim.slide_in_left,
+                            R.anim.slide_out, 0, 0);
+                    transaction.replace(R.id.export_container, selectPillsFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+            });
 
         }
 
         return view;
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
 
-        final Activity activity = getActivity();
-        new GetPillsTask(activity, new GetPillsTask.ITaskComplete() {
-            @Override
-            public void pillsReceived(List<Pill> pills) {
 
-                final List<String> pillNames = new ArrayList<String>();
-
-                for (Pill pill : pills) {
-                    pillNames.add(pill.getName() + " " + pill.getFormattedSize() + pill.getUnits());
-                }
-                _pillSelector.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new AlertDialog.Builder( activity )
-                                .setTitle("Pills")
-                                .setMultiChoiceItems(pillNames.toArray(new String[pillNames.size()]), new boolean[]{false, false, false, false, true}, new DialogInterface.OnMultiChoiceClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-
-                                    }
-                                })
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                    }
-                                })
-                                .create()
-                                .show();
-                    }
-                });
-            }
-        }).execute();
-    }
 }
