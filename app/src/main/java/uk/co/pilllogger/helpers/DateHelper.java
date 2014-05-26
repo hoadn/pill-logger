@@ -72,7 +72,7 @@ public class DateHelper {
         if (isDateInFuture(date)) {
             dateString = setAsDateAndTime(context, date);
         }
-        else if(date.plusHours(6).isAfterNow()){
+        else if(date.plusHours(23).isAfterNow()){
             // hours ago
             long timeMs = System.currentTimeMillis() - date.getMillis();
             long minutes = timeMs / 1000 / 60;
