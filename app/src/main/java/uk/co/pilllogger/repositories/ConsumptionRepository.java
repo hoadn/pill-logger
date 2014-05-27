@@ -24,6 +24,7 @@ import uk.co.pilllogger.state.Observer;
  * Created by alex on 14/11/2013.
  */
 public class ConsumptionRepository extends BaseRepository<Consumption>{
+    private static final String TAG = "ConsumptionRepository";
     private static ConsumptionRepository _instance;
     private Map<Integer, Map<Integer, Consumption>> _cache = new HashMap<Integer, Map<Integer, Consumption>>();
     private Map<Integer, Consumption> _consumptionsCache = new HashMap<Integer, Consumption>();
@@ -90,6 +91,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     }
 
     private void updateCaches(Consumption consumption){
+        Logger.d(TAG, "Updating caches");
 
         Map<Integer, Consumption> consumptionCache = new HashMap<Integer, Consumption>();
         if(_cache.containsKey(consumption.getPillId())) {
@@ -110,11 +112,15 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         groupCache.put(consumption.getId(), consumption);
 
         _consumptionsCache.put(consumption.getId(), consumption);
+        Logger.d(TAG, "Caches updated");
     }
 
     @Override
     public long insert(Consumption consumption) {
         SQLiteDatabase db = _dbCreator.getWritableDatabase();
+
+        Logger.d(TAG, "Going to insert consumption");
+        notifyUpdated(consumption);
 
         ContentValues values = getContentValues(consumption);
         long newRowId = 0L;
@@ -125,7 +131,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                     values);
         }
         consumption.setId((int) newRowId);
-        notifyUpdated(consumption);
+        Logger.d(TAG, "Consumption inserted");
         updateCaches(consumption);
         return newRowId;
     }

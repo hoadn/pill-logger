@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
 
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 
@@ -13,6 +14,7 @@ import uk.co.pilllogger.models.Pill;
  */
 public class Observer {
 
+    private static final String TAG = "Observer";
     private static Observer _instance;
     private WeakHashMap<IPillsUpdated, WeakReference<IPillsUpdated>> _pillsUpdatedArrayList = new WeakHashMap<IPillsUpdated, WeakReference<IPillsUpdated>>();
     private WeakHashMap<IConsumptionAdded, WeakReference<IConsumptionAdded>> _consumptionAddedListeners = new WeakHashMap<IConsumptionAdded, WeakReference<IConsumptionAdded>>();
@@ -30,6 +32,8 @@ public class Observer {
 
         List<WeakReference<IPillsUpdated>> tempObservers = new ArrayList<WeakReference<IPillsUpdated>>(_pillsUpdatedArrayList.values());
 
+        Logger.d(TAG, "notifyPillsUpdated");
+
         for(WeakReference<IPillsUpdated> reference : tempObservers){
             IPillsUpdated observer = reference.get();
             if(observer != null)
@@ -37,7 +41,6 @@ public class Observer {
             else
                 deadrefs.add(reference);
         }
-
         _pillsUpdatedArrayList.values().removeAll(deadrefs);
     }
 
@@ -83,6 +86,8 @@ public class Observer {
 
     public void notifyConsumptionAdded(Consumption consumption) {
         List<WeakReference<IConsumptionAdded>> deadrefs = new ArrayList<WeakReference<IConsumptionAdded>>();
+
+        Logger.d(TAG, "About to notify " + _consumptionAddedListeners.size() + " listeners of new consumption");
 
         for (WeakReference<IConsumptionAdded> reference : _consumptionAddedListeners.values()) {
             IConsumptionAdded listener = reference.get();

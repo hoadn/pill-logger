@@ -62,12 +62,10 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
     }
 
     public static void updateWidget(Context context, int id, AppWidgetManager appWidgetManager){
-        Logger.d(TAG, "WidgetId: " + id);
         SharedPreferences preferences = context.getSharedPreferences("widgets", Context.MODE_MULTI_PROCESS);
         int pillId = preferences.getInt("widgetPill" + id, -1);
         int quantity = preferences.getInt("widgetQuantity" + id, 1);
 
-        Logger.d(TAG, "PillId: " + pillId);
         if(pillId == -1){
             return;
         }
@@ -94,7 +92,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         if(pill.getSize() > 0) {
             views.setTextViewText(R.id.widget_size, String.valueOf(NumberHelper.getNiceFloatString(pill.getSize()) + "mg"));
         }
-        //views.setInt(R.id.widget_size, "setBackgroundColor", pill.getColour());
+
         views.setTextViewText(R.id.widget_text, pill.getName().substring(0, 3));
 
         String quantityIndicator = "";

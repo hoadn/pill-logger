@@ -73,6 +73,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Logger.d(TAG, "onCreateView");
         // Inflate the layout for this fragment
         this.setRetainInstance(true);
         View v = inflater.inflate(R.layout.main_fragment, container, false);
@@ -103,8 +105,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
             title.setTypeface(typeface);
         }
 
+        new GetPillsTask(this.getActivity(), this).execute();
 
-        Logger.v(TAG, "onCreateView");
         Observer.getSingleton().registerConsumptionAddedObserver(this);
         Observer.getSingleton().registerConsumptionDeletedObserver(this);
         return v;
@@ -116,25 +118,32 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        Logger.d(TAG, "onCreate");
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
     public void onStart(){
         super.onStart();
-
-        Logger.d(TAG, "onStart");
-
         Observer.getSingleton().registerPillsUpdatedObserver(this);
+        Logger.d(TAG, "onStart");
     }
 
     @Override
     public void onPause(){
         super.onPause();
-
         Logger.d(TAG, "onPause");
     }
 
     @Override
     public void onStop(){
         super.onStop();
-
         Logger.d(TAG, "onStop");
     }
 
@@ -142,18 +151,23 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     public void onDestroyView(){
         super.onDestroyView();
 
-        Logger.d(TAG, "onDestroyView");
-
         Observer.getSingleton().unregisterPillsUpdatedObserver(this);
         Observer.getSingleton().unregisterConsumptionAddedObserver(this);
         Observer.getSingleton().unregisterConsumptionDeletedObserver(this);
+        Logger.d(TAG, "onDestroyView");
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Logger.d(TAG, "onDestroy");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
         Logger.d(TAG, "onResume");
-        new GetPillsTask(this.getActivity(), this).execute();
     }
 
     @Override
@@ -270,18 +284,22 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                     }
                 });
             }
+            Logger.d(TAG, "Getting Consumptions");
             new GetConsumptionsTask(this.getActivity(), this, true).execute();
         }
     }
 
     @Override
     public void pillsUpdated(Pill pill) {
-        new GetPillsTask(this.getActivity(), this).execute();
+        //new GetPillsTask(this.getActivity(), this).execute();
+        Logger.d(TAG, "Pills Updated");
     }
 
     @Override
     public void consumptionAdded(Consumption consumption) {
         final Consumption consumption1 = consumption;
+
+        Logger.d(TAG, "Consumption added. Updating consumption list.");
 
         Runnable runnable = new Runnable() {
             @Override
@@ -291,6 +309,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                     Collections.sort(_consumptions);
                     _consumptions = ConsumptionRepository.getSingleton(_activity).groupConsumptions(_consumptions);
                     consumptionsReceived(_consumptions);
+
+                    Logger.d(TAG, "Consumption list updated");
                 }
             }
         };

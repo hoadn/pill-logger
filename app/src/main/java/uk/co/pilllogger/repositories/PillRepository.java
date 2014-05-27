@@ -107,6 +107,7 @@ public class PillRepository extends BaseRepository<Pill>{
         }
         pill.setId((int)newRowId);
         notifyUpdated(pill);
+        Logger.d(TAG, "inserted pill");
         return newRowId;
     }
 
@@ -288,6 +289,8 @@ public class PillRepository extends BaseRepository<Pill>{
             _cache.remove(pill.getId());
         else
             _cache.put(pill.getId(), pill);
+
+        Logger.d(TAG, "notifyUpdated");
 
         Observer.getSingleton().notifyPillsUpdated(pill);
     }

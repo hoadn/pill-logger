@@ -123,11 +123,7 @@ public class
                 holder.amount.setText(State.getSingleton().getOpenPills().get(pill).toString());
             }
             else {
-                Logger.v("PillName", "pill: " + pill.getName() + " pill id: " + pill.getId() + " size of open pills: " + State.getSingleton().getOpenPills().size());
                 v = close(v);
-                for (Pill aPill : State.getSingleton().getOpenPills().keySet()) {
-                    Logger.v("PillName", "open pill " + aPill.getName() + " id: " + aPill.getId());
-                }
             }
 
             Consumption latest = pill.getLatestConsumption();
