@@ -31,6 +31,10 @@ public class PillRepository extends BaseRepository<Pill>{
     private Map<Integer, Pill> _cache = new HashMap<Integer, Pill>();
     private boolean _getAllCalled = false;
 
+    public boolean isCached(){
+        return _cache != null && _cache.size() > 0 && _getAllCalled;
+    }
+
     private PillRepository(Context context){
         super(context);
     }
@@ -69,7 +73,11 @@ public class PillRepository extends BaseRepository<Pill>{
     }
 
     @Override
-    protected Pill getFromCursor(Cursor c) {
+    protected Pill getFromCursor(Cursor c){
+        return getFromCursor(c, true);
+    }
+
+    protected Pill getFromCursor(Cursor c, boolean getConsumptions) {
         Pill pill = new Pill();
         pill.setId(getInt(c, DatabaseContract.Pills._ID));
         pill.setName(getString(c, DatabaseContract.Pills.COLUMN_NAME));
@@ -80,8 +88,10 @@ public class PillRepository extends BaseRepository<Pill>{
         int fav = getInt(c, DatabaseContract.Pills.COLUMN_FAVOURITE);
         pill.setFavourite(fav != 0);
 
-        List<Consumption> consumptions = ConsumptionRepository.getSingleton(_context).getForPill(pill);
-        pill.getConsumptions().addAll(consumptions);
+        if(getConsumptions) {
+            List<Consumption> consumptions = ConsumptionRepository.getSingleton(_context).getForPill(pill);
+            pill.getConsumptions().addAll(consumptions);
+        }
 
         _cache.put(pill.getId(), pill);
 
@@ -164,40 +174,31 @@ public class PillRepository extends BaseRepository<Pill>{
     }
 
     private Pill get(String selection, String[] selectionArgs){
-        List<Pill> pills = getList(selection, selectionArgs);
+        List<Pill> pills = getList(selection, selectionArgs, true);
 
         return pills.size() == 0 ? null : pills.get(0);
     }
 
-    private List<Pill> getList(String selection, String[] selectionArgs){
+    private List<Pill> getList(String selection, String[] selectionArgs, boolean getConsumptions){
         SQLiteDatabase db = _dbCreator.getReadableDatabase();
         List<Pill> pills = new ArrayList<Pill>();
         if (db != null) {
             StringBuilder sql = new StringBuilder();
-            sql.append("select distinct ");
+            sql.append("select ");
             sql.append(getSelectFromProjection());
             sql.append(" from ");
             sql.append(DatabaseContract.Pills.TABLE_NAME);
-            //sql.append(" left join " );
-            //sql.append(DatabaseContract.Consumptions.TABLE_NAME);
-            //sql.append(" on ");
-            //sql.append(getTableName()).append(".").append(DatabaseContract.Pills._ID);
-            //sql.append(" = ");
-            //sql.append(DatabaseContract.Consumptions.COLUMN_PILL_ID);
             if(selection != null){
                 sql.append(" where ");
                 sql.append(" ").append(selection).append(" ");
             }
-            //sql.append(" group by ");
-            //sql.append(getTableName()).append(".").append(DatabaseContract.Pills._ID);
-            sql.append(" order by ");
-            sql.append(DatabaseContract.Pills._ID + " ASC");
-            //sql.append(" desc ");
+
+            Logger.d(TAG, "Sql: " + sql.toString());
             Cursor c = db.rawQuery(sql.toString(), selectionArgs);
 
             c.moveToFirst();
             while (!c.isAfterLast()) {
-                Pill pill = getFromCursor(c);
+                Pill pill = getFromCursor(c, getConsumptions);
                 pills.add(pill);
                 c.moveToNext();
             }
@@ -211,17 +212,20 @@ public class PillRepository extends BaseRepository<Pill>{
         String selection = DatabaseContract.Pills.COLUMN_FAVOURITE + " =?";
         String[] selectionArgs = {String.valueOf(1) };
 
-        return getList(selection, selectionArgs);
+        return getList(selection, selectionArgs, true);
     }
 
     @Override
     public List<Pill> getAll() {
         List<Pill> pills;
-        if(_cache != null && _cache.size() > 0 && _getAllCalled)
+        if(isCached())
             pills = new ArrayList<Pill>(_cache.values());
         else {
+            Logger.d(TAG, "Timing: getAll()");
             _getAllCalled = true;
-            pills = getList(null, null);
+            pills = getList(null, null, false);
+
+            Logger.d(TAG, "Timing: " + pills.size() +  " pills back from db");
         }
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(_context);
@@ -269,6 +273,8 @@ public class PillRepository extends BaseRepository<Pill>{
             };
         }
 
+        Logger.d(TAG, "Timing: Going to sort pills");
+
         if(comparator != null) {
             Collections.sort(pills, comparator);
 
@@ -276,6 +282,8 @@ public class PillRepository extends BaseRepository<Pill>{
                 Collections.reverse(pills);
             }
         }
+
+        Logger.d(TAG, "Timing: Pills sorted");
 
         return pills;
     }

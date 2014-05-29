@@ -2,14 +2,10 @@ package uk.co.pilllogger.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.echo.holographlibrary.BarGraph;
 import com.echo.holographlibrary.LineGraph;
@@ -29,7 +24,6 @@ import org.joda.time.Days;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,11 +37,11 @@ import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
+import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.stats.Statistics;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
-import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.InitTestDbTask;
 
 /**
@@ -56,7 +50,7 @@ import uk.co.pilllogger.tasks.InitTestDbTask;
 public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         InitTestDbTask.ITaskComplete,
         GetConsumptionsTask.ITaskComplete,
-        GetPillsTask.ITaskComplete,
+        Observer.IPillsLoaded,
         Observer.IPillsUpdated,
         Observer.IConsumptionAdded,
         Observer.IConsumptionDeleted{
@@ -105,10 +99,14 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
             title.setTypeface(typeface);
         }
 
-        new GetPillsTask(this.getActivity(), this).execute();
-
         Observer.getSingleton().registerConsumptionAddedObserver(this);
         Observer.getSingleton().registerConsumptionDeletedObserver(this);
+
+        if(PillRepository.getSingleton(_activity).isCached()){
+            List<Pill> pills = PillRepository.getSingleton(_activity).getAll();
+            pillsLoaded(pills);
+        }
+
         return v;
     }
 
@@ -121,6 +119,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         Logger.d(TAG, "onCreate");
+        Observer.getSingleton().registerPillsLoadedObserver(this);
     }
 
     @Override
@@ -154,6 +153,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         Observer.getSingleton().unregisterPillsUpdatedObserver(this);
         Observer.getSingleton().unregisterConsumptionAddedObserver(this);
         Observer.getSingleton().unregisterConsumptionDeletedObserver(this);
+        Observer.getSingleton().unregisterPillsLoadedObserver(this);
         Logger.d(TAG, "onDestroyView");
     }
 
@@ -207,6 +207,9 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         TrackerHelper.updateUserProfile(activity, _pills.size(), _consumptions);
 
         Statistics.getInstance(activity).refreshConsumptionCaches(consumptions);
+
+        Logger.d(TAG, "Timing: Consumptions loaded");
+        Logger.d(TAG, "Timing: App loaded");
     }
 
     private int getGraphDays(){
@@ -244,7 +247,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     }
 
     @Override
-    public void pillsReceived(List<Pill> pills) {
+    public void pillsLoaded(List<Pill> pills) {
         _pills = pills;
         List<Integer> graphPills = State.getSingleton().getGraphExcludePills();
         if (graphPills == null) {
@@ -284,7 +287,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                     }
                 });
             }
-            Logger.d(TAG, "Getting Consumptions");
+            Logger.d(TAG, "Timing: Getting Consumptions");
             new GetConsumptionsTask(this.getActivity(), this, true).execute();
         }
     }

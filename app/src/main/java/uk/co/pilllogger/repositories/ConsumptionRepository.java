@@ -131,7 +131,6 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                     values);
         }
         consumption.setId((int) newRowId);
-        Logger.d(TAG, "Consumption inserted");
         updateCaches(consumption);
         return newRowId;
     }
@@ -190,6 +189,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         String[] projection = getProjection();
 
         String selection = DatabaseContract.Consumptions._ID + " =?";
+        Logger.d(TAG, "sql: " + selection + " " + id);
         String[] selectionArgs = { String.valueOf(id) };
         Consumption consumption = new Consumption();
         if (db != null) {
@@ -227,6 +227,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         String sortOrder = getSortOrder();
         String selection = pill == null ? null : DatabaseContract.Consumptions.COLUMN_PILL_ID + " =?";
         String[] selectionArgs = pill == null ? null : new String[] { String.valueOf(pill.getId()) };
+        Logger.d(TAG, "sql: " + selection + " " + pill.getId());
         List<Consumption> consumptions = new ArrayList<Consumption>();
         if (db != null) {
             Cursor c = db.query(
@@ -259,7 +260,6 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
             return new ArrayList<Consumption>(_groupConsumptionCache.get(group).values());
         }
 
-
         SQLiteDatabase db = _dbCreator.getReadableDatabase();
 
         String[] projection = getProjection();
@@ -267,6 +267,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         String sortOrder = getSortOrder();
         String selection = group == null ? null : DatabaseContract.Consumptions.COLUMN_GROUP + " =?";
         String[] selectionArgs = group == null ? null : new String[] { group };
+        Logger.d(TAG, "sql: " + selection + " group: " + group);
         List<Consumption> consumptions = new ArrayList<Consumption>();
         if (db != null) {
             Cursor c = db.query(
@@ -307,20 +308,25 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
         String[] projection = getProjection();
 
+        Logger.d(TAG, "sql: all consumptions");
+        Logger.d(TAG, "Timing: getAll()");
+        Long time = new DateTime().plusDays(-7).toDate().getTime();
+        String selection = time == null ? null : DatabaseContract.Consumptions.COLUMN_DATE_TIME + " > ?";
+        String[] selectionArgs = time == null ? null : new String[] { String.valueOf(time) };
         String sortOrder = getSortOrder();
         List<Consumption> consumptions = new ArrayList<Consumption>();
         if (db != null) {
             Cursor c = db.query(
                     DatabaseContract.Consumptions.TABLE_NAME,
                     projection,
-                    null,
-                    null,
+                    selection,
+                    selectionArgs,
                     null,
                     null,
                     sortOrder
             );
 
-            if (c.moveToFirst() != false) {
+            if (c.moveToFirst()) {
                 while (!c.isAfterLast()) {
                     Consumption consumption = getFromCursor(c);
                     consumptions.add(consumption);
@@ -329,6 +335,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
             }
             c.close();
         }
+        Logger.d(TAG, "Timing: " + consumptions.size() + " consumptions back from db");
 
         return consumptions;
     }
@@ -362,6 +369,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
         grouped.add(groupedConsumption);
 
+        Logger.d(TAG, "Timing: Returning grouped consumptions");
         return grouped;
     }
 

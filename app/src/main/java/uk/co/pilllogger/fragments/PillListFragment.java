@@ -39,6 +39,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         GetPillsTask.ITaskComplete,
         InsertPillTask.ITaskComplete,
         Observer.IPillsUpdated,
+        Observer.IPillsLoaded,
         SharedPreferences.OnSharedPreferenceChangeListener{
 
     public static final String TAG = "PillListFragment";
@@ -61,6 +62,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         super.onStart();
 
         Observer.getSingleton().registerPillsUpdatedObserver(this);
+        Observer.getSingleton().registerPillsLoadedObserver(this);
     }
 
     @Override
@@ -68,6 +70,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         super.onDestroy();
 
         Observer.getSingleton().unregisterPillsUpdatedObserver(this);
+        Observer.getSingleton().unregisterPillsLoadedObserver(this);
     }
 
     @Override
@@ -84,8 +87,6 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
         _list = (ListView) v.findViewById(R.id.pill_list);
         //_list.setOnItemClickListener(new PillItemClickListener(getActivity()));
-
-        new GetPillsTask(getActivity(), this).execute();
 
         Typeface typeface = State.getSingleton().getTypeface();
 
@@ -199,7 +200,16 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 	}
 
     @Override
-    public void pillsReceived(List<Pill> pills) {
+    public void pillsLoaded(List<Pill> pills) {
+        updatePills(pills);
+    }
+
+    @Override
+    public void pillsReceived(List<Pill> pills){
+        updatePills(pills);
+    }
+
+    private void updatePills(List<Pill> pills){
         if (_list.getAdapter() == null){ //we need to init the adapter
             Activity activity = getActivity();
 
@@ -213,18 +223,9 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         else
         {
             PillsListAdapter adapter = (PillsListAdapter)_list.getAdapter();
-           adapter.updateAdapter(pills);
+            adapter.updateAdapter(pills);
         }
     }
-
-//    @Override
-//    public void deleteItem(int i) {
-//        PillsListAdapter adapter = ((PillsListAdapter)((ContextualUndoAdapter)_list.getAdapter()).getDecoratedBaseAdapter());
-//        Pill p = adapter.getPillAtPosition(i);
-//        adapter.removeAtPosition(i);
-//
-//        new DeletePillTask(getActivity(), p).execute();
-//    }
 
     @Override
     public void pillInserted(Pill pill) {

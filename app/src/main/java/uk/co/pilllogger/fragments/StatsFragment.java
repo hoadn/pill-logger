@@ -36,7 +36,12 @@ import uk.co.pilllogger.views.HourOfDayView;
 /**
  * Created by nick on 18/03/14.
  */
-public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTask.ITaskComplete, GetConsumptionsTask.ITaskComplete, Observer.IConsumptionAdded, Observer.IConsumptionDeleted, Observer.IPillsUpdated {
+public class StatsFragment extends PillLoggerFragmentBase implements
+        GetConsumptionsTask.ITaskComplete,
+        Observer.IConsumptionAdded,
+        Observer.IConsumptionDeleted,
+        Observer.IPillsUpdated,
+        Observer.IPillsLoaded{
 
     TextView _medicineMostTaken1st;
     TextView _medicineMostTaken2nd;
@@ -145,6 +150,7 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
         Observer.getSingleton().registerPillsUpdatedObserver(this);
         Observer.getSingleton().registerConsumptionAddedObserver(this);
         Observer.getSingleton().registerConsumptionDeletedObserver(this);
+        Observer.getSingleton().registerPillsLoadedObserver(this);
 
         return v;
     }
@@ -152,7 +158,6 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        new GetPillsTask(getActivity(), this).execute();
     }
 
     @Override
@@ -162,10 +167,11 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
         Observer.getSingleton().unregisterPillsUpdatedObserver(this);
         Observer.getSingleton().unregisterConsumptionAddedObserver(this);
         Observer.getSingleton().unregisterConsumptionDeletedObserver(this);
+        Observer.getSingleton().unregisterPillsLoadedObserver(this);
     }
 
     @Override
-    public void pillsReceived(List<Pill> pills) {
+    public void pillsLoaded(List<Pill> pills) {
         new GetConsumptionsTask(getActivity(), this, true).execute();
     }
 

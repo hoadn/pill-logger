@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 
@@ -13,6 +14,7 @@ import uk.co.pilllogger.repositories.ConsumptionRepository;
  */
 public class GetConsumptionsTask extends AsyncTask<Void, Void, List<Consumption>>{
 
+    private static final String TAG = "GetConsumptionsTask";
     Context _context;
     ITaskComplete _listener;
     private boolean _shouldGroup;
@@ -32,6 +34,7 @@ public class GetConsumptionsTask extends AsyncTask<Void, Void, List<Consumption>
     protected List<Consumption> doInBackground(Void... voids) {
         ConsumptionRepository repository = ConsumptionRepository.getSingleton(_context);
 
+        Logger.d(TAG, "Timing: Going to get Consumptions");
         List<Consumption> consumptions;
         if(_group == null){
             consumptions = repository.getAll();
@@ -39,14 +42,19 @@ public class GetConsumptionsTask extends AsyncTask<Void, Void, List<Consumption>
         else{
             consumptions = repository.getForGroup(_group);
         }
-        if(_shouldGroup && consumptions.size() > 0)
+
+        Logger.d(TAG, "Timing: Going to group Consumptions");
+        if(_shouldGroup && consumptions.size() > 0) {
             return repository.groupConsumptions(consumptions);
+        }
+
 
         return consumptions;
     }
 
     @Override
     protected void onPostExecute(List<Consumption> consumptions) {
+        Logger.d(TAG, "Timing: Going to call consumptionsReceived");
         _listener.consumptionsReceived(consumptions);
     }
 

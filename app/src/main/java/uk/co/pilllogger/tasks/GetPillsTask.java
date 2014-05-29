@@ -5,14 +5,17 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
+import uk.co.pilllogger.state.Observer;
 
 /**
  * Created by nick on 21/10/13.
  */
 public class GetPillsTask extends AsyncTask<Void, Void, List<Pill>>{
 
+    private static final String TAG = "GetPillsTask";
     Context _context;
     ITaskComplete _listener;
 
@@ -23,12 +26,16 @@ public class GetPillsTask extends AsyncTask<Void, Void, List<Pill>>{
     @Override
     protected List<Pill> doInBackground(Void... voids) {
         List<Pill> pills = PillRepository.getSingleton(_context).getAll();
+        Logger.d(TAG, "Timing: Returning pills");
         return pills;
     }
 
     @Override
     protected void onPostExecute(List<Pill> pills) {
+        Logger.d(TAG, "Timing: Going to call pillsReceived");
         _listener.pillsReceived(pills);
+
+        Observer.getSingleton().notifyPillsLoaded(pills);
     }
 
     public interface ITaskComplete{
