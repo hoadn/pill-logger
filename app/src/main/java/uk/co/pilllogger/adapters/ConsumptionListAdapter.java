@@ -50,6 +50,7 @@ import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.stats.Statistics;
 import uk.co.pilllogger.tasks.DeleteConsumptionTask;
@@ -63,10 +64,10 @@ import org.joda.time.Days;
 /**
  * Created by nick on 22/10/13.
  */
-public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> implements ConsumptionInfoDialog.ConsumptionInfoDialogListener {
+public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> implements
+        ConsumptionInfoDialog.ConsumptionInfoDialogListener {
 
     private static String TAG = "ConsumptionListAdapter";
-    private Consumption _selectedConsumption;
     private List<Consumption> _consumptions;
     private Activity _activity;
     private Fragment _fragment;
@@ -77,6 +78,13 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         _activity = activity;
         _fragment = fragment;
         _consumptions = consumptions;
+
+        Observer.getSingleton().registerPillsUpdatedObserver(new Observer.IPillsUpdated() {
+            @Override
+            public void pillsUpdated(Pill pill) {
+                notifyDataSetChanged();
+            }
+        });
     }
 
     public ConsumptionListAdapter(Activity activity, Fragment fragment, int textViewResourceId, List<Consumption> consumptions, List<Pill> pills) {
