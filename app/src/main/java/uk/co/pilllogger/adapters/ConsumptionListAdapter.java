@@ -65,7 +65,7 @@ import org.joda.time.Days;
  * Created by nick on 22/10/13.
  */
 public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> implements
-        ConsumptionInfoDialog.ConsumptionInfoDialogListener {
+        ConsumptionInfoDialog.ConsumptionInfoDialogListener, Observer.IConsumptionAdded {
 
     private static String TAG = "ConsumptionListAdapter";
     private List<Consumption> _consumptions;
@@ -85,6 +85,8 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                 notifyDataSetChanged();
             }
         });
+
+        Observer.getSingleton().registerConsumptionAddedObserver(this);
     }
 
     public ConsumptionListAdapter(Activity activity, Fragment fragment, int textViewResourceId, List<Consumption> consumptions, List<Pill> pills) {
@@ -135,6 +137,19 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         new DeleteConsumptionTask(_activity, consumption, true).execute();
         TrackerHelper.deleteConsumptionEvent(_activity, "DialogDelete");
         dialog.dismiss();
+    }
+
+    @Override
+    public void consumptionAdded(Consumption consumption) {
+        if(_activity != null) {
+            _activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Logger.d(TAG, "consumptionAdded");
+                    notifyDataSetChanged();
+                }
+            });
+        }
     }
 
     public static class ViewHolder extends ActionBarArrayAdapter.ViewHolder{

@@ -127,7 +127,6 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         SQLiteDatabase db = _dbCreator.getWritableDatabase();
 
         Logger.d(TAG, "Going to insert consumption");
-        notifyUpdated(consumption);
 
         ContentValues values = getContentValues(consumption);
         long newRowId = 0L;
@@ -138,6 +137,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                     values);
         }
         consumption.setId((int) newRowId);
+        notifyUpdated(consumption);
         updateCaches(consumption);
         return newRowId;
     }
