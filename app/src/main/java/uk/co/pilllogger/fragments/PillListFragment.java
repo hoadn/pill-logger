@@ -28,6 +28,7 @@ import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
@@ -78,10 +79,11 @@ public class PillListFragment extends PillLoggerFragmentBase implements
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.pill_list_fragment, container, false);
-        if(getActivity() == null || v == null){
+        Activity activity = getActivity();
+        if(activity == null || v == null){
             return null;
         }
-        int color = getActivity().getResources().getColor(State.getSingleton().getTheme().getPillListBackgroundResourceId());
+        int color = activity.getResources().getColor(State.getSingleton().getTheme().getPillListBackgroundResourceId());
         v.setTag(R.id.tag_page_colour, color);
         v.setTag(R.id.tag_tab_icon_position, 1);
 
@@ -143,14 +145,10 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         View completed = v.findViewById(R.id.pill_fragment_add_pill_completed);
         completed.setOnClickListener(new AddPillClickListener(this, this));
 
-        _addPillSize.setOnKeyListener(new View.OnKeyListener()
-        {
-            public boolean onKey(View v, int keyCode, KeyEvent event)
-            {
-                if (event.getAction() == KeyEvent.ACTION_DOWN)
-                {
-                    switch (keyCode)
-                    {
+        _addPillSize.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    switch (keyCode) {
                         case KeyEvent.KEYCODE_DPAD_CENTER:
                         case KeyEvent.KEYCODE_ENTER:
                             completed();
@@ -162,7 +160,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
                 return false;
             }
         });
-        _addPillSize.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+        _addPillSize.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
@@ -175,13 +173,18 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         });
 
         _unitSpinner = (Spinner) v.findViewById(R.id.units_spinner);
-        String[] units = getActivity().getResources().getStringArray(R.array.units_array);
-        UnitAdapter adapter = new UnitAdapter(getActivity(), android.R.layout.simple_spinner_item, units);
+        String[] units = activity.getResources().getStringArray(R.array.units_array);
+        UnitAdapter adapter = new UnitAdapter(activity, android.R.layout.simple_spinner_item, units);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _unitSpinner.setAdapter(adapter);
 
-        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+        if(PillRepository.getSingleton(activity).isCached()){
+            List<Pill> pills = PillRepository.getSingleton(activity).getAll();
+            pillsLoaded(pills);
+        }
 
         return v;
     }
@@ -210,6 +213,9 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     }
 
     private void updatePills(List<Pill> pills){
+        if(_list == null)
+            return;
+
         if (_list.getAdapter() == null){ //we need to init the adapter
             Activity activity = getActivity();
 

@@ -252,11 +252,11 @@ public class PillRepository extends BaseRepository<Pill>{
             comparator = new Comparator<Pill>() {
                 @Override
                 public int compare(Pill pill1, Pill pill2) {
-                    if(pill1.getLatestConsumption() == null)
+                    if(pill1.getLatestConsumption(_context) == null)
                         return 1;
-                    if(pill2.getLatestConsumption() == null)
+                    if(pill2.getLatestConsumption(_context) == null)
                         return -1;
-                    return pill2.getLatestConsumption().getDate().compareTo(pill1.getLatestConsumption().getDate());
+                    return pill2.getLatestConsumption(_context).getDate().compareTo(pill1.getLatestConsumption(_context).getDate());
                 }
             };
         }
@@ -264,9 +264,9 @@ public class PillRepository extends BaseRepository<Pill>{
             comparator = new Comparator<Pill>() {
                 @Override
                 public int compare(Pill pill1, Pill pill2) {
-                    if(pill1.getLatestConsumption() == null)
+                    if(pill1.getLatestConsumption(_context) == null)
                         return 1;
-                    if(pill2.getLatestConsumption() == null)
+                    if(pill2.getLatestConsumption(_context) == null)
                         return -1;
                     return (((Integer)pill2.getConsumptions().size()).compareTo(pill1.getConsumptions().size()));
                 }

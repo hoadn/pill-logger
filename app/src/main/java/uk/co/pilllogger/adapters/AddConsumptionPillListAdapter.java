@@ -4,7 +4,6 @@ package uk.co.pilllogger.adapters;
  * Created by nick on 25/10/13.
  */
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,16 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.activities.AddConsumptionActivity;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -36,31 +30,31 @@ public class
         AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
 
     private List<Pill> _pills;
-    private IConsumptionSelected _activity;
+    private IConsumptionSelected _consumptionSelectedListener;
     private Context _context;
     private int _resourceId;
 
 
     public void addOpenPill(Pill pill) {
         State.getSingleton().addOpenPill(pill);
-        _activity.setDoneEnabled(true);
+        _consumptionSelectedListener.setDoneEnabled(true);
     }
 
     public void removeOpenPill(Pill pill) {
         State.getSingleton().removeOpenPill(pill);
         if (!(State.getSingleton().getOpenPills().size() > 0))
-            _activity.setDoneEnabled(false);
+            _consumptionSelectedListener.setDoneEnabled(false);
     }
 
     public void clearOpenPillsList() {
         State.getSingleton().clearOpenPillsList();
         State.getSingleton().clearConsumpedPills();
-        _activity.setDoneEnabled(false);
+        _consumptionSelectedListener.setDoneEnabled(false);
     }
 
     public AddConsumptionPillListAdapter(Context context, IConsumptionSelected activity, int textViewResourceId, List<Pill> pills) {
         super(context, textViewResourceId, pills);
-        _activity = activity;
+        _consumptionSelectedListener = activity;
         _context = context;
         _pills = pills;
         _resourceId = textViewResourceId;
@@ -126,7 +120,7 @@ public class
                 v = close(v);
             }
 
-            Consumption latest = pill.getLatestConsumption();
+            Consumption latest = pill.getLatestConsumption(_context);
             if(latest != null){
                 String prefix = _context.getString(R.string.last_taken_message_prefix);
                 String lastTaken = DateHelper.getRelativeDateTime(_context, latest.getDate());

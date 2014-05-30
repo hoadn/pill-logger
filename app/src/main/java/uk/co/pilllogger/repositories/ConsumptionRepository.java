@@ -26,7 +26,7 @@ import uk.co.pilllogger.state.Observer;
 public class ConsumptionRepository extends BaseRepository<Consumption>{
     private static final String TAG = "ConsumptionRepository";
     private static ConsumptionRepository _instance;
-    private Map<Integer, Map<Integer, Consumption>> _cache = new HashMap<Integer, Map<Integer, Consumption>>();
+    private Map<Integer, Map<Integer, Consumption>> _pillConsumptionCache = new HashMap<Integer, Map<Integer, Consumption>>();
     private Map<Integer, Consumption> _consumptionsCache = new HashMap<Integer, Consumption>();
     private Map<String, Map<Integer, Consumption>> _groupConsumptionCache = new HashMap<String, Map<Integer, Consumption>>();
 
@@ -40,6 +40,13 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         }
         return _instance;
     }
+
+    public boolean isCachedForPill(int pillId){
+        return _pillConsumptionCache != null
+                && _pillConsumptionCache.containsKey(pillId)
+                && _pillConsumptionCache.get(pillId) != null;
+    }
+
 
     @Override
     protected ContentValues getContentValues(Consumption consumption) {
@@ -94,11 +101,11 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         Logger.d(TAG, "Updating caches");
 
         Map<Integer, Consumption> consumptionCache = new HashMap<Integer, Consumption>();
-        if(_cache.containsKey(consumption.getPillId())) {
-            consumptionCache = _cache.get(consumption.getPillId());
+        if(_pillConsumptionCache.containsKey(consumption.getPillId())) {
+            consumptionCache = _pillConsumptionCache.get(consumption.getPillId());
         }
         else{
-            _cache.put(consumption.getPillId(), consumptionCache);
+            _pillConsumptionCache.put(consumption.getPillId(), consumptionCache);
         }
         consumptionCache.put(consumption.getId(), consumption);
 
@@ -214,10 +221,10 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     }
 
     public List<Consumption> getForPill(Pill pill) {
-        if(_cache != null
-            && _cache.size() > 0
-            && _cache.containsKey(pill.getId())){
-            return new ArrayList<Consumption>(_cache.get(pill.getId()).values());
+        if(_pillConsumptionCache != null
+            && _pillConsumptionCache.size() > 0
+            && _pillConsumptionCache.containsKey(pill.getId())){
+            return new ArrayList<Consumption>(_pillConsumptionCache.get(pill.getId()).values());
         }
 
         SQLiteDatabase db = _dbCreator.getReadableDatabase();
@@ -310,17 +317,14 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
         Logger.d(TAG, "sql: all consumptions");
         Logger.d(TAG, "Timing: getAll()");
-        Long time = new DateTime().plusDays(-7).toDate().getTime();
-        String selection = time == null ? null : DatabaseContract.Consumptions.COLUMN_DATE_TIME + " > ?";
-        String[] selectionArgs = time == null ? null : new String[] { String.valueOf(time) };
         String sortOrder = getSortOrder();
         List<Consumption> consumptions = new ArrayList<Consumption>();
         if (db != null) {
             Cursor c = db.query(
                     DatabaseContract.Consumptions.TABLE_NAME,
                     projection,
-                    selection,
-                    selectionArgs,
+                    null,
+                    null,
                     null,
                     null,
                     sortOrder
@@ -375,8 +379,8 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
     public void notifyUpdated(Consumption consumption) {
         _consumptionsCache.put(consumption.getId(), consumption);
-        if (_cache.size() > 0) {
-            Map map = _cache.get(consumption.getPillId());
+        if (_pillConsumptionCache.size() > 0) {
+            Map map = _pillConsumptionCache.get(consumption.getPillId());
             if (map != null)
               map.put(consumption.getId(), consumption);
         }
@@ -385,7 +389,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
     private void notifyDeleted(Consumption consumption) {
         _consumptionsCache.remove(consumption.getId());
-        _cache.get(consumption.getPillId()).remove(consumption.getId());
+        _pillConsumptionCache.get(consumption.getPillId()).remove(consumption.getId());
         Observer.getSingleton().notifyConsumptionDeleted(consumption);
     }
 
@@ -397,7 +401,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                 Consumption c = remove.get(key);
                 _consumptionsCache.remove(key);
 
-                _cache.get(c.getPillId()).remove(key);
+                _pillConsumptionCache.get(c.getPillId()).remove(key);
             }
         }
         _consumptionsCache.remove(consumption.getId());

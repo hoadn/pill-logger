@@ -87,6 +87,9 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         //new InitTestDbTask(this.getActivity(), this).execute();
 
         _listView = (ListView) (v != null ? v.findViewById(R.id.main_consumption_list) : null);
+        View loading = v.findViewById(R.id.consumptions_loading);
+
+        _listView.setEmptyView(loading);
 
         if (_listView.getAdapter() != null) //Trying this to make the list refresh after adding the new consumption
             ((ConsumptionListAdapter)_listView.getAdapter()).notifyDataSetChanged();

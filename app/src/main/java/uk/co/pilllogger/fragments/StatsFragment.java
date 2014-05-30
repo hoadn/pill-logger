@@ -22,6 +22,7 @@ import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.stats.PillAmount;
@@ -151,6 +152,11 @@ public class StatsFragment extends PillLoggerFragmentBase implements
         Observer.getSingleton().registerConsumptionAddedObserver(this);
         Observer.getSingleton().registerConsumptionDeletedObserver(this);
         Observer.getSingleton().registerPillsLoadedObserver(this);
+
+        if(PillRepository.getSingleton(activity).isCached()){
+            List<Pill> pills = PillRepository.getSingleton(activity).getAll();
+            pillsLoaded(pills);
+        }
 
         return v;
     }
