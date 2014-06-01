@@ -22,7 +22,14 @@ import uk.co.pilllogger.tasks.GetPillsTask;
 public class ExportSelectPillsFragment extends PillLoggerFragmentBase implements GetPillsTask.ITaskComplete {
 
     ListView _pillsList;
-    Set<Pill> _selectedPills = new HashSet<Pill>();
+
+    public Set<Pill> getSelectedPills(){
+        if(_pillsList == null || _pillsList.getAdapter() == null)
+            return new HashSet<Pill>();
+
+        PillsListExportAdapter adapter = (PillsListExportAdapter) _pillsList.getAdapter();
+        return adapter.getSelectedPills();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

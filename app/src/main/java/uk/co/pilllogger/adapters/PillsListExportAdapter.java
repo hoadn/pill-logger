@@ -20,6 +20,8 @@ public class PillsListExportAdapter extends PillsListBaseAdapter {
 
     Set<Pill> _selectedPills = new HashSet<Pill>();
 
+    public Set<Pill> getSelectedPills(){ return _selectedPills; }
+
     public PillsListExportAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
         super(activity, textViewResourceId, pills);
     }
@@ -33,10 +35,10 @@ public class PillsListExportAdapter extends PillsListBaseAdapter {
             public void onClick(View v) {
                 holder.selected = !holder.selected;
                 if(holder.selected){
-                    _selectedPills.remove(holder.pill);
+                    _selectedPills.add(holder.pill);
                 }
                 else{
-                    _selectedPills.add(holder.pill);
+                    _selectedPills.remove(holder.pill);
                 }
 
                 notifyDataSetChanged();

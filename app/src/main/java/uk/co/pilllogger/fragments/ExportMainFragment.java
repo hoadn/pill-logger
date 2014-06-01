@@ -2,6 +2,7 @@ package uk.co.pilllogger.fragments;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.models.Pill;
@@ -25,6 +28,7 @@ public class ExportMainFragment extends PillLoggerFragmentBase {
     private Button _pillSelector;
     private ExportSelectPillsFragment _selectPillsFragment;
     List<Pill> _pills = new ArrayList<Pill>();
+    Set<Pill> _selectedPills = new HashSet<Pill>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,7 +61,16 @@ public class ExportMainFragment extends PillLoggerFragmentBase {
     public void onResume(){
         super.onResume();
 
+        if(_selectPillsFragment == null)
+            return;
 
+        Set<Pill> selectedPills = _selectPillsFragment.getSelectedPills();
+
+        _selectedPills = selectedPills;
+
+        if(_pillSelector != null){
+            setPillButtonText(getActivity());
+        }
     }
 
     @Override
@@ -72,11 +85,16 @@ public class ExportMainFragment extends PillLoggerFragmentBase {
         new GetPillsTask(activity, new GetPillsTask.ITaskComplete() {
             @Override
             public void pillsReceived(List<Pill> pills) {
-                if(_pillSelector != null){
-                    String text = activity.getString(R.string.export_select_medicine);
-                    _pillSelector.setText(text + " (0/" + pills.size() + ")");
-                }
+                _pills = pills;
+                setPillButtonText(activity);
             }
         }).execute();
+    }
+
+    private void setPillButtonText(Context context){
+        if(_pillSelector != null && context != null){
+            String text = context.getString(R.string.export_select_medicine);
+            _pillSelector.setText(text + " (" + _selectedPills.size() + "/" + _pills.size() + ")");
+        }
     }
 }
