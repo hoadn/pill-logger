@@ -93,9 +93,9 @@ public class Statistics implements Observer.IConsumptionAdded, Observer.IConsump
                 continue;
 
             if (amountOfPill.containsKey(pill))
-                amountOfPill.put(pill, (amountOfPill.get(pill)) + consumption.getQuantity());
+                amountOfPill.put(pill, (amountOfPill.get(pill)) + 1);
             else
-                amountOfPill.put(pill, consumption.getQuantity());
+                amountOfPill.put(pill, 1);
         }
 
         List<PillAmount> pillAmounts = new ArrayList<PillAmount>();

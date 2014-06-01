@@ -166,7 +166,7 @@ public class StatsFragment extends PillLoggerFragmentBase implements GetPillsTas
 
     @Override
     public void pillsReceived(List<Pill> pills) {
-        new GetConsumptionsTask(getActivity(), this, false).execute();
+        new GetConsumptionsTask(getActivity(), this, true).execute();
     }
 
     @Override
