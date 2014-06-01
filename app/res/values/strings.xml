@@ -173,4 +173,5 @@
     <string name="action_export">Export</string>
     <string name="share_export_chooser_title">Choose an action</string>
     <string name="share_export_subject">Pill Logger Consumption Export</string>
+    <string name="export_select_medicine">Select medicine</string>
 </resources>

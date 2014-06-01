@@ -3,7 +3,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
+              android:layout_height="wrap_content"
               android:baselineAligned="false"
               android:background="@color/white">
 
@@ -28,9 +28,10 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Export"
+        android:text="Unlock for £0.59"
         android:id="@+id/button"
         android:layout_gravity="center_horizontal"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:drawableLeft="@drawable/play_store"/>
 
 </LinearLayout>
