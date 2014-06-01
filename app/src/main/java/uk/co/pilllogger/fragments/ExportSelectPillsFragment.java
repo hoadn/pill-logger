@@ -1,17 +1,14 @@
 package uk.co.pilllogger.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.List;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.adapters.PillsListAdapter;
 import uk.co.pilllogger.adapters.PillsListBaseAdapter;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.tasks.GetPillsTask;
@@ -25,7 +22,7 @@ public class ExportSelectPillsFragment extends PillLoggerFragmentBase implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.export_select_pills, container, false);
+        View view = inflater.inflate(R.layout.fragment_export_select_pills, container, false);
 
         if(view != null){
             _pillsList = (ListView) view.findViewById(R.id.export_pills_list);

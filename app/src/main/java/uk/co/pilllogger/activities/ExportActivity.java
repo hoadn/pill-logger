@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.fragments.ExportMainFragment;
 
 /**
  * Created by Alex on 22/05/2014
@@ -33,5 +34,13 @@ public class ExportActivity extends PillLoggerActivityBase {
             layoutParams.height = (int) (height * 0.75);
             layoutParams.width = (int) (width * 0.9);
         }
+
+        if (savedInstanceState == null) {
+            getFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.export_container, new ExportMainFragment())
+                    .commit();
+        }
+
     }
 }
