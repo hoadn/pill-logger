@@ -174,4 +174,6 @@
     <string name="share_export_chooser_title">Choose an action</string>
     <string name="share_export_subject">Pill Logger Consumption Export</string>
     <string name="export_select_medicine">Select medicine</string>
+    <string name="export_dosage_options">Dosage options</string>
+    <string name="export_date_range">Date range</string>
 </resources>

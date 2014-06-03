@@ -109,8 +109,9 @@ public class MainActivity extends PillLoggerActivityBase implements
         _colourBackground = findViewById(R.id.colour_background);
 
         Typeface ttf = Typeface.create("sans-serif-condensed", Typeface.NORMAL);
-
+        Typeface roboto = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Light.ttf");
         State.getSingleton().setTypeface(ttf);
+        State.getSingleton().setRobotoTypeface(roboto);
 
         _consumptionFragment = new ConsumptionListFragment();
         final Fragment fragment2 = new PillListFragment();

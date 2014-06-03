@@ -25,6 +25,7 @@ public class State {
     private List<Integer> _graphExcludePills = new ArrayList<Integer>();
     private Typeface _typeface;
     private Typeface _scriptTypeface;
+    private Typeface _roboto;
     private List<Pill> _consumptionPills = new ArrayList<Pill>();
     private boolean _appVisible = false;
     private ITheme _theme = new ProfessionalTheme();
@@ -37,6 +38,14 @@ public class State {
         if (_instance == null)
             _instance = new State();
         return _instance;
+    }
+
+    public void setRobotoTypeface(Typeface typeface) {
+        _roboto = typeface;
+    }
+
+    public Typeface getRobotoTypeface() {
+        return _roboto;
     }
 
     public MixpanelAPI getMixpanelAPI() {

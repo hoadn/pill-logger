@@ -3,11 +3,13 @@ package uk.co.pilllogger.fragments;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,7 +27,8 @@ import uk.co.pilllogger.tasks.GetPillsTask;
  * in uk.co.pilllogger.fragments.
  */
 public class ExportMainFragment extends PillLoggerFragmentBase {
-    private Button _pillSelector;
+    private View _pillSelector, _dosageSelector, _dateSelector;
+    private TextView _pillSelectorText, _dosageSelectorText, _dateSelectorText;
     private ExportSelectPillsFragment _selectPillsFragment;
     List<Pill> _pills = new ArrayList<Pill>();
     Set<Pill> _selectedPills = new HashSet<Pill>();
@@ -35,9 +38,19 @@ public class ExportMainFragment extends PillLoggerFragmentBase {
         View view = inflater.inflate(R.layout.fragment_export_main, container, false);
 
         if(view != null){
-            _pillSelector = (Button) view.findViewById(R.id.export_select_pills);
+            _pillSelector = view.findViewById(R.id.export_select_pills);
+            _dosageSelector = view.findViewById(R.id.export_dosage_options);
+            _dateSelector = view.findViewById(R.id.export_date_range);
+            _pillSelectorText = (TextView) view.findViewById(R.id.export_select_pills_text);
+            _dosageSelectorText = (TextView) view.findViewById(R.id.export_dosage_options_text);
+            _dateSelectorText = (TextView) view.findViewById(R.id.export_date_range_text);
+            _pillSelectorText.setTypeface(State.getSingleton().getRobotoTypeface());
+            _dateSelectorText.setTypeface(State.getSingleton().getRobotoTypeface());
+            _dosageSelectorText.setTypeface(State.getSingleton().getRobotoTypeface());
 
-            _pillSelector.setTypeface(State.getSingleton().getTypeface());
+
+            TextView unlock = (TextView)view.findViewById(R.id.export_unlock);
+            unlock.setTypeface(State.getSingleton().getRobotoTypeface());
 
             _pillSelector.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -94,7 +107,7 @@ public class ExportMainFragment extends PillLoggerFragmentBase {
     private void setPillButtonText(Context context){
         if(_pillSelector != null && context != null){
             String text = context.getString(R.string.export_select_medicine);
-            _pillSelector.setText(text + " (" + _selectedPills.size() + "/" + _pills.size() + ")");
+            _pillSelectorText.setText(text + " (" + _selectedPills.size() + "/" + _pills.size() + ")");
         }
     }
 }

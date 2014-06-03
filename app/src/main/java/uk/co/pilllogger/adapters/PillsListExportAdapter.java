@@ -1,6 +1,7 @@
 package uk.co.pilllogger.adapters;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -55,8 +56,11 @@ public class PillsListExportAdapter extends PillsListBaseAdapter {
         PillsListBaseAdapter.ViewHolder holder = (PillsListBaseAdapter.ViewHolder)v.getTag();
         holder.shadow.setVisibility(View.GONE);
         if(holder.selected) {
-            holder.container.setBackgroundColor(_activity.getResources().getColor(State.getSingleton().getTheme().getSelectedBackgroundColourResourceId()));
+            holder.container.setBackgroundColor(_activity.getResources().getColor(R.color.highlight_blue));
         }
+        holder.name.setTypeface(State.getSingleton().getRobotoTypeface());
+        holder.lastTaken.setTypeface(State.getSingleton().getRobotoTypeface());
+        holder.size.setTypeface(State.getSingleton().getRobotoTypeface());
 
         return v;
     }

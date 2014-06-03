@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/list_selector"
+        android:tag="selector"
+        android:id="@+id/selector_container">
+
+        <View
+            android:id="@+id/pill_list_favourite"
+            android:layout_height="wrap_content"
+            android:layout_width="5dp"
+            android:layout_alignParentLeft="true"
+            android:background="@color/pill_favourite"
+            android:visibility="invisible"/>
+
+        <RelativeLayout
+            android:id="@+id/pill_info_container"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/pill_list_item_height"
+            android:padding="10dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
+                <TextView
+                    android:textSize="20sp"
+                    android:id="@+id/pill_list_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_grey"
+                    tools:text="@string/placeholder_pill_text"/>
+                <TextView
+                    android:id="@+id/pill_list_last_taken"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Last taken 3 hours ago"
+                    android:textColor="@color/text_grey_medium"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
+            <uk.co.pilllogger.views.ColourIndicator
+                android:id="@+id/pill_list_colour"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="8dp"
+                android:layout_marginLeft="5dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:color="@color/pill_colour1"
+                />
+
+            <TextView
+                android:textSize="20sp"
+                android:id="@+id/pill_list_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/pill_list_colour"
+                android:layout_centerVertical="true"
+                android:textColor="@color/text_grey"
+                tools:text="@string/placeholder_pill_size"/>
+        </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/pill_list_colour_picker_container"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pill_info_container"
+            android:layout_centerHorizontal="true">
+            <include layout="@layout/colour_picker"/>
+        </LinearLayout>
+    </RelativeLayout>
+    <View
+        android:id="@+id/shadow"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        style="?attr/ContainerShadow" />
+</LinearLayout>
