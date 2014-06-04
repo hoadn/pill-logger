@@ -76,13 +76,7 @@ public class ExportSelectDateFragment extends PillLoggerFragmentBase {
             doneLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ExportMainFragment fragment = new ExportMainFragment();
-                    android.app.FragmentManager fm = getActivity().getFragmentManager();
-                    fm.beginTransaction()
-                            .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)
-                            .replace(R.id.export_container, fragment)
-                            .addToBackStack(null)
-                            .commit();
+                    activity.getFragmentManager().popBackStack();
                 }
             });
         }

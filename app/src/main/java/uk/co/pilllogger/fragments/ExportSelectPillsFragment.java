@@ -51,7 +51,7 @@ public class ExportSelectPillsFragment extends PillLoggerFragmentBase implements
             doneLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    activity.onBackPressed();
+                    activity.getFragmentManager().popBackStack();
                 }
             });
             List<Pill> pills = ((ExportActivity)getActivity()).getPillsList();
