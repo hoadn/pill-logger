@@ -30,6 +30,7 @@ public class ExportMainFragment extends PillLoggerFragmentBase {
     private View _pillSelector, _dosageSelector, _dateSelector;
     private TextView _pillSelectorText, _dosageSelectorText, _dateSelectorText;
     private ExportSelectPillsFragment _selectPillsFragment;
+    private ExportSelectDateFragment _selectDateFragment;
     List<Pill> _pills = new ArrayList<Pill>();
     Set<Pill> _selectedPills = new HashSet<Pill>();
 
@@ -60,6 +61,19 @@ public class ExportMainFragment extends PillLoggerFragmentBase {
                     fm.beginTransaction()
                             .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)
                             .replace(R.id.export_container, _selectPillsFragment)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
+
+            _dateSelector.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    _selectDateFragment = new ExportSelectDateFragment();
+                    FragmentManager fm = ExportMainFragment.this.getActivity().getFragmentManager();
+                    fm.beginTransaction()
+                            .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)
+                            .replace(R.id.export_container, _selectDateFragment)
                             .addToBackStack(null)
                             .commit();
                 }

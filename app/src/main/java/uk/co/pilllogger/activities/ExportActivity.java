@@ -3,6 +3,9 @@ package uk.co.pilllogger.activities;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +24,7 @@ import uk.co.pilllogger.tasks.GetPillsTask;
  * Created by Alex on 22/05/2014
  * in uk.co.pilllogger.activities.
  */
-public class ExportActivity extends PillLoggerActivityBase implements GetPillsTask.ITaskComplete {
+public class ExportActivity extends FragmentActivity implements GetPillsTask.ITaskComplete {
 
     private List<Pill> _pillsList;
 
@@ -68,5 +71,15 @@ public class ExportActivity extends PillLoggerActivityBase implements GetPillsTa
 
     public List<Pill> getPillsList() {
         return _pillsList;
+    }
+
+    @Override
+    public void onBackPressed() {
+        android.app.FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+            return;
+        }
+        super.onBackPressed();
     }
 }
