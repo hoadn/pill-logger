@@ -40,6 +40,7 @@ public class ExportSelectDateFragment extends PillLoggerFragmentBase {
     private TextView _endTimeTitle;
     private TextView _done;
     private boolean _endDateSet = false;
+    private boolean _startDateSet = false;
     private MutableDateTime _startDate;
     private MutableDateTime _endDate;
 
@@ -85,6 +86,7 @@ public class ExportSelectDateFragment extends PillLoggerFragmentBase {
                                                  _startDate.setDayOfMonth(dayOfMonth);
 
                                                  String dateString = DateFormat.format(DATE_FORMAT, _startDate.toDate().getTime()).toString();
+                                                 _startDateSet = true;
                                                  validateDates(_startDate, _endDate);
                                                  _startDateView.setText(dateString);
                                                  _startDateView.setVisibility(View.VISIBLE);
@@ -199,6 +201,7 @@ public class ExportSelectDateFragment extends PillLoggerFragmentBase {
             _startDateView.setVisibility(View.VISIBLE);
             _startTimeView.setText(dateStringTime);
             _startTimeView.setVisibility(View.VISIBLE);
+            _startDateSet = true;
         }
         if (endDate != null) {
             String dateString = DateFormat.format(DATE_FORMAT, endDate.toDate().getTime()).toString();
@@ -207,14 +210,19 @@ public class ExportSelectDateFragment extends PillLoggerFragmentBase {
             _endDateView.setVisibility(View.VISIBLE);
             _endTimeView.setText(dateStringTime);
             _endTimeView.setVisibility(View.VISIBLE);
+            _endDateSet = true;
         }
     }
 
     public MutableDateTime getStartDate() {
+        if (!_startDateSet)
+            return null;
         return _startDate;
     }
 
     public MutableDateTime getEndDate() {
+        if (!_endDateSet)
+            return null;
         return _endDate;
     }
 
