@@ -5,42 +5,124 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/export_start_date_layout"
-        android:padding="20dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/export_start_date_title"
-            android:text="@string/export_start_date"
-            android:textSize="20sp"
-            android:textColor="@color/text_grey_medium"/>
+            android:id="@+id/export_start_date_layout"
+            android:padding="15dp"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/export_start_date_title"
+                android:text="@string/export_start_date"
+                android:textSize="20sp"
+                android:textColor="@color/text_grey_medium"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:id="@+id/export_start_date"
+                android:text="12/04/2014"
+                android:textSize="16sp"
+                android:visibility="gone"
+                android:textColor="@color/text_grey"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/export_start_time_layout"
+            android:padding="15dp"
+            android:layout_alignParentRight="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/export_start_time_title"
+                android:text="@string/export_start_time"
+                android:textSize="20sp"
+                android:textColor="@color/text_grey_medium"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:id="@+id/export_start_time"
+                android:text="13:00"
+                android:textSize="16sp"
+                android:visibility="gone"
+                android:textColor="@color/text_grey"/>
+
+        </LinearLayout>
+    </RelativeLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/grey_divider_lighter" />
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/export_end_date_layout"
-        android:padding="20dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/export_end_date_layout"
+            android:padding="15dp"
+            android:orientation="vertical">
 
-        <TextView
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/export_end_date_title"
+                android:text="@string/export_end_date"
+                android:textSize="20sp"
+                android:textColor="@color/text_grey_medium"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:id="@+id/export_end_date"
+                android:text="12/04/2014"
+                android:textSize="16sp"
+                android:visibility="gone"
+                android:textColor="@color/text_grey"/>
+
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/export_end_date_title"
-            android:text="@string/export_end_date"
-            android:textSize="20sp"
-            android:textColor="@color/text_grey_medium"/>
+            android:id="@+id/export_end_time_layout"
+            android:padding="15dp"
+            android:layout_alignParentRight="true"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/export_end_time_title"
+                android:text="@string/export_end_time"
+                android:textSize="20sp"
+                android:textColor="@color/text_grey_medium"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:id="@+id/export_end_time"
+                android:text="13:00"
+                android:textSize="16sp"
+                android:visibility="gone"
+                android:textColor="@color/text_grey"/>
+
+        </LinearLayout>
+    </RelativeLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

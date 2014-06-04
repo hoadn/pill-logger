@@ -176,6 +176,8 @@
     <string name="export_select_medicine">Select medicine</string>
     <string name="export_dosage_options">Dosage options</string>
     <string name="export_date_range">Date range</string>
-    <string name="export_start_date">Start date:</string>
-    <string name="export_end_date">End date:</string>
+    <string name="export_start_date">Start date</string>
+    <string name="export_end_date">End date</string>
+    <string name="export_start_time">Start time</string>
+    <string name="export_end_time">End time</string>
 </resources>
