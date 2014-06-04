@@ -13,6 +13,10 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
+
+import java.util.Date;
 import java.util.List;
 
 import uk.co.pilllogger.R;
@@ -27,6 +31,7 @@ import uk.co.pilllogger.tasks.GetPillsTask;
 public class ExportActivity extends FragmentActivity implements GetPillsTask.ITaskComplete {
 
     private List<Pill> _pillsList;
+    private MutableDateTime _startDate, _endDate;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,5 +86,41 @@ public class ExportActivity extends FragmentActivity implements GetPillsTask.ITa
             return;
         }
         super.onBackPressed();
+    }
+
+    public void setStartDate(MutableDateTime startDate) {
+        _startDate = startDate;
+    }
+
+    public MutableDateTime getStartDate() {
+        return _startDate;
+    }
+
+    public void setEndDate(MutableDateTime endDate) {
+        _endDate = endDate;
+    }
+
+    public MutableDateTime getEndDate() {
+        return _endDate;
+    }
+
+    public void setStartTime(int hourOfDay, int minute) {
+        if (_startDate != null) {
+            Date dt = new DateTime(_startDate)
+                    .withHourOfDay(hourOfDay + 1)
+                    .withMinuteOfHour(minute)
+                    .toDate();
+            _startDate.setTime(dt.getTime());
+        }
+    }
+
+    public void setEndTime(int hourOfDay, int minute) {
+        if (_endDate != null) {
+            Date dt = new DateTime(_endDate)
+                    .withHourOfDay(hourOfDay + 1)
+                    .withMinuteOfHour(minute)
+                    .toDate();
+            _endDate.setTime(dt.getTime());
+        }
     }
 }

@@ -11,12 +11,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.joda.time.MutableDateTime;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.activities.ExportActivity;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.stats.Statistics;
@@ -88,15 +91,16 @@ public class ExportMainFragment extends PillLoggerFragmentBase {
     public void onResume(){
         super.onResume();
 
-        if(_selectPillsFragment == null)
-            return;
-
-        Set<Pill> selectedPills = _selectPillsFragment.getSelectedPills();
-
-        _selectedPills = selectedPills;
-
-        if(_pillSelector != null){
-            setPillButtonText(getActivity());
+        if(_selectPillsFragment != null) {
+            Set<Pill> selectedPills = _selectPillsFragment.getSelectedPills();
+            _selectedPills = selectedPills;
+            if (_pillSelector != null) {
+                setPillButtonText(getActivity());
+            }
+        }
+        if(_selectDateFragment != null) {
+            ((ExportActivity) getActivity()).setStartDate(_selectDateFragment.getStartDate());
+            ((ExportActivity) getActivity()).setEndDate(_selectDateFragment.getEndDate());
         }
     }
 
