@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.activities.ExportActivity;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 
@@ -20,11 +21,15 @@ import uk.co.pilllogger.state.State;
 public class PillsListExportAdapter extends PillsListBaseAdapter {
 
     Set<Pill> _selectedPills = new HashSet<Pill>();
+    Set<Pill> _previouslySelected = new HashSet<Pill>();
+    ExportActivity _activity;
 
     public Set<Pill> getSelectedPills(){ return _selectedPills; }
 
     public PillsListExportAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
         super(activity, textViewResourceId, pills);
+        _activity = (ExportActivity) activity;
+        _previouslySelected = _activity.getSelectedPills();
     }
 
     @Override
@@ -55,6 +60,11 @@ public class PillsListExportAdapter extends PillsListBaseAdapter {
 
         PillsListBaseAdapter.ViewHolder holder = (PillsListBaseAdapter.ViewHolder)v.getTag();
         holder.shadow.setVisibility(View.GONE);
+        if (_previouslySelected != null) {
+            _selectedPills = _previouslySelected;
+            if (_previouslySelected.contains(holder.pill))
+                holder.selected = true;
+        }
         if(holder.selected) {
             holder.container.setBackgroundColor(_activity.getResources().getColor(R.color.highlight_blue));
         }

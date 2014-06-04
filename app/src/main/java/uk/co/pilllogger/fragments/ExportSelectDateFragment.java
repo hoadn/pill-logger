@@ -87,7 +87,7 @@ public class ExportSelectDateFragment extends PillLoggerFragmentBase {
                                                  String dateString = DateFormat.format(DATE_FORMAT, _startDate.toDate().getTime()).toString();
                                                  validateDates(_startDate, _endDate);
                                                  _startDateView.setText(dateString);
-                                                 _startDateView.setVisibility(View.VISIBLE);=
+                                                 _startDateView.setVisibility(View.VISIBLE);
                                              }
                                          }, _startDate.getYear(), (_startDate.getMonthOfYear() - 1),
                                     _startDate.getDayOfMonth()

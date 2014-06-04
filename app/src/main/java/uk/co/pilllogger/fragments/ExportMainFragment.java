@@ -94,6 +94,7 @@ public class ExportMainFragment extends PillLoggerFragmentBase {
         if(_selectPillsFragment != null) {
             Set<Pill> selectedPills = _selectPillsFragment.getSelectedPills();
             _selectedPills = selectedPills;
+            ((ExportActivity) getActivity()).setSelectedPills(selectedPills);
             if (_pillSelector != null) {
                 setPillButtonText(getActivity());
             }

@@ -17,7 +17,9 @@ import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.fragments.ExportMainFragment;
@@ -32,6 +34,7 @@ public class ExportActivity extends FragmentActivity implements GetPillsTask.ITa
 
     private List<Pill> _pillsList;
     private MutableDateTime _startDate, _endDate;
+    Set<Pill> _selectedPills = new HashSet<Pill>();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,23 +107,11 @@ public class ExportActivity extends FragmentActivity implements GetPillsTask.ITa
         return _endDate;
     }
 
-    public void setStartTime(int hourOfDay, int minute) {
-        if (_startDate != null) {
-            Date dt = new DateTime(_startDate)
-                    .withHourOfDay(hourOfDay + 1)
-                    .withMinuteOfHour(minute)
-                    .toDate();
-            _startDate.setTime(dt.getTime());
-        }
+    public void setSelectedPills(Set<Pill> pills) {
+        _selectedPills = pills;
     }
 
-    public void setEndTime(int hourOfDay, int minute) {
-        if (_endDate != null) {
-            Date dt = new DateTime(_endDate)
-                    .withHourOfDay(hourOfDay + 1)
-                    .withMinuteOfHour(minute)
-                    .toDate();
-            _endDate.setTime(dt.getTime());
-        }
+    public Set<Pill> getSelectedPills() {
+        return _selectedPills;
     }
 }
