@@ -1,6 +1,7 @@
 package uk.co.pilllogger.fragments;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
@@ -61,7 +63,8 @@ public class ExportSelectDateFragment extends PillLoggerFragmentBase {
             View endDateLayout = view.findViewById(R.id.export_end_date_layout);
             View endTimeLayout = view.findViewById(R.id.export_end_time_layout);
 
-            final MutableDateTime finalDate = new MutableDateTime();
+            final MutableDateTime startDate = new MutableDateTime();
+            final MutableDateTime endDate = new MutableDateTime();
 
 
             startDateLayout.setOnClickListener(new View.OnClickListener() { //Start date picker
@@ -72,16 +75,17 @@ public class ExportSelectDateFragment extends PillLoggerFragmentBase {
                             .newInstance(new CalendarDatePickerDialog.OnDateSetListener() {
                                              @Override
                                              public void onDateSet(CalendarDatePickerDialog calendarDatePickerDialog, int year, int monthOfYear, int dayOfMonth) {
-                                                 finalDate.setYear(year);
-                                                 finalDate.setMonthOfYear(monthOfYear + 1);
-                                                 finalDate.setDayOfMonth(dayOfMonth);
+                                                 startDate.setYear(year);
+                                                 startDate.setMonthOfYear(monthOfYear + 1);
+                                                 startDate.setDayOfMonth(dayOfMonth);
 
-                                                 String dateString = DateFormat.format(DATE_FORMAT, finalDate.toDate().getTime()).toString();
+                                                 String dateString = DateFormat.format(DATE_FORMAT, startDate.toDate().getTime()).toString();
                                                  _startDate.setText(dateString);
                                                  _startDate.setVisibility(View.VISIBLE);
                                              }
-                                         }, finalDate.getYear(), finalDate.getMonthOfYear() - 1,
-                                    finalDate.getDayOfMonth());
+                                         }, startDate.getYear(), (startDate.getMonthOfYear() - 1),
+                                    startDate.getDayOfMonth()
+                            );
                     calendarDatePickerDialog.show(fm, "Start Date Picker");
                 }
             });
@@ -94,18 +98,19 @@ public class ExportSelectDateFragment extends PillLoggerFragmentBase {
                             .newInstance(new RadialTimePickerDialog.OnTimeSetListener() {
                                              @Override
                                              public void onTimeSet(RadialPickerLayout radialPickerLayout, int hourOfDay, int minute) {
-                                                 Date dt = new DateTime(finalDate)
-                                                         .withHourOfDay(hourOfDay)
+                                                 Date dt = new DateTime(startDate)
+                                                         .withHourOfDay(hourOfDay + 1)
                                                          .withMinuteOfHour(minute)
                                                          .toDate();
 
-                                                 finalDate.setTime(dt.getTime());
-                                                 String dateString = DateFormat.format(TIME_FORMAT, finalDate.toDate().getTime()).toString();
+                                                 startDate.setTime(dt.getTime());
+                                                 String dateString = DateFormat.format(TIME_FORMAT, startDate.toDate().getTime()).toString();
                                                  _startTime.setText(dateString);
                                                  _startTime.setVisibility(View.VISIBLE);
                                              }
-                                         }, finalDate.getHourOfDay(), finalDate.getMinuteOfHour(),
-                                    DateFormat.is24HourFormat(activity));
+                                         }, startDate.getHourOfDay(), startDate.getMinuteOfHour(),
+                                    DateFormat.is24HourFormat(activity)
+                            );
 
                     timePickerDialog.show(fm, "Start time picker");
                 }
@@ -119,14 +124,26 @@ public class ExportSelectDateFragment extends PillLoggerFragmentBase {
                             .newInstance(new CalendarDatePickerDialog.OnDateSetListener() {
                                              @Override
                                              public void onDateSet(CalendarDatePickerDialog calendarDatePickerDialog, int year, int monthOfYear, int dayOfMonth) {
-                                                 finalDate.setYear(year);
-                                                 finalDate.setMonthOfYear(monthOfYear + 1);
-                                                 finalDate.setDayOfMonth(dayOfMonth);
+                                                 endDate.setYear(year);
+                                                 endDate.setMonthOfYear(monthOfYear + 1);
+                                                 endDate.setDayOfMonth(dayOfMonth);
 
-                                                 String dateString = DateFormat.format(DATE_FORMAT, finalDate.toDate().getTime()).toString();
+                                                 String dateString = DateFormat.format(DATE_FORMAT, endDate.toDate().getTime()).toString();
+                                                 if (endDate.getMillis() < startDate.getMillis()) {
+                                                     _endDate.setTextColor(Color.RED);
+                                                     _endTime.setTextColor(Color.RED);
+                                                     Toast.makeText(activity, "End date cannot be earlier than start date", Toast.LENGTH_SHORT).show();
+                                                 }
+                                                 else {
+                                                     _endDate.setTextColor(activity.getResources().getColor(R.color.text_grey));
+                                                     _endTime.setTextColor(activity.getResources().getColor(R.color.text_grey));
+                                                 }
+                                                 _endDate.setText(dateString);
+                                                 _endDate.setVisibility(View.VISIBLE);
                                              }
-                                         }, finalDate.getYear(), finalDate.getMonthOfYear() - 1,
-                                    finalDate.getDayOfMonth());
+                                         }, endDate.getYear(), (endDate.getMonthOfYear() - 1),
+                                    endDate.getDayOfMonth()
+                            );
                     calendarDatePickerDialog.show(fm, "Start Date Picker");
                 }
             });
@@ -140,18 +157,28 @@ public class ExportSelectDateFragment extends PillLoggerFragmentBase {
                             .newInstance(new RadialTimePickerDialog.OnTimeSetListener() {
                                              @Override
                                              public void onTimeSet(RadialPickerLayout radialPickerLayout, int hourOfDay, int minute) {
-                                                 Date dt = new DateTime(finalDate)
-                                                         .withHourOfDay(hourOfDay)
+                                                 Date dt = new DateTime(endDate)
+                                                         .withHourOfDay(hourOfDay + 1)
                                                          .withMinuteOfHour(minute)
                                                          .toDate();
 
-                                                 finalDate.setTime(dt.getTime());
-                                                 String dateString = DateFormat.format(TIME_FORMAT, finalDate.toDate().getTime()).toString();
+                                                 endDate.setTime(dt.getTime());
+                                                 String dateString = DateFormat.format(TIME_FORMAT, endDate.toDate().getTime()).toString();
+                                                 if (endDate.getMillis() < startDate.getMillis()) {
+                                                     _endTime.setTextColor(Color.RED);
+                                                     _endDate.setTextColor(Color.RED);
+                                                     Toast.makeText(activity, "End date cannot be earlier than start date", Toast.LENGTH_SHORT).show();
+                                                 }
+                                                 else {
+                                                     _endTime.setTextColor(activity.getResources().getColor(R.color.text_grey));
+                                                     _endDate.setTextColor(activity.getResources().getColor(R.color.text_grey));
+                                                 }
                                                  _endTime.setText(dateString);
                                                  _endTime.setVisibility(View.VISIBLE);
                                              }
-                                         }, finalDate.getHourOfDay(), finalDate.getMinuteOfHour(),
-                                    DateFormat.is24HourFormat(activity));
+                                         }, endDate.getHourOfDay(), endDate.getMinuteOfHour(),
+                                    DateFormat.is24HourFormat(activity)
+                            );
 
                     timePickerDialog.show(fm, "End time picker");
                 }

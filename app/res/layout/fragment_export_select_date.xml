@@ -17,20 +17,19 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/export_start_date_title"
                 android:text="@string/export_start_date"
                 android:textSize="20sp"
                 android:textColor="@color/text_grey_medium"/>
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:id="@+id/export_start_date"
                 android:text="12/04/2014"
-                android:textSize="16sp"
                 android:visibility="gone"
+                android:textSize="16sp"
                 android:textColor="@color/text_grey"/>
 
         </LinearLayout>
@@ -70,14 +69,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/export_end_date_layout"
             android:padding="15dp"
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/export_end_date_title"
                 android:text="@string/export_end_date"
@@ -85,7 +84,7 @@
                 android:textColor="@color/text_grey_medium"/>
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:id="@+id/export_end_date"
