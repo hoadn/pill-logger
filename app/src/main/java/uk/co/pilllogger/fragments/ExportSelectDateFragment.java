@@ -33,11 +33,12 @@ public class ExportSelectDateFragment extends PillLoggerFragmentBase {
     private String DATE_FORMAT = "E, MMM dd, yyyy";
     private String TIME_FORMAT = "kk:mm";
     private TextView _startDate, _startTime, _endDate, _endTime;
-    TextView _startDateTitle;
-    TextView _endDateTitle;
-    TextView _startTimeTitle;
-    TextView _endTimeTitle;
-    TextView _done;
+    private TextView _startDateTitle;
+    private TextView _endDateTitle;
+    private TextView _startTimeTitle;
+    private TextView _endTimeTitle;
+    private TextView _done;
+    private boolean _endDateSet = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,6 +81,7 @@ public class ExportSelectDateFragment extends PillLoggerFragmentBase {
                                                  startDate.setDayOfMonth(dayOfMonth);
 
                                                  String dateString = DateFormat.format(DATE_FORMAT, startDate.toDate().getTime()).toString();
+                                                 validateDates(startDate, endDate);
                                                  _startDate.setText(dateString);
                                                  _startDate.setVisibility(View.VISIBLE);
                                              }
@@ -105,6 +107,7 @@ public class ExportSelectDateFragment extends PillLoggerFragmentBase {
 
                                                  startDate.setTime(dt.getTime());
                                                  String dateString = DateFormat.format(TIME_FORMAT, startDate.toDate().getTime()).toString();
+                                                 validateDates(startDate, endDate);
                                                  _startTime.setText(dateString);
                                                  _startTime.setVisibility(View.VISIBLE);
                                              }
@@ -129,15 +132,8 @@ public class ExportSelectDateFragment extends PillLoggerFragmentBase {
                                                  endDate.setDayOfMonth(dayOfMonth);
 
                                                  String dateString = DateFormat.format(DATE_FORMAT, endDate.toDate().getTime()).toString();
-                                                 if (endDate.getMillis() < startDate.getMillis()) {
-                                                     _endDate.setTextColor(Color.RED);
-                                                     _endTime.setTextColor(Color.RED);
-                                                     Toast.makeText(activity, "End date cannot be earlier than start date", Toast.LENGTH_SHORT).show();
-                                                 }
-                                                 else {
-                                                     _endDate.setTextColor(activity.getResources().getColor(R.color.text_grey));
-                                                     _endTime.setTextColor(activity.getResources().getColor(R.color.text_grey));
-                                                 }
+                                                 _endDateSet = true;
+                                                 validateDates(startDate, endDate);
                                                  _endDate.setText(dateString);
                                                  _endDate.setVisibility(View.VISIBLE);
                                              }
@@ -164,15 +160,7 @@ public class ExportSelectDateFragment extends PillLoggerFragmentBase {
 
                                                  endDate.setTime(dt.getTime());
                                                  String dateString = DateFormat.format(TIME_FORMAT, endDate.toDate().getTime()).toString();
-                                                 if (endDate.getMillis() < startDate.getMillis()) {
-                                                     _endTime.setTextColor(Color.RED);
-                                                     _endDate.setTextColor(Color.RED);
-                                                     Toast.makeText(activity, "End date cannot be earlier than start date", Toast.LENGTH_SHORT).show();
-                                                 }
-                                                 else {
-                                                     _endTime.setTextColor(activity.getResources().getColor(R.color.text_grey));
-                                                     _endDate.setTextColor(activity.getResources().getColor(R.color.text_grey));
-                                                 }
+                                                 validateDates(startDate, endDate);
                                                  _endTime.setText(dateString);
                                                  _endTime.setVisibility(View.VISIBLE);
                                              }
@@ -210,5 +198,16 @@ public class ExportSelectDateFragment extends PillLoggerFragmentBase {
         _endTime.setTypeface(typeface);
     }
 
+    private void validateDates(MutableDateTime startDate, MutableDateTime endDate) {
+        if (endDate.getMillis() < startDate.getMillis() && _endDateSet == true) {
+            _endTime.setTextColor(Color.RED);
+            _endDate.setTextColor(Color.RED);
+            Toast.makeText(getActivity(), "End date cannot be earlier than start date", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            _endTime.setTextColor(getActivity().getResources().getColor(R.color.text_grey));
+            _endDate.setTextColor(getActivity().getResources().getColor(R.color.text_grey));
+        }
+    }
 
 }
