@@ -8,8 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import uk.co.pilllogger.R;
@@ -25,12 +27,25 @@ public class DosageListExportAdapter extends ArrayAdapter<String> {
     private Activity _activity;
     private int _resourceId;
     private List<String> _dosageTypes;
+    private List<Pill> _pills;
+    private Map<String, Float> _dosageMax = new HashMap<String, Float>();
 
-    public DosageListExportAdapter(Activity activity, int resource, List<String> objects) {
+    public DosageListExportAdapter(Activity activity, int resource, List<String> objects, List<Pill> pills) {
         super(activity, resource, objects);
         _activity = activity;
         _resourceId = resource;
         _dosageTypes = objects;
+        _pills = pills;
+        for (String dosage : _dosageTypes) {
+            for (Pill pill : _pills) {
+                if (pill.getUnits().equals(dosage)) {
+                    Float currentMax = _dosageMax.get(dosage);
+                    if (currentMax == null || pill.getSize() > currentMax)
+                        _dosageMax.put(dosage, pill.getSize());
+                }
+
+            }
+        }
     }
 
     public static class ViewHolder {
@@ -63,7 +78,7 @@ public class DosageListExportAdapter extends ArrayAdapter<String> {
         ViewHolder holder = (ViewHolder)v.getTag();
         holder.name.setText(_dosageTypes.get(position));
         holder.minSize.setText("0");
-        holder.maxSize.setText("1500");
+        holder.maxSize.setText(_dosageMax.get(_dosageTypes.get(position)).toString());
 
         return v;
     }

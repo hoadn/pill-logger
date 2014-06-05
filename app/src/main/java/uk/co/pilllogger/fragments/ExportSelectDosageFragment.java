@@ -36,7 +36,7 @@ public class ExportSelectDosageFragment extends PillLoggerFragmentBase {
                 }
             }
             if (_dosageList != null)
-                _dosageList.setAdapter(new DosageListExportAdapter(getActivity(), R.layout.export_dosage_item, _usedDosages));
+                _dosageList.setAdapter(new DosageListExportAdapter(getActivity(), R.layout.export_dosage_item, _usedDosages, pills));
 
             View doneLayout = view.findViewById(R.id.export_dosage_done_layout);
             doneLayout.setOnClickListener(new View.OnClickListener() {

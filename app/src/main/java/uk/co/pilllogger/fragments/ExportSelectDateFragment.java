@@ -250,11 +250,15 @@ public class ExportSelectDateFragment extends PillLoggerFragmentBase {
         if (endDate.getMillis() < startDate.getMillis() && _endDateSet == true) {
             _endTimeView.setTextColor(Color.RED);
             _endDateView.setTextColor(Color.RED);
+            _startDateView.setTextColor(Color.RED);
+            _startTimeView.setTextColor(Color.RED);
             Toast.makeText(getActivity(), "End date cannot be earlier than start date", Toast.LENGTH_SHORT).show();
         }
         else {
             _endTimeView.setTextColor(getActivity().getResources().getColor(R.color.text_grey));
             _endDateView.setTextColor(getActivity().getResources().getColor(R.color.text_grey));
+            _startTimeView.setTextColor(getActivity().getResources().getColor(R.color.text_grey));
+            _startDateView.setTextColor(getActivity().getResources().getColor(R.color.text_grey));
         }
     }
 
