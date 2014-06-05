@@ -21,7 +21,7 @@ import uk.co.pilllogger.state.State;
 public class PillsListExportAdapter extends PillsListBaseAdapter {
 
     Set<Pill> _selectedPills = new HashSet<Pill>();
-    Set<Pill> _previouslySelected = new HashSet<Pill>();
+    Set<Pill> _previouslySelected;
     ExportActivity _activity;
 
     public Set<Pill> getSelectedPills(){ return _selectedPills; }
@@ -30,6 +30,8 @@ public class PillsListExportAdapter extends PillsListBaseAdapter {
         super(activity, textViewResourceId, pills);
         _activity = (ExportActivity) activity;
         _previouslySelected = _activity.getSelectedPills();
+        if (_previouslySelected != null)
+            _selectedPills = _previouslySelected;
     }
 
     @Override
@@ -60,13 +62,13 @@ public class PillsListExportAdapter extends PillsListBaseAdapter {
 
         PillsListBaseAdapter.ViewHolder holder = (PillsListBaseAdapter.ViewHolder)v.getTag();
         holder.shadow.setVisibility(View.GONE);
-        if (_previouslySelected != null) {
-            _selectedPills = _previouslySelected;
-            if (_previouslySelected.contains(holder.pill))
-                holder.selected = true;
-        }
+        holder.selected = (_selectedPills.contains(holder.pill)) ? true : false;
+
         if(holder.selected) {
             holder.container.setBackgroundColor(_activity.getResources().getColor(R.color.highlight_blue));
+        }
+        else {
+            holder.container.setBackgroundColor(_activity.getResources().getColor(R.color.transparent));
         }
         holder.name.setTypeface(State.getSingleton().getRobotoTypeface());
         holder.lastTaken.setTypeface(State.getSingleton().getRobotoTypeface());
