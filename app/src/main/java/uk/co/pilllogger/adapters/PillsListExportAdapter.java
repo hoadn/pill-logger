@@ -64,12 +64,9 @@ public class PillsListExportAdapter extends PillsListBaseAdapter {
         holder.shadow.setVisibility(View.GONE);
         holder.selected = (_selectedPills.contains(holder.pill)) ? true : false;
 
-        if(holder.selected) {
-            holder.container.setBackgroundColor(_activity.getResources().getColor(R.color.highlight_blue));
-        }
-        else {
-            holder.container.setBackgroundColor(_activity.getResources().getColor(R.color.transparent));
-        }
+        int backgroundColour = (holder.selected) ? _activity.getResources().getColor(R.color.highlight_blue) : _activity.getResources().getColor(R.color.transparent);
+        holder.container.setBackgroundColor(backgroundColour);
+
         holder.name.setTypeface(State.getSingleton().getRobotoTypeface());
         holder.lastTaken.setTypeface(State.getSingleton().getRobotoTypeface());
         holder.size.setTypeface(State.getSingleton().getRobotoTypeface());
