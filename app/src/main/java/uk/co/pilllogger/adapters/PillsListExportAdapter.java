@@ -12,6 +12,7 @@ import java.util.Set;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.ExportActivity;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.services.IExportService;
 import uk.co.pilllogger.state.State;
 
 /**
@@ -20,18 +21,18 @@ import uk.co.pilllogger.state.State;
  */
 public class PillsListExportAdapter extends PillsListBaseAdapter {
 
+    private final IExportService _exportService;
     Set<Pill> _selectedPills = new HashSet<Pill>();
     Set<Pill> _previouslySelected;
     ExportActivity _activity;
 
     public Set<Pill> getSelectedPills(){ return _selectedPills; }
 
-    public PillsListExportAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
+    public PillsListExportAdapter(Activity activity, int textViewResourceId, List<Pill> pills, IExportService exportService) {
         super(activity, textViewResourceId, pills);
+        _exportService = exportService;
         _activity = (ExportActivity) activity;
-        _previouslySelected = _activity.getSelectedPills();
-        if (_previouslySelected != null)
-            _selectedPills = _previouslySelected;
+        _previouslySelected = _exportService.getExportSettings().getSelectedPills();
     }
 
     @Override
@@ -43,10 +44,10 @@ public class PillsListExportAdapter extends PillsListBaseAdapter {
             public void onClick(View v) {
                 holder.selected = !holder.selected;
                 if(holder.selected){
-                    _selectedPills.add(holder.pill);
+                    _exportService.getExportSettings().getSelectedPills().add(holder.pill);
                 }
                 else{
-                    _selectedPills.remove(holder.pill);
+                    _exportService.getExportSettings().getSelectedPills().remove(holder.pill);
                 }
 
                 notifyDataSetChanged();
@@ -62,7 +63,7 @@ public class PillsListExportAdapter extends PillsListBaseAdapter {
 
         PillsListBaseAdapter.ViewHolder holder = (PillsListBaseAdapter.ViewHolder)v.getTag();
         holder.shadow.setVisibility(View.GONE);
-        holder.selected = (_selectedPills.contains(holder.pill)) ? true : false;
+        holder.selected = (_exportService.getExportSettings().getSelectedPills().contains(holder.pill));
 
         int backgroundColour = (holder.selected) ? _activity.getResources().getColor(R.color.highlight_blue) : _activity.getResources().getColor(R.color.transparent);
         holder.container.setBackgroundColor(backgroundColour);

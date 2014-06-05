@@ -17,18 +17,20 @@ import uk.co.pilllogger.models.Pill;
 /**
  * Created by nick on 05/06/14.
  */
-public class ExportSelectDosageFragment extends PillLoggerFragmentBase {
+public class ExportSelectDosageFragment extends ExportFragmentBase {
 
     ListView _dosageList;
     List<String> _usedDosages = new ArrayList<String>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.fragment_export_select_dosage, container, false);
 
         if (view != null) {
             _dosageList = (ListView)view.findViewById(R.id.export_dosage_list);
-            List<Pill> pills = ((ExportActivity)getActivity()).getPillsList();
+            List<Pill> pills = _exportService.getAllPills();
             if (pills != null && pills.size() > 0) {
                 for (Pill pill : pills) {
                     if (!_usedDosages.contains(pill.getUnits()))

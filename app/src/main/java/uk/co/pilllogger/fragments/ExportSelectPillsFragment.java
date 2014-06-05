@@ -24,20 +24,14 @@ import uk.co.pilllogger.tasks.GetPillsTask;
 /**
  * Created by nick on 23/05/14.
  */
-public class ExportSelectPillsFragment extends PillLoggerFragmentBase implements GetPillsTask.ITaskComplete {
+public class ExportSelectPillsFragment extends ExportFragmentBase implements GetPillsTask.ITaskComplete {
 
     ListView _pillsList;
 
-    public Set<Pill> getSelectedPills(){
-        if(_pillsList == null || _pillsList.getAdapter() == null)
-            return new HashSet<Pill>();
-
-        PillsListExportAdapter adapter = (PillsListExportAdapter) _pillsList.getAdapter();
-        return adapter.getSelectedPills();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.fragment_export_select_pills, container, false);
 
         if(view != null){
@@ -54,7 +48,7 @@ public class ExportSelectPillsFragment extends PillLoggerFragmentBase implements
                     activity.getFragmentManager().popBackStack();
                 }
             });
-            List<Pill> pills = ((ExportActivity)getActivity()).getPillsList();
+            List<Pill> pills = _exportService.getAllPills();
             if (pills != null)
                 setUpPillsListAdapter(pills);
             else
@@ -66,7 +60,7 @@ public class ExportSelectPillsFragment extends PillLoggerFragmentBase implements
 
     private void setUpPillsListAdapter(List<Pill> pills) {
         if (_pillsList != null)
-            _pillsList.setAdapter(new PillsListExportAdapter(getActivity(), R.layout.export_pills_list_item, pills));
+            _pillsList.setAdapter(new PillsListExportAdapter(getActivity(), R.layout.export_pills_list_item, pills, _exportService));
     }
 
     @Override

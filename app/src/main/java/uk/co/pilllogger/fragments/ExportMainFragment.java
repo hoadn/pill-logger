@@ -29,14 +29,13 @@ import uk.co.pilllogger.tasks.GetPillsTask;
  * Created by Alex on 01/06/2014
  * in uk.co.pilllogger.fragments.
  */
-public class ExportMainFragment extends PillLoggerFragmentBase {
-    private View _pillSelector, _dosageSelector, _dateSelector;
-    private TextView _pillSelectorText, _dosageSelectorText, _dateSelectorText;
+public class ExportMainFragment extends ExportFragmentBase {
+    private View _pillSelector;
+    private TextView _pillSelectorText;
     private ExportSelectPillsFragment _selectPillsFragment;
     private ExportSelectDateFragment _selectDateFragment;
     private ExportSelectDosageFragment _selectDosageFragment;
     List<Pill> _pills = new ArrayList<Pill>();
-    Set<Pill> _selectedPills = new HashSet<Pill>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,15 +43,14 @@ public class ExportMainFragment extends PillLoggerFragmentBase {
 
         if(view != null){
             _pillSelector = view.findViewById(R.id.export_select_pills);
-            _dosageSelector = view.findViewById(R.id.export_dosage_options);
-            _dateSelector = view.findViewById(R.id.export_date_range);
+            View dosageSelector = view.findViewById(R.id.export_dosage_options);
+            View dateSelector = view.findViewById(R.id.export_date_range);
             _pillSelectorText = (TextView) view.findViewById(R.id.export_select_pills_text);
-            _dosageSelectorText = (TextView) view.findViewById(R.id.export_dosage_options_text);
-            _dateSelectorText = (TextView) view.findViewById(R.id.export_date_range_text);
+            TextView dosageSelectorText = (TextView) view.findViewById(R.id.export_dosage_options_text);
+            TextView dateSelectorText = (TextView) view.findViewById(R.id.export_date_range_text);
             _pillSelectorText.setTypeface(State.getSingleton().getRobotoTypeface());
-            _dateSelectorText.setTypeface(State.getSingleton().getRobotoTypeface());
-            _dosageSelectorText.setTypeface(State.getSingleton().getRobotoTypeface());
-
+            dateSelectorText.setTypeface(State.getSingleton().getRobotoTypeface());
+            dosageSelectorText.setTypeface(State.getSingleton().getRobotoTypeface());
 
             TextView unlock = (TextView)view.findViewById(R.id.export_unlock);
             unlock.setTypeface(State.getSingleton().getRobotoTypeface());
@@ -70,7 +68,7 @@ public class ExportMainFragment extends PillLoggerFragmentBase {
                 }
             });
 
-            _dateSelector.setOnClickListener(new View.OnClickListener() {
+            dateSelector.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     _selectDateFragment = new ExportSelectDateFragment();
@@ -83,7 +81,7 @@ public class ExportMainFragment extends PillLoggerFragmentBase {
                 }
             });
 
-            _dosageSelector.setOnClickListener(new View.OnClickListener() {
+            dosageSelector.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     _selectDosageFragment = new ExportSelectDosageFragment();
@@ -95,7 +93,6 @@ public class ExportMainFragment extends PillLoggerFragmentBase {
                             .commit();
                 }
             });
-
         }
 
         return view;
@@ -105,18 +102,7 @@ public class ExportMainFragment extends PillLoggerFragmentBase {
     public void onResume(){
         super.onResume();
 
-        if(_selectPillsFragment != null) {
-            Set<Pill> selectedPills = _selectPillsFragment.getSelectedPills();
-            _selectedPills = selectedPills;
-            ((ExportActivity) getActivity()).setSelectedPills(selectedPills);
-            if (_pillSelector != null) {
-                setPillButtonText(getActivity());
-            }
-        }
-        if(_selectDateFragment != null) {
-            ((ExportActivity) getActivity()).setStartDate(_selectDateFragment.getStartDate());
-            ((ExportActivity) getActivity()).setEndDate(_selectDateFragment.getEndDate());
-        }
+        setPillButtonText(getActivity());
     }
 
     @Override
@@ -140,7 +126,7 @@ public class ExportMainFragment extends PillLoggerFragmentBase {
     private void setPillButtonText(Context context){
         if(_pillSelector != null && context != null){
             String text = context.getString(R.string.export_select_medicine);
-            _pillSelectorText.setText(text + " (" + _selectedPills.size() + "/" + _pills.size() + ")");
+            _pillSelectorText.setText(text + " (" + _exportService.getExportSettings().getSelectedPills().size() + "/" + _pills.size() + ")");
         }
     }
 }

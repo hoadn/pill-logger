@@ -23,18 +23,19 @@ import java.util.Set;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.fragments.ExportMainFragment;
+import uk.co.pilllogger.models.ExportSettings;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.services.IExportService;
 import uk.co.pilllogger.tasks.GetPillsTask;
 
 /**
  * Created by Alex on 22/05/2014
  * in uk.co.pilllogger.activities.
  */
-public class ExportActivity extends FragmentActivity implements GetPillsTask.ITaskComplete {
+public class ExportActivity extends FragmentActivity implements GetPillsTask.ITaskComplete, IExportService {
 
     private List<Pill> _pillsList;
-    private MutableDateTime _startDate, _endDate;
-    Set<Pill> _selectedPills = new HashSet<Pill>();
+    private ExportSettings _exportSettings = new ExportSettings();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,10 +78,6 @@ public class ExportActivity extends FragmentActivity implements GetPillsTask.ITa
             _pillsList = pills;
     }
 
-    public List<Pill> getPillsList() {
-        return _pillsList;
-    }
-
     @Override
     public void onBackPressed() {
         android.app.FragmentManager fm = getFragmentManager();
@@ -91,27 +88,13 @@ public class ExportActivity extends FragmentActivity implements GetPillsTask.ITa
         super.onBackPressed();
     }
 
-    public void setStartDate(MutableDateTime startDate) {
-        _startDate = startDate;
+    @Override
+    public ExportSettings getExportSettings() {
+        return _exportSettings;
     }
 
-    public MutableDateTime getStartDate() {
-        return _startDate;
-    }
-
-    public void setEndDate(MutableDateTime endDate) {
-        _endDate = endDate;
-    }
-
-    public MutableDateTime getEndDate() {
-        return _endDate;
-    }
-
-    public void setSelectedPills(Set<Pill> pills) {
-        _selectedPills = pills;
-    }
-
-    public Set<Pill> getSelectedPills() {
-        return _selectedPills;
+    @Override
+    public List<Pill> getAllPills() {
+        return _pillsList;
     }
 }
