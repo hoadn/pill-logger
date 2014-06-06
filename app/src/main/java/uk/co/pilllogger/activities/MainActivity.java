@@ -191,6 +191,8 @@ public class MainActivity extends PillLoggerActivityBase implements
         Integer gradientBackgroundResourceId = State.getSingleton().getTheme().getWindowBackgroundResourceId();
         Drawable background = gradientBackgroundResourceId == null ? null : getResources().getDrawable(gradientBackgroundResourceId);
         getWindow().setBackgroundDrawable(background);
+
+        TrackerHelper.launchEvent(this);
     }
 
     @Override

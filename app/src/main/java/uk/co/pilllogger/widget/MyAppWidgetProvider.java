@@ -147,7 +147,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
                     new InsertConsumptionTask(context, consumption).execute();
                 }
             }
-            TrackerHelper.widgetClickedEvent(context, "MyAppWidgetProvider");
+            TrackerHelper.addConsumptionEvent(context, "Widget");
             Toast.makeText(context, quantity + " " + pill.getName() + " added", Toast.LENGTH_SHORT).show();
         }
         else {
