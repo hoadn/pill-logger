@@ -27,7 +27,7 @@ before_install:
   - unzip build-tools_r19.1-linux.zip -d $ANDROID_HOME
 
   - mkdir -p $ANDROID_HOME/build-tools/
-  - mv $ANDROID_HOME/android-4.4.3 $ANDROID_HOME/build-tools/19.1.0
+  - mv $ANDROID_HOME/android-4.4.2 $ANDROID_HOME/build-tools/19.1.0
 
   # Install required components.
   # For a full list, run `android list sdk -a --extended`
