@@ -50,6 +50,7 @@ import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.stats.Statistics;
 import uk.co.pilllogger.tasks.DeleteConsumptionTask;
@@ -63,10 +64,10 @@ import org.joda.time.Days;
 /**
  * Created by nick on 22/10/13.
  */
-public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> implements ConsumptionInfoDialog.ConsumptionInfoDialogListener {
+public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> implements
+        ConsumptionInfoDialog.ConsumptionInfoDialogListener, Observer.IConsumptionAdded {
 
     private static String TAG = "ConsumptionListAdapter";
-    private Consumption _selectedConsumption;
     private List<Consumption> _consumptions;
     private Activity _activity;
     private Fragment _fragment;
@@ -77,6 +78,15 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         _activity = activity;
         _fragment = fragment;
         _consumptions = consumptions;
+
+        Observer.getSingleton().registerPillsUpdatedObserver(new Observer.IPillsUpdated() {
+            @Override
+            public void pillsUpdated(Pill pill) {
+                notifyDataSetChanged();
+            }
+        });
+
+        Observer.getSingleton().registerConsumptionAddedObserver(this);
     }
 
     public ConsumptionListAdapter(Activity activity, Fragment fragment, int textViewResourceId, List<Consumption> consumptions, List<Pill> pills) {
@@ -129,12 +139,27 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         dialog.dismiss();
     }
 
+    @Override
+    public void consumptionAdded(Consumption consumption) {
+        if(_activity != null) {
+            _activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Logger.d(TAG, "consumptionAdded");
+                    notifyDataSetChanged();
+                }
+            });
+        }
+    }
+
     public static class ViewHolder extends ActionBarArrayAdapter.ViewHolder{
         public TextView name;
         public TextView date;
         public TextView quantity;
         public ColourIndicator colour;
         public TextView size;
+        public TextView dayText;
+        public RelativeLayout container;
         Consumption consumption;
     }
 
@@ -146,11 +171,14 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         holder.quantity = (TextView) v.findViewById(R.id.consumption_list_quantity);
         holder.colour = (ColourIndicator) v.findViewById(R.id.consumption_list_colour);
         holder.size = (TextView) v.findViewById(R.id.consumption_list_size);
+        holder.dayText = (TextView) v.findViewById(R.id.day_text);
+        holder.container = (RelativeLayout) v.findViewById(R.id.selector_container);
         if(holder.name != null){
             holder.name.setTypeface(State.getSingleton().getTypeface());
             holder.date.setTypeface(State.getSingleton().getTypeface());
             //holder.quantity.setTypeface(State.getSingleton().getTypeface());
             holder.size.setTypeface(State.getSingleton().getTypeface());
+            holder.dayText.setTypeface(State.getSingleton().getTypeface());
         }
         v.setTag(holder);
 
@@ -211,12 +239,10 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                     holder.quantity.setText(String.valueOf(consumption.getQuantity()));
                     holder.consumption = consumption;
 
-                    RelativeLayout container = (RelativeLayout) v.findViewById(R.id.selector_container);
-                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) container.getLayoutParams();
-                    TextView dayText = (TextView) v.findViewById(R.id.day_text);
+                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.container.getLayoutParams();
                     DateTime currentDate = new DateTime(consumption.getDate());
 
-                    dayText.setText("");
+                    holder.dayText.setText("");
 
                     if(params != null){
                         params.topMargin = 10;
@@ -225,7 +251,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                         boolean setText = false;
 
                         int padding = _activity.getResources().getDimensionPixelSize(R.dimen.list_item_padding);
-                        container.setPadding(padding,padding,padding,padding);
+                        holder.container.setPadding(padding,padding,padding,padding);
 
                         if(position == 0)
                         {
@@ -243,9 +269,9 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                         }
 
                         if(setText){
-                            dayText.setText(DateHelper.getPrettyDayOfMonth(currentDate));
+                            holder.dayText.setText(DateHelper.getPrettyDayOfMonth(currentDate));
 
-                            params.topMargin = params.topMargin + (int) (dayText.getLineHeight() * 1.5f);
+                            params.topMargin = params.topMargin + (int) (holder.dayText.getLineHeight() * 1.5f);
                         }
                     }
                 }

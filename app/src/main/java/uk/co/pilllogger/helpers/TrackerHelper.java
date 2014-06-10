@@ -60,7 +60,29 @@ public class TrackerHelper {
         if(mixpanelAPI == null)
             mixpanelAPI = initMixPanel(context);
 
+
+
         mixpanelAPI.track(action, props);
+    }
+
+    public static void launchEvent(Context context){
+        boolean firstRun = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("firstRun", true);
+
+        MixpanelAPI mixpanelAPi = State.getSingleton().getMixpanelAPI();
+
+        if(mixpanelAPi == null)
+            mixpanelAPi = initMixPanel(context);
+
+        JSONObject props = new JSONObject();
+        try {
+            props.put("FirstRun", firstRun);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mixpanelAPi.track("Launch", props);
+
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean("firstRun", false).apply();
     }
 
     public static void addConsumptionEvent(Context context, String source){
@@ -110,16 +132,14 @@ public class TrackerHelper {
         people.set("Consumptions", totalConsumptions);
 
         String theme = defaultSharedPreferences.getString(context.getString(R.string.pref_key_theme_list), context.getString(R.string.professionalTheme));
-
         people.set("Theme", theme);
 
         String medicationOrder = defaultSharedPreferences.getString(context.getString(R.string.pref_key_medication_list_order), context.getString(R.string.order_created));
-
         people.set("Medication Sort Order", medicationOrder);
 
         Boolean reversedOrder = defaultSharedPreferences.getBoolean(context.getString(R.string.pref_key_reverse_order), false);
-
         people.set("Reversed Sort Order", reversedOrder);
+
         Logger.v("TrackerHelper", "DistinctId ProfileUpdate: " + people.getDistinctId());
     }
 

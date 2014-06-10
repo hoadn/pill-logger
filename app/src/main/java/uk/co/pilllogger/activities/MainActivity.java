@@ -47,6 +47,7 @@ import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.fragments.StatsFragment;
 import uk.co.pilllogger.helpers.ExportHelper;
 import uk.co.pilllogger.helpers.FeedbackHelper;
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -92,6 +93,8 @@ public class MainActivity extends PillLoggerActivityBase implements
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Logger.d(TAG, "Timing: App starting");
 
         boolean isDebuggable =  ( 0 != ( getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
 
@@ -185,11 +188,14 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
+        Logger.d(TAG, "Timing: Getting pills");
         new GetPillsTask(this, this).execute();
 
         Integer gradientBackgroundResourceId = State.getSingleton().getTheme().getWindowBackgroundResourceId();
         Drawable background = gradientBackgroundResourceId == null ? null : getResources().getDrawable(gradientBackgroundResourceId);
         getWindow().setBackgroundDrawable(background);
+
+        TrackerHelper.launchEvent(this);
     }
 
     @Override
@@ -332,7 +338,7 @@ public class MainActivity extends PillLoggerActivityBase implements
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main_menu, menu);
         _menu = menu;
-        new GetFavouritePillsTask(this, this).execute();
+        //new GetFavouritePillsTask(this, this).execute();
         return super.onCreateOptionsMenu(menu);
     }
 

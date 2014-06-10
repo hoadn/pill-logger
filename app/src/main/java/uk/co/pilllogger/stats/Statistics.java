@@ -382,7 +382,8 @@ public class Statistics implements Observer.IConsumptionAdded, Observer.IConsump
                     firstStreakDate = dateTime;
                 }
 
-                currentStreak = Days.daysBetween(firstStreakDate.withTimeAtStartOfDay(), dateTime.withTimeAtStartOfDay()).getDays();
+                // add 1 to include the bound
+                currentStreak = Days.daysBetween(firstStreakDate.withTimeAtStartOfDay(), dateTime.withTimeAtStartOfDay()).getDays() + 1;
             }
             previousConsumptionDate = dateTime;
 
@@ -406,18 +407,18 @@ public class Statistics implements Observer.IConsumptionAdded, Observer.IConsump
         DateTime previousConsumptionDate = null;
         DateTime firstStreakDate = null;
         for(Consumption consumption : consumptions){
-
             DateTime dateTime = new DateTime(consumption.getDate());
 
             if(firstStreakDate == null)
                 firstStreakDate = dateTime;
 
             if(previousConsumptionDate != null) {
-                if(!previousConsumptionDate.withTimeAtStartOfDay().minusDays(2).isBefore(consumption.getDate().getTime())){
+                if(!previousConsumptionDate.withTimeAtStartOfDay().minusDays(1).isBefore(dateTime)){
                     return currentStreak;
                 }
 
-                currentStreak = Math.abs(Days.daysBetween(firstStreakDate.withTimeAtStartOfDay(), previousConsumptionDate.withTimeAtStartOfDay()).getDays());
+                // add 1 to be inclusive of consumption
+                currentStreak = Math.abs(Days.daysBetween(firstStreakDate.withTimeAtStartOfDay(), dateTime.withTimeAtStartOfDay()).getDays()) + 1;
             }
             previousConsumptionDate = dateTime;
         }

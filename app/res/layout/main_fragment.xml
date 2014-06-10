@@ -27,6 +27,12 @@
         android:paddingRight="20dp"
         android:visibility="gone"/>
 
+    <ProgressBar
+        android:id="@+id/consumptions_loading"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"/>
+
     <ListView
         android:id="@+id/main_consumption_list"
         android:layout_width="match_parent"
@@ -35,6 +41,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="0dp"
         android:layout_below="@id/consumption_fragment_title"
+        tools:visibility="gone"
         tools:listitem="@layout/consumption_list_item"/>
 
 

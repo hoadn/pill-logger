@@ -484,8 +484,8 @@ public class AddConsumptionActivity extends FragmentActivity implements
                 if (_addedPills.contains(pill2) && !_addedPills.contains(pill1)) {
                     return 1;
                 }
-                Consumption pill1Consumption = pill1.getLatestConsumption();
-                Consumption pill2Consumption = pill2.getLatestConsumption();
+                Consumption pill1Consumption = pill1.getLatestConsumption(_activity);
+                Consumption pill2Consumption = pill2.getLatestConsumption(_activity);
                 if (pill1Consumption == null && pill2Consumption == null) {
                     return 0;
                 }
@@ -495,7 +495,7 @@ public class AddConsumptionActivity extends FragmentActivity implements
                 if (pill2Consumption == null && pill1Consumption != null) {
                     return -1;
                 }
-                return pill2.getLatestConsumption().getDate().compareTo(pill1.getLatestConsumption().getDate());
+                return pill2.getLatestConsumption(_activity).getDate().compareTo(pill1.getLatestConsumption(_activity).getDate());
             }
         });
 
