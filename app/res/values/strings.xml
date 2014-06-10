@@ -173,9 +173,10 @@
     <string name="action_export">Export</string>
     <string name="share_export_chooser_title">Choose an action</string>
     <string name="share_export_subject">Pill Logger Consumption Export</string>
-    <string name="export_select_medicine">Select medicine</string>
+    <string name="export_select_medicine">Medicines</string>
     <string name="export_dosage_options">Dosage options</string>
-    <string name="export_date_range">Date range</string>
+    <string name="export_date_range">Dates</string>
+    <string name="export_time_range">Times</string>
     <string name="export_start_date">Start date</string>
     <string name="export_end_date">End date</string>
     <string name="export_start_time">Start time</string>

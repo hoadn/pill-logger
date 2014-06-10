@@ -3,26 +3,18 @@ package uk.co.pilllogger.fragments;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
-import org.joda.time.MutableDateTime;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.activities.ExportActivity;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.stats.Statistics;
 import uk.co.pilllogger.tasks.GetPillsTask;
 
 /**
@@ -31,11 +23,14 @@ import uk.co.pilllogger.tasks.GetPillsTask;
  */
 public class ExportMainFragment extends ExportFragmentBase {
     private View _pillSelector;
-    private TextView _pillSelectorText;
     private ExportSelectPillsFragment _selectPillsFragment;
     private ExportSelectDateFragment _selectDateFragment;
     private ExportSelectDosageFragment _selectDosageFragment;
     List<Pill> _pills = new ArrayList<Pill>();
+    private TextView _pillSummary;
+    private TextView _dosageSummary;
+    private TextView _dateSummary;
+    private TextView _timeSummary;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,12 +40,25 @@ public class ExportMainFragment extends ExportFragmentBase {
             _pillSelector = view.findViewById(R.id.export_select_pills);
             View dosageSelector = view.findViewById(R.id.export_dosage_options);
             View dateSelector = view.findViewById(R.id.export_date_range);
-            _pillSelectorText = (TextView) view.findViewById(R.id.export_select_pills_text);
-            TextView dosageSelectorText = (TextView) view.findViewById(R.id.export_dosage_options_text);
-            TextView dateSelectorText = (TextView) view.findViewById(R.id.export_date_range_text);
-            _pillSelectorText.setTypeface(State.getSingleton().getRobotoTypeface());
+            TextView pillSelectorText = (TextView) view.findViewById(R.id.export_select_pills_title);
+            TextView dosageSelectorText = (TextView) view.findViewById(R.id.export_select_dosage_title);
+            TextView dateSelectorText = (TextView) view.findViewById(R.id.export_select_dates_title);
+            TextView timeSelectorText = (TextView) view.findViewById(R.id.export_select_times_title);
+
+            _pillSummary = (TextView) view.findViewById(R.id.export_select_pills_summary);
+            _dosageSummary = (TextView) view.findViewById(R.id.export_select_dosage_summary);
+            _dateSummary = (TextView) view.findViewById(R.id.export_select_dates_summary);
+            _timeSummary = (TextView) view.findViewById(R.id.export_select_times_summary);
+
+            pillSelectorText.setTypeface(State.getSingleton().getRobotoTypeface());
             dateSelectorText.setTypeface(State.getSingleton().getRobotoTypeface());
             dosageSelectorText.setTypeface(State.getSingleton().getRobotoTypeface());
+            timeSelectorText.setTypeface(State.getSingleton().getRobotoTypeface());
+
+            _pillSummary.setTypeface(State.getSingleton().getRobotoTypeface());
+            _dosageSummary.setTypeface(State.getSingleton().getRobotoTypeface());
+            _dateSummary.setTypeface(State.getSingleton().getRobotoTypeface());
+            _timeSummary.setTypeface(State.getSingleton().getRobotoTypeface());
 
             TextView unlock = (TextView)view.findViewById(R.id.export_unlock);
             unlock.setTypeface(State.getSingleton().getRobotoTypeface());
@@ -102,7 +110,7 @@ public class ExportMainFragment extends ExportFragmentBase {
     public void onResume(){
         super.onResume();
 
-        setPillButtonText(getActivity());
+        updatePillSummary(getActivity());
     }
 
     @Override
@@ -118,15 +126,41 @@ public class ExportMainFragment extends ExportFragmentBase {
             @Override
             public void pillsReceived(List<Pill> pills) {
                 _pills = pills;
-                setPillButtonText(activity);
+                updatePillSummary(activity);
             }
         }).execute();
     }
 
-    private void setPillButtonText(Context context){
+    private void updatePillSummary(Context context){
         if(_pillSelector != null && context != null){
-            String text = context.getString(R.string.export_select_medicine);
-            _pillSelectorText.setText(text + " (" + _exportService.getExportSettings().getSelectedPills().size() + "/" + _pills.size() + ")");
+            String prefix = "All";
+
+            int currentlySelectedPills = _exportService.getExportSettings().getSelectedPills().size();
+
+            if(currentlySelectedPills == 0){
+                _pillSummary.setText("You must select at least 1 medicine");
+                _pillSummary.setTextColor(context.getResources().getColor(R.color.warning_red));
+                return;
+            }
+            _pillSummary.setTextColor(context.getResources().getColor(R.color.text_grey_medium));
+
+            if(currentlySelectedPills != _pills.size())
+            prefix = currentlySelectedPills + " of ";
+
+            String text = prefix;
+
+            if(currentlySelectedPills == 2 && _pills.size() == 2)
+                text = "Both";
+
+            if(_pills.size() > 2 || currentlySelectedPills != _pills.size())
+                text += _pills.size();
+
+            text += " medicine";
+            if(_pills.size() > 1 || currentlySelectedPills == _pills.size())
+                text += "s";
+
+            text += " selected";
+            _pillSummary.setText(text);
         }
     }
 }

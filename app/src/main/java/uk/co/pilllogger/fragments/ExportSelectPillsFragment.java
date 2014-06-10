@@ -65,6 +65,7 @@ public class ExportSelectPillsFragment extends ExportFragmentBase implements Get
 
     @Override
     public void pillsReceived(List<Pill> pills) {
+        _exportService.getExportSettings().getSelectedPills().addAll(pills);
         setUpPillsListAdapter(pills);
     }
 }

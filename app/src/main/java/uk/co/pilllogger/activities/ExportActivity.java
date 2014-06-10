@@ -80,8 +80,10 @@ public class ExportActivity extends FragmentActivity
 
     @Override
     public void pillsReceived(List<Pill> pills) {
-        if (pills != null)
+        if (pills != null) {
             _pillsList = pills;
+            _exportSettings.getSelectedPills().addAll(pills);
+        }
     }
 
     @Override

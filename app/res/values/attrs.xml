@@ -20,4 +20,5 @@
     <attr name="NewMedicineTitle" format="reference" />
     <attr name="AddConsumptionGradient" format="reference" />
     <attr name="InfoDialogTopTextColour" format="reference" />
+    <attr name="ExportItem" format="reference"/>
 </resources>

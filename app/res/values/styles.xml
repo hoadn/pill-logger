@@ -69,6 +69,13 @@
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_example</item>
     </style>
 
+    <style name="ExportItem">
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
+
     <style name="Tick"/>
     <style name="ConsumptionListItem"/>
     <style name="ListItemBackgroundSecondary"/>
@@ -130,6 +137,7 @@
         <item name="FragmentTitle">@style/FragmentTitle.Rainbow</item>
         <item name="AddConsumptionGradient">@style/AddConsumptionGradient.Rainbow</item>
         <item name="InfoDialogTopTextColour">@style/InfoDialogTopTextColour</item>
+        <item name="ExportItem">@style/ExportItem</item>
     </style>
 
     <style name="RainbowTextView">
@@ -206,6 +214,7 @@
         <item name="CardTitle">@style/CardTitle.Professional</item>
         <item name="NewMedicineTitle">@style/NewMedicineTitle.Professional</item>
         <item name="InfoDialogTopTextColour">@style/InfoDialogTopTextColour</item>
+        <item name="ExportItem">@style/ExportItem</item>
     </style>
 
     <style name="ProfessionalTextView">
