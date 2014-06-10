@@ -23,13 +23,10 @@ public class GetMaxDosagesTask extends AsyncTask<Void, Void, Map<Integer, Intege
 
     Context _context;
     ITaskComplete _listener;
-    List<Pill> _pills;
 
-
-    public GetMaxDosagesTask(Context context, ITaskComplete listener, List<Pill> pills) {
+    public GetMaxDosagesTask(Context context, ITaskComplete listener) {
         _context = context;
         _listener = listener;
-        _pills = pills;
     }
     @Override
     protected Map<Integer, Integer> doInBackground(Void... voids) {

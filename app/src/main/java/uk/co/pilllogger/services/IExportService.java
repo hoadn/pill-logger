@@ -1,6 +1,7 @@
 package uk.co.pilllogger.services;
 
 import java.util.List;
+import java.util.Map;
 
 import uk.co.pilllogger.models.ExportSettings;
 import uk.co.pilllogger.models.Pill;
@@ -13,4 +14,6 @@ public interface IExportService {
     ExportSettings getExportSettings();
 
     List<Pill> getAllPills();
+
+    Map<Integer, Integer> getMaxDosages();
 }

@@ -19,6 +19,7 @@ import org.joda.time.MutableDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import uk.co.pilllogger.R;
@@ -26,16 +27,20 @@ import uk.co.pilllogger.fragments.ExportMainFragment;
 import uk.co.pilllogger.models.ExportSettings;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.services.IExportService;
+import uk.co.pilllogger.tasks.GetMaxDosagesTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
 
 /**
  * Created by Alex on 22/05/2014
  * in uk.co.pilllogger.activities.
  */
-public class ExportActivity extends FragmentActivity implements GetPillsTask.ITaskComplete, IExportService {
+public class ExportActivity extends FragmentActivity
+        implements GetPillsTask.ITaskComplete,
+        IExportService, GetMaxDosagesTask.ITaskComplete {
 
     private List<Pill> _pillsList;
     private ExportSettings _exportSettings = new ExportSettings();
+    private Map<Integer, Integer> _maxDosages;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +48,7 @@ public class ExportActivity extends FragmentActivity implements GetPillsTask.ITa
         setContentView(R.layout.activity_export);
 
         new GetPillsTask(this, this).execute();
+        new GetMaxDosagesTask(this, this).execute();
         Display display = getWindowManager().getDefaultDisplay();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
         Point size = new Point();
@@ -96,5 +102,15 @@ public class ExportActivity extends FragmentActivity implements GetPillsTask.ITa
     @Override
     public List<Pill> getAllPills() {
         return _pillsList;
+    }
+
+    @Override
+    public Map<Integer, Integer> getMaxDosages() {
+        return _maxDosages;
+    }
+
+    @Override
+    public void maxConsumptionsReceived(Map<Integer, Integer> pillConsumptionMaxQuantityMap) {
+        _maxDosages = pillConsumptionMaxQuantityMap;
     }
 }

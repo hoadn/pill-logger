@@ -39,10 +39,12 @@ public class DosageListExportAdapter extends ArrayAdapter<String> {
         _dosageTypes = objects;
 
         for (Integer pillId : consumptions.keySet()) {
-            Pill pill = PillRepository.getSingleton(activity).get(pillId);
-            float dosage = pill.getSize() * consumptions.get(pillId);
-            if (_dosageMax.get(pill.getUnits()) == null || _dosageMax.get(pill.getUnits()) < dosage)
-                _dosageMax.put(pill.getUnits(), dosage);
+            if(PillRepository.getSingleton(activity).isCached()) {
+                Pill pill = PillRepository.getSingleton(activity).get(pillId);
+                float dosage = pill.getSize() * consumptions.get(pillId);
+                if (_dosageMax.get(pill.getUnits()) == null || _dosageMax.get(pill.getUnits()) < dosage)
+                    _dosageMax.put(pill.getUnits(), dosage);
+            }
         }
     }
 

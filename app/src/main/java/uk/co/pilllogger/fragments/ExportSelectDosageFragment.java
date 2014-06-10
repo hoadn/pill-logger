@@ -13,6 +13,7 @@ import java.util.Map;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.ExportActivity;
 import uk.co.pilllogger.adapters.DosageListExportAdapter;
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.tasks.GetMaxDosagesTask;
@@ -20,8 +21,10 @@ import uk.co.pilllogger.tasks.GetMaxDosagesTask;
 /**
  * Created by nick on 05/06/14.
  */
-public class ExportSelectDosageFragment extends ExportFragmentBase implements GetMaxDosagesTask.ITaskComplete {
+public class ExportSelectDosageFragment extends ExportFragmentBase
+        implements GetMaxDosagesTask.ITaskComplete {
 
+    private static final String TAG = "ExportSelectDosageFragment";
     ListView _dosageList;
     List<String> _usedDosages = new ArrayList<String>();
 
@@ -40,9 +43,14 @@ public class ExportSelectDosageFragment extends ExportFragmentBase implements Ge
                         _usedDosages.add(pill.getUnits());
                 }
             }
-            if (getActivity() != null)
-                new GetMaxDosagesTask(getActivity(), this, pills).execute();
-
+            if (getActivity() != null) {
+                if (_exportService.getMaxDosages() != null) {
+                    maxConsumptionsReceived(_exportService.getMaxDosages());
+                } else {
+                    Logger.d(TAG, "Getting Max Dosages");
+                    new GetMaxDosagesTask(getActivity(), this).execute();
+                }
+            }
 
             View doneLayout = view.findViewById(R.id.export_dosage_done_layout);
             doneLayout.setOnClickListener(new View.OnClickListener() {
@@ -52,6 +60,7 @@ public class ExportSelectDosageFragment extends ExportFragmentBase implements Ge
                 }
             });
         }
+
         return view;
     }
 
