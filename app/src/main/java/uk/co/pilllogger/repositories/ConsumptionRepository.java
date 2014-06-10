@@ -247,22 +247,43 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         return consumptions;
     }
 
-    public Consumption getMaxDosageForPill(Pill pill) {
+    public Map<Integer, Integer> getMaxDosages() {
         SQLiteDatabase db = _dbCreator.getReadableDatabase();
 
-        String query = "SELECT count(" + DatabaseContract.Consumptions.COLUMN_GROUP +") FROM " + DatabaseContract.Consumptions.TABLE_NAME
-                + " WHERE " + DatabaseContract.Consumptions.COLUMN_PILL_ID + " = ?"
-                + " GROUP BY " + DatabaseContract.Consumptions.COLUMN_GROUP
-                + " ORDER BY count(" + DatabaseContract.Consumptions.COLUMN_PILL_ID +") DESC";
-        String[] selectionArgs = { String.valueOf(pill.getId()) };
-        Cursor c = db.rawQuery(query, selectionArgs);
-        while (!c.isAfterLast()) {
-            c.moveToFirst();
-            Consumption consumption = getFromCursor(c, pill);
-            consumption.setPill(pill);
-            return consumption;
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+
+        if(db == null) {
+            return map;
         }
-        return null;
+
+        String query = "SELECT "
+                + DatabaseContract.Consumptions.COLUMN_PILL_ID
+                + ", MAX(quantity) as maxQuantity FROM (SELECT count("
+                + DatabaseContract.Consumptions.COLUMN_GROUP
+                + ") as quantity, "
+                + DatabaseContract.Consumptions.COLUMN_PILL_ID
+                + " FROM "
+                + DatabaseContract.Consumptions.TABLE_NAME
+                + " GROUP BY "
+                + DatabaseContract.Consumptions.COLUMN_GROUP
+                + ", " + DatabaseContract.Consumptions.COLUMN_PILL_ID
+                + ") "
+                + " GROUP BY "
+                + DatabaseContract.Consumptions.COLUMN_PILL_ID;
+
+        Cursor c = db.rawQuery(query, new String[]{});
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+
+            int pillId = getInt(c, DatabaseContract.Consumptions.COLUMN_PILL_ID);
+            int maxCount = getInt(c, "maxQuantity");
+
+            map.put(pillId, maxCount);
+            c.moveToNext();
+        }
+        c.close();
+
+        return map;
     }
 
     public List<Consumption> getForGroup(String group) {

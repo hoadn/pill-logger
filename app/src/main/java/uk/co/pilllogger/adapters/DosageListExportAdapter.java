@@ -16,8 +16,10 @@ import java.util.Set;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.ExportActivity;
+import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.State;
 
 /**
@@ -30,18 +32,18 @@ public class DosageListExportAdapter extends ArrayAdapter<String> {
     private List<String> _dosageTypes;
     private Map<String, Float> _dosageMax = new HashMap<String, Float>();
 
-    public DosageListExportAdapter(Activity activity, int resource, List<String> objects, List<Consumption> consumptions) {
+    public DosageListExportAdapter(Activity activity, int resource, List<String> objects, Map<Integer, Integer> consumptions) {
         super(activity, resource, objects);
         _activity = activity;
         _resourceId = resource;
         _dosageTypes = objects;
-        for (Consumption consumption : consumptions) {
-            Pill pill = consumption.getPill();
-            float dosage = pill.getSize() * consumption.getQuantity();
-            if (_dosageMax.get(pill.getUnits()) != null && _dosageMax.get(pill.getUnits()) < dosage)
+
+        for (Integer pillId : consumptions.keySet()) {
+            Pill pill = PillRepository.getSingleton(activity).get(pillId);
+            float dosage = pill.getSize() * consumptions.get(pillId);
+            if (_dosageMax.get(pill.getUnits()) == null || _dosageMax.get(pill.getUnits()) < dosage)
                 _dosageMax.put(pill.getUnits(), dosage);
         }
-
     }
 
     public static class ViewHolder {
@@ -72,9 +74,15 @@ public class DosageListExportAdapter extends ArrayAdapter<String> {
             v.setTag(holder);
         }
         ViewHolder holder = (ViewHolder)v.getTag();
-        holder.name.setText(_dosageTypes.get(position));
         holder.minSize.setText("0");
-        holder.maxSize.setText(_dosageMax.get(_dosageTypes.get(position)).toString());
+
+        if(_dosageTypes.size() > position) {
+            String type = _dosageTypes.get(position);
+            holder.name.setText(type);
+            if(_dosageMax.containsKey(type)) {
+                holder.maxSize.setText(NumberHelper.getNiceFloatString(_dosageMax.get(type)));
+            }
+        }
 
         return v;
     }

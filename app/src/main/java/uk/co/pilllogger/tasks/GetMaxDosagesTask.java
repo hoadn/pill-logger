@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -18,7 +19,7 @@ import uk.co.pilllogger.repositories.ConsumptionRepository;
 /**
  * Created by alex on 23/10/13.
  */
-public class GetMaxDosagesTask extends AsyncTask<Void, Void, List<Consumption>> {
+public class GetMaxDosagesTask extends AsyncTask<Void, Void, Map<Integer, Integer>> {
 
     Context _context;
     ITaskComplete _listener;
@@ -31,21 +32,17 @@ public class GetMaxDosagesTask extends AsyncTask<Void, Void, List<Consumption>> 
         _pills = pills;
     }
     @Override
-    protected List<Consumption> doInBackground(Void... voids) {
+    protected Map<Integer, Integer> doInBackground(Void... voids) {
         ConsumptionRepository repository = ConsumptionRepository.getSingleton(_context);
-        List<Consumption> maxDosageConsumptions = new ArrayList<Consumption>();
-        for (Pill pill: _pills) {
-            maxDosageConsumptions.add(repository.getMaxDosageForPill(pill));
-        }
-        return maxDosageConsumptions;
+        return repository.getMaxDosages();
     }
 
     @Override
-    protected void onPostExecute(List<Consumption> consumptions) {
-        _listener.maxConsumptionsReceived(consumptions);
+    protected void onPostExecute(Map<Integer, Integer> pillConsumptionMaxQuantityMap) {
+        _listener.maxConsumptionsReceived(pillConsumptionMaxQuantityMap);
     }
 
     public interface ITaskComplete{
-        public void maxConsumptionsReceived(List<Consumption> consumptions);
+        public void maxConsumptionsReceived(Map<Integer, Integer> pillConsumptionMaxQuantityMap);
     }
 }

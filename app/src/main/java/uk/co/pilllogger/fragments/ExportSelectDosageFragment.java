@@ -8,6 +8,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.ExportActivity;
@@ -23,7 +24,6 @@ public class ExportSelectDosageFragment extends ExportFragmentBase implements Ge
 
     ListView _dosageList;
     List<String> _usedDosages = new ArrayList<String>();
-    List<Consumption> _maxDosageConsumptions = new ArrayList<Consumption>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,8 +56,9 @@ public class ExportSelectDosageFragment extends ExportFragmentBase implements Ge
     }
 
     @Override
-    public void maxConsumptionsReceived(List<Consumption> consumptions) {
-        if (_dosageList != null)
-            _dosageList.setAdapter(new DosageListExportAdapter(getActivity(), R.layout.export_dosage_item, _usedDosages, consumptions));
+    public void maxConsumptionsReceived(Map<Integer, Integer> pillConsumptionMaxQuantityMap) {
+        if(_dosageList != null){
+            _dosageList.setAdapter(new DosageListExportAdapter(getActivity(), R.layout.export_dosage_item, _usedDosages, pillConsumptionMaxQuantityMap));
+        }
     }
 }
