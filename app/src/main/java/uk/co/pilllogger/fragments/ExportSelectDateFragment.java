@@ -34,18 +34,12 @@ import uk.co.pilllogger.state.State;
 public class ExportSelectDateFragment extends ExportFragmentBase {
 
     private String DATE_FORMAT = "E, MMM dd, yyyy";
-    private String TIME_FORMAT = "kk:mm";
     private TextView _startDateView;
-    private TextView _startTimeView;
     private TextView _endDateView;
-    private TextView _endTimeView;
     private TextView _startDateTitle;
     private TextView _endDateTitle;
-    private TextView _startTimeTitle;
-    private TextView _endTimeTitle;
     private TextView _done;
     private boolean _endDateSet = false;
-    private boolean _startDateSet = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,13 +49,9 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
         if(view != null) {
             _startDateTitle = (TextView) view.findViewById(R.id.export_start_date_title);
             _endDateTitle = (TextView) view.findViewById(R.id.export_end_date_title);
-            _startTimeTitle = (TextView) view.findViewById(R.id.export_start_time_title);
-            _endTimeTitle = (TextView) view.findViewById(R.id.export_end_time_title);
             _done = (TextView) view.findViewById(R.id.export_pills_done);
             _startDateView = (TextView) view.findViewById(R.id.export_start_date);
-            _startTimeView = (TextView) view.findViewById(R.id.export_start_time);
             _endDateView = (TextView) view.findViewById(R.id.export_end_date);
-            _endTimeView = (TextView) view.findViewById(R.id.export_end_time);
 
             setTypeface();
             loadDates();
@@ -69,9 +59,7 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
             final Activity activity = getActivity();
 
             View startDateLayout = view.findViewById(R.id.export_start_date_layout);
-            View startTimeLayout = view.findViewById(R.id.export_start_time_layout);
             View endDateLayout = view.findViewById(R.id.export_end_date_layout);
-            View endTimeLayout = view.findViewById(R.id.export_end_time_layout);
 
             startDateLayout.setOnClickListener(new View.OnClickListener() { //Start date picker
                 @Override
@@ -87,7 +75,6 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                                                  startDate.setDayOfMonth(dayOfMonth);
 
                                                  String dateString = DateFormat.format(DATE_FORMAT, startDate.toDate().getTime()).toString();
-                                                 _startDateSet = true;
                                                  validateDates(startDate, _exportService.getExportSettings().getEndDate());
                                                  _startDateView.setText(dateString);
                                                  _startDateView.setVisibility(View.VISIBLE);
@@ -96,31 +83,6 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                                     startDate.getDayOfMonth()
                             );
                     calendarDatePickerDialog.show(fm, "Start Date Picker");
-                }
-            });
-
-            startTimeLayout.setOnClickListener(new View.OnClickListener() { //Start time picker
-                @Override
-                public void onClick(View v) {
-                    FragmentManager fm = ((FragmentActivity)getActivity()).getSupportFragmentManager();
-                    RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
-                            .newInstance(new RadialTimePickerDialog.OnTimeSetListener() {
-                                             @Override
-                                             public void onTimeSet(RadialPickerLayout radialPickerLayout, int hourOfDay, int minute) {
-                                                 LocalTime lt = new LocalTime()
-                                                         .withHourOfDay(hourOfDay)
-                                                         .withMinuteOfHour(minute);
-
-                                                 _exportService.getExportSettings().setStartTime(lt);
-                                                 String timeString = DateHelper.getTime(getActivity(), lt.toDateTimeToday());
-                                                 _startTimeView.setText(timeString);
-                                                 _startTimeView.setVisibility(View.VISIBLE);
-                                             }
-                                         }, _exportService.getExportSettings().getStartTime().getHourOfDay(), _exportService.getExportSettings().getStartTime().getMinuteOfHour(),
-                                    DateFormat.is24HourFormat(activity)
-                            );
-
-                    timePickerDialog.show(fm, "Start time picker");
                 }
             });
 
@@ -150,33 +112,6 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                 }
             });
 
-
-            endTimeLayout.setOnClickListener(new View.OnClickListener() { //End time picker
-                @Override
-                public void onClick(View v) {
-                    FragmentManager fm = ((FragmentActivity)getActivity()).getSupportFragmentManager();
-                    RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
-                            .newInstance(new RadialTimePickerDialog.OnTimeSetListener() {
-                                             @Override
-                                             public void onTimeSet(RadialPickerLayout radialPickerLayout, int hourOfDay, int minute) {
-                                                 LocalTime lt = new LocalTime()
-                                                         .withHourOfDay(hourOfDay)
-                                                         .withMinuteOfHour(minute);
-
-                                                 _exportService.getExportSettings().setEndTime(lt);
-                                                 String timeString = DateHelper.getTime(getActivity(), lt.toDateTimeToday());
-                                                 _endTimeView.setText(timeString);
-                                                 _endTimeView.setVisibility(View.VISIBLE);
-                                             }
-                                         }, _exportService.getExportSettings().getEndTime().getHourOfDay(), _exportService.getExportSettings().getEndTime().getMinuteOfHour(),
-                                    DateFormat.is24HourFormat(activity)
-                            );
-
-                    timePickerDialog.show(fm, "End time picker");
-                }
-            });
-
-
             View doneLayout = view.findViewById(R.id.export_pills_list_layout);
             doneLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -196,9 +131,6 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
             String dateStringTime = DateHelper.getTime(getActivity(), _exportService.getExportSettings().getStartTime().toDateTimeToday());
             _startDateView.setText(dateString);
             _startDateView.setVisibility(View.VISIBLE);
-            _startTimeView.setText(dateStringTime);
-            _startTimeView.setVisibility(View.VISIBLE);
-            _startDateSet = true;
         }
 
         MutableDateTime endDate = _exportService.getExportSettings().getEndDate();
@@ -207,8 +139,6 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
             String dateStringTime = DateHelper.getTime(getActivity(), _exportService.getExportSettings().getEndTime().toDateTimeToday());
             _endDateView.setText(dateString);
             _endDateView.setVisibility(View.VISIBLE);
-            _endTimeView.setText(dateStringTime);
-            _endTimeView.setVisibility(View.VISIBLE);
             _endDateSet = true;
         }
 
@@ -222,12 +152,8 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
         _done.setTypeface(typeface);
         _startDateTitle.setTypeface(typeface);
         _endDateTitle.setTypeface(typeface);
-        _startTimeTitle.setTypeface(typeface);
-        _endTimeTitle.setTypeface(typeface);
         _startDateView.setTypeface(typeface);
-        _startTimeView.setTypeface(typeface);
         _endDateView.setTypeface(typeface);
-        _endTimeView.setTypeface(typeface);
     }
 
     private void validateDates(MutableDateTime startDate, MutableDateTime endDate) {
@@ -238,16 +164,12 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
         }
 
         if (endDate.getMillis() < startDate.getMillis() && _endDateSet) {
-            _endTimeView.setTextColor(Color.RED);
             _endDateView.setTextColor(Color.RED);
             _startDateView.setTextColor(Color.RED);
-            _startTimeView.setTextColor(Color.RED);
             Toast.makeText(activity, "End date cannot be earlier than start date", Toast.LENGTH_SHORT).show();
         }
         else {
-            _endTimeView.setTextColor(activity.getResources().getColor(R.color.text_grey));
             _endDateView.setTextColor(activity.getResources().getColor(R.color.text_grey));
-            _startTimeView.setTextColor(activity.getResources().getColor(R.color.text_grey));
             _startDateView.setTextColor(activity.getResources().getColor(R.color.text_grey));
         }
     }

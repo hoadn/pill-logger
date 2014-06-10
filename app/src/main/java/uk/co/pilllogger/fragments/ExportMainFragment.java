@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
@@ -22,10 +23,11 @@ import uk.co.pilllogger.tasks.GetPillsTask;
  * in uk.co.pilllogger.fragments.
  */
 public class ExportMainFragment extends ExportFragmentBase {
-    private View _pillSelector;
     private ExportSelectPillsFragment _selectPillsFragment;
     private ExportSelectDateFragment _selectDateFragment;
     private ExportSelectDosageFragment _selectDosageFragment;
+    private ExportSelectTimeFragment _selectTimeFragment;
+
     List<Pill> _pills = new ArrayList<Pill>();
     private TextView _pillSummary;
     private TextView _dosageSummary;
@@ -37,9 +39,11 @@ public class ExportMainFragment extends ExportFragmentBase {
         View view = inflater.inflate(R.layout.fragment_export_main, container, false);
 
         if(view != null){
-            _pillSelector = view.findViewById(R.id.export_select_pills);
+            View pillSelector = view.findViewById(R.id.export_select_pills);
             View dosageSelector = view.findViewById(R.id.export_dosage_options);
             View dateSelector = view.findViewById(R.id.export_date_range);
+            View timeSelector = view.findViewById(R.id.export_time_range);
+
             TextView pillSelectorText = (TextView) view.findViewById(R.id.export_select_pills_title);
             TextView dosageSelectorText = (TextView) view.findViewById(R.id.export_select_dosage_title);
             TextView dateSelectorText = (TextView) view.findViewById(R.id.export_select_dates_title);
@@ -63,7 +67,7 @@ public class ExportMainFragment extends ExportFragmentBase {
             TextView unlock = (TextView)view.findViewById(R.id.export_unlock);
             unlock.setTypeface(State.getSingleton().getRobotoTypeface());
 
-            _pillSelector.setOnClickListener(new View.OnClickListener() {
+            pillSelector.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     _selectPillsFragment = new ExportSelectPillsFragment();
@@ -84,6 +88,19 @@ public class ExportMainFragment extends ExportFragmentBase {
                     fm.beginTransaction()
                             .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)
                             .replace(R.id.export_container, _selectDateFragment)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
+
+            timeSelector.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    _selectTimeFragment = new ExportSelectTimeFragment();
+                    FragmentManager fm = ExportMainFragment.this.getActivity().getFragmentManager();
+                    fm.beginTransaction()
+                            .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)
+                            .replace(R.id.export_container, _selectTimeFragment)
                             .addToBackStack(null)
                             .commit();
                 }
@@ -111,6 +128,7 @@ public class ExportMainFragment extends ExportFragmentBase {
         super.onResume();
 
         updatePillSummary(getActivity());
+        updateTimeSummary(getActivity());
     }
 
     @Override
@@ -132,35 +150,68 @@ public class ExportMainFragment extends ExportFragmentBase {
     }
 
     private void updatePillSummary(Context context){
-        if(_pillSelector != null && context != null){
-            String prefix = "All";
-
-            int currentlySelectedPills = _exportService.getExportSettings().getSelectedPills().size();
-
-            if(currentlySelectedPills == 0){
-                _pillSummary.setText("You must select at least 1 medicine");
-                _pillSummary.setTextColor(context.getResources().getColor(R.color.warning_red));
-                return;
-            }
-            _pillSummary.setTextColor(context.getResources().getColor(R.color.text_grey_medium));
-
-            if(currentlySelectedPills != _pills.size())
-            prefix = currentlySelectedPills + " of ";
-
-            String text = prefix;
-
-            if(currentlySelectedPills == 2 && _pills.size() == 2)
-                text = "Both";
-
-            if(_pills.size() > 2 || currentlySelectedPills != _pills.size())
-                text += _pills.size();
-
-            text += " medicine";
-            if(_pills.size() > 1 || currentlySelectedPills == _pills.size())
-                text += "s";
-
-            text += " selected";
-            _pillSummary.setText(text);
+        if (context == null) {
+            return;
         }
+
+        String prefix = "All";
+
+        int currentlySelectedPills = _exportService.getExportSettings().getSelectedPills().size();
+
+        if(currentlySelectedPills == 0){
+            _pillSummary.setText("You must select at least 1 medicine");
+            _pillSummary.setTextColor(context.getResources().getColor(R.color.warning_red));
+            return;
+        }
+        _pillSummary.setTextColor(context.getResources().getColor(R.color.text_grey_medium));
+
+        if(currentlySelectedPills != _pills.size())
+        prefix = currentlySelectedPills + " of ";
+
+        String text = prefix;
+
+        if(currentlySelectedPills == 2 && _pills.size() == 2)
+            text = "Both";
+
+        if(_pills.size() > 2 || currentlySelectedPills != _pills.size())
+            text += _pills.size();
+
+        text += " medicine";
+        if(_pills.size() > 1 || currentlySelectedPills == _pills.size())
+            text += "s";
+
+        text += " selected";
+        _pillSummary.setText(text);
+    }
+
+    private void updateTimeSummary(Context context){
+        if(context == null) {
+            return;
+        }
+
+        String text = "Any time of the day";
+
+        if(_exportService.getExportSettings().getStartTime() != null
+                && _exportService.getExportSettings().getEndTime() != null){
+
+            String startTimeString = DateHelper.getTime(context, _exportService.getExportSettings().getStartTime().toDateTimeToday());
+            String endTimeString = DateHelper.getTime(context, _exportService.getExportSettings().getEndTime().toDateTimeToday());
+
+            text = startTimeString + " - " + endTimeString;
+        }
+        else {
+            if (_exportService.getExportSettings().getEndTime() != null) {
+                String endTimeString = DateHelper.getTime(context, _exportService.getExportSettings().getEndTime().toDateTimeToday());
+                text = "Before " + endTimeString;
+            }
+            else{
+                if(_exportService.getExportSettings().getStartTime() != null){
+                    String startTimeString = DateHelper.getTime(context, _exportService.getExportSettings().getStartTime().toDateTimeToday());
+                    text = "After " + startTimeString;
+                }
+            }
+        }
+
+        _timeSummary.setText(text);
     }
 }

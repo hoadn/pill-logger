@@ -15,8 +15,8 @@ public class ExportSettings {
 
     MutableDateTime _startDate = new MutableDateTime();
     MutableDateTime _endDate = new MutableDateTime();
-    LocalTime _startTime = new LocalTime();
-    LocalTime _endTime = new LocalTime();
+    LocalTime _startTime = null;
+    LocalTime _endTime = null;
 
     public Set<Pill> getSelectedPills() {
         return _selectedPills;
