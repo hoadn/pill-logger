@@ -16,6 +16,7 @@ import java.util.Set;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.ExportActivity;
+import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 
@@ -27,25 +28,20 @@ public class DosageListExportAdapter extends ArrayAdapter<String> {
     private Activity _activity;
     private int _resourceId;
     private List<String> _dosageTypes;
-    private List<Pill> _pills;
     private Map<String, Float> _dosageMax = new HashMap<String, Float>();
 
-    public DosageListExportAdapter(Activity activity, int resource, List<String> objects, List<Pill> pills) {
+    public DosageListExportAdapter(Activity activity, int resource, List<String> objects, List<Consumption> consumptions) {
         super(activity, resource, objects);
         _activity = activity;
         _resourceId = resource;
         _dosageTypes = objects;
-        _pills = pills;
-        for (String dosage : _dosageTypes) {
-            for (Pill pill : _pills) {
-                if (pill.getUnits().equals(dosage)) {
-                    Float currentMax = _dosageMax.get(dosage);
-                    if (currentMax == null || pill.getSize() > currentMax)
-                        _dosageMax.put(dosage, pill.getSize());
-                }
-
-            }
+        for (Consumption consumption : consumptions) {
+            Pill pill = consumption.getPill();
+            float dosage = pill.getSize() * consumption.getQuantity();
+            if (_dosageMax.get(pill.getUnits()) != null && _dosageMax.get(pill.getUnits()) < dosage)
+                _dosageMax.put(pill.getUnits(), dosage);
         }
+
     }
 
     public static class ViewHolder {

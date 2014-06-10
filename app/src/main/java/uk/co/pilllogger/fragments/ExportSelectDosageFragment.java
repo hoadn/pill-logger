@@ -12,15 +12,18 @@ import java.util.List;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.ExportActivity;
 import uk.co.pilllogger.adapters.DosageListExportAdapter;
+import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.tasks.GetMaxDosagesTask;
 
 /**
  * Created by nick on 05/06/14.
  */
-public class ExportSelectDosageFragment extends ExportFragmentBase {
+public class ExportSelectDosageFragment extends ExportFragmentBase implements GetMaxDosagesTask.ITaskComplete {
 
     ListView _dosageList;
     List<String> _usedDosages = new ArrayList<String>();
+    List<Consumption> _maxDosageConsumptions = new ArrayList<Consumption>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,8 +40,9 @@ public class ExportSelectDosageFragment extends ExportFragmentBase {
                         _usedDosages.add(pill.getUnits());
                 }
             }
-            if (_dosageList != null)
-                _dosageList.setAdapter(new DosageListExportAdapter(getActivity(), R.layout.export_dosage_item, _usedDosages, pills));
+            if (getActivity() != null)
+                new GetMaxDosagesTask(getActivity(), this, pills).execute();
+
 
             View doneLayout = view.findViewById(R.id.export_dosage_done_layout);
             doneLayout.setOnClickListener(new View.OnClickListener() {
@@ -49,5 +53,11 @@ public class ExportSelectDosageFragment extends ExportFragmentBase {
             });
         }
         return view;
+    }
+
+    @Override
+    public void maxConsumptionsReceived(List<Consumption> consumptions) {
+        if (_dosageList != null)
+            _dosageList.setAdapter(new DosageListExportAdapter(getActivity(), R.layout.export_dosage_item, _usedDosages, consumptions));
     }
 }

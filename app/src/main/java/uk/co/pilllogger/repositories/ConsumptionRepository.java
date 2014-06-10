@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.ContactsContract;
 
 import org.joda.time.DateTime;
 
@@ -244,6 +245,24 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         }
 
         return consumptions;
+    }
+
+    public Consumption getMaxDosageForPill(Pill pill) {
+        SQLiteDatabase db = _dbCreator.getReadableDatabase();
+
+        String query = "SELECT count(" + DatabaseContract.Consumptions.COLUMN_GROUP +") FROM " + DatabaseContract.Consumptions.TABLE_NAME
+                + " WHERE " + DatabaseContract.Consumptions.COLUMN_PILL_ID + " = ?"
+                + " GROUP BY " + DatabaseContract.Consumptions.COLUMN_GROUP
+                + " ORDER BY count(" + DatabaseContract.Consumptions.COLUMN_PILL_ID +") DESC";
+        String[] selectionArgs = { String.valueOf(pill.getId()) };
+        Cursor c = db.rawQuery(query, selectionArgs);
+        while (!c.isAfterLast()) {
+            c.moveToFirst();
+            Consumption consumption = getFromCursor(c, pill);
+            consumption.setPill(pill);
+            return consumption;
+        }
+        return null;
     }
 
     public List<Consumption> getForGroup(String group) {
