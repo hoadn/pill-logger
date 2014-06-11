@@ -34,8 +34,12 @@ public class ExportMainFragment extends ExportFragmentBase {
     private TextView _dateSummary;
     private TextView _timeSummary;
 
+    private View _finishedView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (_finishedView != null)
+            return _finishedView;
         View view = inflater.inflate(R.layout.fragment_export_main, container, false);
 
         if(view != null){
@@ -119,7 +123,7 @@ public class ExportMainFragment extends ExportFragmentBase {
                 }
             });
         }
-
+        _finishedView = view;
         return view;
     }
 
