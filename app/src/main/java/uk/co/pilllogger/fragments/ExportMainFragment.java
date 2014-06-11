@@ -14,6 +14,7 @@ import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.helpers.DateHelper;
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
@@ -23,6 +24,7 @@ import uk.co.pilllogger.tasks.GetPillsTask;
  * in uk.co.pilllogger.fragments.
  */
 public class ExportMainFragment extends ExportFragmentBase {
+    private static final String TAG = "ExportMainFragment";
     private ExportSelectPillsFragment _selectPillsFragment;
     private ExportSelectDateFragment _selectDateFragment;
     private ExportSelectDosageFragment _selectDosageFragment;
@@ -144,13 +146,17 @@ public class ExportMainFragment extends ExportFragmentBase {
         if(activity == null)
             return;
 
-        new GetPillsTask(activity, new GetPillsTask.ITaskComplete() {
-            @Override
-            public void pillsReceived(List<Pill> pills) {
-                _pills = pills;
-                updatePillSummary(activity);
-            }
-        }).execute();
+        Logger.d(TAG, "onActivityCreated");
+
+        if(_pills == null || _pills.size() == 0) {
+            new GetPillsTask(activity, new GetPillsTask.ITaskComplete() {
+                @Override
+                public void pillsReceived(List<Pill> pills) {
+                    _pills = pills;
+                    updatePillSummary(activity);
+                }
+            }).execute();
+        }
     }
 
     private void updatePillSummary(Context context){
