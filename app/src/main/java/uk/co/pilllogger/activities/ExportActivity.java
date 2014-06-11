@@ -16,6 +16,7 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -24,9 +25,11 @@ import java.util.Set;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.fragments.ExportMainFragment;
+import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.ExportSettings;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.services.IExportService;
+import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetMaxDosagesTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
 
@@ -36,11 +39,14 @@ import uk.co.pilllogger.tasks.GetPillsTask;
  */
 public class ExportActivity extends FragmentActivity
         implements GetPillsTask.ITaskComplete,
-        IExportService, GetMaxDosagesTask.ITaskComplete {
+        IExportService,
+        GetMaxDosagesTask.ITaskComplete,
+        GetConsumptionsTask.ITaskComplete {
 
     private List<Pill> _pillsList;
     private ExportSettings _exportSettings = new ExportSettings();
     private Map<Integer, Integer> _maxDosages;
+    private List<Consumption> _consumptions;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +54,7 @@ public class ExportActivity extends FragmentActivity
         setContentView(R.layout.activity_export);
 
         new GetPillsTask(this, this).execute();
+        new GetConsumptionsTask(this, this, true).execute();
         new GetMaxDosagesTask(this, this).execute();
         Display display = getWindowManager().getDefaultDisplay();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
@@ -112,7 +119,27 @@ public class ExportActivity extends FragmentActivity
     }
 
     @Override
+    public List<Consumption> getFilteredConsumptions() {
+        if(_consumptions == null || _consumptions.size() == 0){
+            return new ArrayList<Consumption>();
+        }
+
+        List<Consumption> filteredConsumptions = new ArrayList<Consumption>();
+
+        //for(Consumption c : _consumptions){
+        //
+        //}
+
+        return filteredConsumptions;
+    }
+
+    @Override
     public void maxConsumptionsReceived(Map<Integer, Integer> pillConsumptionMaxQuantityMap) {
         _maxDosages = pillConsumptionMaxQuantityMap;
+    }
+
+    @Override
+    public void consumptionsReceived(List<Consumption> consumptions) {
+        _consumptions = consumptions;
     }
 }
