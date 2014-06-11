@@ -13,8 +13,8 @@ import java.util.Set;
 public class ExportSettings {
     private Set<Pill> _selectedPills = new HashSet<Pill>();
 
-    MutableDateTime _startDate = new MutableDateTime();
-    MutableDateTime _endDate = new MutableDateTime();
+    MutableDateTime _startDate = null;
+    MutableDateTime _endDate = null;
     LocalTime _startTime = null;
     LocalTime _endTime = null;
 

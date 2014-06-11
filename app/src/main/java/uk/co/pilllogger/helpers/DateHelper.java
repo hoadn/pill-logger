@@ -144,6 +144,11 @@ public class DateHelper {
         return df.format(date);
     }
 
+    public static String formatDateAndTimeMedium(Context context, Date date){
+        java.text.DateFormat df = DateFormat.getMediumDateFormat(context);
+        return df.format(date);
+    }
+
     public static String getDayOfWeek(int dayOfWeek, Context context){
         switch(dayOfWeek){
             case 1:

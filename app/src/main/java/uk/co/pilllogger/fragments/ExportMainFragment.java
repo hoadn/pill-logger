@@ -134,6 +134,7 @@ public class ExportMainFragment extends ExportFragmentBase {
         super.onResume();
 
         updatePillSummary(getActivity());
+        updateDateSummary(getActivity());
         updateTimeSummary(getActivity());
     }
 
@@ -192,6 +193,37 @@ public class ExportMainFragment extends ExportFragmentBase {
 
         text += " selected";
         _pillSummary.setText(text);
+    }
+
+    private void updateDateSummary(Context context){
+        if(context == null) {
+            return;
+        }
+
+        String text = "Any date";
+
+        if(_exportService.getExportSettings().getStartDate() != null
+                && _exportService.getExportSettings().getEndDate() != null){
+
+            String startDateString = DateHelper.formatDateAndTimeMedium(context, _exportService.getExportSettings().getStartDate().toDate());
+            String endDateString = DateHelper.formatDateAndTimeMedium(context, _exportService.getExportSettings().getEndDate().toDate());
+
+            text = startDateString + " - " + endDateString;
+        }
+        else {
+            if (_exportService.getExportSettings().getEndDate() != null) {
+                String endDateString = DateHelper.formatDateAndTimeMedium(context, _exportService.getExportSettings().getEndDate().toDate());
+                text = "Before " + endDateString;
+            }
+            else{
+                if(_exportService.getExportSettings().getStartDate() != null){
+                    String startDateString = DateHelper.formatDateAndTimeMedium(context, _exportService.getExportSettings().getStartDate().toDate());
+                    text = "After " + startDateString;
+                }
+            }
+        }
+
+        _dateSummary.setText(text);
     }
 
     private void updateTimeSummary(Context context){

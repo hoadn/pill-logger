@@ -65,17 +65,20 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                 @Override
                 public void onClick(View v) {
                     FragmentManager fm = ((FragmentActivity)getActivity()).getSupportFragmentManager();
-                    final MutableDateTime startDate = _exportService.getExportSettings().getStartDate();
+                    MutableDateTime startDate = _exportService.getExportSettings().getStartDate();
+                    if(startDate == null) startDate = new MutableDateTime();
+                    final MutableDateTime finalStartDate = startDate;
                     CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog
                             .newInstance(new CalendarDatePickerDialog.OnDateSetListener() {
                                              @Override
                                              public void onDateSet(CalendarDatePickerDialog calendarDatePickerDialog, int year, int monthOfYear, int dayOfMonth) {
-                                                 startDate.setYear(year);
-                                                 startDate.setMonthOfYear(monthOfYear + 1);
-                                                 startDate.setDayOfMonth(dayOfMonth);
+                                                 finalStartDate.setYear(year);
+                                                 finalStartDate.setMonthOfYear(monthOfYear + 1);
+                                                 finalStartDate.setDayOfMonth(dayOfMonth);
 
-                                                 String dateString = DateFormat.format(DATE_FORMAT, startDate.toDate().getTime()).toString();
-                                                 validateDates(startDate, _exportService.getExportSettings().getEndDate());
+                                                 _exportService.getExportSettings().setStartDate(finalStartDate);
+                                                 String dateString = DateFormat.format(DATE_FORMAT, finalStartDate.toDate().getTime()).toString();
+                                                 validateDates(finalStartDate, _exportService.getExportSettings().getEndDate());
                                                  _startDateView.setText(dateString);
                                                  _startDateView.setVisibility(View.VISIBLE);
                                              }
@@ -90,18 +93,21 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                 @Override
                 public void onClick(View v) {
                     FragmentManager fm = ((FragmentActivity)getActivity()).getSupportFragmentManager();
-                    final MutableDateTime endDate = _exportService.getExportSettings().getEndDate();
+                    MutableDateTime endDate = _exportService.getExportSettings().getEndDate();
+                    if(endDate == null) endDate = new MutableDateTime();
+                    final MutableDateTime finalEndDate = endDate;
                     CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog
                             .newInstance(new CalendarDatePickerDialog.OnDateSetListener() {
                                              @Override
                                              public void onDateSet(CalendarDatePickerDialog calendarDatePickerDialog, int year, int monthOfYear, int dayOfMonth) {
-                                                 endDate.setYear(year);
-                                                 endDate.setMonthOfYear(monthOfYear + 1);
-                                                 endDate.setDayOfMonth(dayOfMonth);
+                                                 finalEndDate.setYear(year);
+                                                 finalEndDate.setMonthOfYear(monthOfYear + 1);
+                                                 finalEndDate.setDayOfMonth(dayOfMonth);
 
-                                                 String dateString = DateFormat.format(DATE_FORMAT, endDate.toDate().getTime()).toString();
+                                                 String dateString = DateFormat.format(DATE_FORMAT, finalEndDate.toDate().getTime()).toString();
                                                  _endDateSet = true;
-                                                 validateDates(_exportService.getExportSettings().getStartDate(), endDate);
+                                                 _exportService.getExportSettings().setEndDate(finalEndDate);
+                                                 validateDates(_exportService.getExportSettings().getStartDate(), finalEndDate);
                                                  _endDateView.setText(dateString);
                                                  _endDateView.setVisibility(View.VISIBLE);
                                              }
@@ -126,7 +132,6 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
 
     private void loadDates() {
         MutableDateTime startDate = _exportService.getExportSettings().getStartDate();
-        LocalTime startTime = _exportService.getExportSettings().getStartTime();
         if (startDate != null) {
             String dateString = DateFormat.format(DATE_FORMAT, startDate.toDate().getTime()).toString();
             _startDateView.setText(dateString);
@@ -162,7 +167,7 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
             return;
         }
 
-        if (endDate.getMillis() < startDate.getMillis() && _endDateSet) {
+        if (endDate != null && startDate != null && endDate.isBefore(startDate)) {
             _endDateView.setTextColor(Color.RED);
             _startDateView.setTextColor(Color.RED);
             Toast.makeText(activity, "End date cannot be earlier than start date", Toast.LENGTH_SHORT).show();
