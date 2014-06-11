@@ -158,7 +158,7 @@ public class ExportMainFragment extends ExportFragmentBase {
             return;
         }
 
-        String prefix = "All ";
+        String prefix = "All";
 
         int currentlySelectedPills = _exportService.getExportSettings().getSelectedPills().size();
 
@@ -170,7 +170,7 @@ public class ExportMainFragment extends ExportFragmentBase {
         _pillSummary.setTextColor(context.getResources().getColor(R.color.text_grey_medium));
 
         if(currentlySelectedPills != _pills.size())
-        prefix = currentlySelectedPills + " of ";
+        prefix = currentlySelectedPills + " of";
 
         String text = prefix;
 
@@ -178,7 +178,7 @@ public class ExportMainFragment extends ExportFragmentBase {
             text = "Both";
 
         if(_pills.size() > 2 || currentlySelectedPills != _pills.size())
-            text += _pills.size();
+            text += " " + _pills.size();
 
         text += " medicine";
         if(_pills.size() > 1 || currentlySelectedPills == _pills.size())
