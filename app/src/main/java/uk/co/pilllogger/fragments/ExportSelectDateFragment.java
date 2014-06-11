@@ -126,9 +126,9 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
 
     private void loadDates() {
         MutableDateTime startDate = _exportService.getExportSettings().getStartDate();
+        LocalTime startTime = _exportService.getExportSettings().getStartTime();
         if (startDate != null) {
             String dateString = DateFormat.format(DATE_FORMAT, startDate.toDate().getTime()).toString();
-            String dateStringTime = DateHelper.getTime(getActivity(), _exportService.getExportSettings().getStartTime().toDateTimeToday());
             _startDateView.setText(dateString);
             _startDateView.setVisibility(View.VISIBLE);
         }
@@ -136,7 +136,6 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
         MutableDateTime endDate = _exportService.getExportSettings().getEndDate();
         if (endDate != null) {
             String dateString = DateFormat.format(DATE_FORMAT, endDate.toDate().getTime()).toString();
-            String dateStringTime = DateHelper.getTime(getActivity(), _exportService.getExportSettings().getEndTime().toDateTimeToday());
             _endDateView.setText(dateString);
             _endDateView.setVisibility(View.VISIBLE);
             _endDateSet = true;
