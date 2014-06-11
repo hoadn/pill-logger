@@ -154,7 +154,7 @@ public class ExportMainFragment extends ExportFragmentBase {
             return;
         }
 
-        String prefix = "All";
+        String prefix = "All ";
 
         int currentlySelectedPills = _exportService.getExportSettings().getSelectedPills().size();
 
