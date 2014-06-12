@@ -185,4 +185,6 @@
     <string name="export_start_time_select">Select start time</string>
     <string name="export_end_time">End time</string>
     <string name="export_end_time_select">Select end time</string>
+    <string name="export_date_warning">End date cannot be before Start date</string>
+    <string name="discard">Discard</string>
 </resources>

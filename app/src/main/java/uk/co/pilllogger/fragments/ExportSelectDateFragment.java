@@ -39,7 +39,9 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
     private TextView _startDateTitle;
     private TextView _endDateTitle;
     private TextView _done;
-    private boolean _endDateSet = false;
+    private TextView _exportDateWarning;
+    private View _clearStartDate;
+    private View _clearEndDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +54,9 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
             _done = (TextView) view.findViewById(R.id.export_pills_done);
             _startDateView = (TextView) view.findViewById(R.id.export_start_date);
             _endDateView = (TextView) view.findViewById(R.id.export_end_date);
+            _exportDateWarning = (TextView) view.findViewById(R.id.export_date_warning);
+            _clearStartDate = view.findViewById(R.id.export_start_date_clear);
+            _clearEndDate = view.findViewById(R.id.export_end_date_clear);
 
             setTypeface();
             loadDates();
@@ -60,6 +65,24 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
 
             View startDateLayout = view.findViewById(R.id.export_start_date_layout);
             View endDateLayout = view.findViewById(R.id.export_end_date_layout);
+
+            _clearStartDate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    _exportService.getExportSettings().setStartDate(null);
+                    _startDateView.setVisibility(View.GONE);
+                    _clearStartDate.setVisibility(View.GONE);
+                }
+            });
+
+            _clearEndDate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    _exportService.getExportSettings().setEndDate(null);
+                    _endDateView.setVisibility(View.GONE);
+                    _clearEndDate.setVisibility(View.GONE);
+                }
+            });
 
             startDateLayout.setOnClickListener(new View.OnClickListener() { //Start date picker
                 @Override
@@ -90,6 +113,7 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                                                  _startDateView.setText(dateString);
                                                  _startDateTitle.setText(activity.getResources().getString(R.string.export_start_date));
                                                  _startDateView.setVisibility(View.VISIBLE);
+                                                 _clearStartDate.setVisibility(View.VISIBLE);
                                              }
                                          }, startDate.getYear(), (startDate.getMonthOfYear() - 1),
                                     startDate.getDayOfMonth()
@@ -116,7 +140,6 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                                                  date.setDayOfMonth(dayOfMonth);
 
                                                  String dateString = DateFormat.format(DATE_FORMAT, date.toDate().getTime()).toString();
-                                                 _endDateSet = true;
                                                  if (validateDates(_exportService.getExportSettings().getStartDate(), date)) {
                                                      finalEndDate.setYear(date.getYear());
                                                      finalEndDate.setMonthOfYear(date.getMonthOfYear());
@@ -128,6 +151,7 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                                                  _endDateTitle.setText(activity.getResources().getString(R.string.export_end_date));
                                                  _endDateView.setText(dateString);
                                                  _endDateView.setVisibility(View.VISIBLE);
+                                                 _clearEndDate.setVisibility(View.VISIBLE);
                                              }
                                          }, endDate.getYear(), (endDate.getMonthOfYear() - 1),
                                     endDate.getDayOfMonth()
@@ -154,6 +178,7 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
             String dateString = DateFormat.format(DATE_FORMAT, startDate.toDate().getTime()).toString();
             _startDateView.setText(dateString);
             _startDateView.setVisibility(View.VISIBLE);
+            _clearStartDate.setVisibility(View.VISIBLE);
             if (getActivity() != null)
                 _startDateTitle.setText(getActivity().getResources().getString(R.string.export_start_date));
         }
@@ -163,9 +188,9 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
             String dateString = DateFormat.format(DATE_FORMAT, endDate.toDate().getTime()).toString();
             _endDateView.setText(dateString);
             _endDateView.setVisibility(View.VISIBLE);
+            _clearEndDate.setVisibility(View.VISIBLE);
             if (getActivity() != null)
                 _endDateTitle.setText(getActivity().getResources().getString(R.string.export_end_date));
-            _endDateSet = true;
         }
 
         if (startDate != null && endDate != null) {
@@ -180,6 +205,7 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
         _endDateTitle.setTypeface(typeface);
         _startDateView.setTypeface(typeface);
         _endDateView.setTypeface(typeface);
+        _exportDateWarning.setTypeface(typeface);
     }
 
     private boolean validateDates(MutableDateTime startDate, MutableDateTime endDate) {
@@ -190,14 +216,18 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
         }
 
         if (endDate != null && startDate != null && endDate.isBefore(startDate)) {
-            _endDateView.setTextColor(Color.RED);
-            _startDateView.setTextColor(Color.RED);
-            Toast.makeText(activity, "End date cannot be earlier than start date", Toast.LENGTH_SHORT).show();
+            int warningColour = activity.getResources().getColor(R.color.warning_red);
+            _endDateView.setTextColor(warningColour);
+            _startDateView.setTextColor(warningColour);
+            _exportDateWarning.setVisibility(View.VISIBLE);
+            _done.setText(activity.getString(R.string.discard));
             return false;
         }
         else {
             _endDateView.setTextColor(activity.getResources().getColor(R.color.text_grey));
             _startDateView.setTextColor(activity.getResources().getColor(R.color.text_grey));
+            _exportDateWarning.setVisibility(View.GONE);
+            _done.setText(activity.getString(R.string.done_label));
             return true;
         }
     }

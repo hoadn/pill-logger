@@ -14,23 +14,32 @@
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:id="@+id/export_start_date_title"
-                android:gravity="center_horizontal"
+                android:gravity="center"
                 android:text="@string/export_start_date_select"
                 android:textSize="20sp"
                 android:textColor="@color/title_blue"/>
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:id="@+id/export_start_date"
-                android:gravity="center_horizontal"
+                android:gravity="center"
                 android:text="12/04/2014"
                 android:visibility="gone"
                 android:textSize="16sp"
                 android:textColor="@color/text_grey"/>
+
+            <ImageView
+                android:id="@+id/export_start_date_clear"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="4dp"
+                android:src="@drawable/bin"
+                android:visibility="gone"
+                android:background="?android:attr/selectableItemBackground"/>
 
         </LinearLayout>
     <View
@@ -48,52 +57,66 @@
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:id="@+id/export_end_date_title"
-                android:gravity="center_horizontal"
+                android:gravity="center"
                 android:text="@string/export_end_date_select"
                 android:textSize="20sp"
                 android:textColor="@color/title_blue"/>
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center_horizontal"
+                android:gravity="center"
                 android:id="@+id/export_end_date"
                 android:visibility="gone"
+                tools:visbility="visible"
                 android:text="12/04/2014"
                 android:textSize="16sp"
                 android:textColor="@color/text_grey"/>
+            <ImageView
+                android:id="@+id/export_end_date_clear"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="4dp"
+                android:src="@drawable/bin"
+                android:visibility="gone"/>
 
         </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/grey_divider_lighter" />
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/export_pills_list_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground">
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/export_pills_done"
-            android:text="Done"
+            android:text="@string/done_label"
             android:textSize="20sp"
-            android:gravity="center"
-            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
-            android:textColor="@color/text_grey_medium"/>
-        <ImageView
+            android:textColor="@color/text_grey_medium"
+            android:drawableLeft="@drawable/navigation_back"/>
+        <TextView
+            android:id="@+id/export_date_warning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/export_pills_done"
-            android:src="@drawable/navigation_back"/>
-    </RelativeLayout>
+            android:textColor="@color/warning_red"
+            android:layout_gravity="center"
+            android:paddingTop="0dp"
+            android:paddingBottom="10dp"
+            android:text="@string/export_date_warning"
+            android:visibility="gone"/>
+    </LinearLayout>
 
 </LinearLayout>
