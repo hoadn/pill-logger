@@ -72,13 +72,19 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                             .newInstance(new CalendarDatePickerDialog.OnDateSetListener() {
                                              @Override
                                              public void onDateSet(CalendarDatePickerDialog calendarDatePickerDialog, int year, int monthOfYear, int dayOfMonth) {
-                                                 finalStartDate.setYear(year);
-                                                 finalStartDate.setMonthOfYear(monthOfYear + 1);
-                                                 finalStartDate.setDayOfMonth(dayOfMonth);
+                                                 MutableDateTime date = new MutableDateTime();
 
-                                                 _exportService.getExportSettings().setStartDate(finalStartDate);
-                                                 String dateString = DateFormat.format(DATE_FORMAT, finalStartDate.toDate().getTime()).toString();
-                                                 validateDates(finalStartDate, _exportService.getExportSettings().getEndDate());
+                                                 date.setYear(year);
+                                                 date.setMonthOfYear(monthOfYear + 1);
+                                                 date.setDayOfMonth(dayOfMonth);
+
+                                                 String dateString = DateFormat.format(DATE_FORMAT, date.toDate().getTime()).toString();
+                                                 if (validateDates(date, _exportService.getExportSettings().getEndDate())) {
+                                                     finalStartDate.setYear(date.getYear());
+                                                     finalStartDate.setMonthOfYear(date.getMonthOfYear());
+                                                     finalStartDate.setDayOfMonth(date.getDayOfMonth());
+                                                     _exportService.getExportSettings().setStartDate(finalStartDate);
+                                                 }
                                                  _startDateView.setText(dateString);
                                                  _startDateView.setVisibility(View.VISIBLE);
                                              }
@@ -100,14 +106,20 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                             .newInstance(new CalendarDatePickerDialog.OnDateSetListener() {
                                              @Override
                                              public void onDateSet(CalendarDatePickerDialog calendarDatePickerDialog, int year, int monthOfYear, int dayOfMonth) {
-                                                 finalEndDate.setYear(year);
-                                                 finalEndDate.setMonthOfYear(monthOfYear + 1);
-                                                 finalEndDate.setDayOfMonth(dayOfMonth);
+                                                 MutableDateTime date = new MutableDateTime();
 
-                                                 String dateString = DateFormat.format(DATE_FORMAT, finalEndDate.toDate().getTime()).toString();
+                                                 date.setYear(year);
+                                                 date.setMonthOfYear(monthOfYear + 1);
+                                                 date.setDayOfMonth(dayOfMonth);
+
+                                                 String dateString = DateFormat.format(DATE_FORMAT, date.toDate().getTime()).toString();
                                                  _endDateSet = true;
-                                                 _exportService.getExportSettings().setEndDate(finalEndDate);
-                                                 validateDates(_exportService.getExportSettings().getStartDate(), finalEndDate);
+                                                 if (validateDates(_exportService.getExportSettings().getStartDate(), date)) {
+                                                     finalEndDate.setYear(date.getYear());
+                                                     finalEndDate.setMonthOfYear(date.getMonthOfYear());
+                                                     finalEndDate.setDayOfMonth(date.getDayOfMonth());
+                                                     _exportService.getExportSettings().setEndDate(finalEndDate);
+                                                 }
                                                  _endDateView.setText(dateString);
                                                  _endDateView.setVisibility(View.VISIBLE);
                                              }
@@ -160,21 +172,23 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
         _endDateView.setTypeface(typeface);
     }
 
-    private void validateDates(MutableDateTime startDate, MutableDateTime endDate) {
+    private boolean validateDates(MutableDateTime startDate, MutableDateTime endDate) {
         Activity activity = getActivity();
 
         if (activity == null) {
-            return;
+            return true;
         }
 
         if (endDate != null && startDate != null && endDate.isBefore(startDate)) {
             _endDateView.setTextColor(Color.RED);
             _startDateView.setTextColor(Color.RED);
             Toast.makeText(activity, "End date cannot be earlier than start date", Toast.LENGTH_SHORT).show();
+            return false;
         }
         else {
             _endDateView.setTextColor(activity.getResources().getColor(R.color.text_grey));
             _startDateView.setTextColor(activity.getResources().getColor(R.color.text_grey));
+            return true;
         }
     }
 

@@ -5,23 +5,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/export_start_date_layout"
             android:padding="15dp"
-            android:orientation="vertical">
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:id="@+id/export_start_date_title"
                 android:text="@string/export_start_date"
                 android:textSize="20sp"
                 android:textColor="@color/text_grey_medium"/>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:id="@+id/export_start_date"
+                android:gravity="center_horizontal"
                 android:text="12/04/2014"
                 android:visibility="gone"
                 android:textSize="16sp"
@@ -34,28 +38,31 @@
         android:background="@color/grey_divider_lighter" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/export_end_date_layout"
             android:padding="15dp"
-            android:orientation="vertical">
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:id="@+id/export_end_date_title"
                 android:text="@string/export_end_date"
                 android:textSize="20sp"
                 android:textColor="@color/text_grey_medium"/>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:id="@+id/export_end_date"
+                android:visibility="gone"
                 android:text="12/04/2014"
                 android:textSize="16sp"
-                android:visibility="gone"
                 android:textColor="@color/text_grey"/>
 
         </LinearLayout>
