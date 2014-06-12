@@ -26,6 +26,7 @@ import java.util.Set;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.fragments.ExportMainFragment;
+import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.ExportSettings;
 import uk.co.pilllogger.models.Pill;
@@ -153,6 +154,106 @@ public class ExportActivity extends FragmentActivity
         }
 
         return filteredConsumptions;
+    }
+
+    @Override
+    public String getPillSummary(){
+        return getPillSummary(null);
+    }
+
+    @Override
+    public String getPillSummary(TextView tv) {
+        String prefix = "All";
+
+        int currentlySelectedPills = getExportSettings().getSelectedPills().size();
+
+        if(currentlySelectedPills == 0){
+            String text = "You must select at least 1 medicine";
+            if(tv != null) {
+                tv.setText(text);
+                tv.setTextColor(this.getResources().getColor(R.color.warning_red));
+            }
+
+            return text;
+        }
+        if(tv != null) {
+            tv.setTextColor(this.getResources().getColor(R.color.text_grey_medium));
+        }
+
+        if(currentlySelectedPills != _pillsList.size())
+            prefix = currentlySelectedPills + " of";
+
+        String text = prefix;
+
+        if(currentlySelectedPills == 2 && _pillsList.size() == 2)
+            text = "Both";
+
+        if(_pillsList.size() > 2 || currentlySelectedPills != _pillsList.size())
+            text += " " + _pillsList.size();
+
+        text += " medicine";
+        if(_pillsList.size() > 1 || currentlySelectedPills == _pillsList.size())
+            text += "s";
+
+        text += " selected";
+
+        return text;
+    }
+
+    @Override
+    public String getDateSummary() {
+        String text = "Any date";
+
+        if(getExportSettings().getStartDate() != null
+                && getExportSettings().getEndDate() != null){
+
+            String startDateString = DateHelper.formatDateAndTimeMedium(this, getExportSettings().getStartDate().toDate());
+            String endDateString = DateHelper.formatDateAndTimeMedium(this, getExportSettings().getEndDate().toDate());
+
+            text = startDateString + " - " + endDateString;
+        }
+        else {
+            if (getExportSettings().getEndDate() != null) {
+                String endDateString = DateHelper.formatDateAndTimeMedium(this, getExportSettings().getEndDate().toDate());
+                text = "Before " + endDateString;
+            }
+            else{
+                if(getExportSettings().getStartDate() != null){
+                    String startDateString = DateHelper.formatDateAndTimeMedium(this, getExportSettings().getStartDate().toDate());
+                    text = "After " + startDateString;
+                }
+            }
+        }
+
+        return text;
+    }
+
+    @Override
+    public String getTimeSummary() {
+        String text = "Any time of the day";
+
+        if(getExportSettings().getStartTime() != null
+                && getExportSettings().getEndTime() != null){
+
+            String startTimeString = DateHelper.getTime(this, getExportSettings().getStartTime().toDateTimeToday());
+            String endTimeString = DateHelper.getTime(this, getExportSettings().getEndTime().toDateTimeToday());
+
+            text = startTimeString + " - " + endTimeString;
+        }
+        else {
+            if (getExportSettings().getEndTime() != null) {
+                String endTimeString = DateHelper.getTime(this, getExportSettings().getEndTime().toDateTimeToday());
+                text = "Before " + endTimeString;
+            }
+            else{
+                if(getExportSettings().getStartTime() != null){
+                    String startTimeString = DateHelper.getTime(this, getExportSettings().getStartTime().toDateTimeToday());
+                    text = "After " + startTimeString;
+                }
+            }
+        }
+
+        return text;
     }
 
     @Override

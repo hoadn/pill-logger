@@ -1,5 +1,7 @@
 package uk.co.pilllogger.services;
 
+import android.widget.TextView;
+
 import java.util.List;
 import java.util.Map;
 
@@ -19,4 +21,12 @@ public interface IExportService {
     Map<Integer, Integer> getMaxDosages();
 
     List<Consumption> getFilteredConsumptions();
+
+    String getPillSummary();
+
+    String getPillSummary(TextView textView);
+
+    String getDateSummary();
+
+    String getTimeSummary();
 }

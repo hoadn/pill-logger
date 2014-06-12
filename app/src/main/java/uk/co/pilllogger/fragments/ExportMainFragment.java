@@ -178,33 +178,8 @@ public class ExportMainFragment extends ExportFragmentBase {
             return;
         }
 
-        String prefix = "All";
+        String text = _exportService.getPillSummary(_pillSummary);
 
-        int currentlySelectedPills = _exportService.getExportSettings().getSelectedPills().size();
-
-        if(currentlySelectedPills == 0){
-            _pillSummary.setText("You must select at least 1 medicine");
-            _pillSummary.setTextColor(context.getResources().getColor(R.color.warning_red));
-            return;
-        }
-        _pillSummary.setTextColor(context.getResources().getColor(R.color.text_grey_medium));
-
-        if(currentlySelectedPills != _pills.size())
-        prefix = currentlySelectedPills + " of";
-
-        String text = prefix;
-
-        if(currentlySelectedPills == 2 && _pills.size() == 2)
-            text = "Both";
-
-        if(_pills.size() > 2 || currentlySelectedPills != _pills.size())
-            text += " " + _pills.size();
-
-        text += " medicine";
-        if(_pills.size() > 1 || currentlySelectedPills == _pills.size())
-            text += "s";
-
-        text += " selected";
         _pillSummary.setText(text);
     }
 
@@ -213,28 +188,7 @@ public class ExportMainFragment extends ExportFragmentBase {
             return;
         }
 
-        String text = "Any date";
-
-        if(_exportService.getExportSettings().getStartDate() != null
-                && _exportService.getExportSettings().getEndDate() != null){
-
-            String startDateString = DateHelper.formatDateAndTimeMedium(context, _exportService.getExportSettings().getStartDate().toDate());
-            String endDateString = DateHelper.formatDateAndTimeMedium(context, _exportService.getExportSettings().getEndDate().toDate());
-
-            text = startDateString + " - " + endDateString;
-        }
-        else {
-            if (_exportService.getExportSettings().getEndDate() != null) {
-                String endDateString = DateHelper.formatDateAndTimeMedium(context, _exportService.getExportSettings().getEndDate().toDate());
-                text = "Before " + endDateString;
-            }
-            else{
-                if(_exportService.getExportSettings().getStartDate() != null){
-                    String startDateString = DateHelper.formatDateAndTimeMedium(context, _exportService.getExportSettings().getStartDate().toDate());
-                    text = "After " + startDateString;
-                }
-            }
-        }
+        String text = _exportService.getDateSummary();
 
         _dateSummary.setText(text);
     }
@@ -244,28 +198,7 @@ public class ExportMainFragment extends ExportFragmentBase {
             return;
         }
 
-        String text = "Any time of the day";
-
-        if(_exportService.getExportSettings().getStartTime() != null
-                && _exportService.getExportSettings().getEndTime() != null){
-
-            String startTimeString = DateHelper.getTime(context, _exportService.getExportSettings().getStartTime().toDateTimeToday());
-            String endTimeString = DateHelper.getTime(context, _exportService.getExportSettings().getEndTime().toDateTimeToday());
-
-            text = startTimeString + " - " + endTimeString;
-        }
-        else {
-            if (_exportService.getExportSettings().getEndTime() != null) {
-                String endTimeString = DateHelper.getTime(context, _exportService.getExportSettings().getEndTime().toDateTimeToday());
-                text = "Before " + endTimeString;
-            }
-            else{
-                if(_exportService.getExportSettings().getStartTime() != null){
-                    String startTimeString = DateHelper.getTime(context, _exportService.getExportSettings().getStartTime().toDateTimeToday());
-                    text = "After " + startTimeString;
-                }
-            }
-        }
+        String text = _exportService.getTimeSummary();
 
         _timeSummary.setText(text);
     }
