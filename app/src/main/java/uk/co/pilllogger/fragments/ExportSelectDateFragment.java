@@ -83,6 +83,8 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                                                      finalStartDate.setYear(date.getYear());
                                                      finalStartDate.setMonthOfYear(date.getMonthOfYear());
                                                      finalStartDate.setDayOfMonth(date.getDayOfMonth());
+                                                     finalStartDate.setHourOfDay(0);
+                                                     finalStartDate.setMinuteOfHour(0);
                                                      _exportService.getExportSettings().setStartDate(finalStartDate);
                                                  }
                                                  _startDateView.setText(dateString);
@@ -119,6 +121,8 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                                                      finalEndDate.setYear(date.getYear());
                                                      finalEndDate.setMonthOfYear(date.getMonthOfYear());
                                                      finalEndDate.setDayOfMonth(date.getDayOfMonth());
+                                                     finalEndDate.setHourOfDay(0);
+                                                     finalEndDate.setMinuteOfHour(0);
                                                      _exportService.getExportSettings().setEndDate(finalEndDate);
                                                  }
                                                  _endDateTitle.setText(activity.getResources().getString(R.string.export_end_date));

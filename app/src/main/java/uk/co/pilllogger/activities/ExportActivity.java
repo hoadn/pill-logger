@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
 import org.joda.time.MutableDateTime;
 
 import java.util.ArrayList;
@@ -126,9 +127,30 @@ public class ExportActivity extends FragmentActivity
 
         List<Consumption> filteredConsumptions = new ArrayList<Consumption>();
 
-        //for(Consumption c : _consumptions){
-        //
-        //}
+        Set<Pill> selectedPills = _exportSettings.getSelectedPills();
+        MutableDateTime startDate = _exportSettings.getStartDate();
+        MutableDateTime endDate = _exportSettings.getEndDate();
+        LocalTime startTime = _exportSettings.getStartTime();
+        LocalTime endTime = _exportSettings.getEndTime();
+
+        for(Consumption c : _consumptions){
+            LocalTime consumptionTime = new LocalTime().withHourOfDay(c.getDate().getHours())
+                                                            .withMinuteOfHour(c.getDate().getMinutes());
+            MutableDateTime consumptionDate = new MutableDateTime(c.getDate());
+
+            if (!selectedPills.contains(c.getPill()))
+                continue;
+            if (startDate != null && consumptionDate.isBefore(startDate))
+                continue;
+            if (endDate != null && consumptionDate.isAfter(endDate))
+                continue;
+            if (startTime != null && consumptionTime.isBefore(startTime))
+                continue;
+            if (endTime != null && consumptionTime.isAfter(endTime))
+                continue;
+
+            filteredConsumptions.add(c);
+        }
 
         return filteredConsumptions;
     }

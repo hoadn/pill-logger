@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
@@ -125,6 +127,14 @@ public class ExportMainFragment extends ExportFragmentBase {
                 }
             });
         }
+        View exportFinished = view.findViewById(R.id.export_finished_layout);
+        exportFinished.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<Consumption> filteredConsumptions = _exportService.getFilteredConsumptions();
+                Toast.makeText(getActivity(), "Consumption size: " + filteredConsumptions.size(), Toast.LENGTH_SHORT).show();
+            }
+        });
         _finishedView = view;
         return view;
     }
