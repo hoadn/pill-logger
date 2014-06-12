@@ -75,6 +75,7 @@ public class ExportSelectTimeFragment extends ExportFragmentBase {
 
                                                  _exportService.getExportSettings().setStartTime(lt);
                                                  String timeString = DateHelper.getTime(getActivity(), lt.toDateTimeToday());
+                                                 _startTimeTitle.setText(getActivity().getResources().getString(R.string.export_start_time));
                                                  _startTimeView.setText(timeString);
                                                  _startTimeView.setVisibility(View.VISIBLE);
                                              }
@@ -103,6 +104,7 @@ public class ExportSelectTimeFragment extends ExportFragmentBase {
 
                                                  _exportService.getExportSettings().setEndTime(lt);
                                                  String timeString = DateHelper.getTime(getActivity(), lt.toDateTimeToday());
+                                                 _endTimeTitle.setText(getActivity().getResources().getString(R.string.export_end_time));
                                                  _endTimeView.setText(timeString);
                                                  _endTimeView.setVisibility(View.VISIBLE);
                                              }
@@ -133,6 +135,7 @@ public class ExportSelectTimeFragment extends ExportFragmentBase {
             String timeString = DateHelper.getTime(getActivity(), _exportService.getExportSettings().getStartTime().toDateTimeToday());
             _startTimeView.setText(timeString);
             _startTimeView.setVisibility(View.VISIBLE);
+            _startTimeTitle.setText(getActivity().getResources().getString(R.string.export_start_time));
         }
 
         LocalTime endTime = _exportService.getExportSettings().getEndTime();
@@ -140,6 +143,7 @@ public class ExportSelectTimeFragment extends ExportFragmentBase {
             String timeString = DateHelper.getTime(getActivity(), _exportService.getExportSettings().getEndTime().toDateTimeToday());
             _endTimeView.setText(timeString);
             _endTimeView.setVisibility(View.VISIBLE);
+            _endTimeTitle.setText(getActivity().getResources().getString(R.string.export_end_time));
         }
 
         if (startTime != null && endTime != null) {

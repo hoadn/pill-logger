@@ -178,7 +178,11 @@
     <string name="export_date_range">Dates</string>
     <string name="export_time_range">Times</string>
     <string name="export_start_date">Start date</string>
+    <string name="export_start_date_select">Select start date</string>
     <string name="export_end_date">End date</string>
+    <string name="export_end_date_select">Select end date</string>
     <string name="export_start_time">Start time</string>
+    <string name="export_start_time_select">Select start time</string>
     <string name="export_end_time">End time</string>
+    <string name="export_end_time_select">Select end time</string>
 </resources>

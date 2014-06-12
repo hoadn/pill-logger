@@ -86,6 +86,7 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                                                      _exportService.getExportSettings().setStartDate(finalStartDate);
                                                  }
                                                  _startDateView.setText(dateString);
+                                                 _startDateTitle.setText(activity.getResources().getString(R.string.export_start_date));
                                                  _startDateView.setVisibility(View.VISIBLE);
                                              }
                                          }, startDate.getYear(), (startDate.getMonthOfYear() - 1),
@@ -120,6 +121,7 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                                                      finalEndDate.setDayOfMonth(date.getDayOfMonth());
                                                      _exportService.getExportSettings().setEndDate(finalEndDate);
                                                  }
+                                                 _endDateTitle.setText(activity.getResources().getString(R.string.export_end_date));
                                                  _endDateView.setText(dateString);
                                                  _endDateView.setVisibility(View.VISIBLE);
                                              }
@@ -148,6 +150,8 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
             String dateString = DateFormat.format(DATE_FORMAT, startDate.toDate().getTime()).toString();
             _startDateView.setText(dateString);
             _startDateView.setVisibility(View.VISIBLE);
+            if (getActivity() != null)
+                _startDateTitle.setText(getActivity().getResources().getString(R.string.export_start_date));
         }
 
         MutableDateTime endDate = _exportService.getExportSettings().getEndDate();
@@ -155,6 +159,8 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
             String dateString = DateFormat.format(DATE_FORMAT, endDate.toDate().getTime()).toString();
             _endDateView.setText(dateString);
             _endDateView.setVisibility(View.VISIBLE);
+            if (getActivity() != null)
+                _endDateTitle.setText(getActivity().getResources().getString(R.string.export_end_date));
             _endDateSet = true;
         }
 

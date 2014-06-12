@@ -18,7 +18,7 @@
                 android:layout_weight="1"
                 android:id="@+id/export_start_time_title"
                 android:gravity="center_horizontal"
-                android:text="@string/export_start_time"
+                android:text="@string/export_start_time_select"
                 android:textSize="20sp"
                 android:textColor="@color/title_blue"/>
 
@@ -53,7 +53,7 @@
                 android:layout_weight="1"
                 android:id="@+id/export_end_time_title"
                 android:gravity="center_horizontal"
-                android:text="@string/export_end_time"
+                android:text="@string/export_end_time_select"
                 android:textSize="20sp"
                 android:textColor="@color/title_blue"/>
 
