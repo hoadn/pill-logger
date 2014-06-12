@@ -17,9 +17,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:id="@+id/export_start_date_title"
+                android:gravity="center_horizontal"
                 android:text="@string/export_start_date"
                 android:textSize="20sp"
-                android:textColor="@color/text_grey_medium"/>
+                android:textColor="@color/title_blue"/>
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -50,9 +51,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:id="@+id/export_end_date_title"
+                android:gravity="center_horizontal"
                 android:text="@string/export_end_date"
                 android:textSize="20sp"
-                android:textColor="@color/text_grey_medium"/>
+                android:textColor="@color/title_blue"/>
 
             <TextView
                 android:layout_width="0dp"
