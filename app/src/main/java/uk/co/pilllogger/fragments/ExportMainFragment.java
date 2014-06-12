@@ -15,6 +15,7 @@ import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.helpers.DateHelper;
+import uk.co.pilllogger.helpers.ExportHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -133,6 +134,8 @@ public class ExportMainFragment extends ExportFragmentBase {
             public void onClick(View v) {
                 List<Consumption> filteredConsumptions = _exportService.getFilteredConsumptions();
                 Toast.makeText(getActivity(), "Consumption size: " + filteredConsumptions.size(), Toast.LENGTH_SHORT).show();
+                ExportHelper export = ExportHelper.getSingleton(getActivity());
+                export.exportToCsv(filteredConsumptions);
             }
         });
         _finishedView = view;
