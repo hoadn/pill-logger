@@ -145,10 +145,6 @@ public class ExportSelectTimeFragment extends ExportFragmentBase {
             _endTimeView.setVisibility(View.VISIBLE);
             _endTimeTitle.setText(getActivity().getResources().getString(R.string.export_end_time));
         }
-
-        if (startTime != null && endTime != null) {
-            validateTimes(startTime, endTime);
-        }
     }
 
     private void setTypeface() {
@@ -158,24 +154,6 @@ public class ExportSelectTimeFragment extends ExportFragmentBase {
         _endTimeTitle.setTypeface(typeface);
         _startTimeView.setTypeface(typeface);
         _endTimeView.setTypeface(typeface);
-    }
-
-    private void validateTimes(LocalTime startTime, LocalTime endTime) {
-        Activity activity = getActivity();
-
-        if (activity == null) {
-            return;
-        }
-
-        if (endTime.isBefore(startTime)) {
-            _endTimeView.setTextColor(Color.RED);
-            _startTimeView.setTextColor(Color.RED);
-            Toast.makeText(activity, "End time cannot be earlier than start time", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            _endTimeView.setTextColor(activity.getResources().getColor(R.color.text_grey));
-            _startTimeView.setTextColor(activity.getResources().getColor(R.color.text_grey));
-        }
     }
 
 }
