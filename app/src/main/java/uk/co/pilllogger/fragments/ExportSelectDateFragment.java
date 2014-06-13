@@ -1,7 +1,6 @@
 package uk.co.pilllogger.fragments;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -11,21 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
-import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
-import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalTime;
 import org.joda.time.MutableDateTime;
 
-import java.util.Date;
-
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.activities.ExportActivity;
-import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.state.State;
 
 /**
@@ -72,6 +62,7 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                     _exportService.getExportSettings().setStartDate(null);
                     _startDateView.setVisibility(View.GONE);
                     _clearStartDate.setVisibility(View.GONE);
+                    _startDateTitle.setText(getActivity().getResources().getString(R.string.export_start_date_select));
                 }
             });
 
@@ -81,6 +72,7 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                     _exportService.getExportSettings().setEndDate(null);
                     _endDateView.setVisibility(View.GONE);
                     _clearEndDate.setVisibility(View.GONE);
+                    _endDateTitle.setText(getActivity().getResources().getString(R.string.export_end_date_select));
                 }
             });
 
@@ -171,6 +163,8 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
 
         return view;
     }
+
+
 
     private void loadDates() {
         MutableDateTime startDate = _exportService.getExportSettings().getStartDate();
