@@ -50,10 +50,9 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
         if(view == null)
             return;
 
+        int colour = (Integer)view.getTag(R.id.tag_page_colour);
+        int tabPosition = (Integer)view.getTag(R.id.tag_tab_icon_position);
         if(position <= 1 && position > -1){ // page is visible
-            int colour = (Integer)view.getTag(R.id.tag_page_colour);
-            int tabPosition = (Integer)view.getTag(R.id.tag_tab_icon_position);
-
             if(position < 0)
                 _fadeTo = colour;
             else
@@ -80,6 +79,9 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
 
                 setColorOfTab(tabPosition, tabAlpha);
             }
+        }
+        else {
+            setColorOfTab(tabPosition, 0.25f);
         }
     }
 

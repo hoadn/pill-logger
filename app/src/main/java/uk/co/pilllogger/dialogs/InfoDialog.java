@@ -82,7 +82,7 @@ public abstract class InfoDialog extends DialogFragment {
         if(_pill != null) {
             colour.setColour(_pill.getColour());
 
-            Consumption lastConsumption = _pill.getLatestConsumption();
+            Consumption lastConsumption = _pill.getLatestConsumption(activity);
             if (lastConsumption != null) {
                 String lastTakenText = lastTaken.getText() + " " + DateHelper.formatDateAndTime(activity, lastConsumption.getDate());
                 lastTakenText += " " + DateHelper.getTime(activity, lastConsumption.getDate());

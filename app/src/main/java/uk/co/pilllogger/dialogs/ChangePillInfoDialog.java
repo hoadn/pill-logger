@@ -1,5 +1,6 @@
 package uk.co.pilllogger.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -38,6 +39,7 @@ public class ChangePillInfoDialog extends DialogFragment {
     public ChangePillInfoDialog() {
     }
 
+    @SuppressLint("ValidFragment")
     public ChangePillInfoDialog(Activity activity, Pill pill, ChangePillInfoDialogListener listener) {
         _activity = activity;
         _pill = pill;

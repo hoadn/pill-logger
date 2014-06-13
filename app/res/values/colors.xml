@@ -4,6 +4,7 @@
     <color name="text_grey">#333333</color>
     <color name="grey_divider">#555555</color>
     <color name="grey_divider_light">#DDDDDD</color>
+    <color name="grey_divider_lighter">#90DDDDDD</color>
     <color name="pill_default_color">#FFBBBBBB</color>
     <color name="text_grey_light">#CCCCCC</color>
     <color name="text_grey_medium">#8F8F8F</color>
@@ -21,6 +22,8 @@
     <color name="gold">#FFD700</color>
     <color name="dark_blue">#10147f</color>
     <color name="green_border">#29c801</color>
+    <color name="highlight_blue">#3076a0d3</color>
+    <color name="warning_red">#80FF0000</color>
 
     <color name="monday">#336699</color>
     <color name="tuesday">#FF9900</color>

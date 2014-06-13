@@ -1,5 +1,6 @@
 package uk.co.pilllogger.dialogs;
 
+import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ public class PillInfoDialog extends InfoDialog {
         super();
     }
 
+    @SuppressLint("ValidFragment")
     public PillInfoDialog(Pill pill, PillInfoDialogListener listener) {
         super(pill);
         _listener = listener;

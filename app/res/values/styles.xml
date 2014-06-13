@@ -33,7 +33,7 @@
         <item name="android:popupMenuStyle">@style/PopupMenu.Example</item>
     </style>
 
-    <style name="Theme.Transparent" parent="@android:style/Theme.Holo.Dialog">
+    <style name="Theme.Transparent" parent="@android:style/Theme.Holo.Light.Dialog">
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -67,6 +67,13 @@
 
     <style name="DropDownNav.Example" parent="@android:style/Widget.Holo.Light.Spinner">
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_example</item>
+    </style>
+
+    <style name="ExportItem">
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
     </style>
 
     <style name="Tick"/>
@@ -130,6 +137,7 @@
         <item name="FragmentTitle">@style/FragmentTitle.Rainbow</item>
         <item name="AddConsumptionGradient">@style/AddConsumptionGradient.Rainbow</item>
         <item name="InfoDialogTopTextColour">@style/InfoDialogTopTextColour</item>
+        <item name="ExportItem">@style/ExportItem</item>
     </style>
 
     <style name="RainbowTextView">
@@ -206,6 +214,7 @@
         <item name="CardTitle">@style/CardTitle.Professional</item>
         <item name="NewMedicineTitle">@style/NewMedicineTitle.Professional</item>
         <item name="InfoDialogTopTextColour">@style/InfoDialogTopTextColour</item>
+        <item name="ExportItem">@style/ExportItem</item>
     </style>
 
     <style name="ProfessionalTextView">

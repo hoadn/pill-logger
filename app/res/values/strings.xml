@@ -62,7 +62,7 @@
     <string name="finish_create_pill">Create</string>
     <string name="graph_title">Pill Consumption over the past 7 days</string>
     <string name="no_consumptions_text">Your consumption history will be visible here!</string>
-    <string name="pill_fragment_title">Your Medicine</string>
+    <string name="pill_fragment_title">Your Medicine Library</string>
     <string name="consumption_fragment_title">Your Consumption History</string>
     <string name="graph_fragment_title">Charts</string>
 
@@ -170,4 +170,21 @@
     <string name="info_daily_title_dosage">Average daily dosage</string>
     <string name="most_taken">Most Taken</string>
     <string name="taken_most_recently">Taken Most Recently</string>
+    <string name="action_export">Export</string>
+    <string name="share_export_chooser_title">Choose an action</string>
+    <string name="share_export_subject">Pill Logger Consumption Export</string>
+    <string name="export_select_medicine">Medicines</string>
+    <string name="export_dosage_options">Dosage options</string>
+    <string name="export_date_range">Dates</string>
+    <string name="export_time_range">Times</string>
+    <string name="export_start_date">Start date</string>
+    <string name="export_start_date_select">Select start date</string>
+    <string name="export_end_date">End date</string>
+    <string name="export_end_date_select">Select end date</string>
+    <string name="export_start_time">Start time</string>
+    <string name="export_start_time_select">Select start time</string>
+    <string name="export_end_time">End time</string>
+    <string name="export_end_time_select">Select end time</string>
+    <string name="export_date_warning">End date cannot be before Start date</string>
+    <string name="discard">Discard</string>
 </resources>

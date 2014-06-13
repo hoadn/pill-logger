@@ -1,5 +1,6 @@
 package uk.co.pilllogger.dialogs;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
@@ -24,6 +25,7 @@ public class ConsumptionInfoDialog extends InfoDialog {
         super();
     }
 
+    @SuppressLint("ValidFragment")
     public ConsumptionInfoDialog(Context context, Consumption consumption, ConsumptionInfoDialogListener listener) {
         super(consumption.getPill());
         _context = context;

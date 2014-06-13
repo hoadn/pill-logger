@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.google.analytics.tracking.android.Tracker;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -39,13 +41,18 @@ import uk.co.pilllogger.views.ColourIndicator;
 /**
  * Created by nick on 22/10/13.
  */
-public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDialog.PillInfoDialogListener, ChangePillInfoDialog.ChangePillInfoDialogListener, Observer.IConsumptionAdded, Observer.IConsumptionDeleted {
+public class PillsListAdapter extends PillsListBaseAdapter implements
+        PillInfoDialog.PillInfoDialogListener,
+        ChangePillInfoDialog.ChangePillInfoDialogListener,
+        Observer.IConsumptionAdded,
+        Observer.IConsumptionDeleted {
 
     private static final String TAG = "PillsListAdapter";
-    private Pill _selectedPill;
+    private final Activity _activity;
 
     public PillsListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
         super(activity, textViewResourceId, pills);
+        _activity = activity;
         Observer.getSingleton().registerConsumptionAddedObserver(this);
         Observer.getSingleton().registerConsumptionDeletedObserver(this);
     }
@@ -195,23 +202,42 @@ public class PillsListAdapter extends PillsListBaseAdapter implements PillInfoDi
 
     @Override
     public void consumptionAdded(Consumption consumption) {
-        Pill pill = consumption.getPill();
-        new UpdatePillTask(_activity, pill).execute();
+        notifyDataSetChangedOnUiThread();
     }
 
     @Override
     public void consumptionDeleted(Consumption consumption) {
-        Pill pill = consumption.getPill();
-        new UpdatePillTask(_activity, pill).execute();
+        notifyDataSetChangedOnUiThread();
+    }
+
+    private void notifyDataSetChangedOnUiThread(){
+        if(_activity != null) {
+            _activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Collections.sort(_data, new Comparator<Pill>(){
+                        @Override
+                        public int compare(Pill lhs, Pill rhs) {
+                            if(lhs == null && rhs == null)
+                                return 0;
+
+                            if(lhs == null)
+                                return -1;
+
+                            if(rhs == null)
+                                return 1;
+
+                            return rhs.getLatestConsumption(_activity).getDate().compareTo(lhs.getLatestConsumption(_activity).getDate());
+                        }
+                    });
+                    notifyDataSetChanged();
+                }
+            });
+        }
     }
 
     @Override
     public void consumptionPillGroupDeleted(String group, int pillId) {
-        for (Pill pill : _data) {
-            if (pill.getId() == pillId) {
-                new UpdatePillTask(_activity, pill).execute();
-                return; //is this worth doing?
-            }
-        }
+        notifyDataSetChangedOnUiThread();
     }
 }

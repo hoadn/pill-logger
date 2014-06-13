@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by root on 21/10/13.
  */
 public class DatabaseCreator extends SQLiteOpenHelper{
-    public static final int DATABASE_VERSION = 8;
+    public static final int DATABASE_VERSION = 9;
     public static final String DATABASE_NAME = "PillLogger.db";
 
     public DatabaseCreator(Context context) {
@@ -20,6 +20,7 @@ public class DatabaseCreator extends SQLiteOpenHelper{
         db.execSQL(DatabaseContract.CreateTables.CREATE_PILL_TABLE);
         db.execSQL(DatabaseContract.CreateTables.CREATE_CONSUMPTION_TABLE);
         db.execSQL(DatabaseContract.CreateTables.CREATE_TUTORIAL_TABLE);
+        db.execSQL(DatabaseContract.CreateIndicies.CREATE_CONSUMPTION_DATE_INDEX);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -31,12 +32,18 @@ public class DatabaseCreator extends SQLiteOpenHelper{
                 try {
                     db.execSQL(DatabaseContract.AlterTables.ADD_CONSUMPTIONS_GROUP_COLUMN);
                 } catch (SQLException ignored) {}
+            case 9:
+                try{
+                    db.execSQL(DatabaseContract.CreateIndicies.CREATE_CONSUMPTION_DATE_INDEX);
+                } catch(SQLException ignored) {}
                 // add alter SQL statement here
         }
     }
 
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch(newVersion){
+            case 9:
+                db.execSQL(DatabaseContract.DeleteIndicies.DELETE_CONSUMPTION_DATE_INDEX);
             case 8:
             case 7:
                 db.execSQL(DatabaseContract.DeleteTables.DELETE_TUTORIALS_TABLE);

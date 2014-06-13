@@ -14,4 +14,8 @@
         android:id="@+id/action_feedback"
         android:title="@string/action_feedback"
         android:showAsAction="never"/>
+    <item
+        android:id="@+id/action_export"
+        android:title="@string/action_export"
+        android:showAsAction="never"/>
 </menu>

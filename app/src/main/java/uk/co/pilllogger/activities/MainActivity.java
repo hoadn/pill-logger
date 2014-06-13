@@ -28,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -52,6 +53,7 @@ import uk.co.pilllogger.dialogs.ThemeChoiceDialog;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.fragments.StatsFragment;
+import uk.co.pilllogger.helpers.ExportHelper;
 import uk.co.pilllogger.helpers.FeedbackHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
@@ -61,6 +63,7 @@ import uk.co.pilllogger.services.BillingServiceConnection;
 import uk.co.pilllogger.state.FeatureType;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
+import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetFavouritePillsTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.GetTutorialSeenTask;
@@ -84,7 +87,7 @@ public class MainActivity extends PillLoggerActivityBase implements
         Observer.IPillsUpdated,
         GetFavouritePillsTask.ITaskComplete,
         GetTutorialSeenTask.ITaskComplete,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+        SharedPreferences.OnSharedPreferenceChangeListener, GetConsumptionsTask.ITaskComplete {
 
     private static final String TAG = "MainActivity";
     private MyViewPager _fragmentPager;
@@ -103,6 +106,8 @@ public class MainActivity extends PillLoggerActivityBase implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Logger.d(TAG, "Timing: App starting");
+
         boolean isDebuggable =  ( 0 != ( getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
 
         if(!isDebuggable)
@@ -119,8 +124,9 @@ public class MainActivity extends PillLoggerActivityBase implements
         _colourBackground = findViewById(R.id.colour_background);
 
         Typeface ttf = Typeface.create("sans-serif-condensed", Typeface.NORMAL);
-
+        Typeface roboto = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Light.ttf");
         State.getSingleton().setTypeface(ttf);
+        State.getSingleton().setRobotoTypeface(roboto);
 
         _consumptionFragment = new ConsumptionListFragment();
         final Fragment fragment2 = new PillListFragment();
@@ -194,12 +200,14 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
+        Logger.d(TAG, "Timing: Getting pills");
         new GetPillsTask(this, this).execute();
 
         Integer gradientBackgroundResourceId = State.getSingleton().getTheme().getWindowBackgroundResourceId();
         Drawable background = gradientBackgroundResourceId == null ? null : getResources().getDrawable(gradientBackgroundResourceId);
         getWindow().setBackgroundDrawable(background);
 
+        TrackerHelper.launchEvent(this);
         setupBilling();
     }
 
@@ -299,14 +307,14 @@ public class MainActivity extends PillLoggerActivityBase implements
     }
 
     private void setupChrome(){
-        ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getActionBar();
         if(actionBar != null){
             //actionBar.setDisplayShowHomeEnabled(false);
             actionBar.setDisplayShowTitleEnabled(false);
 
             // Specify that tabs should be displayed in the action bar.
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
+            final ActionBar actionBar1 = actionBar;
             // Create a tab listener that is called when the user changes tabs.
             ActionBar.TabListener tabListener = new ActionBar.TabListener() {
                 public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
@@ -314,7 +322,6 @@ public class MainActivity extends PillLoggerActivityBase implements
                 }
 
                 public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                    // hide the given tab
                 }
 
                 public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
@@ -394,7 +401,7 @@ public class MainActivity extends PillLoggerActivityBase implements
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main_menu, menu);
         _menu = menu;
-        new GetFavouritePillsTask(this, this).execute();
+        //new GetFavouritePillsTask(this, this).execute();
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -428,9 +435,17 @@ public class MainActivity extends PillLoggerActivityBase implements
             case R.id.action_feedback:
                 sendFeedbackIntent();
                 return true;
+            case R.id.action_export:
+                startExport();
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void startExport() {
+        Intent intent = new Intent(this, ExportActivity.class);
+        startActivity(intent);
+        //new GetConsumptionsTask(this, this, true).execute();
     }
 
     private void startSettingsActivity() {
@@ -622,5 +637,11 @@ public class MainActivity extends PillLoggerActivityBase implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         _themeChanged = updateTheme(key);
+    }
+
+    @Override
+    public void consumptionsReceived(List<Consumption> consumptions) {
+        ExportHelper export = ExportHelper.getSingleton(this);
+        export.exportToCsv(consumptions);
     }
 }

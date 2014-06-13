@@ -18,6 +18,5 @@ public class SettingsActivity extends PillLoggerActivityBase {
         setTheme(State.getSingleton().getTheme().getStyleResourceId());
 
         setContentView(R.layout.activity_settings);
-
     }
 }

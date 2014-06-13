@@ -3,6 +3,7 @@
  */
 package uk.co.pilllogger.models;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.joda.time.DateTime;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.helpers.NumberHelper;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.Observer;
 
 /**
@@ -120,9 +122,19 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
         return _consumptions;
     }
 
-    public Consumption getLatestConsumption(){
-        if(_consumptions.isEmpty())
-            return null;
+    public Consumption getLatestConsumption(Context context){
+        if(_consumptions.isEmpty()) {
+            if(ConsumptionRepository.getSingleton(context).isCachedForPill(getId())) {
+                List<Consumption> consumptions = ConsumptionRepository.getSingleton(context).getForPill(this);
+                if (consumptions == null || consumptions.size() == 0)
+                    return null;
+
+                _consumptions.addAll(consumptions);
+            }
+            else{
+                return null;
+            }
+        }
 
         if(_latest == null) {
             updateLatestFirst();

@@ -38,17 +38,22 @@ public class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
         public ColourIndicator colour;
         public ViewGroup pickerContainer;
         public boolean open;
+        public boolean selected;
+        public ViewGroup container;
+        public View shadow;
     }
 
     @Override
     protected ActionBarArrayAdapter.ViewHolder initViewHolder(View v) {
         ViewHolder holder = new ViewHolder();
+        holder.container = (ViewGroup) v.findViewById(R.id.selector_container);
         holder.name = (TextView) v.findViewById(R.id.pill_list_name);
         holder.lastTaken = (TextView) v.findViewById(R.id.pill_list_last_taken);
         holder.size = (TextView) v.findViewById(R.id.pill_list_size);
         holder.favourite = v.findViewById(R.id.pill_list_favourite);
         holder.colour = (ColourIndicator) v.findViewById(R.id.pill_list_colour);
         holder.pickerContainer = (ViewGroup) v.findViewById(R.id.pill_list_colour_picker_container);
+        holder.shadow = v.findViewById(R.id.shadow);
 
         holder.name.setTypeface(State.getSingleton().getTypeface());
         holder.size.setTypeface(State.getSingleton().getTypeface());
@@ -69,7 +74,7 @@ public class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
             if (pill != null) {
                 holder.name.setText(pill.getName());
 
-                Consumption latest = pill.getLatestConsumption();
+                Consumption latest = pill.getLatestConsumption(_activity);
                 if(latest != null){
                     String prefix = _activity.getString(R.string.last_taken_message_prefix);
                     String lastTaken = DateHelper.getRelativeDateTime(_activity, latest.getDate(), true);
