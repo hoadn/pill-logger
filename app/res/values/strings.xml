@@ -187,4 +187,6 @@
     <string name="export_end_time_select">Select end time</string>
     <string name="export_date_warning">End date cannot be before Start date</string>
     <string name="discard">Discard</string>
+    <string name="unlock_prefix">Unlock for </string>
+    <string name="billingKey">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjs+wAJzNtDwMFWgfw5J/Q8DNw7BNSdJ4lS1+dk2Zdtvg1lg257GcXzEz1lK4LpVrhReD3pS9xyV9qDIMA2vr2SW1pmZZbwOUy/lW9vC00WaTQcgIwM5VdcjHKO0sPiccLhF2kGI9JNyK32cc2p9pkJO2bIQPhyXQvp3GUW0wlbsQz918fSkHv7DondBhvTe0kYViJ2XmQh4anguLiUOhE3I1HislrynXDEKHr/Pp4UOQQKyU44P9RCm0P8HflmMCFgrgj8t+n0DFXdnCbneP3kRzweVPgajvh1Zk5PxzC926gmbWlDOBt89vORPMkaZTkWJWA94siYXFLDAyUsfeJQIDAQAB</string>
 </resources>

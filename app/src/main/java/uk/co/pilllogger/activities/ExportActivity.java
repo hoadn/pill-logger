@@ -1,11 +1,13 @@
 package uk.co.pilllogger.activities;
 
+import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,9 @@ import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.ExportSettings;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.services.IExportService;
+import uk.co.pilllogger.state.FeatureType;
+import uk.co.pilllogger.state.Observer;
+import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetMaxDosagesTask;
 import uk.co.pilllogger.tasks.GetPillsTask;
@@ -43,12 +48,14 @@ public class ExportActivity extends FragmentActivity
         implements GetPillsTask.ITaskComplete,
         IExportService,
         GetMaxDosagesTask.ITaskComplete,
-        GetConsumptionsTask.ITaskComplete {
+        GetConsumptionsTask.ITaskComplete, Observer.IFeaturePurchased {
 
+    private static final String TAG = "ExportActivity";
     private List<Pill> _pillsList;
     private ExportSettings _exportSettings = new ExportSettings();
     private Map<Integer, Integer> _maxDosages;
     private List<Consumption> _consumptions;
+    private TextView _exportSubtitle;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,9 +74,9 @@ public class ExportActivity extends FragmentActivity
 
         Typeface roboto = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Light.ttf");
         TextView exportTitle = (TextView)findViewById(R.id.export_title);
-        TextView exportSubtitle = (TextView) findViewById(R.id.export_sub_title);
+        _exportSubtitle = (TextView) findViewById(R.id.export_sub_title);
         exportTitle.setTypeface(roboto);
-        exportSubtitle.setTypeface(roboto);
+        _exportSubtitle.setTypeface(roboto);
 
         View container = findViewById(R.id.export_container);
 
@@ -84,6 +91,8 @@ public class ExportActivity extends FragmentActivity
                     .add(R.id.export_container, new ExportMainFragment())
                     .commit();
         }
+
+        Observer.getSingleton().registerFeaturePurchasedObserver(this);
 
     }
 
@@ -264,5 +273,39 @@ public class ExportActivity extends FragmentActivity
     @Override
     public void consumptionsReceived(List<Consumption> consumptions) {
         _consumptions = consumptions;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
+
+        if(State.getSingleton().getIabHelper() == null) {
+            return;
+        }
+
+        // Pass on the activity result to the helper for handling
+        if (!State.getSingleton().getIabHelper().handleActivityResult(requestCode, resultCode, data)) {
+            // not handled, so handle it ourselves (here's where you'd
+            // perform any handling of activity results not related to in-app
+            // billing...
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+        else {
+            Log.d(TAG, "onActivityResult handled by IABUtil.");
+        }
+    }
+
+    @Override
+    protected void onDestroy(){
+        Observer.getSingleton().unregisterFeaturePurchasedObserver(this);
+
+        super.onDestroy();
+    }
+
+    @Override
+    public void featurePurchased(FeatureType featureType) {
+        if(_exportSubtitle != null){
+            _exportSubtitle.setVisibility(View.GONE);
+        }
     }
 }

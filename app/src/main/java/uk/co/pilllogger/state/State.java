@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import uk.co.pilllogger.billing.IabHelper;
 import uk.co.pilllogger.billing.SkuDetails;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.themes.ITheme;
@@ -33,6 +34,7 @@ public class State {
     private Set<FeatureType> _enabledFeatures = new HashSet<FeatureType>();
     private ITheme _theme = new ProfessionalTheme();
     private MixpanelAPI _mixpanelAPI = null;
+    private IabHelper _iabHelper;
 
     private State() {
     }
@@ -158,6 +160,14 @@ public class State {
 
     public boolean hasFeature(FeatureType feature){
         return _enabledFeatures.contains(feature);
+    }
+
+    public void setIabHelper(IabHelper iabHelper) {
+        _iabHelper = iabHelper;
+    }
+
+    public IabHelper getIabHelper() {
+        return _iabHelper;
     }
 }
 

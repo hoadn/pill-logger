@@ -213,9 +213,10 @@ public class MainActivity extends PillLoggerActivityBase implements
 
     private void setupBilling(){
 
-        String billingKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjs+wAJzNtDwMFWgfw5J/Q8DNw7BNSdJ4lS1+dk2Zdtvg1lg257GcXzEz1lK4LpVrhReD3pS9xyV9qDIMA2vr2SW1pmZZbwOUy/lW9vC00WaTQcgIwM5VdcjHKO0sPiccLhF2kGI9JNyK32cc2p9pkJO2bIQPhyXQvp3GUW0wlbsQz918fSkHv7DondBhvTe0kYViJ2XmQh4anguLiUOhE3I1HislrynXDEKHr/Pp4UOQQKyU44P9RCm0P8HflmMCFgrgj8t+n0DFXdnCbneP3kRzweVPgajvh1Zk5PxzC926gmbWlDOBt89vORPMkaZTkWJWA94siYXFLDAyUsfeJQIDAQAB";
+        String billingKey = getString(R.string.billingKey);
 
         _billingHelper = new IabHelper(this, billingKey);
+        _billingHelper.enableDebugLogging(true, TAG);
 
         _billingHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
             @Override
@@ -251,6 +252,29 @@ public class MainActivity extends PillLoggerActivityBase implements
             });
             }
         });
+
+        State.getSingleton().setIabHelper(_billingHelper);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
+
+        if(State.getSingleton().getIabHelper() == null) {
+            return;
+        }
+
+        // Pass on the activity result to the helper for handling
+        if (!State.getSingleton().getIabHelper().handleActivityResult(requestCode, resultCode, data)) {
+            // not handled, so handle it ourselves (here's where you'd
+            // perform any handling of activity results not related to in-app
+            // billing...
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+        else {
+            Log.d(TAG, "onActivityResult handled by IABUtil.");
+        }
     }
 
     @Override
@@ -259,6 +283,8 @@ public class MainActivity extends PillLoggerActivityBase implements
             _billingHelper.dispose();
         }
         _billingHelper = null;
+
+        super.onDestroy();
     }
 
     @Override

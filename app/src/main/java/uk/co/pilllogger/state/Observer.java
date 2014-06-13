@@ -20,7 +20,7 @@ public class Observer {
     private WeakHashMap<IConsumptionAdded, WeakReference<IConsumptionAdded>> _consumptionAddedListeners = new WeakHashMap<IConsumptionAdded, WeakReference<IConsumptionAdded>>();
     private WeakHashMap<IConsumptionDeleted, WeakReference<IConsumptionDeleted>> _consumptionDeletedListeners = new WeakHashMap<IConsumptionDeleted, WeakReference<IConsumptionDeleted>>();
     private WeakHashMap<IPillsLoaded, WeakReference<IPillsLoaded>> _pillsLoadedListeners = new WeakHashMap<IPillsLoaded, WeakReference<IPillsLoaded>>();
-
+    private WeakHashMap<IFeaturePurchased, WeakReference<IFeaturePurchased>> _featuredPurchasedListeners = new WeakHashMap<IFeaturePurchased, WeakReference<IFeaturePurchased>>();
 
     public static Observer getSingleton() {
         if(_instance == null)
@@ -52,6 +52,14 @@ public class Observer {
 
     public void unregisterPillsUpdatedObserver(IPillsUpdated observer) {
         _pillsUpdatedArrayList.remove(observer);
+    }
+
+    public void registerFeaturePurchasedObserver(IFeaturePurchased observer){
+        _featuredPurchasedListeners.put(observer, new WeakReference<IFeaturePurchased>(observer));
+    }
+
+    public void unregisterFeaturePurchasedObserver(IFeaturePurchased observer){
+        _featuredPurchasedListeners.remove(observer);
     }
 
     public void unregisterConsumptionDeletedObserver(IConsumptionDeleted observer){
@@ -99,6 +107,23 @@ public class Observer {
 
         _consumptionAddedListeners.values().removeAll(deadrefs);
     }
+
+    public void notifyFeaturePurchased(FeatureType featureType) {
+        List<WeakReference<IFeaturePurchased>> deadrefs = new ArrayList<WeakReference<IFeaturePurchased>>();
+
+        Logger.d(TAG, "About to notify " + _featuredPurchasedListeners.size() + " listeners of new purchase");
+
+        for (WeakReference<IFeaturePurchased> reference : _featuredPurchasedListeners.values()) {
+            IFeaturePurchased listener = reference.get();
+            if (listener != null)
+                listener.featurePurchased(featureType);
+            else
+                deadrefs.add(reference);
+        }
+
+        _featuredPurchasedListeners.values().removeAll(deadrefs);
+    }
+
 
     public void notifyConsumptionDeleted(Consumption consumption){
         List<WeakReference<IConsumptionDeleted>> deadrefs = new ArrayList<WeakReference<IConsumptionDeleted>>();
@@ -162,4 +187,8 @@ public class Observer {
     public interface IPillsLoaded{
         void pillsLoaded(List<Pill> pills);
     }
+    public interface IFeaturePurchased {
+        void featurePurchased(FeatureType featureType);
+    }
+
 }

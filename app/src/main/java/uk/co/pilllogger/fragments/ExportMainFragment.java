@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +15,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.billing.IabException;
+import uk.co.pilllogger.billing.IabHelper;
+import uk.co.pilllogger.billing.IabResult;
+import uk.co.pilllogger.billing.Purchase;
+import uk.co.pilllogger.billing.SkuDetails;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.ExportHelper;
 import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.FeatureType;
+import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
 
@@ -40,6 +49,7 @@ public class ExportMainFragment extends ExportFragmentBase {
     private TextView _timeSummary;
 
     private View _finishedView;
+    private TextView _unlock;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,8 +83,8 @@ public class ExportMainFragment extends ExportFragmentBase {
             _dateSummary.setTypeface(State.getSingleton().getRobotoTypeface());
             _timeSummary.setTypeface(State.getSingleton().getRobotoTypeface());
 
-            TextView unlock = (TextView)view.findViewById(R.id.export_unlock);
-            unlock.setTypeface(State.getSingleton().getRobotoTypeface());
+            _unlock = (TextView)view.findViewById(R.id.export_unlock);
+            _unlock.setTypeface(State.getSingleton().getRobotoTypeface());
 
             pillSelector.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -132,10 +142,53 @@ public class ExportMainFragment extends ExportFragmentBase {
         exportFinished.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<Consumption> filteredConsumptions = _exportService.getFilteredConsumptions();
-                Toast.makeText(getActivity(), "Consumption size: " + filteredConsumptions.size(), Toast.LENGTH_SHORT).show();
-                ExportHelper export = ExportHelper.getSingleton(getActivity());
-                export.exportToCsv(filteredConsumptions);
+                final Activity activity = getActivity();
+                if(activity == null){
+                    return;
+                }
+
+                if(State.getSingleton().hasFeature(FeatureType.export)) {
+                    List<Consumption> filteredConsumptions = _exportService.getFilteredConsumptions();
+                    Toast.makeText(activity, "Consumption size: " + filteredConsumptions.size(), Toast.LENGTH_SHORT).show();
+                    ExportHelper export = ExportHelper.getSingleton(activity);
+                    export.exportToCsv(filteredConsumptions);
+                }
+                else{
+
+                    final IabHelper billingHelper = State.getSingleton().getIabHelper();
+
+                    if(billingHelper == null) {
+                        return;
+                    }
+
+                    billingHelper.launchPurchaseFlow(activity, "android.test.purchased", 10001, new IabHelper.OnIabPurchaseFinishedListener() {
+                        @Override
+                        public void onIabPurchaseFinished(IabResult result, Purchase info) {
+                            if (result.isFailure()) {
+                                Log.d(TAG, "Error purchasing: " + result);
+                                try {
+                                    billingHelper.consume("inapp:" + activity.getPackageName() + ":android.test.purchased");
+                                } catch (IabException e) {
+                                    Logger.e(TAG, e.getMessage());
+                                }
+                                return;
+                            }
+                            Logger.d(TAG, info.getDeveloperPayload());
+                            Logger.d(TAG, info.getOrderId());
+                            Logger.d(TAG, info.getPackageName());
+                            Logger.d(TAG, info.getSku());
+
+                            State.getSingleton().getEnabledFeatures().add(FeatureType.export);
+                            Observer.getSingleton().notifyFeaturePurchased(FeatureType.export);
+                            setExportButtonText();
+                            try {
+                                billingHelper.consume("inapp:" + activity.getPackageName() + ":android.test.purchased");
+                            } catch (IabException e) {
+                                Logger.e(TAG, e.getMessage());
+                            }
+                        }
+                    }, TrackerHelper.getUniqueId(activity));
+                }
             }
         });
         _finishedView = view;
@@ -170,6 +223,23 @@ public class ExportMainFragment extends ExportFragmentBase {
                     updatePillSummary(activity);
                 }
             }).execute();
+        }
+
+        setExportButtonText();
+    }
+
+    private void setExportButtonText(){
+        if (State.getSingleton().getAvailableFeatures().containsKey(FeatureType.export)) {
+            SkuDetails skuDetails = State.getSingleton().getAvailableFeatures().get(FeatureType.export);
+
+            if(State.getSingleton().hasFeature(FeatureType.export)) {
+                _unlock.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                _unlock.setText("Export");
+            }
+            else {
+                _unlock.setText(getString(R.string.unlock_prefix) + " " + skuDetails.getPrice());
+                _unlock.setCompoundDrawablesWithIntrinsicBounds(R.drawable.play_store, 0, 0, 0);
+            }
         }
     }
 

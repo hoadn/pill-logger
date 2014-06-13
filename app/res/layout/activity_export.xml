@@ -9,17 +9,20 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="10dp"
+        android:paddingBottom="20dp">
         <TextView
             android:id="@+id/export_title"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:textColor="@color/text_grey_medium"
             android:text="Export Options"
             android:gravity="center"
             android:textSize="24sp"
             android:textStyle="bold"
+            android:paddingTop="10dp"
             />
         <TextView
             android:id="@+id/export_sub_title"
@@ -27,7 +30,6 @@
             android:layout_height="wrap_content"
             android:textColor="@color/warning_red"
             android:text="Unlock Required"
-            android:layout_marginTop="-15dp"
             android:gravity="center"
             android:textSize="16sp"
             android:textStyle="bold"
