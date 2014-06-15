@@ -55,6 +55,8 @@ public class ExportSelectPillsFragment extends ExportFragmentBase implements Get
                 new GetPillsTask(getActivity(), this).execute();
         }
 
+        _exportService.getPillSummary(_exportService.getSummaryTextView());
+
         return view;
     }
 

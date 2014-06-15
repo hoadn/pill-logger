@@ -28,6 +28,15 @@
             android:id="@+id/export_sub_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/export_sub_title"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/export_unlock_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="@color/warning_red"
             android:text="Unlock Required"
             android:gravity="center"

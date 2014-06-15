@@ -50,6 +50,8 @@ public class PillsListExportAdapter extends PillsListBaseAdapter {
                     _exportService.getExportSettings().getSelectedPills().remove(holder.pill);
                 }
 
+                _exportService.getPillSummary(_exportService.getSummaryTextView());
+
                 notifyDataSetChanged();
             }
         });

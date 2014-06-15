@@ -4,24 +4,18 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.TextView;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.MutableDateTime;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,7 +49,8 @@ public class ExportActivity extends FragmentActivity
     private ExportSettings _exportSettings = new ExportSettings();
     private Map<Integer, Integer> _maxDosages;
     private List<Consumption> _consumptions;
-    private TextView _exportSubtitle;
+    private TextView _exportUnlockTitle;
+    private TextView _exportSubTitle;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,9 +69,11 @@ public class ExportActivity extends FragmentActivity
 
         Typeface roboto = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Light.ttf");
         TextView exportTitle = (TextView)findViewById(R.id.export_title);
-        _exportSubtitle = (TextView) findViewById(R.id.export_sub_title);
+        _exportSubTitle = (TextView)findViewById(R.id.export_sub_title);
+        _exportUnlockTitle = (TextView) findViewById(R.id.export_unlock_title);
         exportTitle.setTypeface(roboto);
-        _exportSubtitle.setTypeface(roboto);
+        _exportUnlockTitle.setTypeface(roboto);
+        _exportSubTitle.setTypeface(roboto);
 
         View container = findViewById(R.id.export_container);
 
@@ -206,6 +203,10 @@ public class ExportActivity extends FragmentActivity
 
         text += " selected";
 
+        if(tv != null){
+            tv.setText(text);
+        }
+
         return text;
     }
 
@@ -266,6 +267,11 @@ public class ExportActivity extends FragmentActivity
     }
 
     @Override
+    public TextView getSummaryTextView() {
+        return _exportSubTitle;
+    }
+
+    @Override
     public void maxConsumptionsReceived(Map<Integer, Integer> pillConsumptionMaxQuantityMap) {
         _maxDosages = pillConsumptionMaxQuantityMap;
     }
@@ -304,8 +310,8 @@ public class ExportActivity extends FragmentActivity
 
     @Override
     public void featurePurchased(FeatureType featureType) {
-        if(_exportSubtitle != null){
-            _exportSubtitle.setVisibility(View.GONE);
+        if(_exportUnlockTitle != null){
+            _exportUnlockTitle.setVisibility(View.GONE);
         }
     }
 }

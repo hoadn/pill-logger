@@ -29,4 +29,6 @@ public interface IExportService {
     String getDateSummary();
 
     String getTimeSummary();
+
+    TextView getSummaryTextView();
 }

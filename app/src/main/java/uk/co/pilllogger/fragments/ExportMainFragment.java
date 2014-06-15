@@ -202,6 +202,12 @@ public class ExportMainFragment extends ExportFragmentBase {
         updatePillSummary(getActivity());
         updateDateSummary(getActivity());
         updateTimeSummary(getActivity());
+
+        TextView summaryTextView = _exportService.getSummaryTextView();
+        if(summaryTextView != null) {
+            summaryTextView.setText(R.string.export_sub_title);
+            summaryTextView.setTextColor(getResources().getColor(R.color.text_grey_medium));
+        }
     }
 
     @Override

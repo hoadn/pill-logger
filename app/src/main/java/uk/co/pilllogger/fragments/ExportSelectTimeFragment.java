@@ -29,12 +29,14 @@ import uk.co.pilllogger.state.State;
  */
 public class ExportSelectTimeFragment extends ExportFragmentBase {
 
-    private String DATE_FORMAT = "E, MMM dd, yyyy";
     private TextView _startTimeView;
     private TextView _endTimeView;
     private TextView _startTimeTitle;
     private TextView _endTimeTitle;
     private TextView _done;
+    private TextView _exportTimeWarning;
+    private View _clearStartTime;
+    private View _clearEndTime;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,6 +50,9 @@ public class ExportSelectTimeFragment extends ExportFragmentBase {
 
             _startTimeView = (TextView) view.findViewById(R.id.export_start_time);
             _endTimeView = (TextView) view.findViewById(R.id.export_end_time);
+            _exportTimeWarning = (TextView) view.findViewById(R.id.export_time_warning);
+            _clearStartTime = view.findViewById(R.id.export_start_time_clear);
+            _clearEndTime = view.findViewById(R.id.export_end_time_clear);
 
             setTypeface();
             loadTimes();
@@ -56,6 +61,28 @@ public class ExportSelectTimeFragment extends ExportFragmentBase {
 
             View startTimeLayout = view.findViewById(R.id.export_start_time_layout);
             View endTimeLayout = view.findViewById(R.id.export_end_time_layout);
+
+            _clearStartTime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    _exportService.getExportSettings().setStartTime(null);
+                    _startTimeView.setVisibility(View.GONE);
+                    _clearStartTime.setVisibility(View.GONE);
+                    _startTimeTitle.setText(getActivity().getResources().getString(R.string.export_start_time_select));
+                    updateSummaryText(_exportService.getTimeSummary());
+                }
+            });
+
+            _clearEndTime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    _exportService.getExportSettings().setEndTime(null);
+                    _endTimeView.setVisibility(View.GONE);
+                    _clearEndTime.setVisibility(View.GONE);
+                    _endTimeTitle.setText(getActivity().getResources().getString(R.string.export_end_time_select));
+                    updateSummaryText(_exportService.getTimeSummary());
+                }
+            });
 
             startTimeLayout.setOnClickListener(new View.OnClickListener() { //Start time picker
                 @Override
@@ -73,11 +100,15 @@ public class ExportSelectTimeFragment extends ExportFragmentBase {
                                                          .withHourOfDay(hourOfDay)
                                                          .withMinuteOfHour(minute);
 
-                                                 _exportService.getExportSettings().setStartTime(lt);
+                                                 if(validateTimes(lt, _exportService.getExportSettings().getEndTime())) {
+                                                     _exportService.getExportSettings().setStartTime(lt);
+                                                     updateSummaryText(_exportService.getTimeSummary());
+                                                 }
                                                  String timeString = DateHelper.getTime(getActivity(), lt.toDateTimeToday());
                                                  _startTimeTitle.setText(getActivity().getResources().getString(R.string.export_start_time));
                                                  _startTimeView.setText(timeString);
                                                  _startTimeView.setVisibility(View.VISIBLE);
+                                                 _clearStartTime.setVisibility(View.VISIBLE);
                                              }
                                          }, startTime.getHourOfDay(), startTime.getMinuteOfHour(),
                                     DateFormat.is24HourFormat(activity)
@@ -102,11 +133,15 @@ public class ExportSelectTimeFragment extends ExportFragmentBase {
                                                          .withHourOfDay(hourOfDay)
                                                          .withMinuteOfHour(minute);
 
-                                                 _exportService.getExportSettings().setEndTime(lt);
+                                                 if(validateTimes(_exportService.getExportSettings().getStartTime(), lt)) {
+                                                     _exportService.getExportSettings().setEndTime(lt);
+                                                     updateSummaryText(_exportService.getTimeSummary());
+                                                 }
                                                  String timeString = DateHelper.getTime(getActivity(), lt.toDateTimeToday());
                                                  _endTimeTitle.setText(getActivity().getResources().getString(R.string.export_end_time));
                                                  _endTimeView.setText(timeString);
                                                  _endTimeView.setVisibility(View.VISIBLE);
+                                                 _clearEndTime.setVisibility(View.VISIBLE);
                                              }
                                          }, endTime.getHourOfDay(), endTime.getMinuteOfHour(),
                                     DateFormat.is24HourFormat(activity)
@@ -126,6 +161,8 @@ public class ExportSelectTimeFragment extends ExportFragmentBase {
             });
         }
 
+        updateSummaryText(_exportService.getTimeSummary());
+
         return view;
     }
 
@@ -135,6 +172,7 @@ public class ExportSelectTimeFragment extends ExportFragmentBase {
             String timeString = DateHelper.getTime(getActivity(), _exportService.getExportSettings().getStartTime().toDateTimeToday());
             _startTimeView.setText(timeString);
             _startTimeView.setVisibility(View.VISIBLE);
+            _clearStartTime.setVisibility(View.VISIBLE);
             _startTimeTitle.setText(getActivity().getResources().getString(R.string.export_start_time));
         }
 
@@ -143,6 +181,7 @@ public class ExportSelectTimeFragment extends ExportFragmentBase {
             String timeString = DateHelper.getTime(getActivity(), _exportService.getExportSettings().getEndTime().toDateTimeToday());
             _endTimeView.setText(timeString);
             _endTimeView.setVisibility(View.VISIBLE);
+            _clearEndTime.setVisibility(View.VISIBLE);
             _endTimeTitle.setText(getActivity().getResources().getString(R.string.export_end_time));
         }
     }
@@ -156,4 +195,26 @@ public class ExportSelectTimeFragment extends ExportFragmentBase {
         _endTimeView.setTypeface(typeface);
     }
 
+    private boolean validateTimes(LocalTime startTime, LocalTime endTime) {
+        Activity activity = getActivity();
+
+        if (activity == null) {
+            return true;
+        }
+
+        if (endTime != null && startTime != null && endTime.isBefore(startTime)) {
+            _endTimeView.setTextColor(Color.RED);
+            _startTimeView.setTextColor(Color.RED);
+            _exportTimeWarning.setVisibility(View.VISIBLE);
+            _done.setText(activity.getString(R.string.discard));
+            return false;
+        }
+        else {
+            _endTimeView.setTextColor(activity.getResources().getColor(R.color.text_grey));
+            _startTimeView.setTextColor(activity.getResources().getColor(R.color.text_grey));
+            _exportTimeWarning.setVisibility(View.GONE);
+            _done.setText(activity.getString(R.string.done_label));
+            return true;
+        }
+    }
 }

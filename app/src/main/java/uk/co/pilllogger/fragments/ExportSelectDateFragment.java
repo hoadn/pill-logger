@@ -63,6 +63,7 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                     _startDateView.setVisibility(View.GONE);
                     _clearStartDate.setVisibility(View.GONE);
                     _startDateTitle.setText(getActivity().getResources().getString(R.string.export_start_date_select));
+                    updateSummaryText(_exportService.getDateSummary());
                 }
             });
 
@@ -73,6 +74,7 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                     _endDateView.setVisibility(View.GONE);
                     _clearEndDate.setVisibility(View.GONE);
                     _endDateTitle.setText(getActivity().getResources().getString(R.string.export_end_date_select));
+                    updateSummaryText(_exportService.getDateSummary());
                 }
             });
 
@@ -101,6 +103,8 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                                                      finalStartDate.setHourOfDay(0);
                                                      finalStartDate.setMinuteOfHour(0);
                                                      _exportService.getExportSettings().setStartDate(finalStartDate);
+
+                                                     updateSummaryText(_exportService.getDateSummary());
                                                  }
                                                  _startDateView.setText(dateString);
                                                  _startDateTitle.setText(activity.getResources().getString(R.string.export_start_date));
@@ -139,6 +143,8 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
                                                      finalEndDate.setHourOfDay(0);
                                                      finalEndDate.setMinuteOfHour(0);
                                                      _exportService.getExportSettings().setEndDate(finalEndDate);
+
+                                                     updateSummaryText(_exportService.getDateSummary());
                                                  }
                                                  _endDateTitle.setText(activity.getResources().getString(R.string.export_end_date));
                                                  _endDateView.setText(dateString);
@@ -161,10 +167,10 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
             });
         }
 
+        updateSummaryText(_exportService.getDateSummary());
+
         return view;
     }
-
-
 
     private void loadDates() {
         MutableDateTime startDate = _exportService.getExportSettings().getStartDate();
@@ -224,6 +230,7 @@ public class ExportSelectDateFragment extends ExportFragmentBase {
             _done.setText(activity.getString(R.string.done_label));
             return true;
         }
+
     }
 
 }
