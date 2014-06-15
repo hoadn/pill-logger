@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.helpers.Logger;
@@ -27,8 +28,8 @@ import uk.co.pilllogger.state.Observer;
 public class ConsumptionRepository extends BaseRepository<Consumption>{
     private static final String TAG = "ConsumptionRepository";
     private static ConsumptionRepository _instance;
-    private Map<Integer, Map<Integer, Consumption>> _pillConsumptionCache = new HashMap<Integer, Map<Integer, Consumption>>();
-    private Map<Integer, Consumption> _consumptionsCache = new HashMap<Integer, Consumption>();
+    private Map<Integer, Map<Integer, Consumption>> _pillConsumptionCache = new ConcurrentHashMap<Integer, Map<Integer, Consumption>>();
+    private Map<Integer, Consumption> _consumptionsCache = new ConcurrentHashMap<Integer, Consumption>();
     private Map<String, Map<Integer, Consumption>> _groupConsumptionCache = new HashMap<String, Map<Integer, Consumption>>();
 
     private ConsumptionRepository(Context context) {
