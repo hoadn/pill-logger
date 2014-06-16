@@ -152,6 +152,7 @@ public class ExportMainFragment extends ExportFragmentBase {
                     Toast.makeText(activity, "Consumption size: " + filteredConsumptions.size(), Toast.LENGTH_SHORT).show();
                     ExportHelper export = ExportHelper.getSingleton(activity);
                     export.exportToCsv(filteredConsumptions);
+                    activity.finish();
                 }
                 else{
 
@@ -161,33 +162,36 @@ public class ExportMainFragment extends ExportFragmentBase {
                         return;
                     }
 
-                    billingHelper.launchPurchaseFlow(activity, "android.test.purchased", 10001, new IabHelper.OnIabPurchaseFinishedListener() {
-                        @Override
-                        public void onIabPurchaseFinished(IabResult result, Purchase info) {
-                            if (result.isFailure()) {
-                                Log.d(TAG, "Error purchasing: " + result);
+                    SkuDetails exportSkuDetails = State.getSingleton().getAvailableFeatures().get(FeatureType.export);
+                    if(exportSkuDetails != null) {
+                        billingHelper.launchPurchaseFlow(activity, exportSkuDetails.getSku(), 10001, new IabHelper.OnIabPurchaseFinishedListener() {
+                            @Override
+                            public void onIabPurchaseFinished(IabResult result, Purchase info) {
+                                if (result.isFailure()) {
+                                    Log.d(TAG, "Error purchasing: " + result);
+                                    try {
+                                        billingHelper.consume("inapp:" + activity.getPackageName() + ":android.test.purchased");
+                                    } catch (IabException e) {
+                                        Logger.e(TAG, e.getMessage());
+                                    }
+                                    return;
+                                }
+                                Logger.d(TAG, info.getDeveloperPayload());
+                                Logger.d(TAG, info.getOrderId());
+                                Logger.d(TAG, info.getPackageName());
+                                Logger.d(TAG, info.getSku());
+
+                                State.getSingleton().getEnabledFeatures().add(FeatureType.export);
+                                Observer.getSingleton().notifyFeaturePurchased(FeatureType.export);
+                                setExportButtonText();
                                 try {
                                     billingHelper.consume("inapp:" + activity.getPackageName() + ":android.test.purchased");
                                 } catch (IabException e) {
                                     Logger.e(TAG, e.getMessage());
                                 }
-                                return;
                             }
-                            Logger.d(TAG, info.getDeveloperPayload());
-                            Logger.d(TAG, info.getOrderId());
-                            Logger.d(TAG, info.getPackageName());
-                            Logger.d(TAG, info.getSku());
-
-                            State.getSingleton().getEnabledFeatures().add(FeatureType.export);
-                            Observer.getSingleton().notifyFeaturePurchased(FeatureType.export);
-                            setExportButtonText();
-                            try {
-                                billingHelper.consume("inapp:" + activity.getPackageName() + ":android.test.purchased");
-                            } catch (IabException e) {
-                                Logger.e(TAG, e.getMessage());
-                            }
-                        }
-                    }, TrackerHelper.getUniqueId(activity));
+                        }, TrackerHelper.getUniqueId(activity));
+                    }
                 }
             }
         });

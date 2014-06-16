@@ -99,7 +99,6 @@ public class MainActivity extends PillLoggerActivityBase implements
     private Menu _menu;
     Fragment _consumptionFragment;
     private TutorialService _tutorialService;
-    BillingServiceConnection _billingServiceConnection = new BillingServiceConnection();
     private boolean _themeChanged;
     private IabHelper _billingHelper;
 
@@ -108,7 +107,8 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         Logger.d(TAG, "Timing: App starting");
 
-        boolean isDebuggable =  ( 0 != ( getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE ) );
+        boolean isDebuggable = 0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE);
+        State.getSingleton().setIsDebuggable(isDebuggable);
 
         if(!isDebuggable)
             Crashlytics.start(this);

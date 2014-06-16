@@ -30,7 +30,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     private static ConsumptionRepository _instance;
     private Map<Integer, Map<Integer, Consumption>> _pillConsumptionCache = new ConcurrentHashMap<Integer, Map<Integer, Consumption>>();
     private Map<Integer, Consumption> _consumptionsCache = new ConcurrentHashMap<Integer, Consumption>();
-    private Map<String, Map<Integer, Consumption>> _groupConsumptionCache = new HashMap<String, Map<Integer, Consumption>>();
+    private Map<String, Map<Integer, Consumption>> _groupConsumptionCache = new ConcurrentHashMap<String, Map<Integer, Consumption>>();
 
     private ConsumptionRepository(Context context) {
         super(context);
@@ -102,7 +102,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     private void updateCaches(Consumption consumption){
         Logger.d(TAG, "Updating caches");
 
-        Map<Integer, Consumption> consumptionCache = new HashMap<Integer, Consumption>();
+        Map<Integer, Consumption> consumptionCache = new ConcurrentHashMap<Integer, Consumption>();
         if(_pillConsumptionCache.containsKey(consumption.getPillId())) {
             consumptionCache = _pillConsumptionCache.get(consumption.getPillId());
         }
@@ -111,7 +111,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         }
         consumptionCache.put(consumption.getId(), consumption);
 
-        Map<Integer, Consumption> groupCache = new HashMap<Integer, Consumption>();
+        Map<Integer, Consumption> groupCache = new ConcurrentHashMap<Integer, Consumption>();
         if(_groupConsumptionCache.containsKey(consumption.getGroup())) {
             groupCache = _groupConsumptionCache.get(consumption.getGroup());
         }

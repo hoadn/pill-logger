@@ -26,6 +26,7 @@ import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.ExportSettings;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.services.IExportService;
 import uk.co.pilllogger.state.FeatureType;
 import uk.co.pilllogger.state.Observer;
@@ -57,7 +58,13 @@ public class ExportActivity extends FragmentActivity
 
         setContentView(R.layout.activity_export);
 
-        new GetPillsTask(this, this).execute();
+        if(PillRepository.getSingleton(this).isCached()){
+            List<Pill> pills = PillRepository.getSingleton(this).getAll();
+            pillsReceived(pills);
+        }
+        else {
+            new GetPillsTask(this, this).execute();
+        }
         new GetConsumptionsTask(this, this, true).execute();
         new GetMaxDosagesTask(this, this).execute();
         Display display = getWindowManager().getDefaultDisplay();
@@ -91,6 +98,9 @@ public class ExportActivity extends FragmentActivity
 
         Observer.getSingleton().registerFeaturePurchasedObserver(this);
 
+        if(State.getSingleton().hasFeature(FeatureType.export)){
+            _exportUnlockTitle.setVisibility(View.GONE);
+        }
     }
 
     @Override

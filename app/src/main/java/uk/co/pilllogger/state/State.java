@@ -35,6 +35,7 @@ public class State {
     private ITheme _theme = new ProfessionalTheme();
     private MixpanelAPI _mixpanelAPI = null;
     private IabHelper _iabHelper;
+    private boolean _isDebuggable;
 
     private State() {
     }
@@ -144,7 +145,7 @@ public class State {
         _appVisible = appVisible;
     }
 
-        public ITheme getTheme() {
+    public ITheme getTheme() {
         return _theme;
     }
 
@@ -159,7 +160,7 @@ public class State {
     }
 
     public boolean hasFeature(FeatureType feature){
-        return _enabledFeatures.contains(feature);
+        return _isDebuggable || _enabledFeatures.contains(feature);
     }
 
     public void setIabHelper(IabHelper iabHelper) {
@@ -168,6 +169,14 @@ public class State {
 
     public IabHelper getIabHelper() {
         return _iabHelper;
+    }
+
+    public void setIsDebuggable(boolean isDebuggable) {
+        _isDebuggable = isDebuggable;
+    }
+
+    public boolean isDebuggable() {
+        return _isDebuggable;
     }
 }
 
