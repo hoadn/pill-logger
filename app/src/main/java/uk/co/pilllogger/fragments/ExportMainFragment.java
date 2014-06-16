@@ -168,12 +168,7 @@ public class ExportMainFragment extends ExportFragmentBase {
                             @Override
                             public void onIabPurchaseFinished(IabResult result, Purchase info) {
                                 if (result.isFailure()) {
-                                    Log.d(TAG, "Error purchasing: " + result);
-                                    try {
-                                        billingHelper.consume("inapp:" + activity.getPackageName() + ":android.test.purchased");
-                                    } catch (IabException e) {
-                                        Logger.e(TAG, e.getMessage());
-                                    }
+                                    Logger.e(TAG, "Error purchasing: " + result);
                                     return;
                                 }
                                 Logger.d(TAG, info.getDeveloperPayload());
@@ -184,11 +179,6 @@ public class ExportMainFragment extends ExportFragmentBase {
                                 State.getSingleton().getEnabledFeatures().add(FeatureType.export);
                                 Observer.getSingleton().notifyFeaturePurchased(FeatureType.export);
                                 setExportButtonText();
-                                try {
-                                    billingHelper.consume("inapp:" + activity.getPackageName() + ":android.test.purchased");
-                                } catch (IabException e) {
-                                    Logger.e(TAG, e.getMessage());
-                                }
                             }
                         }, TrackerHelper.getUniqueId(activity));
                     }

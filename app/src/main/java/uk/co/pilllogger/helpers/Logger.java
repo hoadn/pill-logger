@@ -3,6 +3,8 @@
  */
 package uk.co.pilllogger.helpers;
 
+import com.crashlytics.android.Crashlytics;
+
 /**
  * @author alex
  *
@@ -12,13 +14,17 @@ public class Logger {
     private static LogLevel _logLevel = LogLevel.Verbose;
 
 	public static void e(String tag, String message){
-        if(_logLevel != LogLevel.Off)
-		    android.util.Log.e(tag, message);
+        if(_logLevel != LogLevel.Off) {
+            android.util.Log.e(tag, message);
+            Crashlytics.log(1, tag, message);
+        }
 	}
 	
 	public static void e(String tag, String message, Throwable ex){
-        if(_logLevel != LogLevel.Off)
+        if(_logLevel != LogLevel.Off) {
             android.util.Log.e(tag, message, ex);
+            Crashlytics.logException(ex);
+        }
 	}
 
     public static void i(String tag, String message){

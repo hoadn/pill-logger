@@ -36,6 +36,8 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.pilllogger.helpers.Logger;
+
 
 /**
  * Provides convenience methods for in-app billing. Create one instance of this
@@ -875,10 +877,10 @@ public class IabHelper {
     }
     
     void logError(String msg) {
-        Log.e(mDebugTag, "In-app billing error: " + msg);
+        Logger.e(mDebugTag, "In-app billing error: " + msg);
     }
     
     void logWarn(String msg) {
-        Log.w(mDebugTag, "In-app billing warning: " + msg);
+        Logger.w(mDebugTag, "In-app billing warning: " + msg);
     }
 }
