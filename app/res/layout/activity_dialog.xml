@@ -6,12 +6,184 @@
               android:layout_height="wrap_content"
               android:baselineAligned="false"
               android:background="@color/white">
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp">
 
+    <uk.co.pilllogger.views.ColourIndicator
+        android:id="@+id/colour"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
+        android:padding="6dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:color="@color/pill_colour2"/>
+    <TextView
+        android:id="@+id/info_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textColor="@color/light_blue"
+        tools:text="Paracetamol 500mg"
+        android:layout_gravity="center_vertical"/>
+</LinearLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <TextView
+        android:id="@+id/info_dialog_last_taken"
+        android:text="@string/info_dialog_last_taken"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:gravity="left"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/text_grey_medium"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="10dp" />
+    <TextView
+        android:id="@+id/info_dialog_dosage"
+        android:text="24h: "
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="16sp"
+        android:textColor="@color/text_grey_medium"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
+        android:gravity="right"/>
+</LinearLayout>
+<TextView
+    android:id="@+id/info_dialog_daily_title"
+    android:text="@string/info_daily_title_units"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="16sp"
+    android:textColor="@color/text_grey_medium"
+    android:layout_marginTop="5dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginBottom="5dp"
+    android:gravity="center_horizontal"
+    android:fontFamily="sans-serif"/>
+<LinearLayout
+    android:id="@+id/pill_stats_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <LinearLayout
+        android:id="@+id/stats_total"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+            <TextView
+                android:id="@+id/pill_stats_7d"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="@dimen/numeric_pill_stat_font_size"
+                style="?attr/InfoDialogTopTextColour"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"/>
+            <ImageView
+                android:id="@+id/pill_stats_7d_indicator"
+                android:layout_weight="1"
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/chevron_up_grey"/>
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="7d"
+            android:layout_gravity="center_horizontal"
+            style="?attr/InfoDialogTopTextColour"
+            android:gravity="center"
+            android:textSize="14sp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/stats_longest_consecutive"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+            <TextView
+                android:id="@+id/pill_stats_30d"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.8"
+                android:textSize="@dimen/numeric_pill_stat_font_size"
+                style="?attr/InfoDialogTopTextColour"
+                android:layout_gravity="center"
+                android:textStyle="bold"/>
+            <ImageView
+                android:id="@+id/pill_stats_30d_indicator"
+                android:layout_weight="1"
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/chevron_down_grey"/>
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="30d"
+            style="?attr/InfoDialogTopTextColour"
+            android:textSize="14sp"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/stats_current_consecutive"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/pill_stats_all_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1.9"
+            style="?attr/InfoDialogTopTextColour"
+            android:textSize="@dimen/numeric_pill_stat_font_size"
+            android:layout_gravity="center"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="All time"
+            style="?attr/InfoDialogTopTextColour"
+            android:textSize="14sp"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+</LinearLayout>
+<View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/grey_divider_light" />
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:id="@+id/export_container">
     </FrameLayout>
-
 </LinearLayout>

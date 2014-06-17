@@ -5,17 +5,9 @@ import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.view.ActionMode;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
-
-import com.google.analytics.tracking.android.Tracker;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,16 +17,12 @@ import java.util.List;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
 import uk.co.pilllogger.dialogs.ChangePillInfoDialog;
-import uk.co.pilllogger.dialogs.InfoDialog;
-import uk.co.pilllogger.dialogs.PillInfoDialog;
-import uk.co.pilllogger.helpers.LayoutHelper;
-import uk.co.pilllogger.helpers.Logger;
+import uk.co.pilllogger.fragments.InfoDialogFragment;
+import uk.co.pilllogger.fragments.PillInfoDialogFragment;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
-import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.Observer;
-import uk.co.pilllogger.stats.Statistics;
 import uk.co.pilllogger.tasks.DeletePillTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.tasks.UpdatePillTask;
@@ -44,7 +32,7 @@ import uk.co.pilllogger.views.ColourIndicator;
  * Created by nick on 22/10/13.
  */
 public class PillsListAdapter extends PillsListBaseAdapter implements
-        PillInfoDialog.PillInfoDialogListener,
+        PillInfoDialogFragment.PillInfoDialogListener,
         ChangePillInfoDialog.ChangePillInfoDialogListener,
         Observer.IConsumptionAdded,
         Observer.IConsumptionDeleted {
@@ -161,7 +149,7 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
     }
 
     @Override
-    public void onDialogAddConsumption(Pill pill, InfoDialog dialog) {
+    public void onDialogAddConsumption(Pill pill, InfoDialogFragment dialog) {
         if (pill != null) {
             Consumption consumption = new Consumption(pill, new Date());
             new InsertConsumptionTask(_activity, consumption).execute();
@@ -172,14 +160,14 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
     }
 
     @Override
-    public void onDialogDelete(Pill pill, InfoDialog dialog) {
+    public void onDialogDelete(Pill pill, InfoDialogFragment dialog) {
         AlertDialog cancelDialog = createCancelDialog(pill, "DialogDelete");
         cancelDialog.show();
         dialog.getActivity().finish();
     }
 
     @Override
-    public void setDialogFavourite(Pill pill, InfoDialog dialog) {
+    public void setDialogFavourite(Pill pill, InfoDialogFragment dialog) {
         if (pill != null) {
             if (pill.isFavourite())
                 pill.setFavourite(false);
@@ -191,18 +179,18 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
     }
 
     @Override
-    public void onDialogChangePillColour(Pill pill, InfoDialog dialog) {
+    public void onDialogChangePillColour(Pill pill, InfoDialogFragment dialog) {
         new UpdatePillTask(_activity, pill).execute();
         dialog.getActivity().finish();
     }
 
     @Override
-    public void onDialogChangeNameDosage(Pill pill, InfoDialog dialog) {
+    public void onDialogChangeNameDosage(Pill pill, InfoDialogFragment dialog) {
         DialogFragment editDialog = new ChangePillInfoDialog(_activity, pill, this);
+        dialog.getActivity().finish();
         if (editDialog != null) {
             editDialog.show(_activity.getFragmentManager(), pill.getName());
         }
-        dialog.getActivity().finish();
     }
 
     @Override

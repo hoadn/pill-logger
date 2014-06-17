@@ -6,38 +6,27 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.joda.time.LocalTime;
-import org.joda.time.MutableDateTime;
-
-import java.util.ArrayList;
+import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.dialogs.ConsumptionInfoDialog;
-import uk.co.pilllogger.dialogs.PillInfoDialog;
-import uk.co.pilllogger.fragments.ExportMainFragment;
+import uk.co.pilllogger.fragments.ConsumptionInfoDialogFragment;
+import uk.co.pilllogger.fragments.PillInfoDialogFragment;
 import uk.co.pilllogger.helpers.DateHelper;
+import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Consumption;
-import uk.co.pilllogger.models.ExportSettings;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.repositories.PillRepository;
-import uk.co.pilllogger.services.IExportService;
-import uk.co.pilllogger.state.FeatureType;
-import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.GetConsumptionsTask;
-import uk.co.pilllogger.tasks.GetMaxDosagesTask;
-import uk.co.pilllogger.tasks.GetPillsTask;
+import uk.co.pilllogger.views.ColourIndicator;
 
 /**
  * Created by Alex on 22/05/2014
@@ -46,6 +35,16 @@ import uk.co.pilllogger.tasks.GetPillsTask;
 public class DialogActivity extends FragmentActivity{
 
     private static final String TAG = "DialogActivity";
+    private Pill _pill;
+    private List<Consumption> _consumptions;
+    private TextView _firstStats;
+    private ImageView _firstStatsIndicator;
+    private TextView _secondStats;
+    private ImageView _secondStatsIndicator;
+    private TextView _thirdStats;
+    private TextView _statsTitle;
+    private View _statsContainer;
+    private boolean _statsToggled;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,13 +67,57 @@ public class DialogActivity extends FragmentActivity{
             layoutParams.width = (int) (width * 0.9);
         }
 
+        setFragment();
 
+        ColourIndicator colour = (ColourIndicator)findViewById(R.id.colour);
+        TextView title = (TextView) findViewById(R.id.info_dialog_title);
+        TextView lastTaken = (TextView) findViewById(R.id.info_dialog_last_taken);
+        TextView dosage = (TextView) findViewById(R.id.info_dialog_dosage);
+
+        Typeface typeface = State.getSingleton().getTypeface();
+        title.setTypeface(typeface);
+        lastTaken.setTypeface(typeface);
+        dosage.setTypeface(typeface);
+
+        if(_pill != null) {
+            colour.setColour(_pill.getColour());
+
+            Consumption lastConsumption = _pill.getLatestConsumption(this);
+            if (lastConsumption != null) {
+                String lastTakenText = lastTaken.getText() + " " + DateHelper.formatDateAndTime(this, lastConsumption.getDate());
+                lastTakenText += " " + DateHelper.getTime(this, lastConsumption.getDate());
+                lastTaken.setText(lastTakenText);
+            }
+            _consumptions = _pill.getConsumptions();
+            String dosage24 = NumberHelper.getNiceFloatString(_pill.getTotalSize(24));
+            int quantity24 = _pill.getTotalQuantity(24);
+
+            String dosageText = dosage.getText().toString();
+            if(_pill.getSize() > 0)
+                dosageText += " " + dosage24 + _pill.getUnits() + " (" + quantity24 + " x " + _pill.getFormattedSize() + _pill.getUnits() + ")";
+            else
+                dosageText += " " + quantity24;
+            dosage.setText(dosageText);
+
+            title.setText(_pill.getName() + " " + _pill.getFormattedSize() + _pill.getUnits());
+        }
+
+        setupStats();
+    }
+
+    private void setFragment(){
         Fragment fragment = null;
+
         Intent intent = getIntent();
         if (intent != null) {
             int dialogTypeInt = intent.getIntExtra("DialogType", DialogType.Consumption.ordinal());
 
             DialogType dialogType = DialogType.values()[dialogTypeInt];
+
+            int pillId = intent.getIntExtra("PillId", -1);
+            if(pillId >= 0) {
+                _pill = PillRepository.getSingleton(this).get(pillId);
+            }
 
             switch(dialogType){
 
@@ -83,25 +126,19 @@ public class DialogActivity extends FragmentActivity{
 
                     if(consumptionId >= 0){
                         Consumption consumption = ConsumptionRepository.getSingleton(this).get(consumptionId);
-                        setFragment(new ConsumptionInfoDialog(this, consumption));
+                        fragment = new ConsumptionInfoDialogFragment(this, consumption);
                     }
                     break;
                 case Pill:
-                    int pillId = intent.getIntExtra("PillId", -1);
-                    if(pillId >= 0){
-                        Pill pill = PillRepository.getSingleton(this).get(pillId);
-                        setFragment(new PillInfoDialog(pill));
-                    }
+                        fragment = new PillInfoDialogFragment(_pill);
                     break;
             }
         }
-    }
 
-    private void setFragment(Fragment fragment){
         getFragmentManager()
                 .beginTransaction()
                 .add(R.id.export_container, fragment)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     @Override
@@ -112,6 +149,58 @@ public class DialogActivity extends FragmentActivity{
             return;
         }
         super.onBackPressed();
+    }
+
+    private void setupStats() {
+        _firstStats = (TextView) findViewById(R.id.pill_stats_7d);
+        _firstStatsIndicator = (ImageView) findViewById(R.id.pill_stats_7d_indicator);
+        _secondStats = (TextView) findViewById(R.id.pill_stats_30d);
+        _secondStatsIndicator = (ImageView) findViewById(R.id.pill_stats_30d_indicator);
+        _thirdStats = (TextView) findViewById(R.id.pill_stats_all_time);
+        _statsTitle = (TextView) findViewById(R.id.info_dialog_daily_title);
+
+        Typeface typeface = State.getSingleton().getTypeface();
+        _firstStats.setTypeface(typeface);
+        _secondStats.setTypeface(typeface);
+        _thirdStats.setTypeface(typeface);
+        _statsTitle.setTypeface(typeface);
+
+        _statsContainer = findViewById(R.id.pill_stats_container);
+
+        if(_pill != null && _pill.getSize() > 0) {
+            _statsContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    _statsToggled = !_statsToggled;
+                    updateStats();
+                }
+            });
+        }
+
+        updateStats();
+    }
+
+    private void updateStats(){
+        if(_pill == null)
+            return;
+
+        float firstAverage = _pill.getDailyAverage(7);
+        float secondAverage = _pill.getDailyAverage(30);
+        float totalAverage = _pill.getDailyAverage();
+
+        _firstStatsIndicator.setImageResource(firstAverage > totalAverage ? R.drawable.chevron_up_grey : R.drawable.chevron_down_grey);
+        _secondStatsIndicator.setImageResource(secondAverage > totalAverage ? R.drawable.chevron_up_grey : R.drawable.chevron_down_grey);
+
+        DecimalFormat decimalFormat = new DecimalFormat("#.#");
+        String firstText = _statsToggled ? decimalFormat.format(firstAverage * _pill.getSize()) + _pill.getUnits() : decimalFormat.format(firstAverage);
+        String secondText = _statsToggled ? decimalFormat.format(secondAverage * _pill.getSize()) + _pill.getUnits() : decimalFormat.format(secondAverage);
+        String thirdText = _statsToggled ? decimalFormat.format(totalAverage * _pill.getSize()) + _pill.getUnits() : decimalFormat.format(totalAverage);
+
+        _firstStats.setText(firstText);
+        _secondStats.setText(secondText);
+        _thirdStats.setText(thirdText);
+
+        _statsTitle.setText(_statsToggled ? R.string.info_daily_title_dosage : R.string.info_daily_title_units);
     }
 
     public enum DialogType{

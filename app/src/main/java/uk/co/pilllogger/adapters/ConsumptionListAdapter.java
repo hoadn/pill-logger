@@ -4,22 +4,16 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Point;
-import android.preference.PreferenceManager;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.util.SparseIntArray;
-import android.view.ActionMode;
 import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -40,9 +34,8 @@ import java.util.UUID;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
-import uk.co.pilllogger.dialogs.ConsumptionInfoDialog;
-import uk.co.pilllogger.dialogs.InfoDialog;
-import uk.co.pilllogger.dialogs.PillInfoDialog;
+import uk.co.pilllogger.fragments.ConsumptionInfoDialogFragment;
+import uk.co.pilllogger.fragments.InfoDialogFragment;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
@@ -54,9 +47,7 @@ import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.stats.Statistics;
 import uk.co.pilllogger.tasks.DeleteConsumptionTask;
-import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.views.ColourIndicator;
 
@@ -67,7 +58,7 @@ import org.joda.time.Days;
  * Created by nick on 22/10/13.
  */
 public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> implements
-        ConsumptionInfoDialog.ConsumptionInfoDialogListener, Observer.IConsumptionAdded {
+        ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, Observer.IConsumptionAdded {
 
     private static String TAG = "ConsumptionListAdapter";
     private List<Consumption> _consumptions;
@@ -99,7 +90,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
     }
 
     @Override
-    public void onDialogTakeAgain(Consumption consumption, InfoDialog dialog) {
+    public void onDialogTakeAgain(Consumption consumption, InfoDialogFragment dialog) {
         Date consumptionDate = new Date();
         String consumptionGroup = UUID.randomUUID().toString();
 
@@ -118,7 +109,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
     }
 
     @Override
-    public void onDialogIncrease(Consumption consumption, InfoDialog dialog) {
+    public void onDialogIncrease(Consumption consumption, InfoDialogFragment dialog) {
         Consumption newC = new Consumption(consumption);
         newC.setId(0);
         newC.setQuantity(1);
@@ -129,7 +120,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
     }
 
     @Override
-    public void onDialogDecrease(Consumption consumption, InfoDialog dialog) {
+    public void onDialogDecrease(Consumption consumption, InfoDialogFragment dialog) {
         new DeleteConsumptionTask(_activity, consumption, false).execute();
         TrackerHelper.deleteConsumptionEvent(_activity, "DialogDecrease");
         Toast.makeText(_activity, R.string.consumption_info_dialog_decrease_toast, Toast.LENGTH_SHORT).show();
@@ -137,7 +128,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
     }
 
     @Override
-    public void onDialogDelete(Consumption consumption, InfoDialog dialog) {
+    public void onDialogDelete(Consumption consumption, InfoDialogFragment dialog) {
         new DeleteConsumptionTask(_activity, consumption, true).execute();
         TrackerHelper.deleteConsumptionEvent(_activity, "DialogDelete");
         dialog.getActivity().finish();
@@ -222,7 +213,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                         @Override
                         public void onClick(View v) {
                                 TrackerHelper.showInfoDialogEvent(_activity, TAG);
-                                startDialog(consumption.getId());
+                                startDialog(consumption.getId(), consumption.getPillId());
                         }
                     });
 
@@ -331,10 +322,11 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         }
     }
 
-    private void startDialog(int consumptionId) {
+    private void startDialog(int consumptionId, int pillId) {
         Intent intent = new Intent(_activity, DialogActivity.class);
         intent.putExtra("DialogType", DialogActivity.DialogType.Consumption.ordinal());
         intent.putExtra("ConsumptionId", consumptionId);
+        intent.putExtra("PillId", pillId);
         _activity.startActivity(intent);
     }
 
