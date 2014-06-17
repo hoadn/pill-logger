@@ -1,13 +1,17 @@
 package uk.co.pilllogger.dialogs;
 
 import android.annotation.SuppressLint;
+import android.app.FragmentManager;
 import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.fragments.ExportMainFragment;
+import uk.co.pilllogger.fragments.ExportSelectDateFragment;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.UpdatePillTask;
 import uk.co.pilllogger.views.ColourIndicator;
@@ -16,16 +20,14 @@ import uk.co.pilllogger.views.ColourIndicator;
  * Created by Alex on 05/03/14.
  */
 public class PillInfoDialog extends InfoDialog {
-    private PillInfoDialogListener _listener;
 
     public PillInfoDialog(){
         super();
     }
 
     @SuppressLint("ValidFragment")
-    public PillInfoDialog(Pill pill, PillInfoDialogListener listener) {
+    public PillInfoDialog(Pill pill) {
         super(pill);
-        _listener = listener;
     }
 
     @Override
@@ -41,6 +43,7 @@ public class PillInfoDialog extends InfoDialog {
         final TextView changeColour = (TextView) view.findViewById(R.id.info_dialog_change_colour);
         TextView favourite = (TextView) view.findViewById(R.id.info_dialog_set_favourite);
         TextView changeNameDosage = (TextView) view.findViewById(R.id.info_dialog_set_name_dosage);
+        TextView setReminders = (TextView) view.findViewById(R.id.info_dialog_set_reminders);
 
         Typeface typeface = State.getSingleton().getTypeface();
         addConsumption.setTypeface(typeface);
@@ -50,7 +53,7 @@ public class PillInfoDialog extends InfoDialog {
         changeNameDosage.setTypeface(typeface);
 
         if(_pill == null) {
-            dismiss();
+            getActivity().finish();
             return;
         }
 
@@ -60,27 +63,42 @@ public class PillInfoDialog extends InfoDialog {
         addConsumption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _listener.onDialogAddConsumption(_pill, PillInfoDialog.this);
+                Observer.getSingleton().notifyOnPillDialogAddConsumption(_pill, PillInfoDialog.this);
             }
         });
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _listener.onDialogDelete(_pill, PillInfoDialog.this);
+                Observer.getSingleton().notifyOnPillDialogDelete(_pill, PillInfoDialog.this);
             }
         });
         changeNameDosage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _listener.onDialogChangeNameDosage(_pill, PillInfoDialog.this);
+                Observer.getSingleton().notifyOnPillDialogChangeNameDosage(_pill, PillInfoDialog.this);
             }
         });
         favourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _listener.setDialogFavourite(_pill, PillInfoDialog.this);
+                Observer.getSingleton().notifyOnPillDialogFavourite(_pill, PillInfoDialog.this);
             }
 
+        });
+
+        setReminders.setOnClickListener(new View.OnClickListener() {
+            public ExportSelectDateFragment _selectDateFragment;
+
+            @Override
+            public void onClick(View v) {
+                _selectDateFragment = new ExportSelectDateFragment();
+                FragmentManager fm = PillInfoDialog.this.getActivity().getFragmentManager();
+                fm.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)
+                        .replace(R.id.export_container, _selectDateFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
         });
 
         final View mainView = view;
@@ -112,7 +130,7 @@ public class PillInfoDialog extends InfoDialog {
                                     colourTop.setColour(colour);
                                     colourHolder.setVisibility(View.GONE);
                                     _pill.setColour(colour);
-                                    _listener.onDialogChangePillColour(_pill, PillInfoDialog.this);
+                                    Observer.getSingleton().notifyOnPillDialogChangePillColour(_pill, PillInfoDialog.this);
                                 }
                             });
                         }

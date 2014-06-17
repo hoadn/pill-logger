@@ -471,7 +471,6 @@ public class MainActivity extends PillLoggerActivityBase implements
     private void startExport() {
         Intent intent = new Intent(this, ExportActivity.class);
         startActivity(intent);
-        //new GetConsumptionsTask(this, this, true).execute();
     }
 
     private void startSettingsActivity() {

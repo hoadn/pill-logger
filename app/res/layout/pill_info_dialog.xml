@@ -78,6 +78,22 @@
         android:layout_height="1dp"
         android:background="@color/grey_divider_light" />
     <TextView
+        android:id="@+id/info_dialog_set_reminders"
+        android:text="Test"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dialog_item_height"
+        android:textSize="18sp"
+        android:textColor="@color/text_grey"
+        android:paddingLeft="@dimen/dialog_item_padding_left"
+        android:paddingRight="4dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:gravity="center_vertical"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_divider_light" />
+    <TextView
         android:id="@+id/info_dialog_delete"
         android:text="@string/info_dialog_delete"
         android:layout_width="match_parent"

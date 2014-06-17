@@ -10,6 +10,7 @@ import android.widget.TextView;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 
 /**
@@ -18,19 +19,16 @@ import uk.co.pilllogger.state.State;
 public class ConsumptionInfoDialog extends InfoDialog {
     private Context _context;
     private Consumption _consumption;
-    private ConsumptionInfoDialogListener _listener;
-
 
     public ConsumptionInfoDialog(){
         super();
     }
 
     @SuppressLint("ValidFragment")
-    public ConsumptionInfoDialog(Context context, Consumption consumption, ConsumptionInfoDialogListener listener) {
+    public ConsumptionInfoDialog(Context context, Consumption consumption) {
         super(consumption.getPill());
         _context = context;
         _consumption = consumption;
-        _listener = listener;
     }
 
     @Override
@@ -55,7 +53,7 @@ public class ConsumptionInfoDialog extends InfoDialog {
         delete.setTypeface(typeface);
 
         if(_consumption == null) {
-            dismiss();
+            getActivity().finish();
             return;
         }
 
@@ -81,25 +79,25 @@ public class ConsumptionInfoDialog extends InfoDialog {
         takeAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _listener.onDialogTakeAgain(_consumption, ConsumptionInfoDialog.this);
+                Observer.getSingleton().notifyOnConsumptionDialogTakeAgain(_consumption, ConsumptionInfoDialog.this);
             }
         });
         increase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _listener.onDialogIncrease(_consumption, ConsumptionInfoDialog.this);
+                Observer.getSingleton().notifyOnConsumptionDialogIncrease(_consumption, ConsumptionInfoDialog.this);
             }
         });
         decrease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _listener.onDialogDecrease(_consumption, ConsumptionInfoDialog.this);
+                Observer.getSingleton().notifyOnConsumptionDialogDecrease(_consumption, ConsumptionInfoDialog.this);
             }
         });
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _listener.onDialogDelete(_consumption, ConsumptionInfoDialog.this);
+                Observer.getSingleton().notifyOnConsumptionDialogDelete(_consumption, ConsumptionInfoDialog.this);
             }
         });
     }

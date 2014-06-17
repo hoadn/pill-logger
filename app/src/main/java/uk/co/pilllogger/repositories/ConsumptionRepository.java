@@ -193,6 +193,11 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
     @Override
     public Consumption get(int id) {
+        if(_consumptionsCache != null
+                && _consumptionsCache.size() > 0
+                && _consumptionsCache.containsKey(id))
+            return _consumptionsCache.get(id);
+
         SQLiteDatabase db = _dbCreator.getReadableDatabase();
 
         String[] projection = getProjection();

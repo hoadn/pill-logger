@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.activities.DialogActivity;
 import uk.co.pilllogger.dialogs.ChangePillInfoDialog;
 import uk.co.pilllogger.dialogs.InfoDialog;
 import uk.co.pilllogger.dialogs.PillInfoDialog;
@@ -55,6 +57,7 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
         _activity = activity;
         Observer.getSingleton().registerConsumptionAddedObserver(this);
         Observer.getSingleton().registerConsumptionDeletedObserver(this);
+        Observer.getSingleton().registerPillDialogObserver(this);
     }
 
     private AlertDialog createCancelDialog(Pill pill, String deleteTrackerType) {
@@ -84,6 +87,13 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
         return null;
     }
 
+    private void startDialog(int pillId) {
+        Intent intent = new Intent(_activity, DialogActivity.class);
+        intent.putExtra("DialogType", DialogActivity.DialogType.Pill.ordinal());
+        intent.putExtra("PillId", pillId);
+        _activity.startActivity(intent);
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = super.getView(position, convertView, parent);
@@ -97,9 +107,8 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
                 @Override
                 public void onClick(View v) {
                     if (pill != null) {
-                        InfoDialog dialog = new PillInfoDialog(pill, PillsListAdapter.this);
                         TrackerHelper.showInfoDialogEvent(_activity, TAG);
-                        dialog.show(_activity.getFragmentManager(), pill.getName());
+                        startDialog(pill.getId());
                     }
                 }
             });
@@ -159,14 +168,14 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
             TrackerHelper.addConsumptionEvent(_activity, "PillDialog");
             Toast.makeText(_activity, "Added consumption of " + pill.getName(), Toast.LENGTH_SHORT).show();
         }
-        dialog.dismiss();
+        dialog.getActivity().finish();
     }
 
     @Override
     public void onDialogDelete(Pill pill, InfoDialog dialog) {
         AlertDialog cancelDialog = createCancelDialog(pill, "DialogDelete");
         cancelDialog.show();
-        dialog.dismiss();
+        dialog.getActivity().finish();
     }
 
     @Override
@@ -178,21 +187,22 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
                 pill.setFavourite(true);
             new UpdatePillTask(_activity, pill).execute();
         }
-        dialog.dismiss();
+        dialog.getActivity().finish();
     }
 
     @Override
     public void onDialogChangePillColour(Pill pill, InfoDialog dialog) {
         new UpdatePillTask(_activity, pill).execute();
-        dialog.dismiss();
+        dialog.getActivity().finish();
     }
 
     @Override
     public void onDialogChangeNameDosage(Pill pill, InfoDialog dialog) {
         DialogFragment editDialog = new ChangePillInfoDialog(_activity, pill, this);
-        if (editDialog != null)
+        if (editDialog != null) {
             editDialog.show(_activity.getFragmentManager(), pill.getName());
-        dialog.dismiss();
+        }
+        dialog.getActivity().finish();
     }
 
     @Override

@@ -3,6 +3,7 @@ package uk.co.pilllogger.adapters;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.preference.PreferenceManager;
@@ -38,6 +39,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.activities.DialogActivity;
 import uk.co.pilllogger.dialogs.ConsumptionInfoDialog;
 import uk.co.pilllogger.dialogs.InfoDialog;
 import uk.co.pilllogger.dialogs.PillInfoDialog;
@@ -87,6 +89,8 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         });
 
         Observer.getSingleton().registerConsumptionAddedObserver(this);
+
+        Observer.getSingleton().registerConsumptionDialogObserver(this);
     }
 
     public ConsumptionListAdapter(Activity activity, Fragment fragment, int textViewResourceId, List<Consumption> consumptions, List<Pill> pills) {
@@ -110,7 +114,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         }
 
         TrackerHelper.addConsumptionEvent(_activity, "DialogTakeAgain");
-        dialog.dismiss();
+        dialog.getActivity().finish();
     }
 
     @Override
@@ -121,7 +125,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         new InsertConsumptionTask(_activity, newC).execute();
         TrackerHelper.addConsumptionEvent(_activity, "DialogIncrease");
         Toast.makeText(_activity, R.string.consumption_info_dialog_increase_toast, Toast.LENGTH_SHORT).show();
-        dialog.dismiss();
+        dialog.getActivity().finish();
     }
 
     @Override
@@ -129,14 +133,14 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         new DeleteConsumptionTask(_activity, consumption, false).execute();
         TrackerHelper.deleteConsumptionEvent(_activity, "DialogDecrease");
         Toast.makeText(_activity, R.string.consumption_info_dialog_decrease_toast, Toast.LENGTH_SHORT).show();
-        dialog.dismiss();
+        dialog.getActivity().finish();
     }
 
     @Override
     public void onDialogDelete(Consumption consumption, InfoDialog dialog) {
         new DeleteConsumptionTask(_activity, consumption, true).execute();
         TrackerHelper.deleteConsumptionEvent(_activity, "DialogDelete");
-        dialog.dismiss();
+        dialog.getActivity().finish();
     }
 
     @Override
@@ -217,9 +221,8 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                     v.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                InfoDialog dialog = new ConsumptionInfoDialog(_activity, consumption, ConsumptionListAdapter.this);
                                 TrackerHelper.showInfoDialogEvent(_activity, TAG);
-                                dialog.show(_activity.getFragmentManager(), consumption.getPill().getName());
+                                startDialog(consumption.getId());
                         }
                     });
 
@@ -326,6 +329,13 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                 });
             }
         }
+    }
+
+    private void startDialog(int consumptionId) {
+        Intent intent = new Intent(_activity, DialogActivity.class);
+        intent.putExtra("DialogType", DialogActivity.DialogType.Consumption.ordinal());
+        intent.putExtra("ConsumptionId", consumptionId);
+        _activity.startActivity(intent);
     }
 
     private void setUpSlidingPane(View v) {
