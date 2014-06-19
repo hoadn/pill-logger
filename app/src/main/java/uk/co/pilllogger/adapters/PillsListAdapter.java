@@ -194,7 +194,7 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
     }
 
     @Override
-    public void onDialogInfomationChanged(Pill pill, ChangePillInfoDialog dialog) {
+    public void onDialogInfomationChanged(Pill pill) {
         new UpdatePillTask(_activity, pill).execute();
     }
 

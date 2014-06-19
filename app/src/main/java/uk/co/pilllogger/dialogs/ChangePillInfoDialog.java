@@ -98,7 +98,7 @@ public class ChangePillInfoDialog extends DialogFragment {
                 float size = pillSize.trim().length() > 0 ? Float.valueOf(pillSize) : 0;
                 _pill.setSize(size);
                 _pill.setUnits(spinner.getSelectedItem().toString());
-                _listener.onDialogInfomationChanged(_pill, ChangePillInfoDialog.this);
+                _listener.onDialogInfomationChanged(_pill);
                 InputMethodManager im = (InputMethodManager)_activity.getSystemService(Context.INPUT_METHOD_SERVICE);
                 im.hideSoftInputFromWindow(editPillName.getWindowToken(), 0);
                 dialog.dismiss();
@@ -132,6 +132,6 @@ public class ChangePillInfoDialog extends DialogFragment {
     }
 
     public interface ChangePillInfoDialogListener {
-        public void onDialogInfomationChanged(Pill pill, ChangePillInfoDialog dialog);
+        public void onDialogInfomationChanged(Pill pill);
     }
 }

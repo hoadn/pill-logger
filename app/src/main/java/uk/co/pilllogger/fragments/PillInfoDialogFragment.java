@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.dialogs.ChangePillInfoDialog;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
@@ -18,7 +19,7 @@ import uk.co.pilllogger.views.ColourIndicator;
 /**
  * Created by Alex on 05/03/14.
  */
-public class PillInfoDialogFragment extends InfoDialogFragment {
+public class PillInfoDialogFragment extends InfoDialogFragment implements ChangePillInfoDialog.ChangePillInfoDialogListener {
 
     public PillInfoDialogFragment() {
         super();
@@ -80,7 +81,13 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
         changeNameDosage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Observer.getSingleton().notifyOnPillDialogChangeNameDosage(_pill, PillInfoDialogFragment.this);
+                ChangeNameDosageFragment fragment = new ChangeNameDosageFragment(_pill, PillInfoDialogFragment.this);
+                FragmentManager fm = PillInfoDialogFragment.this.getActivity().getFragmentManager();
+                fm.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)
+                        .replace(R.id.export_container, fragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
         favourite.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +149,11 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onDialogInfomationChanged(Pill pill) {
+        Observer.getSingleton().notifyPillsUpdated(pill);
     }
 
     public interface PillInfoDialogListener {
