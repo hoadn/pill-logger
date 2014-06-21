@@ -37,7 +37,7 @@
                 android:paddingBottom="5dp"
                 android:textSize="22sp"
                 android:layout_weight="1"
-                android:hint="@string/create_a_pill_name_hint"
+                android:hint="@string/pill_name_hint"
                 android:textColorHint="@color/text_grey_light"
                 android:background="@null"
                 android:inputType="textCapWords"

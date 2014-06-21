@@ -106,12 +106,20 @@
         <item name="android:background">@drawable/consumption_shadow</item>
     </style>
 
-    <style name="FragmentTitle">
+    <style name="Title">
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:padding">5dp</item>
         <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="Title.Fragment">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Title.Dialog">
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="CardTitle"/>
@@ -134,10 +142,11 @@
         <item name="AddConsumptionBackground">@style/AddConsumptionBackground.Rainbow</item>
         <item name="ContainerBackground">@style/ContainerBackground.Rainbow</item>
         <item name="ContainerShadow">@style/ContainerShadow.Rainbow</item>
-        <item name="FragmentTitle">@style/FragmentTitle.Rainbow</item>
+        <item name="FragmentTitle">@style/Title.Rainbow</item>
         <item name="AddConsumptionGradient">@style/AddConsumptionGradient.Rainbow</item>
         <item name="InfoDialogTopTextColour">@style/InfoDialogTopTextColour</item>
         <item name="ExportItem">@style/ExportItem</item>
+        <item name="DialogTitle">@style/Title.Dialog</item>
     </style>
 
     <style name="RainbowTextView">
@@ -188,7 +197,7 @@
         <item name="android:visibility">gone</item>
     </style>
 
-    <style name="FragmentTitle.Rainbow">
+    <style name="Title.Rainbow">
         <item name="android:textColor">@color/default_text</item>
     </style>
 
@@ -210,11 +219,12 @@
         <item name="android:popupMenuStyle">@style/PopupMenu.Example.Professional</item>
         <item name="ContainerBackground">@style/ContainerBackground.Professional</item>
         <item name="ContainerShadow">@style/ContainerShadow</item>
-        <item name="FragmentTitle">@style/FragmentTitle.Professional</item>
+        <item name="FragmentTitle">@style/Title.Professional</item>
         <item name="CardTitle">@style/CardTitle.Professional</item>
         <item name="NewMedicineTitle">@style/NewMedicineTitle.Professional</item>
         <item name="InfoDialogTopTextColour">@style/InfoDialogTopTextColour</item>
         <item name="ExportItem">@style/ExportItem</item>
+        <item name="DialogTitle">@style/Title.Dialog</item>
     </style>
 
     <style name="ProfessionalTextView">
@@ -261,7 +271,7 @@
         <item name="android:background">@drawable/consumption_background</item>
     </style>
 
-    <style name="FragmentTitle.Professional">
+    <style name="Title.Professional">
         <item name="android:textColor">@color/title_blue</item>
     </style>
 

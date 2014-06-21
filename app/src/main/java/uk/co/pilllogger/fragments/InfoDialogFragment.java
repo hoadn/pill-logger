@@ -22,6 +22,7 @@ import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.views.ColourIndicator;
 
@@ -29,7 +30,7 @@ import uk.co.pilllogger.views.ColourIndicator;
 /**
  * Created by Nick on 05/03/14.
  */
-public abstract class InfoDialogFragment extends PillLoggerFragmentBase {
+public abstract class InfoDialogFragment extends PillLoggerFragmentBase{
 
     String _title;
     Pill _pill;

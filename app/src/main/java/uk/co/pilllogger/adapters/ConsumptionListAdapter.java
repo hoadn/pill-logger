@@ -75,7 +75,12 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         Observer.getSingleton().registerPillsUpdatedObserver(new Observer.IPillsUpdated() {
             @Override
             public void pillsUpdated(Pill pill) {
-                notifyDataSetChanged();
+                _activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
             }
         });
 

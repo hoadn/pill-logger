@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.dialogs.ChangePillInfoDialog;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
@@ -19,7 +18,15 @@ import uk.co.pilllogger.views.ColourIndicator;
 /**
  * Created by Alex on 05/03/14.
  */
-public class PillInfoDialogFragment extends InfoDialogFragment implements ChangePillInfoDialog.ChangePillInfoDialogListener {
+public class PillInfoDialogFragment extends InfoDialogFragment {
+
+    private TextView _addConsumption;
+    private TextView _delete;
+    private TextView _changeColour;
+    private TextView _favourite;
+    private TextView _editPill;
+    private TextView _setReminders;
+    private TextView _editPillSummary;
 
     public PillInfoDialogFragment() {
         super();
@@ -44,44 +51,38 @@ public class PillInfoDialogFragment extends InfoDialogFragment implements Change
         if(activity == null)
             return;
 
-        TextView addConsumption = (TextView) activity.findViewById(R.id.info_dialog_add_consumption);
-        TextView delete = (TextView) activity.findViewById(R.id.info_dialog_delete);
-        final TextView changeColour = (TextView) activity.findViewById(R.id.info_dialog_change_colour);
-        TextView favourite = (TextView) activity.findViewById(R.id.info_dialog_set_favourite);
-        TextView changeNameDosage = (TextView) activity.findViewById(R.id.info_dialog_set_name_dosage);
-        TextView setReminders = (TextView) activity.findViewById(R.id.info_dialog_set_reminders);
+        _addConsumption = (TextView) activity.findViewById(R.id.info_dialog_add_consumption);
+        _delete = (TextView) activity.findViewById(R.id.info_dialog_delete);
+        _changeColour = (TextView) activity.findViewById(R.id.info_dialog_change_colour);
+        _favourite = (TextView) activity.findViewById(R.id.info_dialog_set_favourite);
+        _editPill = (TextView) activity.findViewById(R.id.info_dialog_edit_pill_title);
+        _editPillSummary = (TextView) activity.findViewById(R.id.info_dialog_edit_pill_summary);
+        View editPillContainer = activity.findViewById(R.id.info_dialog_edit_pill);
+        _setReminders = (TextView) activity.findViewById(R.id.info_dialog_set_reminders);
 
-        Typeface typeface = State.getSingleton().getTypeface();
-        addConsumption.setTypeface(typeface);
-        delete.setTypeface(typeface);
-        changeColour.setTypeface(typeface);
-        favourite.setTypeface(typeface);
-        changeNameDosage.setTypeface(typeface);
+        setTypeFace();
 
         if(_pill == null) {
             activity.finish();
             return;
         }
 
-        if (_pill.isFavourite())
-            favourite.setText(getResources().getString(R.string.info_dialog_unset_favourite));
-
-        addConsumption.setOnClickListener(new View.OnClickListener() {
+        _addConsumption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Observer.getSingleton().notifyOnPillDialogAddConsumption(_pill, PillInfoDialogFragment.this);
             }
         });
-        delete.setOnClickListener(new View.OnClickListener() {
+        _delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Observer.getSingleton().notifyOnPillDialogDelete(_pill, PillInfoDialogFragment.this);
             }
         });
-        changeNameDosage.setOnClickListener(new View.OnClickListener() {
+        editPillContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChangeNameDosageFragment fragment = new ChangeNameDosageFragment(_pill, PillInfoDialogFragment.this);
+                EditPillFragment fragment = new EditPillFragment(_pill);
                 FragmentManager fm = PillInfoDialogFragment.this.getActivity().getFragmentManager();
                 fm.beginTransaction()
                         .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)
@@ -90,7 +91,7 @@ public class PillInfoDialogFragment extends InfoDialogFragment implements Change
                         .commit();
             }
         });
-        favourite.setOnClickListener(new View.OnClickListener() {
+        _favourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Observer.getSingleton().notifyOnPillDialogFavourite(_pill, PillInfoDialogFragment.this);
@@ -98,7 +99,10 @@ public class PillInfoDialogFragment extends InfoDialogFragment implements Change
 
         });
 
-        setReminders.setOnClickListener(new View.OnClickListener() {
+        if (_pill.isFavourite())
+            _favourite.setText(getResources().getString(R.string.info_dialog_unset_favourite));
+
+        _setReminders.setOnClickListener(new View.OnClickListener() {
             public PillRecurringFragment _selectDateFragment;
 
             @Override
@@ -114,7 +118,7 @@ public class PillInfoDialogFragment extends InfoDialogFragment implements Change
         });
 
         final uk.co.pilllogger.views.ColourIndicator colourTop = (uk.co.pilllogger.views.ColourIndicator) activity.findViewById(R.id.colour);
-        changeColour.setOnClickListener(new View.OnClickListener() {
+        _changeColour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final View colourHolder = activity.findViewById(R.id.info_dialog_colour_picker_container);
@@ -151,9 +155,14 @@ public class PillInfoDialogFragment extends InfoDialogFragment implements Change
         });
     }
 
-    @Override
-    public void onDialogInfomationChanged(Pill pill) {
-        Observer.getSingleton().notifyPillsUpdated(pill);
+    private void setTypeFace() {
+        Typeface typeface = State.getSingleton().getRobotoTypeface();
+        _addConsumption.setTypeface(typeface);
+        _delete.setTypeface(typeface);
+        _changeColour.setTypeface(typeface);
+        _favourite.setTypeface(typeface);
+        _editPill.setTypeface(typeface);
+        _editPillSummary.setTypeface(typeface);
     }
 
     public interface PillInfoDialogListener {

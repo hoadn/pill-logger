@@ -50,7 +50,7 @@
         android:layout_marginLeft="10dp" />
     <TextView
         android:id="@+id/info_dialog_dosage"
-        android:text="24h: "
+        android:text="@string/twenty_four_hour_short_hand"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -110,7 +110,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="7d"
+            android:text="@string/seven_days_short_hand"
             android:layout_gravity="center_horizontal"
             style="?attr/InfoDialogTopTextColour"
             android:gravity="center"
@@ -147,7 +147,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="30d"
+            android:text="@string/thirty_day_short_hand"
             style="?attr/InfoDialogTopTextColour"
             android:textSize="14sp"
             android:layout_gravity="center"/>

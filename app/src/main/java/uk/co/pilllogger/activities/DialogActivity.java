@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,7 @@ import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.repositories.PillRepository;
+import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.views.ColourIndicator;
 
@@ -32,7 +32,7 @@ import uk.co.pilllogger.views.ColourIndicator;
  * Created by Alex on 22/05/2014
  * in uk.co.pilllogger.activities.
  */
-public class DialogActivity extends FragmentActivity{
+public class DialogActivity extends PillLoggerActivityBase implements Observer.IPillsUpdated{
 
     private static final String TAG = "DialogActivity";
     private Pill _pill;
@@ -45,6 +45,10 @@ public class DialogActivity extends FragmentActivity{
     private TextView _statsTitle;
     private View _statsContainer;
     private boolean _statsToggled;
+    private ColourIndicator _colour;
+    private TextView _title;
+    private TextView _lastTaken;
+    private TextView _dosage;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,40 +73,51 @@ public class DialogActivity extends FragmentActivity{
 
         setFragment();
 
-        ColourIndicator colour = (ColourIndicator)findViewById(R.id.colour);
-        TextView title = (TextView) findViewById(R.id.info_dialog_title);
-        TextView lastTaken = (TextView) findViewById(R.id.info_dialog_last_taken);
-        TextView dosage = (TextView) findViewById(R.id.info_dialog_dosage);
+        _colour = (ColourIndicator)findViewById(R.id.colour);
+        _title = (TextView) findViewById(R.id.info_dialog_title);
+        _lastTaken = (TextView) findViewById(R.id.info_dialog_last_taken);
+        _dosage = (TextView) findViewById(R.id.info_dialog_dosage);
 
         Typeface typeface = State.getSingleton().getTypeface();
-        title.setTypeface(typeface);
-        lastTaken.setTypeface(typeface);
-        dosage.setTypeface(typeface);
+        _title.setTypeface(typeface);
+        _lastTaken.setTypeface(typeface);
+        _dosage.setTypeface(typeface);
 
+        bindPill();
+
+        setupStats();
+
+        Observer.getSingleton().registerPillsUpdatedObserver(this);
+    }
+
+    public void onDestroy(){
+        Observer.getSingleton().unregisterPillsUpdatedObserver(this);
+        super.onDestroy();
+    }
+
+    private void bindPill(){
         if(_pill != null) {
-            colour.setColour(_pill.getColour());
+            _colour.setColour(_pill.getColour());
 
             Consumption lastConsumption = _pill.getLatestConsumption(this);
             if (lastConsumption != null) {
-                String lastTakenText = lastTaken.getText() + " " + DateHelper.formatDateAndTime(this, lastConsumption.getDate());
+                String lastTakenText = getString(R.string.info_dialog_last_taken) + " " + DateHelper.formatDateAndTime(this, lastConsumption.getDate());
                 lastTakenText += " " + DateHelper.getTime(this, lastConsumption.getDate());
-                lastTaken.setText(lastTakenText);
+                _lastTaken.setText(lastTakenText);
             }
             _consumptions = _pill.getConsumptions();
             String dosage24 = NumberHelper.getNiceFloatString(_pill.getTotalSize(24));
             int quantity24 = _pill.getTotalQuantity(24);
 
-            String dosageText = dosage.getText().toString();
+            String dosageText = getString(R.string.twenty_four_hour_short_hand);
             if(_pill.getSize() > 0)
-                dosageText += " " + dosage24 + _pill.getUnits() + " (" + quantity24 + " x " + _pill.getFormattedSize() + _pill.getUnits() + ")";
+                dosageText += dosage24 + " " + _pill.getUnits() + " (" + quantity24 + " x " + _pill.getFormattedSize() + _pill.getUnits() + ")";
             else
                 dosageText += " " + quantity24;
-            dosage.setText(dosageText);
+            _dosage.setText(dosageText);
 
-            title.setText(_pill.getName() + " " + _pill.getFormattedSize() + _pill.getUnits());
+            _title.setText(_pill.getName() + " " + _pill.getFormattedSize() + _pill.getUnits());
         }
-
-        setupStats();
     }
 
     private void setFragment(){
@@ -201,6 +216,18 @@ public class DialogActivity extends FragmentActivity{
         _thirdStats.setText(thirdText);
 
         _statsTitle.setText(_statsToggled ? R.string.info_daily_title_dosage : R.string.info_daily_title_units);
+    }
+
+    @Override
+    public void pillsUpdated(Pill pill) {
+        _pill = pill;
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                bindPill();
+            }
+        });
     }
 
     public enum DialogType{
