@@ -107,6 +107,8 @@
     <string name="consumption_info_dialog_take">Take again</string>
     <string name="consumption_info_dialog_take_again_prefix">Take another</string>
     <string name="consumption_info_dialog_take_again_suffix"> now</string>
+    <string name="pill_info_dialog_take_now_prefix">Take a </string>
+    <string name="pill_info_dialog_take_now_suffix"> now</string>
     <string name="medicine_taken_most_often_title">Medicine Taken Most Often</string>
     <string name="day_with_most_consumptions_title">Day of Week with Most Consumptions</string>
     <string name="hour_with_most_consumptions_title">Hour of Day with Most Consumptions</string>
@@ -194,4 +196,6 @@
     <string name="thirty_day_short_hand">30d</string>
     <string name="twenty_four_hour_short_hand">24h: </string>
     <string name="edit_pill_fragment_title">Edit Medicine</string>
+    <string name="edit_pill_summary_text">Edit name, dosage, colour etc.</string>
+    <string name="info_dialog_take_again">Take again</string>
 </resources>

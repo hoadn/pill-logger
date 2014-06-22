@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:textColor="@color/text_grey_medium"
-                android:text="Take 2 Paracetamol now"/>
+                android:text="Take a Paracetamol now"/>
         </LinearLayout>
     </LinearLayout>
     <View
@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:textColor="@color/text_grey_medium"
-                android:text="Edit name, dosage, colour etc."/>
+                android:text="@string/edit_pill_summary_text"/>
         </LinearLayout>
         <ImageView
             android:layout_width="wrap_content"
@@ -102,7 +102,7 @@
         android:background="?android:attr/selectableItemBackground"
         style="?attr/ExportItem">
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="32dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="13dp"
             android:layout_marginRight="8dp"

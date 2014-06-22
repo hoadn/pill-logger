@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.ContactsContract;
 
 import org.joda.time.DateTime;
 
@@ -94,12 +93,12 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
         consumption.setPill(pill);
 
-        updateCaches(consumption);
+        addToCaches(consumption);
 
         return consumption;
     }
 
-    private void updateCaches(Consumption consumption){
+    private void addToCaches(Consumption consumption){
         Logger.d(TAG, "Updating caches");
 
         Map<Integer, Consumption> consumptionCache = new ConcurrentHashMap<Integer, Consumption>();
@@ -112,15 +111,47 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         consumptionCache.put(consumption.getId(), consumption);
 
         Map<Integer, Consumption> groupCache = new ConcurrentHashMap<Integer, Consumption>();
-        if(_groupConsumptionCache.containsKey(consumption.getGroup())) {
-            groupCache = _groupConsumptionCache.get(consumption.getGroup());
-        }
-        else{
-            _groupConsumptionCache.put(consumption.getGroup(), groupCache);
+        if(consumption.getGroup() != null) {
+            if (_groupConsumptionCache.containsKey(consumption.getGroup())) {
+                groupCache = _groupConsumptionCache.get(consumption.getGroup());
+            } else {
+                _groupConsumptionCache.put(consumption.getGroup(), groupCache);
+            }
         }
         groupCache.put(consumption.getId(), consumption);
 
         _consumptionsCache.put(consumption.getId(), consumption);
+        Logger.d(TAG, "Caches updated");
+    }
+
+    private void removeFromCaches(Consumption consumption){
+        Logger.d(TAG, "Updating caches");
+
+        Map<Integer, Consumption> consumptionCache = new ConcurrentHashMap<Integer, Consumption>();
+        if(_pillConsumptionCache.containsKey(consumption.getPillId())) {
+            consumptionCache = _pillConsumptionCache.get(consumption.getPillId());
+        }
+        else{
+            _pillConsumptionCache.put(consumption.getPillId(), consumptionCache);
+        }
+        if(consumptionCache.containsKey(consumption.getId()))
+            consumptionCache.remove(consumption.getId());
+
+        Map<Integer, Consumption> groupCache = new ConcurrentHashMap<Integer, Consumption>();
+        if(consumption.getGroup() != null) {
+            if (_groupConsumptionCache.containsKey(consumption.getGroup())) {
+                groupCache = _groupConsumptionCache.get(consumption.getGroup());
+            } else {
+                _groupConsumptionCache.put(consumption.getGroup(), groupCache);
+            }
+        }
+        if (groupCache.containsKey(consumption.getId())) {
+            groupCache.remove(consumption.getId());
+        }
+
+        if(_consumptionsCache.containsKey(consumption.getId())) {
+            _consumptionsCache.remove(consumption.getId());
+        }
         Logger.d(TAG, "Caches updated");
     }
 
@@ -140,7 +171,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         }
         consumption.setId((int) newRowId);
         notifyUpdated(consumption);
-        updateCaches(consumption);
+        addToCaches(consumption);
         return newRowId;
     }
 
@@ -163,6 +194,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                     "_ID = ?",
                     new String[]{id});
         }
+        removeFromCaches(consumption);
         notifyDeleted(consumption);
     }
 
@@ -434,8 +466,6 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     }
 
     private void notifyDeleted(Consumption consumption) {
-        _consumptionsCache.remove(consumption.getId());
-        _pillConsumptionCache.get(consumption.getPillId()).remove(consumption.getId());
         Observer.getSingleton().notifyConsumptionDeleted(consumption);
     }
 

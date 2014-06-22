@@ -68,6 +68,8 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
             return;
         }
 
+        _addConsumptionSummary.setText(getString(R.string.pill_info_dialog_take_now_prefix) + " " + _pill.getName() + " " + getString(R.string.pill_info_dialog_take_now_suffix));
+
         addConsumptionContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

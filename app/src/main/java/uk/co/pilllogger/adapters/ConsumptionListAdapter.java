@@ -218,7 +218,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                         @Override
                         public void onClick(View v) {
                                 TrackerHelper.showInfoDialogEvent(_activity, TAG);
-                                startDialog(consumption.getId(), consumption.getPillId());
+                                startDialog(consumption.getPillId(), consumption.getGroup());
                         }
                     });
 
@@ -327,10 +327,10 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         }
     }
 
-    private void startDialog(int consumptionId, int pillId) {
+    private void startDialog(int pillId, String consumptionGroup) {
         Intent intent = new Intent(_activity, DialogActivity.class);
         intent.putExtra("DialogType", DialogActivity.DialogType.Consumption.ordinal());
-        intent.putExtra("ConsumptionId", consumptionId);
+        intent.putExtra("ConsumptionGroup", consumptionGroup);
         intent.putExtra("PillId", pillId);
         _activity.startActivity(intent);
     }

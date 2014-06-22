@@ -329,11 +329,11 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         final Consumption consumption1 = consumption;
         Runnable runnable = new Runnable(){
             public void run(){
-                if (_consumptions != null && (_consumptions.contains(consumption1))) {
+                if (_consumptions != null) {
                     Collections.sort(_consumptions);
                     for (Consumption consumption2 : _consumptions) {
                         if (consumption2.getGroup().equals(consumption1.getGroup()) && consumption2.getPillId() == consumption1.getPillId()) {
-                            consumption2.setQuantity(consumption2.getQuantity()-1);
+                            consumption2.setQuantity(consumption2.getQuantity() - 1);
                         }
                     }
                     //_consumptions = ConsumptionRepository.getSingleton(_activity).groupConsumptions(_consumptions);

@@ -20,6 +20,11 @@ import uk.co.pilllogger.state.State;
 public class ConsumptionInfoDialogFragment extends InfoDialogFragment {
     private Context _context;
     private Consumption _consumption;
+    private TextView _takeAgain;
+    private TextView _quantityText;
+    private TextView _takeAgainSummary;
+    private TextView _quantity;
+    private TextView _delete;
 
     public ConsumptionInfoDialogFragment(){
         super();
@@ -43,31 +48,29 @@ public class ConsumptionInfoDialogFragment extends InfoDialogFragment {
 
         Activity activity = getActivity();
 
-        TextView takeAgain = (TextView) activity.findViewById(R.id.consumption_info_dialog_take);
-        TextView quantityText = (TextView) activity.findViewById(R.id.consumption_info_quantity_text);
-        TextView quantity = (TextView) activity.findViewById(R.id.consumption_info_quantity);
+        View takeAgainContainer = activity.findViewById(R.id.info_dialog_take_again);
+        _takeAgain = (TextView) activity.findViewById(R.id.info_dialog_take_again_title);
+        _takeAgainSummary = (TextView) activity.findViewById(R.id.info_dialog_take_again_summary);
+        _quantityText = (TextView) activity.findViewById(R.id.consumption_info_quantity_text);
+        _quantity = (TextView) activity.findViewById(R.id.consumption_info_quantity);
         View increase = activity.findViewById(R.id.consumption_info_dialog_increase);
         ImageView decrease = (ImageView) activity.findViewById(R.id.consumption_info_dialog_decrease);
-        TextView delete = (TextView) activity.findViewById(R.id.info_dialog_delete);
+        _delete = (TextView) activity.findViewById(R.id.info_dialog_delete);
 
-        Typeface typeface = State.getSingleton().getTypeface();
-        takeAgain.setTypeface(typeface);
-        quantityText.setTypeface(typeface);
-        quantity.setTypeface(typeface);
-        delete.setTypeface(typeface);
+        setTypeFace();
 
         if(_consumption == null) {
             activity.finish();
             return;
         }
 
-        quantity.setText("" + _consumption.getQuantity());
+        _quantity.setText("" + _consumption.getQuantity());
 
         String takeAgainText =  _context.getString(R.string.consumption_info_dialog_take_again_prefix);
         if(_consumption.getQuantity() > 1)
             takeAgainText += " " + _consumption.getQuantity();
         takeAgainText += String.format(" %s %s", _consumption.getPill().getName(), _context.getString(R.string.consumption_info_dialog_take_again_suffix));
-        takeAgain.setText(takeAgainText);
+        _takeAgainSummary.setText(takeAgainText);
 
         if(_consumption.getQuantity() > 1){
             decrease.setClickable(true);
@@ -80,7 +83,7 @@ public class ConsumptionInfoDialogFragment extends InfoDialogFragment {
             decrease.setImageResource(R.drawable.chevron_down_grey);
         }
 
-        takeAgain.setOnClickListener(new View.OnClickListener() {
+        takeAgainContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Observer.getSingleton().notifyOnConsumptionDialogTakeAgain(_consumption, ConsumptionInfoDialogFragment.this);
@@ -98,12 +101,21 @@ public class ConsumptionInfoDialogFragment extends InfoDialogFragment {
                 Observer.getSingleton().notifyOnConsumptionDialogDecrease(_consumption, ConsumptionInfoDialogFragment.this);
             }
         });
-        delete.setOnClickListener(new View.OnClickListener() {
+        _delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Observer.getSingleton().notifyOnConsumptionDialogDelete(_consumption, ConsumptionInfoDialogFragment.this);
             }
         });
+    }
+
+    private void setTypeFace() {
+        Typeface typeface = State.getSingleton().getRobotoTypeface();
+        _takeAgain.setTypeface(typeface);
+        _takeAgainSummary.setTypeface(typeface);
+        _quantityText.setTypeface(typeface);
+        _quantity.setTypeface(typeface);
+        _delete.setTypeface(typeface);
     }
 
     public interface ConsumptionInfoDialogListener {

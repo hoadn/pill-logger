@@ -138,11 +138,19 @@ public class DialogActivity extends FragmentActivity implements Observer.IPillsU
             switch(dialogType){
 
                 case Consumption:
-                    int consumptionId = intent.getIntExtra("ConsumptionId", -1);
+                    String consumptionGroup = intent.getStringExtra("ConsumptionGroup");
 
-                    if(consumptionId >= 0){
-                        Consumption consumption = ConsumptionRepository.getSingleton(this).get(consumptionId);
+                    List<Consumption> consumptions = ConsumptionRepository.getSingleton(this).getForGroup(consumptionGroup);
+
+                    consumptions = ConsumptionRepository.getSingleton(this).groupConsumptions(consumptions);
+
+                    for (Consumption consumption : consumptions) {
+                        if(consumption.getPillId() != pillId) {
+                            continue;
+                        }
+
                         fragment = new ConsumptionInfoDialogFragment(this, consumption);
+                        break;
                     }
                     break;
                 case Pill:
