@@ -149,7 +149,6 @@ public class ExportMainFragment extends ExportFragmentBase {
 
                 if(State.getSingleton().hasFeature(FeatureType.export)) {
                     List<Consumption> filteredConsumptions = _exportService.getFilteredConsumptions();
-                    Toast.makeText(activity, "Consumption size: " + filteredConsumptions.size(), Toast.LENGTH_SHORT).show();
                     ExportHelper export = ExportHelper.getSingleton(activity);
                     export.exportToCsv(filteredConsumptions);
                     activity.finish();
