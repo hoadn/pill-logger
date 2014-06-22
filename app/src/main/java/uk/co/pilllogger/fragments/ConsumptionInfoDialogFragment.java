@@ -25,6 +25,8 @@ public class ConsumptionInfoDialogFragment extends InfoDialogFragment {
     private TextView _takeAgainSummary;
     private TextView _quantity;
     private TextView _delete;
+    private TextView _deleteSummary;
+    private TextView _quantitySummary;
 
     public ConsumptionInfoDialogFragment(){
         super();
@@ -51,11 +53,14 @@ public class ConsumptionInfoDialogFragment extends InfoDialogFragment {
         View takeAgainContainer = activity.findViewById(R.id.info_dialog_take_again);
         _takeAgain = (TextView) activity.findViewById(R.id.info_dialog_take_again_title);
         _takeAgainSummary = (TextView) activity.findViewById(R.id.info_dialog_take_again_summary);
-        _quantityText = (TextView) activity.findViewById(R.id.consumption_info_quantity_text);
+        _quantityText = (TextView) activity.findViewById(R.id.info_dialog_quantity_title);
         _quantity = (TextView) activity.findViewById(R.id.consumption_info_quantity);
+        _quantitySummary = (TextView) activity.findViewById(R.id.info_dialog_quantity_summary);
         View increase = activity.findViewById(R.id.consumption_info_dialog_increase);
         ImageView decrease = (ImageView) activity.findViewById(R.id.consumption_info_dialog_decrease);
-        _delete = (TextView) activity.findViewById(R.id.info_dialog_delete);
+        View deleteContainer = activity.findViewById(R.id.info_dialog_delete);
+        _delete = (TextView) activity.findViewById(R.id.info_dialog_delete_title);
+        _deleteSummary = (TextView) activity.findViewById(R.id.info_dialog_delete_summary);
 
         setTypeFace();
 
@@ -101,7 +106,7 @@ public class ConsumptionInfoDialogFragment extends InfoDialogFragment {
                 Observer.getSingleton().notifyOnConsumptionDialogDecrease(_consumption, ConsumptionInfoDialogFragment.this);
             }
         });
-        _delete.setOnClickListener(new View.OnClickListener() {
+        deleteContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Observer.getSingleton().notifyOnConsumptionDialogDelete(_consumption, ConsumptionInfoDialogFragment.this);
@@ -115,7 +120,9 @@ public class ConsumptionInfoDialogFragment extends InfoDialogFragment {
         _takeAgainSummary.setTypeface(typeface);
         _quantityText.setTypeface(typeface);
         _quantity.setTypeface(typeface);
+        _quantitySummary.setTypeface(typeface);
         _delete.setTypeface(typeface);
+        _deleteSummary.setTypeface(typeface);
     }
 
     public interface ConsumptionInfoDialogListener {

@@ -336,7 +336,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                             consumption2.setQuantity(consumption2.getQuantity() - 1);
                         }
                     }
-                    //_consumptions = ConsumptionRepository.getSingleton(_activity).groupConsumptions(_consumptions);
                     consumptionsReceived(_consumptions);
                 }
             }

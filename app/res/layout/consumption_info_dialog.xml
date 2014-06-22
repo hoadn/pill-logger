@@ -50,21 +50,43 @@
         android:layout_height="1dp"
         android:background="@color/grey_divider_light" />
     <LinearLayout
+        android:id="@+id/info_dialog_quantity"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dialog_item_height"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingRight="4dp">
-        <TextView
-            android:id="@+id/consumption_info_quantity_text"
-            android:layout_width="wrap_content"
+        style="?attr/ExportItem">
+        <ImageView
+            android:layout_width="32dp"
             android:layout_height="match_parent"
-            android:text="@string/take_again_quantity_prefix"
-            android:textSize="18sp"
-            android:textColor="@color/text_grey"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/add_subtract_blue"
+            android:contentDescription="Blue plus"/>
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:paddingLeft="@dimen/dialog_item_padding_left"
-            android:gravity="center_vertical"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+            <TextView
+                android:id="@+id/info_dialog_quantity_title"
+                android:text="@string/take_again_quantity_prefix"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/text_grey"
+                android:gravity="center_vertical"/>
+            <TextView
+                android:id="@+id/info_dialog_quantity_summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/text_grey_medium"
+                android:text="Adjust the quantity"/>
+        </LinearLayout>
         <ImageView
             android:id="@+id/consumption_info_dialog_decrease"
             android:text="@string/consumption_info_dialog_decrease"
@@ -93,22 +115,49 @@
             android:padding="16dp"
             android:src="@drawable/chevron_up_green"
             android:background="?android:attr/selectableItemBackground"/>
-        </LinearLayout>
-
+    </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/grey_divider_light" />
-    <TextView
+    <LinearLayout
         android:id="@+id/info_dialog_delete"
-        android:text="@string/info_dialog_delete"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dialog_item_height"
-        android:textSize="18sp"
-        android:textColor="@color/text_grey"
-        android:paddingLeft="@dimen/dialog_item_padding_left"
-        android:paddingRight="4dp"
-        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"/>
+        style="?attr/ExportItem">
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/bin"
+            android:contentDescription="Blue plus"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+            <TextView
+                android:id="@+id/info_dialog_delete_title"
+                android:text="@string/info_dialog_delete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/text_grey"
+                android:gravity="center_vertical"/>
+            <TextView
+                android:id="@+id/info_dialog_delete_summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/text_grey_medium"
+                android:text="Delete this record"/>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
