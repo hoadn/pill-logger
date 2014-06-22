@@ -22,9 +22,7 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
 
     private TextView _addConsumption;
     private TextView _delete;
-    private TextView _favourite;
     private TextView _editPill;
-    private TextView _setReminders;
     private TextView _editPillSummary;
     private TextView _deletePillSummary;
     private TextView _addConsumptionSummary;
@@ -56,10 +54,8 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
         _addConsumptionSummary = (TextView) activity.findViewById(R.id.info_dialog_add_consumption_summary);
         _delete = (TextView) activity.findViewById(R.id.info_dialog_delete_pill_title);
         _deletePillSummary = (TextView) activity.findViewById(R.id.info_dialog_delete_pill_summary);
-        _favourite = (TextView) activity.findViewById(R.id.info_dialog_set_favourite);
         _editPill = (TextView) activity.findViewById(R.id.info_dialog_edit_pill_title);
         _editPillSummary = (TextView) activity.findViewById(R.id.info_dialog_edit_pill_summary);
-        _setReminders = (TextView) activity.findViewById(R.id.info_dialog_set_reminders);
 
         View editPillContainer = activity.findViewById(R.id.info_dialog_edit_pill);
         View addConsumptionContainer = activity.findViewById(R.id.info_dialog_take_now);
@@ -96,31 +92,6 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
                         .commit();
             }
         });
-        _favourite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Observer.getSingleton().notifyOnPillDialogFavourite(_pill, PillInfoDialogFragment.this);
-            }
-
-        });
-
-        if (_pill.isFavourite())
-            _favourite.setText(getResources().getString(R.string.info_dialog_unset_favourite));
-
-        _setReminders.setOnClickListener(new View.OnClickListener() {
-            public PillRecurringFragment _selectDateFragment;
-
-            @Override
-            public void onClick(View v) {
-                _selectDateFragment = new PillRecurringFragment();
-                FragmentManager fm = PillInfoDialogFragment.this.getActivity().getFragmentManager();
-                fm.beginTransaction()
-                        .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)
-                        .replace(R.id.export_container, _selectDateFragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
     }
 
     private void setTypeFace() {
@@ -129,7 +100,6 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
         _addConsumptionSummary.setTypeface(typeface);
         _delete.setTypeface(typeface);
         _deletePillSummary.setTypeface(typeface);
-        _favourite.setTypeface(typeface);
         _editPill.setTypeface(typeface);
         _editPillSummary.setTypeface(typeface);
     }

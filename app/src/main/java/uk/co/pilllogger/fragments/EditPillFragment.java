@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -43,6 +44,7 @@ public class EditPillFragment extends PillLoggerFragmentBase {
         final View view = inflater.inflate(R.layout.fragment_edit_pill, container, false);
         final EditText editPillName = (EditText) (view != null ? view.findViewById(R.id.edit_pill_name) : null);
         final EditText editPillSize = (EditText) (view != null ? view.findViewById(R.id.edit_pill_size) : null);
+        final ImageView editPillFavourite = (ImageView) (view != null ? view.findViewById(R.id.edit_pill_favourite) : null);
         final Spinner spinner = (Spinner) (view != null ? view.findViewById(R.id.units_spinner) : null);
         final ViewGroup colourContainer = (ViewGroup) (view != null ? view.findViewById(R.id.colour_container) : null);
 
@@ -76,6 +78,18 @@ public class EditPillFragment extends PillLoggerFragmentBase {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setSelection(getSpinnerSelection());
+
+        if(editPillFavourite != null){
+            editPillFavourite.setImageResource(_pill.isFavourite() ? R.drawable.star : R.drawable.star_empty);
+
+            editPillFavourite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    _pill.setFavourite(!_pill.isFavourite());
+                    editPillFavourite.setImageResource(_pill.isFavourite() ? R.drawable.star : R.drawable.star_empty);
+                }
+            });
+        }
 
         View doneLayout = view.findViewById(R.id.export_pills_list_layout);
         doneLayout.setOnClickListener(new View.OnClickListener() {

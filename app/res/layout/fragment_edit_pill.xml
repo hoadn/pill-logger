@@ -7,15 +7,19 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Edit Medicine"
+        android:text="@string/edit_pill_fragment_title"
         android:gravity="center_horizontal"
         android:textColor="@color/title_blue"
         android:textAllCaps="true"
         android:textSize="14sp"
         />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <EditText
             android:id="@+id/edit_pill_name"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:textColor="@color/text_grey"
             android:textCursorDrawable="@null"
@@ -23,6 +27,15 @@
             android:layout_margin="4dp"
             android:inputType="textCapWords"
             android:hint="@string/pill_name_hint"/>
+        <ImageView
+            android:id="@+id/edit_pill_favourite"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:src="@drawable/star_empty"
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackground"/>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,7 +59,7 @@
             />
     </LinearLayout>
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:paddingBottom="10dp">
