@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,7 @@ import uk.co.pilllogger.views.ColourIndicator;
  * Created by Alex on 22/05/2014
  * in uk.co.pilllogger.activities.
  */
-public class DialogActivity extends PillLoggerActivityBase implements Observer.IPillsUpdated{
+public class DialogActivity extends FragmentActivity implements Observer.IPillsUpdated{
 
     private static final String TAG = "DialogActivity";
     private Pill _pill;

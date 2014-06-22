@@ -27,6 +27,8 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
     private TextView _editPill;
     private TextView _setReminders;
     private TextView _editPillSummary;
+    private TextView _deletePillSummary;
+    private TextView _addConsumptionSummary;
 
     public PillInfoDialogFragment() {
         super();
@@ -51,14 +53,19 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
         if(activity == null)
             return;
 
-        _addConsumption = (TextView) activity.findViewById(R.id.info_dialog_add_consumption);
-        _delete = (TextView) activity.findViewById(R.id.info_dialog_delete);
+        _addConsumption = (TextView) activity.findViewById(R.id.info_dialog_add_consumption_title);
+        _addConsumptionSummary = (TextView) activity.findViewById(R.id.info_dialog_add_consumption_summary);
+        _delete = (TextView) activity.findViewById(R.id.info_dialog_delete_pill_title);
+        _deletePillSummary = (TextView) activity.findViewById(R.id.info_dialog_delete_pill_summary);
         _changeColour = (TextView) activity.findViewById(R.id.info_dialog_change_colour);
         _favourite = (TextView) activity.findViewById(R.id.info_dialog_set_favourite);
         _editPill = (TextView) activity.findViewById(R.id.info_dialog_edit_pill_title);
         _editPillSummary = (TextView) activity.findViewById(R.id.info_dialog_edit_pill_summary);
-        View editPillContainer = activity.findViewById(R.id.info_dialog_edit_pill);
         _setReminders = (TextView) activity.findViewById(R.id.info_dialog_set_reminders);
+
+        View editPillContainer = activity.findViewById(R.id.info_dialog_edit_pill);
+        View addConsumptionContainer = activity.findViewById(R.id.info_dialog_take_now);
+        View deletePillContainer = activity.findViewById(R.id.info_dialog_delete_pill);
 
         setTypeFace();
 
@@ -67,13 +74,13 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
             return;
         }
 
-        _addConsumption.setOnClickListener(new View.OnClickListener() {
+        addConsumptionContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Observer.getSingleton().notifyOnPillDialogAddConsumption(_pill, PillInfoDialogFragment.this);
             }
         });
-        _delete.setOnClickListener(new View.OnClickListener() {
+        deletePillContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Observer.getSingleton().notifyOnPillDialogDelete(_pill, PillInfoDialogFragment.this);
@@ -158,7 +165,9 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
     private void setTypeFace() {
         Typeface typeface = State.getSingleton().getRobotoTypeface();
         _addConsumption.setTypeface(typeface);
+        _addConsumptionSummary.setTypeface(typeface);
         _delete.setTypeface(typeface);
+        _deletePillSummary.setTypeface(typeface);
         _changeColour.setTypeface(typeface);
         _favourite.setTypeface(typeface);
         _editPill.setTypeface(typeface);

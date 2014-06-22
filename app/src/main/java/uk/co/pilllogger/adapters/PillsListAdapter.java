@@ -225,6 +225,9 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
                             if(rhs == null)
                                 return 1;
 
+                            if(rhs.getLatestConsumption(_activity) == null || lhs.getLatestConsumption(_activity) == null)
+                                return 0;
+
                             return rhs.getLatestConsumption(_activity).getDate().compareTo(lhs.getLatestConsumption(_activity).getDate());
                         }
                     });

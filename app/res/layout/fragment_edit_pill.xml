@@ -7,14 +7,17 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="?attr/DialogTitle"
         android:text="Edit Medicine"
+        android:gravity="center_horizontal"
+        android:textColor="@color/title_blue"
+        android:textAllCaps="true"
+        android:textSize="14sp"
         />
         <EditText
             android:id="@+id/edit_pill_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_grey_medium"
+            android:textColor="@color/text_grey"
             android:textCursorDrawable="@null"
             android:textSize="18sp"
             android:layout_margin="4dp"
@@ -29,7 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/text_grey_medium"
+            android:textColor="@color/text_grey"
             android:textCursorDrawable="@null"
             android:textSize="18sp"
             android:layout_margin="4dp"

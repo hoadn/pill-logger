@@ -52,7 +52,7 @@ public abstract class InfoDialogFragment extends PillLoggerFragmentBase{
         if(activity == null)
             return null;
 
-        View view = inflater.inflate(getLayoutId(), null);
+        View view = inflater.inflate(getLayoutId(), container, false);
 
         if(view == null)
             return null;

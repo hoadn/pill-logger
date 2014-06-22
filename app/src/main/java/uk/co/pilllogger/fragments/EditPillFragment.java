@@ -39,7 +39,7 @@ public class EditPillFragment extends PillLoggerFragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        final View view = inflater.inflate(R.layout.fragment_edit_pill, null);
+        final View view = inflater.inflate(R.layout.fragment_edit_pill, container, false);
         final EditText editPillName = (EditText) (view != null ? view.findViewById(R.id.edit_pill_name) : null);
         final EditText editPillSize = (EditText) (view != null ? view.findViewById(R.id.edit_pill_size) : null);
         final Spinner spinner = (Spinner) (view != null ? view.findViewById(R.id.units_spinner) : null);

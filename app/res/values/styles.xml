@@ -142,11 +142,11 @@
         <item name="AddConsumptionBackground">@style/AddConsumptionBackground.Rainbow</item>
         <item name="ContainerBackground">@style/ContainerBackground.Rainbow</item>
         <item name="ContainerShadow">@style/ContainerShadow.Rainbow</item>
-        <item name="FragmentTitle">@style/Title.Rainbow</item>
+        <item name="FragmentTitle">@style/Title.Fragment.Rainbow</item>
         <item name="AddConsumptionGradient">@style/AddConsumptionGradient.Rainbow</item>
         <item name="InfoDialogTopTextColour">@style/InfoDialogTopTextColour</item>
         <item name="ExportItem">@style/ExportItem</item>
-        <item name="DialogTitle">@style/Title.Dialog</item>
+        <item name="DialogTitle">@style/Title.Dialog.Rainbow</item>
     </style>
 
     <style name="RainbowTextView">
@@ -197,7 +197,11 @@
         <item name="android:visibility">gone</item>
     </style>
 
-    <style name="Title.Rainbow">
+    <style name="Title.Fragment.Rainbow">
+        <item name="android:textColor">@color/default_text</item>
+    </style>
+
+    <style name="Title.Dialog.Rainbow">
         <item name="android:textColor">@color/default_text</item>
     </style>
 
@@ -219,12 +223,12 @@
         <item name="android:popupMenuStyle">@style/PopupMenu.Example.Professional</item>
         <item name="ContainerBackground">@style/ContainerBackground.Professional</item>
         <item name="ContainerShadow">@style/ContainerShadow</item>
-        <item name="FragmentTitle">@style/Title.Professional</item>
+        <item name="FragmentTitle">@style/Title.Fragment.Professional</item>
         <item name="CardTitle">@style/CardTitle.Professional</item>
         <item name="NewMedicineTitle">@style/NewMedicineTitle.Professional</item>
         <item name="InfoDialogTopTextColour">@style/InfoDialogTopTextColour</item>
         <item name="ExportItem">@style/ExportItem</item>
-        <item name="DialogTitle">@style/Title.Dialog</item>
+        <item name="DialogTitle">@style/Title.Dialog.Professional</item>
     </style>
 
     <style name="ProfessionalTextView">
@@ -271,7 +275,11 @@
         <item name="android:background">@drawable/consumption_background</item>
     </style>
 
-    <style name="Title.Professional">
+    <style name="Title.Fragment.Professional">
+        <item name="android:textColor">@color/title_blue</item>
+    </style>
+
+    <style name="Title.Dialog.Professional">
         <item name="android:textColor">@color/title_blue</item>
     </style>
 
