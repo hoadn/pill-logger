@@ -19,6 +19,7 @@ import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.UpdatePillTask;
+import uk.co.pilllogger.views.ColourIndicator;
 
 /**
  * Created by nick on 19/06/14.
@@ -43,6 +44,7 @@ public class EditPillFragment extends PillLoggerFragmentBase {
         final EditText editPillName = (EditText) (view != null ? view.findViewById(R.id.edit_pill_name) : null);
         final EditText editPillSize = (EditText) (view != null ? view.findViewById(R.id.edit_pill_size) : null);
         final Spinner spinner = (Spinner) (view != null ? view.findViewById(R.id.units_spinner) : null);
+        final ViewGroup colourContainer = (ViewGroup) (view != null ? view.findViewById(R.id.colour_container) : null);
 
         Typeface typeface = State.getSingleton().getRobotoTypeface();
         if (editPillName != null) {
@@ -100,7 +102,32 @@ public class EditPillFragment extends PillLoggerFragmentBase {
             }
         });
 
+        setupColourIndicators(colourContainer);
+
         return view;
+    }
+
+    private void setupColourIndicators(final ViewGroup colourContainer) {
+        if(colourContainer != null) {
+            for (int i = 0; i < colourContainer.getChildCount(); i++) {
+                ColourIndicator ci = (ColourIndicator) colourContainer.getChildAt(i);
+
+                if (ci == null)
+                    continue;
+
+                ci.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int colour = ((ColourIndicator) view).getColour();
+                        _pill.setColour(colour);
+                        setupColourIndicators(colourContainer);
+                    }
+                });
+                int colour = ci.getColour();
+
+                ci.setColour(colour, false, colour == _pill.getColour());
+            }
+        }
     }
 
     private int getSpinnerSelection() {

@@ -22,7 +22,6 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
 
     private TextView _addConsumption;
     private TextView _delete;
-    private TextView _changeColour;
     private TextView _favourite;
     private TextView _editPill;
     private TextView _setReminders;
@@ -57,7 +56,6 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
         _addConsumptionSummary = (TextView) activity.findViewById(R.id.info_dialog_add_consumption_summary);
         _delete = (TextView) activity.findViewById(R.id.info_dialog_delete_pill_title);
         _deletePillSummary = (TextView) activity.findViewById(R.id.info_dialog_delete_pill_summary);
-        _changeColour = (TextView) activity.findViewById(R.id.info_dialog_change_colour);
         _favourite = (TextView) activity.findViewById(R.id.info_dialog_set_favourite);
         _editPill = (TextView) activity.findViewById(R.id.info_dialog_edit_pill_title);
         _editPillSummary = (TextView) activity.findViewById(R.id.info_dialog_edit_pill_summary);
@@ -123,43 +121,6 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
                         .commit();
             }
         });
-
-        final uk.co.pilllogger.views.ColourIndicator colourTop = (uk.co.pilllogger.views.ColourIndicator) activity.findViewById(R.id.colour);
-        _changeColour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final View colourHolder = activity.findViewById(R.id.info_dialog_colour_picker_container);
-                final ViewGroup colourContainer = (ViewGroup) colourHolder.findViewById(R.id.colour_container);
-                if (colourHolder.getVisibility() == View.VISIBLE) {
-                    int colourCount = colourContainer.getChildCount();
-                    for (int i = 0; i < colourCount; i++) {
-                        View colourView = colourContainer.getChildAt(i);
-                        if (colourView != null) {
-                            colourView.setOnClickListener(null);
-                        }
-                    }
-                    colourHolder.setVisibility(View.GONE);
-                } else {
-                    colourHolder.setVisibility(View.VISIBLE);
-                    int colourCount = colourContainer.getChildCount();
-                    for (int i = 0; i < colourCount; i++) {
-                        View colourView = colourContainer.getChildAt(i);
-                        if (colourView != null) {
-                            colourView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    int colour = ((ColourIndicator) view).getColour();
-                                    colourTop.setColour(colour);
-                                    colourHolder.setVisibility(View.GONE);
-                                    _pill.setColour(colour);
-                                    Observer.getSingleton().notifyOnPillDialogChangePillColour(_pill, PillInfoDialogFragment.this);
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-        });
     }
 
     private void setTypeFace() {
@@ -168,7 +129,6 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
         _addConsumptionSummary.setTypeface(typeface);
         _delete.setTypeface(typeface);
         _deletePillSummary.setTypeface(typeface);
-        _changeColour.setTypeface(typeface);
         _favourite.setTypeface(typeface);
         _editPill.setTypeface(typeface);
         _editPillSummary.setTypeface(typeface);

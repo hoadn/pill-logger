@@ -40,11 +40,6 @@ public class ColourIndicator extends ImageView {
     private void preInit(Context context) {
         Drawable background = context.getResources().getDrawable(R.drawable.colour_indicator);
         this.setImageDrawable(background);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-//            this.setBackground(background);
-//        } else {
-//            this.setBackgroundDrawable(background);
-//        }
     }
 
     private void init(AttributeSet attrs) {
@@ -55,8 +50,9 @@ public class ColourIndicator extends ImageView {
         //Use a
         if (a != null) {
             int colour = a.getColor(R.styleable.ColourIndicator_android_color, Color.BLACK);
+            boolean selected = a.getBoolean(R.styleable.ColourIndicator_selected, false);
 
-            setColour(colour);
+            setColour(colour, false, selected);
 
             //Don't forget this
             a.recycle();
@@ -72,6 +68,10 @@ public class ColourIndicator extends ImageView {
     }
 
     public void setColour(int colour, boolean lightStroke){
+        setColour(colour, lightStroke, false);
+    }
+
+    public void setColour(int colour, boolean lightStroke, boolean selected){
         int stroke = lightStroke ? ColourHelper.getLighter(colour) : ColourHelper.getDarker(colour);
 
         if(this.getBackground() == null){
@@ -82,7 +82,8 @@ public class ColourIndicator extends ImageView {
 
         if (background != null) {
             background.setColor(colour);
-            background.setStroke(1, stroke);
+            int width = selected ? 6 : 1;
+            background.setStroke(width, stroke);
         }
 
         _colour = colour;

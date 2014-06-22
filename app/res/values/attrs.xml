@@ -2,8 +2,10 @@
 <resources>
     <declare-styleable name="ColourIndicator">
         <attr name="android:color"/>
+        <attr name="selected"/>
     </declare-styleable>
 
+    <attr name="selected" format="boolean"/>
     <attr name="AddConsumptionBackground" format="reference"/>
     <attr name="DefaultText" format="reference"/>
     <attr name="SecondaryText" format="reference"/>

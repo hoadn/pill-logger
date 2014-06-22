@@ -86,9 +86,7 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = super.getView(position, convertView, parent);
 
-        final View listItem = v;
         if (v != null) {
-            ViewHolder holder = (ViewHolder) v.getTag();
             final Pill pill = _data.get(position);
 
             v.setOnClickListener(new View.OnClickListener() {
@@ -98,49 +96,6 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
                         TrackerHelper.showInfoDialogEvent(_activity, TAG);
                         startDialog(pill.getId());
                     }
-                }
-            });
-            holder.colour.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    final ViewHolder viewholder = (ViewHolder) listItem.getTag();
-                    if (viewholder.open) {
-                        viewholder.pickerContainer.setVisibility(View.GONE);
-                        ViewGroup colourContainer = (ViewGroup) viewholder.pickerContainer.findViewById(R.id.colour_container);
-                        int colourCount = colourContainer.getChildCount();
-                        for (int i = 0; i < colourCount; i++) {
-                            View colourView = colourContainer.getChildAt(i);
-                            if (colourView != null) {
-                                colourView.setOnClickListener(null);
-                            }
-                        }
-                    } else {
-                        viewholder.pickerContainer.setVisibility(View.VISIBLE);
-                        ViewGroup colourContainer = (ViewGroup) viewholder.pickerContainer.findViewById(R.id.colour_container);
-                        int colourCount = colourContainer.getChildCount();
-                        for (int i = 0; i < colourCount; i++) {
-                            View colourView = colourContainer.getChildAt(i);
-                            if (colourView != null) {
-                                colourView.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        int colour = ((ColourIndicator) view).getColour();
-                                        if (pill != null) {
-                                            pill.setColour(colour);
-
-                                            new UpdatePillTask(_activity, pill).execute();
-
-                                            TrackerHelper.updatePillColourEvent(_activity, TAG);
-
-                                            notifyDataSetChanged();
-                                            viewholder.pickerContainer.setVisibility(View.GONE);
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    }
-                    viewholder.open = !viewholder.open;
                 }
             });
         }
