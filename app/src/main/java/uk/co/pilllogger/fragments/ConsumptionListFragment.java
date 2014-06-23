@@ -63,6 +63,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     Activity _activity;
     private List<Pill> _pills;
     private List<Consumption> _consumptions;
+    private View _loading;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,9 +88,9 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         //new InitTestDbTask(this.getActivity(), this).execute();
 
         _listView = (ListView) (v != null ? v.findViewById(R.id.main_consumption_list) : null);
-        View loading = v.findViewById(R.id.consumptions_loading);
+        _loading = v.findViewById(R.id.consumptions_loading);
 
-        _listView.setEmptyView(loading);
+        _listView.setEmptyView(_loading);
 
         if (_listView.getAdapter() != null) //Trying this to make the list refresh after adding the new consumption
             ((ConsumptionListAdapter)_listView.getAdapter()).notifyDataSetChanged();
@@ -184,6 +185,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         TextView noConsumption = (TextView) activity.findViewById(R.id.no_consumption_text);
         if (consumptions.size() == 0) {
             noConsumption.setVisibility(View.VISIBLE);
+            _loading.setVisibility(View.INVISIBLE);
             _listView.setVisibility(View.GONE);
         }
         else if(consumptions != null && consumptions.size() > 0){
