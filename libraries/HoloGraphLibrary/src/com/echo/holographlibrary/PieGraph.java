@@ -149,6 +149,9 @@ public class PieGraph extends View {
 	    
 	    int count = 0;
 	    for (PieSlice slice : slices){
+            if(slice == null)
+                continue;
+
 	    	Region r = new Region();
 	    	r.setPath(slice.getPath(), slice.getRegion());
 	    	if (r.contains((int)point.x,(int) point.y) && event.getAction() == MotionEvent.ACTION_DOWN){
