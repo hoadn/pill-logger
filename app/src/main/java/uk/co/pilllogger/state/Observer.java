@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import uk.co.pilllogger.fragments.ConsumptionInfoDialogFragment;
 import uk.co.pilllogger.fragments.InfoDialogFragment;
@@ -20,13 +21,13 @@ public class Observer {
 
     private static final String TAG = "Observer";
     private static Observer _instance;
-    private WeakHashMap<IPillsUpdated, WeakReference<IPillsUpdated>> _pillsUpdatedArrayList = new WeakHashMap<IPillsUpdated, WeakReference<IPillsUpdated>>();
-    private WeakHashMap<IConsumptionAdded, WeakReference<IConsumptionAdded>> _consumptionAddedListeners = new WeakHashMap<IConsumptionAdded, WeakReference<IConsumptionAdded>>();
-    private WeakHashMap<IConsumptionDeleted, WeakReference<IConsumptionDeleted>> _consumptionDeletedListeners = new WeakHashMap<IConsumptionDeleted, WeakReference<IConsumptionDeleted>>();
-    private WeakHashMap<IPillsLoaded, WeakReference<IPillsLoaded>> _pillsLoadedListeners = new WeakHashMap<IPillsLoaded, WeakReference<IPillsLoaded>>();
-    private WeakHashMap<IFeaturePurchased, WeakReference<IFeaturePurchased>> _featuredPurchasedListeners = new WeakHashMap<IFeaturePurchased, WeakReference<IFeaturePurchased>>();
-    private WeakHashMap<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, WeakReference<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>> _consumptionInfoDialogListeners = new WeakHashMap<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, WeakReference<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>>();
-    private WeakHashMap<PillInfoDialogFragment.PillInfoDialogListener, WeakReference<PillInfoDialogFragment.PillInfoDialogListener>> _pillInfoDialogListeners = new WeakHashMap<PillInfoDialogFragment.PillInfoDialogListener, WeakReference<PillInfoDialogFragment.PillInfoDialogListener>>();
+    private Map<IPillsUpdated, WeakReference<IPillsUpdated>> _pillsUpdatedArrayList = new ConcurrentHashMap<IPillsUpdated, WeakReference<IPillsUpdated>>();
+    private Map<IConsumptionAdded, WeakReference<IConsumptionAdded>> _consumptionAddedListeners = new ConcurrentHashMap<IConsumptionAdded, WeakReference<IConsumptionAdded>>();
+    private Map<IConsumptionDeleted, WeakReference<IConsumptionDeleted>> _consumptionDeletedListeners = new ConcurrentHashMap<IConsumptionDeleted, WeakReference<IConsumptionDeleted>>();
+    private Map<IPillsLoaded, WeakReference<IPillsLoaded>> _pillsLoadedListeners = new ConcurrentHashMap<IPillsLoaded, WeakReference<IPillsLoaded>>();
+    private Map<IFeaturePurchased, WeakReference<IFeaturePurchased>> _featuredPurchasedListeners = new ConcurrentHashMap<IFeaturePurchased, WeakReference<IFeaturePurchased>>();
+    private Map<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, WeakReference<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>> _consumptionInfoDialogListeners = new ConcurrentHashMap<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, WeakReference<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>>();
+    private Map<PillInfoDialogFragment.PillInfoDialogListener, WeakReference<PillInfoDialogFragment.PillInfoDialogListener>> _pillInfoDialogListeners = new ConcurrentHashMap<PillInfoDialogFragment.PillInfoDialogListener, WeakReference<PillInfoDialogFragment.PillInfoDialogListener>>();
 
     public static Observer getSingleton() {
         if (_instance == null)
