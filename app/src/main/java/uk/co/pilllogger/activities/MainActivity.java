@@ -221,40 +221,41 @@ public class MainActivity extends PillLoggerActivityBase implements
         _billingHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
             @Override
             public void onIabSetupFinished(IabResult result) {
-            if (!result.isSuccess()) {
-                // Oh noes, there was a problem.
-                Logger.d(TAG, "Problem setting up In-app Billing: " + result);
-            }
-            // Hooray, IAB is fully set up!
-            final List<String> features = new ArrayList<String>();
-            for (FeatureType featureType : FeatureType.values()) {
-                features.add(featureType.toString());
-            }
-            _billingHelper.queryInventoryAsync(true, features, new IabHelper.QueryInventoryFinishedListener() {
-                @Override
-                public void onQueryInventoryFinished(IabResult result, final Inventory inv) {
-                    if(result.isFailure()){
-                        Logger.e(TAG, "Querying billing inventory failed: " + result.getMessage());
-                    }
-
-                    for (FeatureType feature : FeatureType.values()) {
-                        SkuDetails skuDetails = inv.getSkuDetails(feature.toString());
-                        if (skuDetails == null) {
-                            continue;
-                        }
-                        State.getSingleton().getAvailableFeatures().put(feature, skuDetails);
-
-                        if(inv.hasPurchase(feature.toString())){
-                            State.getSingleton().getEnabledFeatures().add(feature);
-                        }
-                    }
+                if (!result.isSuccess()) {
+                    // Oh noes, there was a problem.
+                    Logger.d(TAG, "Problem setting up In-app Billing: " + result);
                 }
-            });
+                else {
+                    State.getSingleton().setIabHelper(_billingHelper);
+                    // Hooray, IAB is fully set up!
+                    final List<String> features = new ArrayList<String>();
+                    for (FeatureType featureType : FeatureType.values()) {
+                        features.add(featureType.toString());
+                    }
+                    _billingHelper.queryInventoryAsync(true, features, new IabHelper.QueryInventoryFinishedListener() {
+                        @Override
+                        public void onQueryInventoryFinished(IabResult result, final Inventory inv) {
+                            if (result.isFailure() || inv == null) {
+                                Logger.e(TAG, "Querying billing inventory failed: " + result.getMessage());
+                            }
+                            else {
+                                for (FeatureType feature : FeatureType.values()) {
+                                    SkuDetails skuDetails = inv.getSkuDetails(feature.toString());
+                                    if (skuDetails == null) {
+                                        continue;
+                                    }
+                                    State.getSingleton().getAvailableFeatures().put(feature, skuDetails);
+
+                                    if (inv.hasPurchase(feature.toString())) {
+                                        State.getSingleton().getEnabledFeatures().add(feature);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
             }
         });
-
-        State.getSingleton().setIabHelper(_billingHelper);
-
     }
 
     @Override
