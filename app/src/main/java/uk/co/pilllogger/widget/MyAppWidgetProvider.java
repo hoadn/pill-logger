@@ -93,7 +93,8 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             views.setTextViewText(R.id.widget_size, String.valueOf(NumberHelper.getNiceFloatString(pill.getSize()) + "mg"));
         }
 
-        views.setTextViewText(R.id.widget_text, pill.getName().substring(0, 3));
+        String pillName = pill.getName();
+        views.setTextViewText(R.id.widget_text, pillName.substring(0, Math.min(pillName.length(), 3)));
 
         String quantityIndicator = "";
 

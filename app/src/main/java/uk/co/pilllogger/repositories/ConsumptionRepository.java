@@ -385,8 +385,14 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     public List<Consumption> getAll() {
         if(_consumptionsCache != null && _consumptionsCache.size() > 0) {
             ArrayList<Consumption> consumptions = new ArrayList<Consumption>(_consumptionsCache.values());
-            Collections.sort(consumptions);
-            return consumptions;
+            try {
+                Collections.sort(consumptions);
+
+                return consumptions;
+            }
+            catch(IllegalArgumentException ex){
+                Logger.e(TAG, "Error whilst sorting consumptions, falling back to retrieving from db", ex);
+            }
         }
 
         SQLiteDatabase db = _dbCreator.getReadableDatabase();

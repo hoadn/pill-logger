@@ -76,4 +76,9 @@ public class PillsListExportAdapter extends PillsListBaseAdapter {
 
         return v;
     }
+
+    @Override
+    public void destroy() {
+
+    }
 }

@@ -67,6 +67,8 @@ public abstract class ActionBarArrayAdapter<T> extends ArrayAdapter<T>{
         this.notifyDataSetChanged();
     }
 
+    public abstract void destroy();
+
     public static class ViewHolder{
 
         public View shadow;

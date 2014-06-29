@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.util.Collections;
@@ -19,6 +20,7 @@ import uk.co.pilllogger.activities.DialogActivity;
 import uk.co.pilllogger.dialogs.ChangePillInfoDialog;
 import uk.co.pilllogger.fragments.InfoDialogFragment;
 import uk.co.pilllogger.fragments.PillInfoDialogFragment;
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -104,6 +106,13 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
     }
 
     @Override
+    public void destroy() {
+        Observer.getSingleton().unregisterConsumptionAddedObserver(this);
+        Observer.getSingleton().unregisterConsumptionDeletedObserver(this);
+        Observer.getSingleton().unregisterPillDialogObserver(this);
+    }
+
+    @Override
     public void onDialogAddConsumption(Pill pill, InfoDialogFragment dialog) {
         if (pill != null) {
             Consumption consumption = new Consumption(pill, new Date());
@@ -117,7 +126,12 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
     @Override
     public void onDialogDelete(Pill pill, InfoDialogFragment dialog) {
         AlertDialog cancelDialog = createCancelDialog(pill, "DialogDelete");
-        cancelDialog.show();
+        try {
+            cancelDialog.show();
+        }
+        catch(WindowManager.BadTokenException ex){
+            Logger.e(TAG, "Error showing dialog", ex);
+        }
         dialog.getActivity().finish();
     }
 

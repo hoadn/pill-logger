@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.Observer;
@@ -159,10 +160,22 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
 
         _latest = _consumptions.get(0);
         _first = _consumptions.get(0);
+
+        if(_latest == null || _first == null)
+            return;
+
         for (Consumption c : _consumptions) {
             long time = c.getDate().getTime();
-            long latestTime = _latest.getDate().getTime();
-            long firstTime = _first.getDate().getTime();
+            Date latestDate = _latest.getDate();
+            Date firstDate = _first.getDate();
+
+            if(latestDate == null || firstDate == null){
+                Logger.e(TAG, "Latest or First date is null");
+                continue;
+            }
+
+            long latestTime = latestDate.getTime();
+            long firstTime = firstDate.getTime();
 
             if (time > latestTime)
                 _latest = c;

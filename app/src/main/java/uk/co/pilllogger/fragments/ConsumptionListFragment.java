@@ -198,6 +198,11 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
 
             adapter = new ConsumptionListAdapter(activity, this, R.layout.consumption_list_item, consumptions, _pills);
 
+            if (_listView.getAdapter() != null) {
+                ConsumptionListAdapter currentAdapter = (ConsumptionListAdapter) _listView.getAdapter();
+                currentAdapter.destroy(); // tidy up Observer events
+            }
+
             _listView.setAdapter(adapter);
             _listView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -355,12 +360,18 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
 
         Consumption[] consumptions = new Consumption[_consumptions.size()];
         for(Consumption c : _consumptions.toArray(consumptions)){
-            String consumptionGroup = c.getGroup();
-            if(consumptionGroup == null)
+            if(c == null){
                 continue;
+            }
 
-            if(c.getGroup().equals(group) && c.getPillId() == pillId)
+            String consumptionGroup = c.getGroup();
+            if(consumptionGroup == null) {
+                continue;
+            }
+
+            if(c.getGroup().equals(group) && c.getPillId() == pillId) {
                 toRemove.add(c);
+            }
         }
 
         Runnable runnable = new Runnable(){

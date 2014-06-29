@@ -22,7 +22,7 @@ import uk.co.pilllogger.views.ColourIndicator;
 /**
  * Created by Nick on 11/11/13.
  */
-public class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
+public abstract class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
 
     public PillsListBaseAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
         super(activity, textViewResourceId, pills);

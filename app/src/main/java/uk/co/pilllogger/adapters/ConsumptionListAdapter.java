@@ -58,7 +58,7 @@ import org.joda.time.Days;
  * Created by nick on 22/10/13.
  */
 public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> implements
-        ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, Observer.IConsumptionAdded {
+        ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, Observer.IConsumptionAdded, Observer.IPillsUpdated {
 
     private static String TAG = "ConsumptionListAdapter";
     private List<Consumption> _consumptions;
@@ -72,20 +72,8 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         _fragment = fragment;
         _consumptions = consumptions;
 
-        Observer.getSingleton().registerPillsUpdatedObserver(new Observer.IPillsUpdated() {
-            @Override
-            public void pillsUpdated(Pill pill) {
-                _activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        notifyDataSetChanged();
-                    }
-                });
-            }
-        });
-
+        Observer.getSingleton().registerPillsUpdatedObserver(this);
         Observer.getSingleton().registerConsumptionAddedObserver(this);
-
         Observer.getSingleton().registerConsumptionDialogObserver(this);
     }
 
@@ -150,6 +138,16 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
                 }
             });
         }
+    }
+
+    @Override
+    public void pillsUpdated(Pill pill) {
+        _activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
     }
 
     public static class ViewHolder extends ActionBarArrayAdapter.ViewHolder{
@@ -277,6 +275,13 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
             }
         }
         return v;
+    }
+
+    @Override
+    public void destroy() {
+        Observer.getSingleton().unregisterPillsUpdatedObserver(this);
+        Observer.getSingleton().unregisterConsumptionAddedObserver(this);
+        Observer.getSingleton().unregisterConsumptionDialogObserver(this);
     }
 
     private void setUpGraphPillsList(View v) {
