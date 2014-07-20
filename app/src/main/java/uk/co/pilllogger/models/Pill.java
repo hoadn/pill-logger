@@ -6,6 +6,8 @@ package uk.co.pilllogger.models;
 import android.content.Context;
 import android.util.Log;
 
+import com.squareup.otto.Subscribe;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
@@ -15,16 +17,18 @@ import java.util.Date;
 import java.util.List;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.Observer;
+import uk.co.pilllogger.state.State;
 
 /**
  * @author alex
  *
  */
-public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.IConsumptionDeleted {
+public class Pill implements Serializable, Observer.IConsumptionDeleted {
 	/**
 	 * 
 	 */
@@ -42,19 +46,14 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
     private List<Consumption> _consumptions = new ArrayList<Consumption>();
 
     public Pill() {
-        Observer.getSingleton().registerConsumptionAddedObserver(this);
         Observer.getSingleton().registerConsumptionDeletedObserver(this);
+        State.getSingleton().getBus().register(this);
     }
 
     public Pill(CharSequence name, float size) {
         this();
         _name = String.valueOf(name);
         _size = size;
-    }
-
-    public Pill(String name, int size, String units) {
-        this(name, size);
-        _units = units;
     }
 
 	/**
@@ -242,8 +241,9 @@ public class Pill implements Serializable, Observer.IConsumptionAdded, Observer.
         return result;
     }
 
-    @Override
-    public void consumptionAdded(Consumption consumption) {
+    @Subscribe
+    public void consumptionAdded(CreatedConsumptionEvent event) {
+        Consumption consumption = event.getConsumption();
         if (consumption != null) {
             if (consumption.getPillId() == _id && !_consumptions.contains(consumption)) {
                 _consumptions.add(consumption);

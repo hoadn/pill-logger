@@ -47,7 +47,7 @@ public class Consumption implements Comparable {
     }
 
     public Date getDate() {
-        return _date;
+        return _date != null ? _date : new Date();
     }
 
     public void setDate(Date date) {

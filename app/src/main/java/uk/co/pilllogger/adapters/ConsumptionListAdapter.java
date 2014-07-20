@@ -35,6 +35,7 @@ import java.util.UUID;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
+import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.fragments.ConsumptionInfoDialogFragment;
 import uk.co.pilllogger.fragments.InfoDialogFragment;
@@ -60,7 +61,7 @@ import org.joda.time.Days;
  * Created by nick on 22/10/13.
  */
 public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> implements
-        ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, Observer.IConsumptionAdded {
+        ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener {
 
     private static String TAG = "ConsumptionListAdapter";
     private List<Consumption> _consumptions;
@@ -74,7 +75,6 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         _fragment = fragment;
         _consumptions = consumptions;
 
-        Observer.getSingleton().registerConsumptionAddedObserver(this);
         Observer.getSingleton().registerConsumptionDialogObserver(this);
 
         State.getSingleton().getBus().register(this);
@@ -130,8 +130,8 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         dialog.getActivity().finish();
     }
 
-    @Override
-    public void consumptionAdded(Consumption consumption) {
+    @Subscribe
+    public void consumptionAdded(CreatedConsumptionEvent event) {
         if(_activity != null) {
             _activity.runOnUiThread(new Runnable() {
                 @Override
@@ -282,7 +282,6 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
 
     @Override
     public void destroy() {
-        Observer.getSingleton().unregisterConsumptionAddedObserver(this);
         Observer.getSingleton().unregisterConsumptionDialogObserver(this);
         State.getSingleton().getBus().unregister(this);
     }

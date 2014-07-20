@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.squareup.otto.Subscribe;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -18,6 +20,7 @@ import java.util.List;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
 import uk.co.pilllogger.dialogs.ChangePillInfoDialog;
+import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.fragments.InfoDialogFragment;
 import uk.co.pilllogger.fragments.PillInfoDialogFragment;
 import uk.co.pilllogger.helpers.Logger;
@@ -36,7 +39,6 @@ import uk.co.pilllogger.views.ColourIndicator;
 public class PillsListAdapter extends PillsListBaseAdapter implements
         PillInfoDialogFragment.PillInfoDialogListener,
         ChangePillInfoDialog.ChangePillInfoDialogListener,
-        Observer.IConsumptionAdded,
         Observer.IConsumptionDeleted {
 
     private static final String TAG = "PillsListAdapter";
@@ -45,9 +47,9 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
     public PillsListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
         super(activity, textViewResourceId, pills);
         _activity = activity;
-        Observer.getSingleton().registerConsumptionAddedObserver(this);
         Observer.getSingleton().registerConsumptionDeletedObserver(this);
         Observer.getSingleton().registerPillDialogObserver(this);
+
     }
 
     private AlertDialog createCancelDialog(Pill pill, String deleteTrackerType) {
@@ -107,7 +109,7 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
 
     @Override
     public void destroy() {
-        Observer.getSingleton().unregisterConsumptionAddedObserver(this);
+        super.destroy();
         Observer.getSingleton().unregisterConsumptionDeletedObserver(this);
         Observer.getSingleton().unregisterPillDialogObserver(this);
     }
@@ -167,8 +169,8 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
         new UpdatePillTask(_activity, pill).execute();
     }
 
-    @Override
-    public void consumptionAdded(Consumption consumption) {
+    @Subscribe
+    public void consumptionAdded(CreatedConsumptionEvent event) {
         notifyDataSetChangedOnUiThread();
     }
 

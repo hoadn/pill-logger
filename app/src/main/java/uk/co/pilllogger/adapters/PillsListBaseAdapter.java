@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.squareup.otto.Bus;
+
 import java.util.List;
 
 import uk.co.pilllogger.R;
@@ -24,8 +26,18 @@ import uk.co.pilllogger.views.ColourIndicator;
  */
 public abstract class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
 
+    protected final Bus _bus;
+
     public PillsListBaseAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
         super(activity, textViewResourceId, pills);
+        _bus = State.getSingleton().getBus();
+
+        _bus.register(this);
+    }
+
+    @Override
+    public void destroy() {
+        _bus.unregister(this);
     }
 
     public static class ViewHolder extends ActionBarArrayAdapter.ViewHolder {

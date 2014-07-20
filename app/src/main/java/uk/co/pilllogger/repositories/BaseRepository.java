@@ -4,11 +4,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.squareup.otto.Bus;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.pilllogger.database.DatabaseCreator;
 import uk.co.pilllogger.helpers.ArrayHelper;
+import uk.co.pilllogger.state.State;
 
 /**
  * Created by alex on 14/11/2013.
@@ -17,9 +20,13 @@ public abstract class BaseRepository<T> implements IRepository<T>{
     protected DatabaseCreator _dbCreator;
     protected Context _context;
 
+    protected Bus _bus;
+
     protected BaseRepository(Context context){
         _dbCreator = new DatabaseCreator(context);
         _context = context;
+        _bus = State.getSingleton().getBus();
+        _bus.register(this);
     }
 
     protected abstract ContentValues getContentValues(T data);

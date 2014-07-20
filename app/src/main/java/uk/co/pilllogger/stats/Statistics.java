@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -26,7 +27,7 @@ import uk.co.pilllogger.tasks.GetConsumptionsTask;
 /**
  * Created by nick on 07/03/14.
  */
-public class Statistics implements Observer.IConsumptionAdded, Observer.IConsumptionDeleted {
+public class Statistics implements Observer.IConsumptionDeleted {
 
     private Context _context;
     // caches
@@ -55,7 +56,6 @@ public class Statistics implements Observer.IConsumptionAdded, Observer.IConsump
 
     private Statistics(Context context){
         _context = context;
-        Observer.getSingleton().registerConsumptionAddedObserver(this);
         Observer.getSingleton().registerConsumptionDeletedObserver(this);
     }
 
@@ -465,8 +465,8 @@ public class Statistics implements Observer.IConsumptionAdded, Observer.IConsump
         getPillsWithAmounts(consumptions);
     }
 
-    @Override
-    public void consumptionAdded(Consumption consumption) {
+    @Subscribe
+    public void consumptionAdded(CreatedConsumptionEvent event) {
         new GetConsumptionsTask(_context, new GetConsumptionsTask.ITaskComplete() {
             @Override
             public void consumptionsReceived(List<Consumption> consumptions) {

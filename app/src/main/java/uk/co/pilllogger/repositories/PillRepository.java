@@ -35,7 +35,6 @@ import uk.co.pilllogger.state.State;
 public class PillRepository extends BaseRepository<Pill>{
     private static final String TAG = "PillRepository";
     private static PillRepository _instance;
-    private static Bus _bus;
     private Map<Integer, Pill> _cache = new HashMap<Integer, Pill>();
     private boolean _getAllCalled = false;
 
@@ -50,9 +49,6 @@ public class PillRepository extends BaseRepository<Pill>{
     public static PillRepository getSingleton(Context context) {
         if (_instance == null) {
             _instance = new PillRepository(context);
-
-            _bus = State.getSingleton().getBus();
-            _bus.register(_instance);
         }
         return _instance;
     }

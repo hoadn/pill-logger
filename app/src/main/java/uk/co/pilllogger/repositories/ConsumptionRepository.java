@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.squareup.otto.Bus;
+
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -16,10 +18,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import uk.co.pilllogger.database.DatabaseContract;
+import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Observer;
+import uk.co.pilllogger.state.State;
 
 /**
  * Created by alex on 14/11/2013.
@@ -462,7 +466,8 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
             if (map != null)
               map.put(consumption.getId(), consumption);
         }
-        Observer.getSingleton().notifyConsumptionAdded(consumption);
+
+        _bus.post(new CreatedConsumptionEvent(consumption));
     }
 
     private void notifyDeleted(Consumption consumption) {

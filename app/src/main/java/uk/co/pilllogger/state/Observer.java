@@ -20,8 +20,6 @@ public class Observer {
 
     private static final String TAG = "Observer";
     private static Observer _instance;
-    //private Map<IPillsUpdated, WeakReference<IPillsUpdated>> _pillsUpdatedArrayList = new ConcurrentHashMap<IPillsUpdated, WeakReference<IPillsUpdated>>();
-    private Map<IConsumptionAdded, WeakReference<IConsumptionAdded>> _consumptionAddedListeners = new ConcurrentHashMap<IConsumptionAdded, WeakReference<IConsumptionAdded>>();
     private Map<IConsumptionDeleted, WeakReference<IConsumptionDeleted>> _consumptionDeletedListeners = new ConcurrentHashMap<IConsumptionDeleted, WeakReference<IConsumptionDeleted>>();
     private Map<IFeaturePurchased, WeakReference<IFeaturePurchased>> _featuredPurchasedListeners = new ConcurrentHashMap<IFeaturePurchased, WeakReference<IFeaturePurchased>>();
     private Map<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, WeakReference<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>> _consumptionInfoDialogListeners = new ConcurrentHashMap<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, WeakReference<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>>();
@@ -33,31 +31,6 @@ public class Observer {
 
         return _instance;
     }
-
-    /*public void notifyPillsUpdated(Pill pill) {
-        List<WeakReference<IPillsUpdated>> deadrefs = new ArrayList<WeakReference<IPillsUpdated>>();
-
-        List<WeakReference<IPillsUpdated>> tempObservers = new ArrayList<WeakReference<IPillsUpdated>>(_pillsUpdatedArrayList.values());
-
-        Logger.d(TAG, "notifyPillsUpdated");
-
-        for (WeakReference<IPillsUpdated> reference : tempObservers) {
-            IPillsUpdated observer = reference.get();
-            if (observer != null)
-                observer.pillsUpdated(pill);
-            else
-                deadrefs.add(reference);
-        }
-        _pillsUpdatedArrayList.values().removeAll(deadrefs);
-    }*/
-
-    /*public void registerPillsUpdatedObserver(IPillsUpdated observer) {
-        _pillsUpdatedArrayList.put(observer, new WeakReference<IPillsUpdated>(observer));
-    }*/
-
-    /*public void unregisterPillsUpdatedObserver(IPillsUpdated observer) {
-        _pillsUpdatedArrayList.remove(observer);
-    }*/
 
     public void registerFeaturePurchasedObserver(IFeaturePurchased observer) {
         _featuredPurchasedListeners.put(observer, new WeakReference<IFeaturePurchased>(observer));
@@ -71,19 +44,8 @@ public class Observer {
         _consumptionDeletedListeners.remove(observer);
     }
 
-    public void unregisterConsumptionAddedObserver(IConsumptionAdded observer) {
-        if (observer != null) {
-            _consumptionAddedListeners.remove(observer);
-        }
-    }
-
     public void registerConsumptionDeletedObserver(IConsumptionDeleted observer) {
         _consumptionDeletedListeners.put(observer, new WeakReference<IConsumptionDeleted>(observer));
-    }
-
-    public void registerConsumptionAddedObserver(IConsumptionAdded listener) {
-        WeakReference<IConsumptionAdded> reference = new WeakReference<IConsumptionAdded>(listener);
-        _consumptionAddedListeners.put(listener, reference);
     }
 
     public void registerConsumptionDialogObserver(ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener listener) {
@@ -122,15 +84,6 @@ public class Observer {
         }
 
         collection.values().removeAll(deadrefs);
-    }
-
-    public void notifyConsumptionAdded(final Consumption consumption) {
-        notify(_consumptionAddedListeners, new INotifiable<IConsumptionAdded>() {
-            @Override
-            public void notify(IConsumptionAdded observer) {
-                observer.consumptionAdded(consumption);
-            }
-        });
     }
 
     public void notifyFeaturePurchased(final FeatureType featureType) {
@@ -242,18 +195,10 @@ public class Observer {
         });
     }
 
-    /*public interface IPillsUpdated {
-        void pillsUpdated(Pill pill);
-    }*/
-
     public interface IConsumptionDeleted {
         void consumptionDeleted(Consumption consumption);
 
         void consumptionPillGroupDeleted(String group, int pillId);
-    }
-
-    public interface IConsumptionAdded {
-        public void consumptionAdded(Consumption consumption);
     }
 
     public interface IFeaturePurchased {
