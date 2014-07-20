@@ -19,6 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
+import uk.co.pilllogger.events.DeletedConsumptionEvent;
+import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -471,7 +473,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     }
 
     private void notifyDeleted(Consumption consumption) {
-        Observer.getSingleton().notifyConsumptionDeleted(consumption);
+        _bus.post(new DeletedConsumptionEvent(consumption));
     }
 
     private void notifyDeletedGroupPill(Consumption consumption){
@@ -486,6 +488,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
             }
         }
         _consumptionsCache.remove(consumption.getId());
-        Observer.getSingleton().notifyConsumptionPillGroupDeleted(consumption.getGroup(), consumption.getPillId());
+
+        _bus.post(new DeletedConsumptionGroupEvent(consumption.getGroup(), consumption.getPillId()));
     }
 }

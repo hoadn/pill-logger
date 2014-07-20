@@ -21,6 +21,8 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
 import uk.co.pilllogger.dialogs.ChangePillInfoDialog;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
+import uk.co.pilllogger.events.DeletedConsumptionEvent;
+import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.fragments.InfoDialogFragment;
 import uk.co.pilllogger.fragments.PillInfoDialogFragment;
 import uk.co.pilllogger.helpers.Logger;
@@ -38,8 +40,7 @@ import uk.co.pilllogger.views.ColourIndicator;
  */
 public class PillsListAdapter extends PillsListBaseAdapter implements
         PillInfoDialogFragment.PillInfoDialogListener,
-        ChangePillInfoDialog.ChangePillInfoDialogListener,
-        Observer.IConsumptionDeleted {
+        ChangePillInfoDialog.ChangePillInfoDialogListener {
 
     private static final String TAG = "PillsListAdapter";
     private final Activity _activity;
@@ -47,9 +48,7 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
     public PillsListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
         super(activity, textViewResourceId, pills);
         _activity = activity;
-        Observer.getSingleton().registerConsumptionDeletedObserver(this);
         Observer.getSingleton().registerPillDialogObserver(this);
-
     }
 
     private AlertDialog createCancelDialog(Pill pill, String deleteTrackerType) {
@@ -110,7 +109,6 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
     @Override
     public void destroy() {
         super.destroy();
-        Observer.getSingleton().unregisterConsumptionDeletedObserver(this);
         Observer.getSingleton().unregisterPillDialogObserver(this);
     }
 
@@ -174,8 +172,8 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
         notifyDataSetChangedOnUiThread();
     }
 
-    @Override
-    public void consumptionDeleted(Consumption consumption) {
+    @Subscribe
+    public void consumptionDeleted(DeletedConsumptionEvent event) {
         notifyDataSetChangedOnUiThread();
     }
 
@@ -208,8 +206,8 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
         }
     }
 
-    @Override
-    public void consumptionPillGroupDeleted(String group, int pillId) {
+    @Subscribe
+    public void consumptionPillGroupDeleted(DeletedConsumptionGroupEvent event) {
         notifyDataSetChangedOnUiThread();
     }
 }

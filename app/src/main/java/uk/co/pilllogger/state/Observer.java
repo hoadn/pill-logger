@@ -20,7 +20,6 @@ public class Observer {
 
     private static final String TAG = "Observer";
     private static Observer _instance;
-    private Map<IConsumptionDeleted, WeakReference<IConsumptionDeleted>> _consumptionDeletedListeners = new ConcurrentHashMap<IConsumptionDeleted, WeakReference<IConsumptionDeleted>>();
     private Map<IFeaturePurchased, WeakReference<IFeaturePurchased>> _featuredPurchasedListeners = new ConcurrentHashMap<IFeaturePurchased, WeakReference<IFeaturePurchased>>();
     private Map<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, WeakReference<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>> _consumptionInfoDialogListeners = new ConcurrentHashMap<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, WeakReference<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>>();
     private Map<PillInfoDialogFragment.PillInfoDialogListener, WeakReference<PillInfoDialogFragment.PillInfoDialogListener>> _pillInfoDialogListeners = new ConcurrentHashMap<PillInfoDialogFragment.PillInfoDialogListener, WeakReference<PillInfoDialogFragment.PillInfoDialogListener>>();
@@ -38,14 +37,6 @@ public class Observer {
 
     public void unregisterFeaturePurchasedObserver(IFeaturePurchased observer) {
         _featuredPurchasedListeners.remove(observer);
-    }
-
-    public void unregisterConsumptionDeletedObserver(IConsumptionDeleted observer) {
-        _consumptionDeletedListeners.remove(observer);
-    }
-
-    public void registerConsumptionDeletedObserver(IConsumptionDeleted observer) {
-        _consumptionDeletedListeners.put(observer, new WeakReference<IConsumptionDeleted>(observer));
     }
 
     public void registerConsumptionDialogObserver(ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener listener) {
@@ -91,25 +82,6 @@ public class Observer {
             @Override
             public void notify(IFeaturePurchased observer) {
                 observer.featurePurchased(featureType);
-            }
-        });
-    }
-
-
-    public void notifyConsumptionDeleted(final Consumption consumption) {
-        notify(_consumptionDeletedListeners, new INotifiable<IConsumptionDeleted>() {
-            @Override
-            public void notify(IConsumptionDeleted observer) {
-                observer.consumptionDeleted(consumption);
-            }
-        });
-    }
-
-    public void notifyConsumptionPillGroupDeleted(final String group, final int pillId) {
-        notify(_consumptionDeletedListeners, new INotifiable<IConsumptionDeleted>() {
-            @Override
-            public void notify(IConsumptionDeleted observer) {
-                observer.consumptionPillGroupDeleted(group, pillId);
             }
         });
     }
@@ -193,12 +165,6 @@ public class Observer {
                 observer.onDialogChangeNameDosage(pill, dialog);
             }
         });
-    }
-
-    public interface IConsumptionDeleted {
-        void consumptionDeleted(Consumption consumption);
-
-        void consumptionPillGroupDeleted(String group, int pillId);
     }
 
     public interface IFeaturePurchased {

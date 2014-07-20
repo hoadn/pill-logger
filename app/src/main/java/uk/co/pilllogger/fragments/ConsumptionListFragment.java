@@ -33,6 +33,8 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.ConsumptionListAdapter;
 import uk.co.pilllogger.adapters.GraphPillListAdapter;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
+import uk.co.pilllogger.events.DeletedConsumptionEvent;
+import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.GraphHelper;
@@ -53,8 +55,7 @@ import uk.co.pilllogger.tasks.InitTestDbTask;
  */
 public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         InitTestDbTask.ITaskComplete,
-        GetConsumptionsTask.ITaskComplete,
-        Observer.IConsumptionDeleted{
+        GetConsumptionsTask.ITaskComplete{
 
     public static final String TAG = "ConsumptionListFragment";
     ListView _listView;
@@ -104,8 +105,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
             title.setTypeface(typeface);
         }
 
-        Observer.getSingleton().registerConsumptionDeletedObserver(this);
-
         return v;
     }
 
@@ -147,7 +146,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     public void onDestroyView(){
         super.onDestroyView();
 
-        Observer.getSingleton().unregisterConsumptionDeletedObserver(this);
         Logger.d(TAG, "onDestroyView");
     }
 
@@ -321,9 +319,9 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         executeRunnable(runnable);
     }
 
-    @Override
-    public void consumptionDeleted(Consumption consumption) {
-        final Consumption consumption1 = consumption;
+    @Subscribe
+    public void consumptionDeleted(DeletedConsumptionEvent event) {
+        final Consumption consumption1 = event.getConsumption();
         Runnable runnable = new Runnable(){
             public void run(){
                 if (_consumptions != null) {
@@ -340,10 +338,10 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         executeRunnable(runnable);
     }
 
-    @Override
-    public void consumptionPillGroupDeleted(String group, int pillId) {
+    @Subscribe
+    public void consumptionPillGroupDeleted(DeletedConsumptionGroupEvent event) {
 
-        if(_consumptions == null || group == null)
+        if(_consumptions == null || event.getGroup() == null)
             return;
 
         final List<Consumption> toRemove = new ArrayList<Consumption>();
@@ -359,7 +357,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                 continue;
             }
 
-            if(c.getGroup().equals(group) && c.getPillId() == pillId) {
+            if(c.getGroup().equals(event.getGroup()) && c.getPillId() == event.getPillId()) {
                 toRemove.add(c);
             }
         }

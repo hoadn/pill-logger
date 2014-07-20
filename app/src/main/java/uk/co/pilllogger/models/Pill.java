@@ -18,6 +18,8 @@ import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
+import uk.co.pilllogger.events.DeletedConsumptionEvent;
+import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
@@ -28,7 +30,7 @@ import uk.co.pilllogger.state.State;
  * @author alex
  *
  */
-public class Pill implements Serializable, Observer.IConsumptionDeleted {
+public class Pill implements Serializable {
 	/**
 	 * 
 	 */
@@ -46,7 +48,6 @@ public class Pill implements Serializable, Observer.IConsumptionDeleted {
     private List<Consumption> _consumptions = new ArrayList<Consumption>();
 
     public Pill() {
-        Observer.getSingleton().registerConsumptionDeletedObserver(this);
         State.getSingleton().getBus().register(this);
     }
 
@@ -254,8 +255,9 @@ public class Pill implements Serializable, Observer.IConsumptionDeleted {
         }
     }
 
-    @Override
-    public void consumptionDeleted(Consumption consumption) {
+    @Subscribe
+    public void consumptionDeleted(DeletedConsumptionEvent event) {
+        Consumption consumption = event.getConsumption();
         if (consumption != null) {
             if (consumption.getPillId() == _id && _consumptions.contains(consumption)) {
                 _consumptions.remove(consumption);
@@ -266,11 +268,11 @@ public class Pill implements Serializable, Observer.IConsumptionDeleted {
         }
     }
 
-    @Override
-    public void consumptionPillGroupDeleted(String group, int pillId) {
+    @Subscribe
+    public void consumptionPillGroupDeleted(DeletedConsumptionGroupEvent event) {
         List<Consumption> toRemove = new ArrayList<Consumption>();
 
-        if(group == null)
+        if(event.getGroup() == null)
             return;
 
         for(Consumption c : _consumptions){
@@ -278,7 +280,7 @@ public class Pill implements Serializable, Observer.IConsumptionDeleted {
             if(consumptionGroup == null)
                 continue;
 
-            if(c.getGroup().equals(group) && c.getPillId() == pillId)
+            if(c.getGroup().equals(event.getGroup()) && c.getPillId() == event.getPillId())
                 toRemove.add(c);
 
             if(_latest != null && c.getId() == _latest.getId())

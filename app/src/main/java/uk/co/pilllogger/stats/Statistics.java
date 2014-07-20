@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
+import uk.co.pilllogger.events.DeletedConsumptionEvent;
+import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -27,7 +29,7 @@ import uk.co.pilllogger.tasks.GetConsumptionsTask;
 /**
  * Created by nick on 07/03/14.
  */
-public class Statistics implements Observer.IConsumptionDeleted {
+public class Statistics{
 
     private Context _context;
     // caches
@@ -56,7 +58,6 @@ public class Statistics implements Observer.IConsumptionDeleted {
 
     private Statistics(Context context){
         _context = context;
-        Observer.getSingleton().registerConsumptionDeletedObserver(this);
     }
 
     private List<Consumption> filterConsumptions(Date startDate, Date endDate, List<Consumption> consumptions) {
@@ -475,8 +476,8 @@ public class Statistics implements Observer.IConsumptionDeleted {
         }, false).execute();
     }
 
-    @Override
-    public void consumptionDeleted(Consumption consumption) {
+    @Subscribe
+    public void consumptionDeleted(DeletedConsumptionEvent event) {
         new GetConsumptionsTask(_context, new GetConsumptionsTask.ITaskComplete() {
             @Override
             public void consumptionsReceived(List<Consumption> consumptions) {
@@ -485,8 +486,8 @@ public class Statistics implements Observer.IConsumptionDeleted {
         }, false).execute();
     }
 
-    @Override
-    public void consumptionPillGroupDeleted(String group, int pillId) {
+    @Subscribe
+    public void consumptionPillGroupDeleted(DeletedConsumptionGroupEvent event) {
         new GetConsumptionsTask(_context, new GetConsumptionsTask.ITaskComplete() {
             @Override
             public void consumptionsReceived(List<Consumption> consumptions) {
