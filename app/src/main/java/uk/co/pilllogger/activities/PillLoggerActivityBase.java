@@ -1,20 +1,13 @@
 package uk.co.pilllogger.activities;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.GoogleAnalytics;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.squareup.otto.Bus;
 
-import java.util.UUID;
-
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.state.State;
 

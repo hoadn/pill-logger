@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
@@ -17,21 +15,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.billing.IabException;
 import uk.co.pilllogger.billing.IabHelper;
 import uk.co.pilllogger.billing.IabResult;
 import uk.co.pilllogger.billing.Purchase;
 import uk.co.pilllogger.billing.SkuDetails;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.PurchasedFeatureEvent;
-import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.ExportHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.FeatureType;
-import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
 

@@ -1,24 +1,14 @@
 package uk.co.pilllogger.fragments;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
-import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
-
-import org.joda.time.LocalTime;
-
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.state.State;
 
 /**

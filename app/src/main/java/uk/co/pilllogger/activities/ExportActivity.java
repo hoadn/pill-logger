@@ -33,7 +33,6 @@ import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.services.IExportService;
 import uk.co.pilllogger.state.FeatureType;
-import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetMaxDosagesTask;

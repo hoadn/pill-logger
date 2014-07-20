@@ -6,7 +6,6 @@ import android.text.format.DateUtils;
 
 import org.joda.time.DateTime;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import uk.co.pilllogger.R;

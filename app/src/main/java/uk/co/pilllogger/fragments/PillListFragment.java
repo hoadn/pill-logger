@@ -2,7 +2,6 @@ package uk.co.pilllogger.fragments;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -15,12 +14,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import hugo.weaving.DebugLog;
@@ -30,11 +26,8 @@ import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.LayoutHelper;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Pill;
-import uk.co.pilllogger.repositories.PillRepository;
-import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.InsertPillTask;

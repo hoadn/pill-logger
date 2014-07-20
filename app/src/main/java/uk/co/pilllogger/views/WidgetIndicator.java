@@ -12,15 +12,12 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.helpers.ColourHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
-import uk.co.pilllogger.helpers.Logger;
 
 /**
  * Created by alex on 10/11/2013.

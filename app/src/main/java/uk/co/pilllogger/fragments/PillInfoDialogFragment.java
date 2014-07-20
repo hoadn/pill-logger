@@ -6,14 +6,13 @@ import android.app.FragmentManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.events.CreateConsumptionEvent;
+import uk.co.pilllogger.events.DeletePillEvent;
 import uk.co.pilllogger.models.Pill;
-import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.views.ColourIndicator;
 
 /**
  * Created by Alex on 05/03/14.
@@ -73,13 +72,13 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
         addConsumptionContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Observer.getSingleton().notifyOnPillDialogAddConsumption(_pill, PillInfoDialogFragment.this);
+                _bus.post(new CreateConsumptionEvent(_pill, PillInfoDialogFragment.this));
             }
         });
         deletePillContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Observer.getSingleton().notifyOnPillDialogDelete(_pill, PillInfoDialogFragment.this);
+                _bus.post(new DeletePillEvent(_pill, PillInfoDialogFragment.this));
             }
         });
         editPillContainer.setOnClickListener(new View.OnClickListener() {
@@ -104,13 +103,5 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
         _deletePillSummary.setTypeface(typeface);
         _editPill.setTypeface(typeface);
         _editPillSummary.setTypeface(typeface);
-    }
-
-    public interface PillInfoDialogListener {
-        public void onDialogAddConsumption(Pill pill, InfoDialogFragment dialog);
-        public void onDialogDelete(Pill pill, InfoDialogFragment dialog);
-        public void setDialogFavourite(Pill pill, InfoDialogFragment dialog);
-        public void onDialogChangePillColour(Pill pill, InfoDialogFragment dialog);
-        public void onDialogChangeNameDosage(Pill pill, InfoDialogFragment dialog);
     }
 }

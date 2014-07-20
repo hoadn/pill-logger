@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.database.DatabaseCreator;
-import uk.co.pilllogger.models.Consumption;
 
 /**
  * Created by nick on 23/01/14.

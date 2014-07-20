@@ -5,8 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.squareup.otto.Bus;
-
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -24,8 +22,6 @@ import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
-import uk.co.pilllogger.state.Observer;
-import uk.co.pilllogger.state.State;
 
 /**
  * Created by alex on 14/11/2013.

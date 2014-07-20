@@ -1,26 +1,26 @@
 package uk.co.pilllogger.helpers;
 
-import java.util.*;
-import java.util.concurrent.ExecutionException;
-
 import android.annotation.TargetApi;
-import android.app.*;
-import android.content.*;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import java.util.Date;
+import java.util.List;
+
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.AddConsumptionActivity;
 import uk.co.pilllogger.models.Consumption;
-import uk.co.pilllogger.state.State;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public abstract class NotificationHelper {

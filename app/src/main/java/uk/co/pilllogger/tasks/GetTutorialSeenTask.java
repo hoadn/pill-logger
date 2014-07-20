@@ -2,9 +2,6 @@ package uk.co.pilllogger.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
-
-import java.util.TooManyListenersException;
 
 import uk.co.pilllogger.repositories.TutorialRepository;
 

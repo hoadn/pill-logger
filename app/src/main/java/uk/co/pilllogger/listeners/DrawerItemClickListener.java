@@ -11,8 +11,8 @@ import android.widget.ListView;
 import java.util.List;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
+import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.fragments.SettingsFragment;
 import uk.co.pilllogger.helpers.Logger;

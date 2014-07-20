@@ -10,7 +10,6 @@ import android.widget.ImageView;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.helpers.ColourHelper;
-import uk.co.pilllogger.helpers.Logger;
 
 /**
  * Created by alex on 10/11/2013.

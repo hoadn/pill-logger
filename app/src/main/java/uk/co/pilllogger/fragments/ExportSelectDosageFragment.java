@@ -11,10 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.activities.ExportActivity;
 import uk.co.pilllogger.adapters.DosageListExportAdapter;
 import uk.co.pilllogger.helpers.Logger;
-import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.tasks.GetMaxDosagesTask;
 

@@ -2,8 +2,6 @@ package uk.co.pilllogger.database;
 
 import android.provider.BaseColumns;
 
-import uk.co.pilllogger.models.Consumption;
-
 /**
  * Created by root on 21/10/13.
  */

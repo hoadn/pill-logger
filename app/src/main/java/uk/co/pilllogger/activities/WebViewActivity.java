@@ -12,11 +12,9 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebView;
-import android.widget.LinearLayout;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.helpers.FeedbackHelper;
-import uk.co.pilllogger.helpers.Logger;
 
 /**
  * Created by alex on 30/10/2013.

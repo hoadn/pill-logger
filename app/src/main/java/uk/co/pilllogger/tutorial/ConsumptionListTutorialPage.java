@@ -1,13 +1,10 @@
 package uk.co.pilllogger.tutorial;
 
-import android.animation.Animator;
 import android.app.Activity;
 import android.view.View;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
-import uk.co.pilllogger.helpers.LayoutHelper;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.tasks.SetTutorialSeenTask;
 
 /**

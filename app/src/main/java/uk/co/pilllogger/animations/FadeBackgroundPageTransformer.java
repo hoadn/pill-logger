@@ -2,8 +2,6 @@ package uk.co.pilllogger.animations;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -12,9 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.adapters.SlidePagerAdapter;
-import uk.co.pilllogger.helpers.Logger;
-import uk.co.pilllogger.state.State;
 
 /**
  * Created by Nick on 07/12/13.

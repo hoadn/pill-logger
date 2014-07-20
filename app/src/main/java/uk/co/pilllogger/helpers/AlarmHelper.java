@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.os.SystemClock;
 import android.widget.Toast;
 
-import org.joda.time.DateTime;
-
 import java.util.Date;
 
 import uk.co.pilllogger.R;

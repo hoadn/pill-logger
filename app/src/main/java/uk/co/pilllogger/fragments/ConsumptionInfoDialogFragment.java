@@ -14,7 +14,6 @@ import uk.co.pilllogger.events.DecreaseConsumptionEvent;
 import uk.co.pilllogger.events.IncreaseConsumptionEvent;
 import uk.co.pilllogger.events.TakeConsumptionAgainEvent;
 import uk.co.pilllogger.models.Consumption;
-import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 
 /**

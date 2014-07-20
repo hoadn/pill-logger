@@ -1,34 +1,24 @@
 package uk.co.pilllogger.activities;
 
-import android.app.Activity;
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RemoteViews;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
-import java.util.Date;
 import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
-import uk.co.pilllogger.adapters.WidgetListAdapter;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.listeners.AddConsumptionPillItemClickListener;
-import uk.co.pilllogger.listeners.WidgetPillsClickListener;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;

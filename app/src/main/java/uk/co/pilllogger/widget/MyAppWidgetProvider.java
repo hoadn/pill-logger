@@ -8,11 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.view.View;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Date;
@@ -21,15 +17,12 @@ import java.util.UUID;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.AppWidgetConfigure;
 import uk.co.pilllogger.helpers.ColourHelper;
-import uk.co.pilllogger.helpers.LayoutHelper;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
-import uk.co.pilllogger.views.ColourIndicator;
 import uk.co.pilllogger.views.WidgetIndicator;
 
 /**

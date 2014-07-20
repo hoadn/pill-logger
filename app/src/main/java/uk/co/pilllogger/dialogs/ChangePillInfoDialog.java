@@ -15,35 +15,34 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.squareup.otto.Bus;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.UnitAdapter;
-import uk.co.pilllogger.helpers.LayoutHelper;
+import uk.co.pilllogger.events.UpdatePillEvent;
 import uk.co.pilllogger.helpers.NumberHelper;
-import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.DeletePillTask;
-import uk.co.pilllogger.tasks.UpdatePillTask;
 
 /**
  * Created by Nick on 24/04/2014.
  */
 public class ChangePillInfoDialog extends DialogFragment {
 
+    private final Bus _bus;
     private Pill _pill;
     private Activity _activity;
-    private ChangePillInfoDialogListener _listener;
 
     public ChangePillInfoDialog() {
+        _bus = State.getSingleton().getBus();
     }
 
     @SuppressLint("ValidFragment")
-    public ChangePillInfoDialog(Activity activity, Pill pill, ChangePillInfoDialogListener listener) {
+    public ChangePillInfoDialog(Activity activity, Pill pill) {
+        this();
         _activity = activity;
         _pill = pill;
-        _listener = listener;
     }
 
     @Override
@@ -98,7 +97,7 @@ public class ChangePillInfoDialog extends DialogFragment {
                 float size = pillSize.trim().length() > 0 ? Float.valueOf(pillSize) : 0;
                 _pill.setSize(size);
                 _pill.setUnits(spinner.getSelectedItem().toString());
-                _listener.onDialogInfomationChanged(_pill);
+                _bus.post(new UpdatePillEvent(_pill));
                 InputMethodManager im = (InputMethodManager)_activity.getSystemService(Context.INPUT_METHOD_SERVICE);
                 im.hideSoftInputFromWindow(editPillName.getWindowToken(), 0);
                 dialog.dismiss();
@@ -127,11 +126,6 @@ public class ChangePillInfoDialog extends DialogFragment {
 
     @Override
     public void dismiss() {
-
         super.dismiss();
-    }
-
-    public interface ChangePillInfoDialogListener {
-        public void onDialogInfomationChanged(Pill pill);
     }
 }

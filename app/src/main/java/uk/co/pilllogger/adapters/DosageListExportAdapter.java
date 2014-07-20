@@ -9,15 +9,11 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.activities.ExportActivity;
 import uk.co.pilllogger.helpers.NumberHelper;
-import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.State;

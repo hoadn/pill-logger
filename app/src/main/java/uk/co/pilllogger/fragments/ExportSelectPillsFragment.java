@@ -2,7 +2,6 @@ package uk.co.pilllogger.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +10,9 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.activities.ExportActivity;
-import uk.co.pilllogger.adapters.PillsListBaseAdapter;
 import uk.co.pilllogger.adapters.PillsListExportAdapter;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.models.Pill;

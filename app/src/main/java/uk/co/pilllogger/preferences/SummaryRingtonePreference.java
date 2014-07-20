@@ -8,9 +8,6 @@ import android.preference.Preference;
 import android.preference.RingtonePreference;
 import android.util.AttributeSet;
 
-import uk.co.pilllogger.activities.SettingsActivity;
-import uk.co.pilllogger.helpers.Logger;
-
 /**
  * Created by Alex on 10/05/2014
  * in uk.co.pilllogger.preferences.

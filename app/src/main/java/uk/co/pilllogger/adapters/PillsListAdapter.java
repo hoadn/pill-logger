@@ -20,27 +20,27 @@ import java.util.List;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
 import uk.co.pilllogger.dialogs.ChangePillInfoDialog;
+import uk.co.pilllogger.events.CreateConsumptionEvent;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
+import uk.co.pilllogger.events.DeletePillEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
+import uk.co.pilllogger.events.UpdatePillEvent;
+import uk.co.pilllogger.fragments.DeleteConsumptionEvent;
 import uk.co.pilllogger.fragments.InfoDialogFragment;
 import uk.co.pilllogger.fragments.PillInfoDialogFragment;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
-import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.tasks.DeletePillTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.tasks.UpdatePillTask;
-import uk.co.pilllogger.views.ColourIndicator;
 
 /**
  * Created by nick on 22/10/13.
  */
-public class PillsListAdapter extends PillsListBaseAdapter implements
-        PillInfoDialogFragment.PillInfoDialogListener,
-        ChangePillInfoDialog.ChangePillInfoDialogListener {
+public class PillsListAdapter extends PillsListBaseAdapter {
 
     private static final String TAG = "PillsListAdapter";
     private final Activity _activity;
@@ -48,7 +48,6 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
     public PillsListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
         super(activity, textViewResourceId, pills);
         _activity = activity;
-        Observer.getSingleton().registerPillDialogObserver(this);
     }
 
     private AlertDialog createCancelDialog(Pill pill, String deleteTrackerType) {
@@ -106,65 +105,32 @@ public class PillsListAdapter extends PillsListBaseAdapter implements
         return v;
     }
 
-    @Override
-    public void destroy() {
-        super.destroy();
-        Observer.getSingleton().unregisterPillDialogObserver(this);
-    }
-
-    @Override
-    public void onDialogAddConsumption(Pill pill, InfoDialogFragment dialog) {
-        if (pill != null) {
-            Consumption consumption = new Consumption(pill, new Date());
+    @Subscribe
+    public void onDialogAddConsumption(CreateConsumptionEvent event) {
+        if (event.getPill() != null) {
+            Consumption consumption = new Consumption(event.getPill(), new Date());
             new InsertConsumptionTask(_activity, consumption).execute();
             TrackerHelper.addConsumptionEvent(_activity, "PillDialog");
-            Toast.makeText(_activity, "Added consumption of " + pill.getName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(_activity, "Added consumption of " + event.getPill().getName(), Toast.LENGTH_SHORT).show();
         }
-        dialog.getActivity().finish();
+        event.getPillInfoDialogFragment().getActivity().finish();
     }
 
-    @Override
-    public void onDialogDelete(Pill pill, InfoDialogFragment dialog) {
-        AlertDialog cancelDialog = createCancelDialog(pill, "DialogDelete");
+    @Subscribe
+    public void onDialogDelete(DeletePillEvent event) {
+        AlertDialog cancelDialog = createCancelDialog(event.getPill(), "DialogDelete");
         try {
             cancelDialog.show();
         }
         catch(WindowManager.BadTokenException ex){
             Logger.e(TAG, "Error showing dialog", ex);
         }
-        dialog.getActivity().finish();
+        event.getPillInfoDialogFragment().getActivity().finish();
     }
 
-    @Override
-    public void setDialogFavourite(Pill pill, InfoDialogFragment dialog) {
-        if (pill != null) {
-            if (pill.isFavourite())
-                pill.setFavourite(false);
-            else
-                pill.setFavourite(true);
-            new UpdatePillTask(_activity, pill).execute();
-        }
-        dialog.getActivity().finish();
-    }
-
-    @Override
-    public void onDialogChangePillColour(Pill pill, InfoDialogFragment dialog) {
-        new UpdatePillTask(_activity, pill).execute();
-        dialog.getActivity().finish();
-    }
-
-    @Override
-    public void onDialogChangeNameDosage(Pill pill, InfoDialogFragment dialog) {
-        DialogFragment editDialog = new ChangePillInfoDialog(_activity, pill, this);
-        dialog.getActivity().finish();
-        if (editDialog != null) {
-            editDialog.show(_activity.getFragmentManager(), pill.getName());
-        }
-    }
-
-    @Override
-    public void onDialogInfomationChanged(Pill pill) {
-        new UpdatePillTask(_activity, pill).execute();
+    @Subscribe
+    public void onDialogInfomationChanged(UpdatePillEvent event) {
+        new UpdatePillTask(_activity, event.getPill()).execute();
     }
 
     @Subscribe

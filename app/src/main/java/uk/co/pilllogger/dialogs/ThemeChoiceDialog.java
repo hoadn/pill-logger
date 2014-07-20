@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.activities.MainActivity;
 
 /**
  * Created by Alex on 26/04/2014

@@ -1,6 +1,5 @@
 package uk.co.pilllogger.fragments;
 
-import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.SparseIntArray;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.vending.billing.IInAppBillingService;
 import com.echo.holographlibrary.BarGraph;
 import com.echo.holographlibrary.LineGraph;
 import com.echo.holographlibrary.PieGraph;
@@ -23,8 +21,6 @@ import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
-import uk.co.pilllogger.state.Feature;
-import uk.co.pilllogger.state.FeatureType;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 

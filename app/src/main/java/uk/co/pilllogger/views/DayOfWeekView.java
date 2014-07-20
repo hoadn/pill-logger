@@ -9,7 +9,6 @@ import android.view.View;
 
 import java.util.Map;
 
-import uk.co.pilllogger.R;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.state.State;
 

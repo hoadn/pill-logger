@@ -27,6 +27,9 @@ import com.echo.holographlibrary.PieGraph;
 import com.echo.holographlibrary.StackBarGraph;
 import com.squareup.otto.Subscribe;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,10 +43,8 @@ import uk.co.pilllogger.events.DecreaseConsumptionEvent;
 import uk.co.pilllogger.events.IncreaseConsumptionEvent;
 import uk.co.pilllogger.events.TakeConsumptionAgainEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
-import uk.co.pilllogger.fragments.ConsumptionInfoDialogFragment;
-import uk.co.pilllogger.fragments.DeleteConsumptionEvent;
-import uk.co.pilllogger.fragments.InfoDialogFragment;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
+import uk.co.pilllogger.fragments.DeleteConsumptionEvent;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.Logger;
@@ -52,14 +53,10 @@ import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
-import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.DeleteConsumptionTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.views.ColourIndicator;
-
-import org.joda.time.DateTime;
-import org.joda.time.Days;
 
 /**
  * Created by nick on 22/10/13.

@@ -7,12 +7,8 @@ package uk.co.pilllogger.tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-import uk.co.pilllogger.models.Consumption;
-import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 
 

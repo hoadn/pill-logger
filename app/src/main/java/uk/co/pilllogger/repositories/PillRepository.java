@@ -6,9 +6,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
-import android.util.SparseIntArray;
 
-import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 
 import java.util.ArrayList;
@@ -26,8 +24,6 @@ import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
-import uk.co.pilllogger.state.Observer;
-import uk.co.pilllogger.state.State;
 
 /**
  * Created by alex on 14/11/2013.
