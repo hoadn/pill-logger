@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.State;
@@ -168,7 +168,7 @@ public class Pill implements Serializable {
             Date firstDate = _first.getDate();
 
             if(latestDate == null || firstDate == null){
-                Logger.e(TAG, "Latest or First date is null");
+                Timber.e("Latest or First date is null");
                 continue;
             }
 

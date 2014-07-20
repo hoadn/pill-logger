@@ -27,7 +27,7 @@ import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 
-import uk.co.pilllogger.helpers.Logger;
+import timber.log.Timber;
 
 /**
  * Security-related methods. For a secure implementation, all of this code
@@ -55,7 +55,7 @@ public class Security {
      */
     public static boolean verifyPurchase(String base64PublicKey, String signedData, String signature) {
         if (signedData == null) {
-            Logger.e(TAG, "data is null");
+            Timber.e("data is null");
             return false;
         }
 
@@ -64,7 +64,7 @@ public class Security {
             PublicKey key = Security.generatePublicKey(base64PublicKey);
             verified = Security.verify(key, signedData, signature);
             if (!verified) {
-                Log.w(TAG, "signature does not match data.");
+                Timber.w("signature does not match data.");
                 return false;
             }
         }
@@ -86,10 +86,10 @@ public class Security {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         } catch (InvalidKeySpecException e) {
-            Logger.e(TAG, "Invalid key specification.");
+            Timber.e("Invalid key specification.");
             throw new IllegalArgumentException(e);
         } catch (Base64DecoderException e) {
-            Logger.e(TAG, "Base64 decoding failed.");
+            Timber.e("Base64 decoding failed.");
             throw new IllegalArgumentException(e);
         }
     }
@@ -110,18 +110,18 @@ public class Security {
             sig.initVerify(publicKey);
             sig.update(signedData.getBytes());
             if (!sig.verify(Base64.decode(signature))) {
-                Logger.e(TAG, "Signature verification failed.");
+                Timber.e("Signature verification failed.");
                 return false;
             }
             return true;
         } catch (NoSuchAlgorithmException e) {
-            Logger.e(TAG, "NoSuchAlgorithmException.");
+            Timber.e("NoSuchAlgorithmException.");
         } catch (InvalidKeyException e) {
-            Logger.e(TAG, "Invalid key specification.");
+            Timber.e("Invalid key specification.");
         } catch (SignatureException e) {
-            Logger.e(TAG, "Signature exception.");
+            Timber.e("Signature exception.");
         } catch (Base64DecoderException e) {
-            Logger.e(TAG, "Base64 decoding failed.");
+            Timber.e("Base64 decoding failed.");
         }
         return false;
     }

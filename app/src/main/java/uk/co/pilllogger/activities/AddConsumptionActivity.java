@@ -47,6 +47,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
@@ -54,7 +55,6 @@ import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.helpers.AlarmHelper;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.listeners.AddConsumptionPillItemClickListener;
 import uk.co.pilllogger.models.Consumption;
@@ -571,7 +571,7 @@ public class AddConsumptionActivity extends FragmentActivity implements
                     hours = Integer.parseInt(_reminderHours.getText().toString());
                 }
                 catch(NumberFormatException e) {
-                    Logger.e(TAG, "Parse of reminder hours error: " + e.getMessage());
+                    Timber.e("Parse of reminder hours error: " + e.getMessage());
                 }
                 reminderDate = DateTime.now().plusHours(hours).toDate();
             }

@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.DosageListExportAdapter;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.tasks.GetMaxDosagesTask;
 
@@ -45,7 +45,6 @@ public class ExportSelectDosageFragment extends ExportFragmentBase
                 if (_exportService.getMaxDosages() != null) {
                     maxConsumptionsReceived(_exportService.getMaxDosages());
                 } else {
-                    Logger.d(TAG, "Getting Max Dosages");
                     new GetMaxDosagesTask(getActivity(), this).execute();
                 }
             }

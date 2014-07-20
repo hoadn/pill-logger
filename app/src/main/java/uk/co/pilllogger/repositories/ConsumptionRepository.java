@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import timber.log.Timber;
 import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 
@@ -155,7 +155,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     public long insert(Consumption consumption) {
         SQLiteDatabase db = _dbCreator.getWritableDatabase();
 
-        Logger.d(TAG, "Going to insert consumption");
+        Timber.d("Going to insert consumption");
 
         ContentValues values = getContentValues(consumption);
         long newRowId = 0L;
@@ -231,7 +231,6 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         String[] projection = getProjection();
 
         String selection = DatabaseContract.Consumptions._ID + " =?";
-        Logger.d(TAG, "sql: " + selection + " " + id);
         String[] selectionArgs = { String.valueOf(id) };
         Consumption consumption = new Consumption();
         if (db != null) {
@@ -269,7 +268,6 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         String sortOrder = getSortOrder();
         String selection = pill == null ? null : DatabaseContract.Consumptions.COLUMN_PILL_ID + " =?";
         String[] selectionArgs = pill == null ? null : new String[] { String.valueOf(pill.getId()) };
-        Logger.d(TAG, "sql: " + selection + " " + pill.getId());
         List<Consumption> consumptions = new ArrayList<Consumption>();
         if (db != null) {
             Cursor c = db.query(
@@ -348,7 +346,6 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         String sortOrder = getSortOrder();
         String selection = group == null ? null : DatabaseContract.Consumptions.COLUMN_GROUP + " =?";
         String[] selectionArgs = group == null ? null : new String[] { group };
-        Logger.d(TAG, "sql: " + selection + " group: " + group);
         List<Consumption> consumptions = new ArrayList<Consumption>();
         if (db != null) {
             Cursor c = db.query(
@@ -387,7 +384,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                 return consumptions;
             }
             catch(IllegalArgumentException ex){
-                Logger.e(TAG, "Error whilst sorting consumptions, falling back to retrieving from db", ex);
+                Timber.e(ex, "Error whilst sorting consumptions, falling back to retrieving from db");
             }
         }
 
@@ -395,8 +392,6 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
         String[] projection = getProjection();
 
-        Logger.d(TAG, "sql: all consumptions");
-        Logger.d(TAG, "Timing: getAll()");
         String sortOrder = getSortOrder();
         List<Consumption> consumptions = new ArrayList<Consumption>();
         if (db != null) {
@@ -419,7 +414,6 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
             }
             c.close();
         }
-        Logger.d(TAG, "Timing: " + consumptions.size() + " consumptions back from db");
 
         return consumptions;
     }
@@ -453,7 +447,6 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
         grouped.add(groupedConsumption);
 
-        Logger.d(TAG, "Timing: Returning grouped consumptions");
         return grouped;
     }
 

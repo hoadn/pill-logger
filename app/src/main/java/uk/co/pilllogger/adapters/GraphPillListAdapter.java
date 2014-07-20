@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import timber.log.Timber;
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 
@@ -78,7 +78,7 @@ public class GraphPillListAdapter extends ArrayAdapter<Pill> {
 
         }
         else {
-            Logger.v(TAG, "pill or holder is null");
+            Timber.v("pill or holder is null");
         }
         return v;
     }

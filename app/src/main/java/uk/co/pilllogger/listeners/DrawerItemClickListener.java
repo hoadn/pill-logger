@@ -15,7 +15,6 @@ import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.fragments.SettingsFragment;
-import uk.co.pilllogger.helpers.Logger;
 
 /**
  * Created by nick on 23/10/13.
@@ -45,7 +44,6 @@ public class DrawerItemClickListener implements ListView.OnItemClickListener {
         String pills = _activity.getResources().getString(R.string.drawer_pills);
         String settings = _activity.getResources().getString(R.string.drawer_settings);
         String charts = _activity.getString(R.string.drawer_charts);
-        Logger.d(TAG, "selectItem, position: " + position);
 
         Fragment fragment = null;
         String selectedItem = _navigationItems.get(position);
@@ -80,7 +78,6 @@ public class DrawerItemClickListener implements ListView.OnItemClickListener {
 
         _drawerList.setItemChecked(position, true);
         int selectedPos = _drawerList.getCheckedItemPosition();
-        Logger.v("DrawerItemClickListener", "selectedPos = " + selectedPos);
         _drawerLayout.closeDrawer(_drawerList);
 
         _activity.getActionBar().setTitle(title);

@@ -7,11 +7,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.animations.AddPillToConsumptionAnimation;
 import uk.co.pilllogger.helpers.LayoutHelper;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 
@@ -37,7 +37,7 @@ public class AddConsumptionPillItemClickListener implements ListView.OnItemClick
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Logger.v("AddConsumptionPillItemClickListener", "testingWidth, this is being called");
+        Timber.v("testingWidth, this is being called");
         LinearLayout addButtonLayout = (LinearLayout)view.findViewById(R.id.add_consumption_after_click_layout);
         AddPillToConsumptionAnimation animation;
         int width = addButtonLayout.getLayoutParams().width;

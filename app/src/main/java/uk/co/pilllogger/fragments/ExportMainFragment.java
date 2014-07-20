@@ -14,6 +14,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.billing.IabHelper;
 import uk.co.pilllogger.billing.IabResult;
@@ -22,7 +23,6 @@ import uk.co.pilllogger.billing.SkuDetails;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.PurchasedFeatureEvent;
 import uk.co.pilllogger.helpers.ExportHelper;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -166,13 +166,13 @@ public class ExportMainFragment extends ExportFragmentBase {
                             @Override
                             public void onIabPurchaseFinished(IabResult result, Purchase info) {
                                 if (result.isFailure()) {
-                                    Logger.e(TAG, "Error purchasing: " + result);
+                                    Timber.e("Error purchasing: " + result);
                                     return;
                                 }
-                                Logger.d(TAG, info.getDeveloperPayload());
-                                Logger.d(TAG, info.getOrderId());
-                                Logger.d(TAG, info.getPackageName());
-                                Logger.d(TAG, info.getSku());
+                                Timber.d(info.getDeveloperPayload());
+                                Timber.d(info.getOrderId());
+                                Timber.d(info.getPackageName());
+                                Timber.d(info.getSku());
 
                                 State.getSingleton().getEnabledFeatures().add(FeatureType.export);
                                 _bus.post(new PurchasedFeatureEvent(FeatureType.export));
@@ -212,7 +212,7 @@ public class ExportMainFragment extends ExportFragmentBase {
         if(activity == null)
             return;
 
-        Logger.d(TAG, "onActivityCreated");
+        Timber.d("onActivityCreated");
 
         if(_pills == null || _pills.size() == 0) {
             new GetPillsTask(activity).execute();

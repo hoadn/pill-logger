@@ -36,7 +36,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.co.pilllogger.helpers.Logger;
+import timber.log.Timber;
 
 
 /**
@@ -873,14 +873,14 @@ public class IabHelper {
     }
     
     void logDebug(String msg) {
-        if (mDebugLog) Log.d(mDebugTag, msg);
+        if (mDebugLog) Timber.d(mDebugTag, msg);
     }
     
     void logError(String msg) {
-        Logger.e(mDebugTag, "In-app billing error: " + msg);
+        Timber.e("In-app billing error: " + msg);
     }
     
     void logWarn(String msg) {
-        Logger.w(mDebugTag, "In-app billing warning: " + msg);
+        Timber.w("In-app billing warning: " + msg);
     }
 }

@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.SlidePagerAdapter;
 import uk.co.pilllogger.animations.FadeBackgroundPageTransformer;
@@ -51,9 +52,9 @@ import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.fragments.StatsFragment;
+import uk.co.pilllogger.helpers.CrashlyticsTree;
 import uk.co.pilllogger.helpers.ExportHelper;
 import uk.co.pilllogger.helpers.FeedbackHelper;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -100,13 +101,16 @@ public class MainActivity extends PillLoggerActivityBase implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Logger.d(TAG, "Timing: App starting");
-
         boolean isDebuggable = 0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE);
         State.getSingleton().setIsDebuggable(isDebuggable);
 
-        if(!isDebuggable)
+        if(!isDebuggable) {
             Crashlytics.start(this);
+            Timber.plant(new CrashlyticsTree());
+        }
+        else{
+            Timber.plant(new Timber.DebugTree());
+        }
 
         _themeChanged = false;
 
@@ -193,7 +197,6 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-        Logger.d(TAG, "Timing: Getting pills");
         if(PillRepository.getSingleton(this).isCached() == false) {
             new GetPillsTask(this).execute();
         }
@@ -218,7 +221,7 @@ public class MainActivity extends PillLoggerActivityBase implements
             public void onIabSetupFinished(IabResult result) {
                 if (!result.isSuccess()) {
                     // Oh noes, there was a problem.
-                    Logger.d(TAG, "Problem setting up In-app Billing: " + result);
+                    Timber.d("Problem setting up In-app Billing: " + result);
                 }
                 else {
                     State.getSingleton().setIabHelper(_billingHelper);
@@ -231,7 +234,7 @@ public class MainActivity extends PillLoggerActivityBase implements
                         @Override
                         public void onQueryInventoryFinished(IabResult result, final Inventory inv) {
                             if (result.isFailure() || inv == null) {
-                                Logger.e(TAG, "Querying billing inventory failed: " + result.getMessage());
+                                Timber.e("Querying billing inventory failed: " + result.getMessage());
                             }
                             else {
                                 for (FeatureType feature : FeatureType.values()) {

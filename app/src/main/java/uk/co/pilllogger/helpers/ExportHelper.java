@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.models.Consumption;
 
@@ -89,7 +90,7 @@ public class ExportHelper {
             _context.startActivity(intent);
         }
         catch (IOException e) {
-            Logger.e(TAG, "IO Execption with FileWriter " + e.getMessage());
+            Timber.e("IO Execption with FileWriter " + e.getMessage());
         }
     }
 

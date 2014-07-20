@@ -7,7 +7,6 @@ import android.widget.ListView;
 
 import java.util.List;
 
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
 
@@ -24,7 +23,6 @@ public class PillItemClickListener implements ListView.OnItemClickListener {
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Logger.v("AddConsumptionPillItemClickListener", "testingWidth, this is being called");
         PillRepository dbHelper = PillRepository.getSingleton(_activity);
         List<Pill> pills = dbHelper.getAll();
         onItemSelected(pills.get(i).getId());

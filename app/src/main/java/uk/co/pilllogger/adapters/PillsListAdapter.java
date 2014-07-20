@@ -2,7 +2,6 @@ package uk.co.pilllogger.adapters;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
@@ -17,19 +16,15 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
-import uk.co.pilllogger.dialogs.ChangePillInfoDialog;
 import uk.co.pilllogger.events.CreateConsumptionEvent;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletePillEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.events.UpdatePillEvent;
-import uk.co.pilllogger.fragments.DeleteConsumptionEvent;
-import uk.co.pilllogger.fragments.InfoDialogFragment;
-import uk.co.pilllogger.fragments.PillInfoDialogFragment;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -123,7 +118,7 @@ public class PillsListAdapter extends PillsListBaseAdapter {
             cancelDialog.show();
         }
         catch(WindowManager.BadTokenException ex){
-            Logger.e(TAG, "Error showing dialog", ex);
+            Timber.e("Error showing dialog", ex);
         }
         event.getPillInfoDialogFragment().getActivity().finish();
     }

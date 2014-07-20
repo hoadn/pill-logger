@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.ConsumptionListAdapter;
 import uk.co.pilllogger.adapters.GraphPillListAdapter;
@@ -38,7 +39,6 @@ import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.GraphHelper;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -69,7 +69,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Logger.d(TAG, "onCreateView");
+        Timber.d("onCreateView");
         // Inflate the layout for this fragment
         this.setRetainInstance(true);
         View v = inflater.inflate(R.layout.main_fragment, container, false);
@@ -114,7 +114,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        Logger.d(TAG, "onCreate");
+        Timber.d("onCreate");
     }
 
     @Override
@@ -125,39 +125,39 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     @Override
     public void onStart(){
         super.onStart();
-        Logger.d(TAG, "onStart");
+        Timber.d("onStart");
     }
 
     @Override
     public void onPause(){
         super.onPause();
-        Logger.d(TAG, "onPause");
+        Timber.d("onPause");
     }
 
     @Override
     public void onStop(){
         super.onStop();
-        Logger.d(TAG, "onStop");
+        Timber.d("onStop");
     }
 
     @Override
     public void onDestroyView(){
         super.onDestroyView();
 
-        Logger.d(TAG, "onDestroyView");
+        Timber.d("onDestroyView");
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
-        Logger.d(TAG, "onDestroy");
+        Timber.d("onDestroy");
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Logger.d(TAG, "onResume");
+        Timber.d("onResume");
     }
 
     @Override
@@ -203,9 +203,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         TrackerHelper.updateUserProfile(activity, _pills.size(), _consumptions);
 
         Statistics.getInstance(activity).refreshConsumptionCaches(consumptions);
-
-        Logger.d(TAG, "Timing: Consumptions loaded");
-        Logger.d(TAG, "Timing: App loaded");
     }
 
     private int getGraphDays(){
@@ -283,7 +280,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                     }
                 });
             }
-            Logger.d(TAG, "Timing: Getting Consumptions");
             new GetConsumptionsTask(this.getActivity(), this, true).execute();
         }
     }
@@ -291,14 +287,14 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     @Subscribe
     public void pillsUpdated(UpdatedPillEvent event) {
         //new GetPillsTask(this.getActivity(), this).execute();
-        Logger.d(TAG, "Pills Updated");
+        Timber.d("Pills Updated");
     }
 
     @Subscribe
     public void consumptionAdded(CreatedConsumptionEvent event) {
         final Consumption consumption1 = event.getConsumption();
 
-        Logger.d(TAG, "Consumption added. Updating consumption list.");
+        Timber.d("Consumption added. Updating consumption list.");
 
         Runnable runnable = new Runnable() {
             @Override
@@ -309,7 +305,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                     _consumptions = ConsumptionRepository.getSingleton(_activity).groupConsumptions(_consumptions);
                     consumptionsReceived(_consumptions);
 
-                    Logger.d(TAG, "Consumption list updated");
+                    Timber.d(TAG, "Consumption list updated");
                 }
             }
         };

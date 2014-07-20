@@ -8,7 +8,6 @@ import org.joda.time.DateTime;
 import java.util.List;
 
 import uk.co.pilllogger.helpers.DateHelper;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -27,8 +26,6 @@ public class InitTestDbTask extends AsyncTask<Void, Void, Void>{
     public InitTestDbTask(Context context, ITaskComplete listener){
         _context = context;
         _listener = listener;
-
-        Logger.d(TAG, "Ctor");
     }
 
     @Override

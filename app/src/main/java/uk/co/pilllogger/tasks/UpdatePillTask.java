@@ -3,7 +3,7 @@ package uk.co.pilllogger.tasks;
 import android.app.Activity;
 import android.os.AsyncTask;
 
-import uk.co.pilllogger.helpers.Logger;
+import timber.log.Timber;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
 
@@ -11,7 +11,6 @@ import uk.co.pilllogger.repositories.PillRepository;
  * Created by nick on 22/10/13.
  */
 public class UpdatePillTask extends AsyncTask<Void, Void, Void> {
-    private static final String TAG = "UpdatePillTask";
     Activity _activity;
     Pill _pill;
 
@@ -22,7 +21,7 @@ public class UpdatePillTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        Logger.d(TAG, "Updating pill");
+        Timber.d("Updating pill");
         PillRepository.getSingleton(_activity).update(_pill);
         return null;
     }

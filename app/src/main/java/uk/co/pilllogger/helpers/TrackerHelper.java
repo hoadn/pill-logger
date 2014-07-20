@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.state.State;
@@ -140,12 +141,12 @@ public class TrackerHelper {
         Boolean reversedOrder = defaultSharedPreferences.getBoolean(context.getString(R.string.pref_key_reverse_order), false);
         people.set("Reversed Sort Order", reversedOrder);
 
-        Logger.v("TrackerHelper", "DistinctId ProfileUpdate: " + people.getDistinctId());
+        Timber.v("DistinctId ProfileUpdate: " + people.getDistinctId());
     }
 
     public static MixpanelAPI initMixPanel(Context context){
         MixpanelAPI mixpanelAPI = MixpanelAPI.getInstance(context, MIXPANEL_TOKEN);
-        Logger.v("PillLoggerActivityBase", "DistinctId PillLoggerActivityBase: " + mixpanelAPI.getDistinctId());
+        Timber.v("DistinctId PillLoggerActivityBase: " + mixpanelAPI.getDistinctId());
         State.getSingleton().setMixpanelAPI(mixpanelAPI);
         String uniqueId = getUniqueId(context);
         mixpanelAPI.getPeople().identify(uniqueId);

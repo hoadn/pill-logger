@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 import hugo.weaving.DebugLog;
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 
@@ -131,7 +131,7 @@ public class PillRepository extends BaseRepository<Pill>{
         }
         pill.setId((int)newRowId);
         notifyUpdated(pill);
-        Logger.d(TAG, "inserted pill");
+        Timber.d("inserted pill");
         return newRowId;
     }
 
@@ -148,7 +148,7 @@ public class PillRepository extends BaseRepository<Pill>{
                     "_ID = ?",
                     new String[]{String.valueOf(pill.getId())});
 
-            Logger.d(TAG, "Pill updated. Favourite: " + pill.isFavourite());
+            Timber.d("Pill updated");
         }
         notifyUpdated(pill);
     }
@@ -207,7 +207,6 @@ public class PillRepository extends BaseRepository<Pill>{
                 sql.append(" ").append(selection).append(" ");
             }
 
-            Logger.d(TAG, "Sql: " + sql.toString());
             Cursor c = db.rawQuery(sql.toString(), selectionArgs);
 
             c.moveToFirst();
@@ -235,11 +234,8 @@ public class PillRepository extends BaseRepository<Pill>{
         if(isCached())
             pills = new ArrayList<Pill>(_cache.values());
         else {
-            Logger.d(TAG, "Timing: getAll()");
             _getAllCalled = true;
             pills = getList(null, null, false);
-
-            Logger.d(TAG, "Timing: " + pills.size() +  " pills back from db");
         }
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(_context);
@@ -287,8 +283,6 @@ public class PillRepository extends BaseRepository<Pill>{
             };
         }
 
-        Logger.d(TAG, "Timing: Going to sort pills");
-
         if(comparator != null) {
             Collections.sort(pills, comparator);
 
@@ -296,8 +290,6 @@ public class PillRepository extends BaseRepository<Pill>{
                 Collections.reverse(pills);
             }
         }
-
-        Logger.d(TAG, "Timing: Pills sorted");
 
         return pills;
     }
@@ -312,8 +304,6 @@ public class PillRepository extends BaseRepository<Pill>{
             _cache.remove(pill.getId());
         else
             _cache.put(pill.getId(), pill);
-
-        Logger.d(TAG, "notifyUpdated");
 
         _bus.post(new UpdatedPillEvent(pill));
     }

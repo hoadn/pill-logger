@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
@@ -47,7 +48,6 @@ import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.DeleteConsumptionEvent;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
-import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.mappers.ConsumptionMapper;
@@ -134,7 +134,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
             _activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Logger.d(TAG, "consumptionAdded");
+                    Timber.d("consumptionAdded");
                     notifyDataSetChanged();
                 }
             });
@@ -292,7 +292,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
         ListView list = (ListView) v.findViewById(R.id.graph_drawer);
         if (list != null){ //we need to init the adapter
-            Logger.v(TAG, "Pills have been recieved and the list is not null");
+            Timber.v("Pills have been recieved and the list is not null");
             if (_pills != null) {
                 GraphPillListAdapter adapter = new GraphPillListAdapter(_activity, R.layout.graph_pill_list, _pills);
                 list.setAdapter(adapter);
@@ -357,15 +357,15 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
             boolean moving = false;
             @Override
             public void onPanelSlide(View view, float v) {
-                Logger.v(TAG, "moving = " + moving + " V = " + v);
+                Timber.v("moving = " + moving + " V = " + v);
                 if (moving == false) {
                     if (v < 0.5) {
-                        Logger.v(TAG, "V = Setting to previous");
+                        Timber.v("V = Setting to previous");
                         graphSettings.setImageDrawable(_activity.getResources().getDrawable(R.drawable.previous));
                         moving = true;
                     }
                     else {
-                        Logger.v(TAG, "V = Setting to next");
+                        Timber.v("V = Setting to next");
                         graphSettings.setImageDrawable(_activity.getResources().getDrawable(R.drawable.next));
                         moving = true;
                     }
