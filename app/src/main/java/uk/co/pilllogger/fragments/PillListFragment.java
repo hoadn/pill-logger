@@ -17,6 +17,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.otto.Subscribe;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -24,6 +26,7 @@ import java.util.List;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillsListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
@@ -40,7 +43,6 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         GetPillsTask.ITaskComplete,
         InsertPillTask.ITaskComplete,
         Observer.IPillsUpdated,
-        Observer.IPillsLoaded,
         SharedPreferences.OnSharedPreferenceChangeListener{
 
     public static final String TAG = "PillListFragment";
@@ -63,7 +65,6 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         super.onStart();
 
         Observer.getSingleton().registerPillsUpdatedObserver(this);
-        Observer.getSingleton().registerPillsLoadedObserver(this);
     }
 
     @Override
@@ -71,7 +72,6 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         super.onDestroy();
 
         Observer.getSingleton().unregisterPillsUpdatedObserver(this);
-        Observer.getSingleton().unregisterPillsLoadedObserver(this);
     }
 
     @Override
@@ -181,11 +181,6 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-        if(PillRepository.getSingleton(activity).isCached()){
-            List<Pill> pills = PillRepository.getSingleton(activity).getAll();
-            pillsLoaded(pills);
-        }
-
         return v;
     }
 
@@ -202,9 +197,9 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 //						: ListView.CHOICE_MODE_NONE);
 	}
 
-    @Override
-    public void pillsLoaded(List<Pill> pills) {
-        updatePills(pills);
+    @Subscribe
+    public void pillsLoaded(LoadedPillsEvent event) {
+        updatePills(event.getPills());
     }
 
     @Override

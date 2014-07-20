@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.echo.holographlibrary.PieGraph;
+import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
 
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.models.Consumption;
@@ -41,8 +43,7 @@ public class StatsFragment extends PillLoggerFragmentBase implements
         GetConsumptionsTask.ITaskComplete,
         Observer.IConsumptionAdded,
         Observer.IConsumptionDeleted,
-        Observer.IPillsUpdated,
-        Observer.IPillsLoaded{
+        Observer.IPillsUpdated{
 
     TextView _medicineMostTaken1st;
     TextView _medicineMostTaken2nd;
@@ -150,13 +151,7 @@ public class StatsFragment extends PillLoggerFragmentBase implements
 
         Observer.getSingleton().registerPillsUpdatedObserver(this);
         Observer.getSingleton().registerConsumptionAddedObserver(this);
-        Observer.getSingleton().registerConsumptionDeletedObserver(this);
-        Observer.getSingleton().registerPillsLoadedObserver(this);
-
-        if(PillRepository.getSingleton(activity).isCached()){
-            List<Pill> pills = PillRepository.getSingleton(activity).getAll();
-            pillsLoaded(pills);
-        }
+        Observer.getSingleton().registerConsumptionDeletedObserver(this); 
 
         return v;
     }
@@ -173,11 +168,10 @@ public class StatsFragment extends PillLoggerFragmentBase implements
         Observer.getSingleton().unregisterPillsUpdatedObserver(this);
         Observer.getSingleton().unregisterConsumptionAddedObserver(this);
         Observer.getSingleton().unregisterConsumptionDeletedObserver(this);
-        Observer.getSingleton().unregisterPillsLoadedObserver(this);
     }
 
-    @Override
-    public void pillsLoaded(List<Pill> pills) {
+    @Subscribe
+    public void pillsLoaded(LoadedPillsEvent event) {
         new GetConsumptionsTask(getActivity(), this, true).execute();
     }
 

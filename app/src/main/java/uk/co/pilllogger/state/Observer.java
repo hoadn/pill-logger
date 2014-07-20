@@ -4,7 +4,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import uk.co.pilllogger.fragments.ConsumptionInfoDialogFragment;
@@ -24,7 +23,7 @@ public class Observer {
     private Map<IPillsUpdated, WeakReference<IPillsUpdated>> _pillsUpdatedArrayList = new ConcurrentHashMap<IPillsUpdated, WeakReference<IPillsUpdated>>();
     private Map<IConsumptionAdded, WeakReference<IConsumptionAdded>> _consumptionAddedListeners = new ConcurrentHashMap<IConsumptionAdded, WeakReference<IConsumptionAdded>>();
     private Map<IConsumptionDeleted, WeakReference<IConsumptionDeleted>> _consumptionDeletedListeners = new ConcurrentHashMap<IConsumptionDeleted, WeakReference<IConsumptionDeleted>>();
-    private Map<IPillsLoaded, WeakReference<IPillsLoaded>> _pillsLoadedListeners = new ConcurrentHashMap<IPillsLoaded, WeakReference<IPillsLoaded>>();
+    //private Map<IPillsLoaded, WeakReference<IPillsLoaded>> _pillsLoadedListeners = new ConcurrentHashMap<IPillsLoaded, WeakReference<IPillsLoaded>>();
     private Map<IFeaturePurchased, WeakReference<IFeaturePurchased>> _featuredPurchasedListeners = new ConcurrentHashMap<IFeaturePurchased, WeakReference<IFeaturePurchased>>();
     private Map<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, WeakReference<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>> _consumptionInfoDialogListeners = new ConcurrentHashMap<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, WeakReference<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>>();
     private Map<PillInfoDialogFragment.PillInfoDialogListener, WeakReference<PillInfoDialogFragment.PillInfoDialogListener>> _pillInfoDialogListeners = new ConcurrentHashMap<PillInfoDialogFragment.PillInfoDialogListener, WeakReference<PillInfoDialogFragment.PillInfoDialogListener>>();
@@ -79,11 +78,11 @@ public class Observer {
         }
     }
 
-    public void unregisterPillsLoadedObserver(IPillsLoaded observer) {
+    /*public void unregisterPillsLoadedObserver(IPillsLoaded observer) {
         if (observer != null) {
             _pillsLoadedListeners.remove(observer);
         }
-    }
+    }*/
 
     public void registerConsumptionDeletedObserver(IConsumptionDeleted observer) {
         _consumptionDeletedListeners.put(observer, new WeakReference<IConsumptionDeleted>(observer));
@@ -94,10 +93,10 @@ public class Observer {
         _consumptionAddedListeners.put(listener, reference);
     }
 
-    public void registerPillsLoadedObserver(IPillsLoaded listener) {
+    /*public void registerPillsLoadedObserver(IPillsLoaded listener) {
         WeakReference<IPillsLoaded> reference = new WeakReference<IPillsLoaded>(listener);
         _pillsLoadedListeners.put(listener, reference);
-    }
+    }*/
 
     public void registerConsumptionDialogObserver(ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener listener) {
         _consumptionInfoDialogListeners.put(listener, new WeakReference<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>(listener));
@@ -174,14 +173,14 @@ public class Observer {
         });
     }
 
-    public void notifyPillsLoaded(final List<Pill> pills) {
+    /*public void notifyPillsLoaded(final List<Pill> pills) {
         notify(_pillsLoadedListeners, new INotifiable<IPillsLoaded>() {
             @Override
             public void notify(IPillsLoaded observer) {
                 observer.pillsLoaded(pills);
             }
         });
-    }
+    }*/
 
     public void notifyOnConsumptionDialogTakeAgain(final Consumption consumption, final InfoDialogFragment dialog) {
         notify(_consumptionInfoDialogListeners, new INotifiable<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>() {
@@ -278,9 +277,9 @@ public class Observer {
         public void consumptionAdded(Consumption consumption);
     }
 
-    public interface IPillsLoaded {
+    /*public interface IPillsLoaded {
         void pillsLoaded(List<Pill> pills);
-    }
+    }*/
 
     public interface IFeaturePurchased {
         void featurePurchased(FeatureType featureType);

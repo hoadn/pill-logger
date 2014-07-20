@@ -18,6 +18,7 @@ import com.echo.holographlibrary.BarGraph;
 import com.echo.holographlibrary.LineGraph;
 import com.echo.holographlibrary.PieGraph;
 import com.echo.holographlibrary.StackBarGraph;
+import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -31,6 +32,7 @@ import java.util.Map;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.ConsumptionListAdapter;
 import uk.co.pilllogger.adapters.GraphPillListAdapter;
+import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
@@ -50,7 +52,6 @@ import uk.co.pilllogger.tasks.InitTestDbTask;
 public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         InitTestDbTask.ITaskComplete,
         GetConsumptionsTask.ITaskComplete,
-        Observer.IPillsLoaded,
         Observer.IPillsUpdated,
         Observer.IConsumptionAdded,
         Observer.IConsumptionDeleted{
@@ -106,11 +107,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         Observer.getSingleton().registerConsumptionAddedObserver(this);
         Observer.getSingleton().registerConsumptionDeletedObserver(this);
 
-        if(PillRepository.getSingleton(_activity).isCached()){
-            List<Pill> pills = PillRepository.getSingleton(_activity).getAll();
-            pillsLoaded(pills);
-        }
-
         return v;
     }
 
@@ -123,7 +119,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         Logger.d(TAG, "onCreate");
-        Observer.getSingleton().registerPillsLoadedObserver(this);
     }
 
     @Override
@@ -157,7 +152,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         Observer.getSingleton().unregisterPillsUpdatedObserver(this);
         Observer.getSingleton().unregisterConsumptionAddedObserver(this);
         Observer.getSingleton().unregisterConsumptionDeletedObserver(this);
-        Observer.getSingleton().unregisterPillsLoadedObserver(this);
         Logger.d(TAG, "onDestroyView");
     }
 
@@ -256,24 +250,24 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         view.setTag(data);
     }
 
-    @Override
-    public void pillsLoaded(List<Pill> pills) {
-        _pills = pills;
+    @Subscribe
+    public void pillsLoaded(LoadedPillsEvent event) {
+        _pills = event.getPills();
         List<Integer> graphPills = State.getSingleton().getGraphExcludePills();
         if (graphPills == null) {
             graphPills = new ArrayList<Integer>();
         }
-        for(Pill p : pills){
+        for(Pill p : _pills){
             _allPills.put(p.getId(), p);
         }
         State.getSingleton().setGraphExcludePills(graphPills);
 
-        final List<Pill> pillList = pills;
+        final List<Pill> pillList = _pills;
         Activity activity = getActivity();
         if (activity != null) {
             ListView list = (ListView) activity.findViewById(R.id.graph_drawer);
             if (list != null){ //we need to init the adapter
-                GraphPillListAdapter adapter = new GraphPillListAdapter(getActivity(), R.layout.graph_pill_list, pills);
+                GraphPillListAdapter adapter = new GraphPillListAdapter(getActivity(), R.layout.graph_pill_list, _pills);
                 list.setAdapter(adapter);
                 list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override

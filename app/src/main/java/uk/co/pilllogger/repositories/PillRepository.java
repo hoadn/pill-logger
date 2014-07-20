@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.util.SparseIntArray;
 
+import com.squareup.otto.Produce;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -17,10 +19,12 @@ import java.util.Map;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.database.DatabaseContract;
+import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.Observer;
+import uk.co.pilllogger.state.State;
 
 /**
  * Created by alex on 14/11/2013.
@@ -42,8 +46,21 @@ public class PillRepository extends BaseRepository<Pill>{
     public static PillRepository getSingleton(Context context) {
         if (_instance == null) {
             _instance = new PillRepository(context);
+
+            State.getSingleton().getBus().register(_instance);
         }
         return _instance;
+    }
+
+    @Produce
+    public LoadedPillsEvent produceLoadedPills(){
+        List<Pill> pills = new ArrayList<Pill>();
+
+        if(isCached()){
+            pills = getAll();
+        }
+
+        return new LoadedPillsEvent(pills);
     }
 
     @Override

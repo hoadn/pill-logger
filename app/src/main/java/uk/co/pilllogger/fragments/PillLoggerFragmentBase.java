@@ -10,12 +10,30 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
+import com.squareup.otto.Bus;
+
+import uk.co.pilllogger.state.State;
 
 /**
  * Created by alex on 25/01/2014.
  */
 public class PillLoggerFragmentBase extends Fragment {
     private Tracker tracker;
+    Bus _bus;
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        _bus.register(this);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        _bus.unregister(this);
+    }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -23,6 +41,8 @@ public class PillLoggerFragmentBase extends Fragment {
         super.onCreate(savedInstanceState);
 
         this.tracker = EasyTracker.getInstance(this.getActivity());
+
+        _bus = State.getSingleton().getBus();
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)

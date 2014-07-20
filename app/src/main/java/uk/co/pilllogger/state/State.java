@@ -3,6 +3,8 @@ package uk.co.pilllogger.state;
 import android.graphics.Typeface;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.squareup.otto.Bus;
+import com.squareup.otto.ThreadEnforcer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +15,7 @@ import java.util.Set;
 
 import uk.co.pilllogger.billing.IabHelper;
 import uk.co.pilllogger.billing.SkuDetails;
+import uk.co.pilllogger.events.AndroidBus;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.themes.ITheme;
 import uk.co.pilllogger.themes.ProfessionalTheme;
@@ -36,6 +39,7 @@ public class State {
     private MixpanelAPI _mixpanelAPI = null;
     private IabHelper _iabHelper;
     private boolean _isDebuggable;
+    private Bus _bus;
 
     private State() {
     }
@@ -177,6 +181,14 @@ public class State {
 
     public boolean isDebuggable() {
         return _isDebuggable;
+    }
+
+    public Bus getBus(){
+        if(_bus == null){
+            _bus = new AndroidBus(ThreadEnforcer.ANY);
+        }
+
+        return _bus;
     }
 }
 
