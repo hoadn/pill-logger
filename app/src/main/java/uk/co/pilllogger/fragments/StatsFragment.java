@@ -17,6 +17,9 @@ import org.joda.time.DateTime;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
@@ -41,35 +44,36 @@ import uk.co.pilllogger.views.HourOfDayView;
 public class StatsFragment extends PillLoggerFragmentBase implements
         GetConsumptionsTask.ITaskComplete{
 
-    TextView _medicineMostTaken1st;
-    TextView _medicineMostTaken2nd;
-    TextView _medicineMostTaken3rd;
-    TextView _medicineMostTakenCount1st;
-    TextView _medicineMostTakenCount2nd;
-    TextView _medicineMostTakenCount3rd;
-    TextView _dayMostTaken;
-    TextView _averageTimeBetween;
-    TextView _longestTimeBetween;
-    private ColourIndicator _medicineMostTakenIndicator1st;
-    private ColourIndicator _medicineMostTakenIndicator2nd;
-    private ColourIndicator _medicineMostTakenIndicator3rd;
-    private PieGraph _medicineMostTakenGraph;
-    private HourOfDayView _hourOfDayView;
-    View _pill2;
-    View _pill3;
-    TextView _medicineMostTakenTitle;
-    TextView _dayMostTakenTitle;
-    TextView _hourMostTakenTitle;
-    TextView _averageTimeBetweenTitle;
-    TextView _longestTimeBetweenTitle;
-    TextView _statsTitle;
-    private DayOfWeekView _dayOfWeekView;
-    private TextView _totalConsumptions;
-    private TextView _longestStreak;
-    private TextView _currentStreak;
-    private TextView _noInformation;
-    private View _statsOuter;
+    @InjectView(R.id.stats_most_taken_medicine_1st) TextView _medicineMostTaken1st;
+    @InjectView(R.id.stats_most_taken_medicine_2nd) TextView _medicineMostTaken2nd;
+    @InjectView(R.id.stats_most_taken_medicine_3rd) TextView _medicineMostTaken3rd;
+    @InjectView(R.id.stats_most_taken_count_1st) TextView _medicineMostTakenCount1st;
+    @InjectView(R.id.stats_most_taken_count_2nd) TextView _medicineMostTakenCount2nd;
+    @InjectView(R.id.stats_most_taken_count_3rd) TextView _medicineMostTakenCount3rd;
+    @InjectView(R.id.stats_most_taken_indicator_1st) ColourIndicator _medicineMostTakenIndicator1st;
+    @InjectView(R.id.stats_most_taken_indicator_2nd) ColourIndicator _medicineMostTakenIndicator2nd;
+    @InjectView(R.id.stats_most_taken_indicator_3rd) ColourIndicator _medicineMostTakenIndicator3rd;
+    @InjectView(R.id.stats_day_most_consumptions) TextView _dayMostTaken;
+    @InjectView(R.id.stats_average_between_consumption) TextView _averageTimeBetween;
+    @InjectView(R.id.stats_longest_between_consumption) TextView _longestTimeBetween;
+    @InjectView(R.id.stats_most_taken_graph) PieGraph _medicineMostTakenGraph;
+    @InjectView(R.id.stats_hour_most_graph) HourOfDayView _hourOfDayView;
+    @InjectView(R.id.stats_most_taken_2nd) View _pill2;
+    @InjectView(R.id.stats_most_taken_3rd) View _pill3;
+    @InjectView(R.id.stats_most_taken_medicine_title) TextView _medicineMostTakenTitle;
+    @InjectView(R.id.stats_day_most_consumptions_title) TextView _dayMostTakenTitle;
+    @InjectView(R.id.stats_hour_most_consumptions_title) TextView _hourMostTakenTitle;
+    @InjectView(R.id.stats_average_between_consumption_title) TextView _averageTimeBetweenTitle;
+    @InjectView(R.id.stats_longest_between_consumption_title) TextView _longestTimeBetweenTitle;
+    @InjectView(R.id.stats_fragment_title) TextView _statsTitle;
+    @InjectView(R.id.stats_day_most_consumptions_view) DayOfWeekView _dayOfWeekView;
+    @InjectView(R.id.stats_total_consumption) TextView _totalConsumptions;
+    @InjectView(R.id.stats_longest_streak) TextView _longestStreak;
+    @InjectView(R.id.stats_current_streak) TextView _currentStreak;
+    @InjectView(R.id.stats_no_information) TextView _noInformation;
+    @InjectView(R.id.stats_outer) View _statsOuter;
 
+    private Context _context;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,74 +87,33 @@ public class StatsFragment extends PillLoggerFragmentBase implements
         v.setTag(R.id.tag_page_colour, color);
         v.setTag(R.id.tag_tab_icon_position, 2);
 
-        _noInformation = (TextView) v.findViewById(R.id.stats_no_information);
-        _statsOuter = v.findViewById(R.id.stats_outer);
-
-        _medicineMostTakenIndicator1st = (ColourIndicator) v.findViewById(R.id.stats_most_taken_indicator_1st);
-        _medicineMostTakenIndicator2nd = (ColourIndicator) v.findViewById(R.id.stats_most_taken_indicator_2nd);
-        _medicineMostTakenIndicator3rd = (ColourIndicator) v.findViewById(R.id.stats_most_taken_indicator_3rd);
-
-        _medicineMostTaken1st = (TextView) v.findViewById(R.id.stats_most_taken_medicine_1st);
-        _medicineMostTaken2nd = (TextView) v.findViewById(R.id.stats_most_taken_medicine_2nd);
-        _medicineMostTaken3rd = (TextView) v.findViewById(R.id.stats_most_taken_medicine_3rd);
-
-        _medicineMostTakenCount1st = (TextView) v.findViewById(R.id.stats_most_taken_count_1st);
-        _medicineMostTakenCount2nd = (TextView) v.findViewById(R.id.stats_most_taken_count_2nd);
-        _medicineMostTakenCount3rd = (TextView) v.findViewById(R.id.stats_most_taken_count_3rd);
-
-        _medicineMostTakenGraph = (PieGraph) v.findViewById(R.id.stats_most_taken_graph);
-        _hourOfDayView = (HourOfDayView) v.findViewById(R.id.stats_hour_most_graph);
-        _dayOfWeekView = (DayOfWeekView) v.findViewById(R.id.stats_day_most_consumptions_view);
-
-        _dayMostTaken = (TextView) v.findViewById(R.id.stats_day_most_consumptions);
-        _averageTimeBetween = (TextView) v.findViewById(R.id.stats_average_between_consumption);
-        _longestTimeBetween = (TextView) v.findViewById(R.id.stats_longest_between_consumption);
-        _pill2 = v.findViewById(R.id.stats_most_taken_2nd);
-        _pill3 = v.findViewById(R.id.stats_most_taken_3rd);
-
-        _medicineMostTakenTitle = (TextView) v.findViewById(R.id.stats_most_taken_medicine_title);
-        _dayMostTakenTitle = (TextView) v.findViewById(R.id.stats_day_most_consumptions_title);
-        _hourMostTakenTitle = (TextView) v.findViewById(R.id.stats_hour_most_consumptions_title);
-        _averageTimeBetweenTitle = (TextView) v.findViewById(R.id.stats_average_between_consumption_title);
-        _longestTimeBetweenTitle = (TextView) v.findViewById(R.id.stats_longest_between_consumption_title);
-        _statsTitle = (TextView) v.findViewById(R.id.stats_fragment_title);
-
-
-        _totalConsumptions = (TextView)v.findViewById(R.id.stats_total_consumption);
-        _longestStreak = (TextView) v.findViewById(R.id.stats_longest_streak);
-        _currentStreak = (TextView) v.findViewById(R.id.stats_current_streak);
-
-        View total = v.findViewById(R.id.stats_total);
-        View longestConsecutive = v.findViewById(R.id.stats_longest_consecutive);
-        View currentConsecutive = v.findViewById(R.id.stats_current_consecutive);
-        final Activity activity = getActivity();
-        total.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(activity, activity.getResources().getString(R.string.stats_total_explanation), Toast.LENGTH_LONG).show();
-            }
-        });
-        longestConsecutive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(activity, activity.getResources().getString(R.string.stats_longest_consecutive_explanation), Toast.LENGTH_LONG).show();
-            }
-        });
-        currentConsecutive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(activity, activity.getResources().getString(R.string.stats_current_consecutive_explanation), Toast.LENGTH_LONG).show();
-            }
-        });
+        ButterKnife.inject(this, v);
 
         setFont();
 
         return v;
     }
 
+    @OnClick(R.id.stats_total)
+    void onTotalClicked(View total){
+        Toast.makeText(_context, getResources().getString(R.string.stats_total_explanation), Toast.LENGTH_LONG).show();
+    }
+
+    @OnClick(R.id.stats_longest_consecutive)
+    void onLongestConsecutiveClicked(View longestConsecutive){
+        Toast.makeText(_context, getResources().getString(R.string.stats_longest_consecutive_explanation), Toast.LENGTH_LONG).show();
+    }
+
+    @OnClick(R.id.stats_current_consecutive)
+    void onCurrentConsecutiveClicked(View currentConsecutive){
+        Toast.makeText(_context, getResources().getString(R.string.stats_current_consecutive_explanation), Toast.LENGTH_LONG).show();
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+
+        _context = getActivity();
     }
 
     @Override
