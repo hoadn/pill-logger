@@ -18,11 +18,9 @@ public class GetPillsTask extends AsyncTask<Void, Void, List<Pill>>{
 
     private static final String TAG = "GetPillsTask";
     Context _context;
-    ITaskComplete _listener;
 
-    public GetPillsTask(Context context, ITaskComplete listener) {
+    public GetPillsTask(Context context) {
         _context = context;
-        _listener = listener;
     }
     @Override
     protected List<Pill> doInBackground(Void... voids) {
@@ -34,12 +32,6 @@ public class GetPillsTask extends AsyncTask<Void, Void, List<Pill>>{
     @Override
     protected void onPostExecute(List<Pill> pills) {
         Logger.d(TAG, "Timing: Going to call pillsReceived");
-        _listener.pillsReceived(pills);
-
         State.getSingleton().getBus().post(new LoadedPillsEvent(pills));
-    }
-
-    public interface ITaskComplete{
-        public void pillsReceived(List<Pill> pills);
     }
 }

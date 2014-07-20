@@ -17,12 +17,15 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.otto.Subscribe;
+
 import java.util.Date;
 import java.util.List;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.adapters.WidgetListAdapter;
+import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.listeners.AddConsumptionPillItemClickListener;
 import uk.co.pilllogger.listeners.WidgetPillsClickListener;
@@ -34,7 +37,7 @@ import uk.co.pilllogger.widget.MyAppWidgetProvider;
 /**
  * Created by nick on 01/11/13.
  */
-public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPillsTask.ITaskComplete, AddConsumptionPillListAdapter.IConsumptionSelected {
+public class AppWidgetConfigure extends PillLoggerActivityBase implements AddConsumptionPillListAdapter.IConsumptionSelected {
 
     public static String CLICK_ACTION = "ClickAction";
     public static String PILL_ID = "uk.co.pilllogger.activities.AppWidgetConfigure.PILL_ID";
@@ -54,7 +57,7 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPil
         _typeface = State.getSingleton().getTypeface();
 
         this.setResult(RESULT_CANCELED);
-        new GetPillsTask(this, this).execute();
+        new GetPillsTask(this).execute();
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -67,12 +70,12 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements GetPil
         _newIntent = new Intent(this, MyAppWidgetProvider.class);
     }
 
-    @Override
-    public void pillsReceived(List<Pill> pills) {
+    @Subscribe
+    public void pillsReceived(LoadedPillsEvent event) {
         ListView pillsList = (ListView) findViewById(R.id.widget_configure_pill_list);
 
         if (pillsList != null) {
-            final AddConsumptionPillListAdapter adapter = new AddConsumptionPillListAdapter(this, this, R.layout.add_consumption_pill_list, pills);
+            final AddConsumptionPillListAdapter adapter = new AddConsumptionPillListAdapter(this, this, R.layout.add_consumption_pill_list, event.getPills());
             pillsList.setAdapter(adapter);
             pillsList.setOnItemClickListener(new AddConsumptionPillItemClickListener(this, (AddConsumptionPillListAdapter)pillsList.getAdapter(), false));
 

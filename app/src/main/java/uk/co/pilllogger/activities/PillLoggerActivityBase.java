@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.os.Bundle;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.squareup.otto.Bus;
 
 import java.util.UUID;
 
@@ -20,6 +22,15 @@ import uk.co.pilllogger.state.State;
  * Created by alex on 25/01/2014.
  */
 public class PillLoggerActivityBase extends Activity {
+
+    Bus _bus;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+
+        _bus = State.getSingleton().getBus();
+    }
 
     @Override
     protected void onStart() {
@@ -49,6 +60,7 @@ public class PillLoggerActivityBase extends Activity {
         super.onResume();
 
         State.getSingleton().setAppVisible(true);
+        _bus.register(this);
     }
 
     @Override
@@ -56,5 +68,6 @@ public class PillLoggerActivityBase extends Activity {
         super.onPause();
 
         State.getSingleton().setAppVisible(false);
+        _bus.unregister(this);
     }
 }

@@ -99,8 +99,6 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     }
 
     private void addToCaches(Consumption consumption){
-        Logger.d(TAG, "Updating caches");
-
         Map<Integer, Consumption> consumptionCache = new ConcurrentHashMap<Integer, Consumption>();
         if(_pillConsumptionCache.containsKey(consumption.getPillId())) {
             consumptionCache = _pillConsumptionCache.get(consumption.getPillId());
@@ -121,12 +119,9 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         groupCache.put(consumption.getId(), consumption);
 
         _consumptionsCache.put(consumption.getId(), consumption);
-        Logger.d(TAG, "Caches updated");
     }
 
     private void removeFromCaches(Consumption consumption){
-        Logger.d(TAG, "Updating caches");
-
         Map<Integer, Consumption> consumptionCache = new ConcurrentHashMap<Integer, Consumption>();
         if(_pillConsumptionCache.containsKey(consumption.getPillId())) {
             consumptionCache = _pillConsumptionCache.get(consumption.getPillId());
@@ -152,7 +147,6 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         if(_consumptionsCache.containsKey(consumption.getId())) {
             _consumptionsCache.remove(consumption.getId());
         }
-        Logger.d(TAG, "Caches updated");
     }
 
     @Override

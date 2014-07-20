@@ -151,7 +151,7 @@ public class StatsFragment extends PillLoggerFragmentBase implements
 
         Observer.getSingleton().registerPillsUpdatedObserver(this);
         Observer.getSingleton().registerConsumptionAddedObserver(this);
-        Observer.getSingleton().registerConsumptionDeletedObserver(this); 
+        Observer.getSingleton().registerConsumptionDeletedObserver(this);
 
         return v;
     }

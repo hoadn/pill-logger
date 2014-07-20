@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.otto.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ import uk.co.pilllogger.billing.IabHelper;
 import uk.co.pilllogger.billing.IabResult;
 import uk.co.pilllogger.billing.Purchase;
 import uk.co.pilllogger.billing.SkuDetails;
+import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.ExportHelper;
 import uk.co.pilllogger.helpers.Logger;
@@ -215,16 +218,16 @@ public class ExportMainFragment extends ExportFragmentBase {
         Logger.d(TAG, "onActivityCreated");
 
         if(_pills == null || _pills.size() == 0) {
-            new GetPillsTask(activity, new GetPillsTask.ITaskComplete() {
-                @Override
-                public void pillsReceived(List<Pill> pills) {
-                    _pills = pills;
-                    updatePillSummary(activity);
-                }
-            }).execute();
+            new GetPillsTask(activity).execute();
         }
 
         setExportButtonText();
+    }
+
+    @Subscribe
+    public void pillsReceived(LoadedPillsEvent event){
+        _pills = event.getPills();
+        updatePillSummary(getActivity());
     }
 
     private void setExportButtonText(){

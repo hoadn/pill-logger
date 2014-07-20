@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import hugo.weaving.DebugLog;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.events.LoadedPillsEvent;
@@ -52,7 +53,7 @@ public class PillRepository extends BaseRepository<Pill>{
         return _instance;
     }
 
-    @Produce
+    @Produce @DebugLog
     public LoadedPillsEvent produceLoadedPills(){
         List<Pill> pills = new ArrayList<Pill>();
 

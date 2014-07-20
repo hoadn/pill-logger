@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
+
 import org.joda.time.LocalTime;
 import org.joda.time.MutableDateTime;
 
@@ -21,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.fragments.ExportMainFragment;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.models.Consumption;
@@ -40,7 +43,7 @@ import uk.co.pilllogger.tasks.GetPillsTask;
  * in uk.co.pilllogger.activities.
  */
 public class ExportActivity extends FragmentActivity
-        implements GetPillsTask.ITaskComplete,
+        implements
         IExportService,
         GetMaxDosagesTask.ITaskComplete,
         GetConsumptionsTask.ITaskComplete, Observer.IFeaturePurchased {
@@ -58,13 +61,10 @@ public class ExportActivity extends FragmentActivity
 
         setContentView(R.layout.activity_export);
 
-        if(PillRepository.getSingleton(this).isCached()){
-            List<Pill> pills = PillRepository.getSingleton(this).getAll();
-            pillsReceived(pills);
+        if (!PillRepository.getSingleton(this).isCached()) {
+            new GetPillsTask(this).execute();
         }
-        else {
-            new GetPillsTask(this, this).execute();
-        }
+
         new GetConsumptionsTask(this, this, true).execute();
         new GetMaxDosagesTask(this, this).execute();
         Display display = getWindowManager().getDefaultDisplay();
@@ -103,12 +103,10 @@ public class ExportActivity extends FragmentActivity
         }
     }
 
-    @Override
-    public void pillsReceived(List<Pill> pills) {
-        if (pills != null) {
-            _pillsList = pills;
-            _exportSettings.getSelectedPills().addAll(pills);
-        }
+    @Subscribe
+    public void pillsReceived(LoadedPillsEvent event) {
+        _pillsList = event.getPills();
+        _exportSettings.getSelectedPills().addAll(event.getPills());
     }
 
     @Override

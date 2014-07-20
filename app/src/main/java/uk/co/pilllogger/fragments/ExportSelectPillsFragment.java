@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +19,7 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.ExportActivity;
 import uk.co.pilllogger.adapters.PillsListBaseAdapter;
 import uk.co.pilllogger.adapters.PillsListExportAdapter;
+import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
@@ -24,7 +27,7 @@ import uk.co.pilllogger.tasks.GetPillsTask;
 /**
  * Created by nick on 23/05/14.
  */
-public class ExportSelectPillsFragment extends ExportFragmentBase implements GetPillsTask.ITaskComplete {
+public class ExportSelectPillsFragment extends ExportFragmentBase {
 
     ListView _pillsList;
 
@@ -52,7 +55,7 @@ public class ExportSelectPillsFragment extends ExportFragmentBase implements Get
             if (pills != null)
                 setUpPillsListAdapter(pills);
             else
-                new GetPillsTask(getActivity(), this).execute();
+                new GetPillsTask(getActivity()).execute();
         }
 
         _exportService.getPillSummary(_exportService.getSummaryTextView());
@@ -65,9 +68,9 @@ public class ExportSelectPillsFragment extends ExportFragmentBase implements Get
             _pillsList.setAdapter(new PillsListExportAdapter(getActivity(), R.layout.export_pills_list_item, pills, _exportService));
     }
 
-    @Override
-    public void pillsReceived(List<Pill> pills) {
-        _exportService.getExportSettings().getSelectedPills().addAll(pills);
-        setUpPillsListAdapter(pills);
+    @Subscribe
+    public void pillsReceived(LoadedPillsEvent event) {
+        _exportService.getExportSettings().getSelectedPills().addAll(event.getPills());
+        setUpPillsListAdapter(event.getPills());
     }
 }

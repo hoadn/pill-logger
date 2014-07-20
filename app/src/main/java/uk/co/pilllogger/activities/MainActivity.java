@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,6 +51,7 @@ import uk.co.pilllogger.billing.Inventory;
 import uk.co.pilllogger.billing.Purchase;
 import uk.co.pilllogger.billing.SkuDetails;
 import uk.co.pilllogger.dialogs.ThemeChoiceDialog;
+import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.fragments.StatsFragment;
@@ -59,6 +61,7 @@ import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.services.BillingServiceConnection;
 import uk.co.pilllogger.state.FeatureType;
 import uk.co.pilllogger.state.Observer;
@@ -83,7 +86,6 @@ import uk.co.pilllogger.widget.MyAppWidgetProvider;
  * Created by nick on 22/10/13.
  */
 public class MainActivity extends PillLoggerActivityBase implements
-        GetPillsTask.ITaskComplete,
         Observer.IPillsUpdated,
         GetFavouritePillsTask.ITaskComplete,
         GetTutorialSeenTask.ITaskComplete,
@@ -201,7 +203,9 @@ public class MainActivity extends PillLoggerActivityBase implements
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         Logger.d(TAG, "Timing: Getting pills");
-        new GetPillsTask(this, this).execute();
+        if(PillRepository.getSingleton(this).isCached() == false) {
+            new GetPillsTask(this).execute();
+        }
 
         Integer gradientBackgroundResourceId = State.getSingleton().getTheme().getWindowBackgroundResourceId();
         Drawable background = gradientBackgroundResourceId == null ? null : getResources().getDrawable(gradientBackgroundResourceId);
@@ -318,7 +322,6 @@ public class MainActivity extends PillLoggerActivityBase implements
     private void setBackgroundColour(){
         int page = _fragmentPager.getCurrentItem();
 
-        Log.d(TAG, "Set currentItem to " + page);
         // TODO: This code will break when colours change in fragments, needs to be updated
         switch(page) {
             case 0:
@@ -488,15 +491,15 @@ public class MainActivity extends PillLoggerActivityBase implements
         this.startActivity(intent);
     }
 
-    @Override
-    public void pillsReceived(List<Pill> pills) {
+    @Subscribe
+    public void pillsReceived(LoadedPillsEvent event) {
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 
             int version = pInfo.versionCode;
 
             SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            if(pills.size() > 0) { // if they've setup a pill (ie. they are using the app). Show recent changes
+            if(event.getPills().size() > 0) { // if they've setup a pill (ie. they are using the app). Show recent changes
                 int seenVersion = defaultSharedPreferences.getInt(getString(R.string.seenVersionKey), 0);
 
                 if (version > seenVersion)

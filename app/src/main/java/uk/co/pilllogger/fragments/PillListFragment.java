@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import hugo.weaving.DebugLog;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillsListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
@@ -40,7 +41,6 @@ import uk.co.pilllogger.views.ColourIndicator;
 
 
 public class PillListFragment extends PillLoggerFragmentBase implements
-        GetPillsTask.ITaskComplete,
         InsertPillTask.ITaskComplete,
         Observer.IPillsUpdated,
         SharedPreferences.OnSharedPreferenceChangeListener{
@@ -143,7 +143,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         });
 
         View completed = v.findViewById(R.id.pill_fragment_add_pill_completed);
-        completed.setOnClickListener(new AddPillClickListener(this, this));
+        completed.setOnClickListener(new AddPillClickListener(this));
 
         _addPillSize.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -197,14 +197,9 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 //						: ListView.CHOICE_MODE_NONE);
 	}
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void pillsLoaded(LoadedPillsEvent event) {
         updatePills(event.getPills());
-    }
-
-    @Override
-    public void pillsReceived(List<Pill> pills){
-        updatePills(pills);
     }
 
     private void updatePills(List<Pill> pills){
@@ -230,7 +225,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     @Override
     public void pillInserted(Pill pill) {
-        new GetPillsTask(getActivity(), this).execute();
+        new GetPillsTask(getActivity()).execute();
         _addPillName.setText("");
         _addPillSize.setText("");
         _addPillSize.clearFocus();
@@ -240,23 +235,21 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     @Override
     public void pillsUpdated(Pill pill) {
-        new GetPillsTask(this.getActivity(), this).execute();
+        new GetPillsTask(this.getActivity()).execute();
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(isAdded() && getActivity() != null) {
             if (key.equals(getActivity().getResources().getString(R.string.pref_key_medication_list_order)) || key.equals(getActivity().getResources().getString(R.string.pref_key_reverse_order)))
-                new GetPillsTask(getActivity(), this).execute();
+                new GetPillsTask(getActivity()).execute();
         }
     }
 
     private class AddPillClickListener implements View.OnClickListener {
 
-        GetPillsTask.ITaskComplete _listener;
         PillListFragment _fragment;
-        public AddPillClickListener(GetPillsTask.ITaskComplete listener, PillListFragment fragment) {
-            _listener = listener;
+        public AddPillClickListener(PillListFragment fragment) {
             _fragment = fragment;
         }
 

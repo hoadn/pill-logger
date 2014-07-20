@@ -35,6 +35,7 @@ import com.doomonafireball.betterpickers.datepicker.DatePickerBuilder;
 import com.doomonafireball.betterpickers.datepicker.DatePickerDialogFragment;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
+import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
@@ -52,6 +53,7 @@ import java.util.UUID;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.helpers.AlarmHelper;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
@@ -60,6 +62,7 @@ import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.listeners.AddConsumptionPillItemClickListener;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.GetTutorialSeenTask;
@@ -73,7 +76,6 @@ import android.support.v4.app.FragmentManager;
  * Created by nick on 24/10/13.
  */
 public class AddConsumptionActivity extends FragmentActivity implements
-        GetPillsTask.ITaskComplete,
         InsertPillTask.ITaskComplete,
         DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener,
@@ -128,7 +130,9 @@ public class AddConsumptionActivity extends FragmentActivity implements
 
         _pillsList = (ListView)findViewById(R.id.add_consumption_pill_list);
 
-        new GetPillsTask(this, this).execute();
+        if(PillRepository.getSingleton(this).isCached() == false) { // this should be handled by the producer
+            new GetPillsTask(this).execute();
+        }
 
         _activity = this;
         _selectPillLayout = _activity.findViewById(R.id.add_consumption_pill_list);
@@ -461,9 +465,9 @@ public class AddConsumptionActivity extends FragmentActivity implements
         reminderTimePickerContainer.setOnClickListener(timeListener);
     }
 
-    @Override
-    public void pillsReceived(List<Pill> pills) {
-        if(pills.size() == 0){
+    @Subscribe
+    public void pillsReceived(LoadedPillsEvent event) {
+        if(event.getPills().size() == 0){
             showNewPillOptions();
         }
         else{
@@ -473,7 +477,7 @@ public class AddConsumptionActivity extends FragmentActivity implements
         /*
         Sorts pill collection based on its last consumption date
          */
-        Collections.sort(pills, new Comparator<Pill>() {
+        Collections.sort(event.getPills(), new Comparator<Pill>() {
             public int compare(Pill pill1, Pill pill2) {
                 if(pill1.getId() == pill2.getId())
                     return 0;
@@ -499,11 +503,11 @@ public class AddConsumptionActivity extends FragmentActivity implements
             }
         });
 
-        _adapter = new AddConsumptionPillListAdapter(this, this, R.layout.add_consumption_pill_list, pills);
+        _adapter = new AddConsumptionPillListAdapter(this, this, R.layout.add_consumption_pill_list, event.getPills());
          _pillsList.setAdapter(_adapter);
         _pillsList.setOnItemClickListener(new AddConsumptionPillItemClickListener(this, (AddConsumptionPillListAdapter)_pillsList.getAdapter()));
 
-        _adapter.updateAdapter(pills);
+        _adapter.updateAdapter(event.getPills());
     }
 
     public void cancel(View view) {
@@ -619,7 +623,7 @@ public class AddConsumptionActivity extends FragmentActivity implements
     @Override
     public void pillInserted(Pill pill) {
         if (_adapter != null) {
-            new GetPillsTask(_activity, (GetPillsTask.ITaskComplete)_activity).execute();
+            new GetPillsTask(_activity).execute();
             _adapter.addOpenPill(pill);
             _adapter.addConsumedPill(pill);
 
