@@ -13,10 +13,15 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
 import java.text.DecimalFormat;
 import java.util.List;
 
+import hugo.weaving.DebugLog;
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.fragments.ConsumptionInfoDialogFragment;
 import uk.co.pilllogger.fragments.PillInfoDialogFragment;
 import uk.co.pilllogger.helpers.DateHelper;
@@ -33,7 +38,7 @@ import uk.co.pilllogger.views.ColourIndicator;
  * Created by Alex on 22/05/2014
  * in uk.co.pilllogger.activities.
  */
-public class DialogActivity extends FragmentActivity implements Observer.IPillsUpdated{
+public class DialogActivity extends FragmentActivity{
 
     private static final String TAG = "DialogActivity";
     private Pill _pill;
@@ -50,11 +55,14 @@ public class DialogActivity extends FragmentActivity implements Observer.IPillsU
     private TextView _title;
     private TextView _lastTaken;
     private TextView _dosage;
+    private Bus _bus;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_dialog);
+
+        _bus = State.getSingleton().getBus();
 
         Display display = getWindowManager().getDefaultDisplay();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
@@ -87,13 +95,6 @@ public class DialogActivity extends FragmentActivity implements Observer.IPillsU
         bindPill();
 
         setupStats();
-
-        Observer.getSingleton().registerPillsUpdatedObserver(this);
-    }
-
-    public void onDestroy(){
-        Observer.getSingleton().unregisterPillsUpdatedObserver(this);
-        super.onDestroy();
     }
 
     private void bindPill(){
@@ -175,6 +176,22 @@ public class DialogActivity extends FragmentActivity implements Observer.IPillsU
         super.onBackPressed();
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        State.getSingleton().setAppVisible(true);
+        _bus.register(this);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+        State.getSingleton().setAppVisible(false);
+        _bus.unregister(this);
+    }
+
     private void setupStats() {
         _firstStats = (TextView) findViewById(R.id.pill_stats_7d);
         _firstStatsIndicator = (ImageView) findViewById(R.id.pill_stats_7d_indicator);
@@ -227,9 +244,9 @@ public class DialogActivity extends FragmentActivity implements Observer.IPillsU
         _statsTitle.setText(_statsToggled ? R.string.info_daily_title_dosage : R.string.info_daily_title_units);
     }
 
-    @Override
-    public void pillsUpdated(Pill pill) {
-        _pill = pill;
+    @Subscribe @DebugLog
+    public void pillsUpdated(UpdatedPillEvent event) {
+        _pill = event.getPill();
 
         runOnUiThread(new Runnable() {
             @Override

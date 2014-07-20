@@ -2,6 +2,8 @@ package uk.co.pilllogger.stats;
 
 import android.content.Context;
 
+import com.squareup.otto.Subscribe;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
@@ -13,16 +15,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.Observer;
+import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 
 /**
  * Created by nick on 07/03/14.
  */
-public class Statistics implements Observer.IConsumptionAdded, Observer.IConsumptionDeleted, Observer.IPillsUpdated {
+public class Statistics implements Observer.IConsumptionAdded, Observer.IConsumptionDeleted {
 
     private Context _context;
     // caches
@@ -42,8 +46,10 @@ public class Statistics implements Observer.IConsumptionAdded, Observer.IConsump
     private static Statistics _instance;
 
     public static Statistics getInstance(Context context) {
-        if(_instance == null)
+        if(_instance == null) {
             _instance = new Statistics(context);
+            State.getSingleton().getBus().register(_instance);
+        }
         return _instance;
     }
 
@@ -51,7 +57,6 @@ public class Statistics implements Observer.IConsumptionAdded, Observer.IConsump
         _context = context;
         Observer.getSingleton().registerConsumptionAddedObserver(this);
         Observer.getSingleton().registerConsumptionDeletedObserver(this);
-        Observer.getSingleton().registerPillsUpdatedObserver(this);
     }
 
     private List<Consumption> filterConsumptions(Date startDate, Date endDate, List<Consumption> consumptions) {
@@ -490,8 +495,8 @@ public class Statistics implements Observer.IConsumptionAdded, Observer.IConsump
         }, false).execute();
     }
 
-    @Override
-    public void pillsUpdated(Pill pill) {
+    @Subscribe
+    public void pillsUpdated(UpdatedPillEvent event) {
         new GetConsumptionsTask(_context, new GetConsumptionsTask.ITaskComplete() {
             @Override
             public void consumptionsReceived(List<Consumption> consumptions) {

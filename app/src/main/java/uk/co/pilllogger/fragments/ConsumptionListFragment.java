@@ -33,6 +33,7 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.ConsumptionListAdapter;
 import uk.co.pilllogger.adapters.GraphPillListAdapter;
 import uk.co.pilllogger.events.LoadedPillsEvent;
+import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
@@ -52,7 +53,6 @@ import uk.co.pilllogger.tasks.InitTestDbTask;
 public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         InitTestDbTask.ITaskComplete,
         GetConsumptionsTask.ITaskComplete,
-        Observer.IPillsUpdated,
         Observer.IConsumptionAdded,
         Observer.IConsumptionDeleted{
 
@@ -129,7 +129,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     @Override
     public void onStart(){
         super.onStart();
-        Observer.getSingleton().registerPillsUpdatedObserver(this);
         Logger.d(TAG, "onStart");
     }
 
@@ -149,7 +148,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     public void onDestroyView(){
         super.onDestroyView();
 
-        Observer.getSingleton().unregisterPillsUpdatedObserver(this);
         Observer.getSingleton().unregisterConsumptionAddedObserver(this);
         Observer.getSingleton().unregisterConsumptionDeletedObserver(this);
         Logger.d(TAG, "onDestroyView");
@@ -296,8 +294,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         }
     }
 
-    @Override
-    public void pillsUpdated(Pill pill) {
+    @Subscribe
+    public void pillsUpdated(UpdatedPillEvent event) {
         //new GetPillsTask(this.getActivity(), this).execute();
         Logger.d(TAG, "Pills Updated");
     }

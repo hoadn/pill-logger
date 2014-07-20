@@ -52,6 +52,7 @@ import uk.co.pilllogger.billing.Purchase;
 import uk.co.pilllogger.billing.SkuDetails;
 import uk.co.pilllogger.dialogs.ThemeChoiceDialog;
 import uk.co.pilllogger.events.LoadedPillsEvent;
+import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.fragments.StatsFragment;
@@ -86,7 +87,6 @@ import uk.co.pilllogger.widget.MyAppWidgetProvider;
  * Created by nick on 22/10/13.
  */
 public class MainActivity extends PillLoggerActivityBase implements
-        Observer.IPillsUpdated,
         GetFavouritePillsTask.ITaskComplete,
         GetTutorialSeenTask.ITaskComplete,
         SharedPreferences.OnSharedPreferenceChangeListener, GetConsumptionsTask.ITaskComplete {
@@ -197,8 +197,6 @@ public class MainActivity extends PillLoggerActivityBase implements
         int tabMaskColour = getResources().getColor(State.getSingleton().getTheme().getTabMaskColourResourceId());
 
         _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_colourBackground, this, tabMaskColour));
-
-        Observer.getSingleton().registerPillsUpdatedObserver(this);
 
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
@@ -566,18 +564,18 @@ public class MainActivity extends PillLoggerActivityBase implements
         Toast.makeText(MainActivity.this, "Added consumption of " + pill.getName(), Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void pillsUpdated(final Pill pill) {
-        if(_menu == null || pill == null)
+    @Subscribe
+    public void pillsUpdated(final UpdatedPillEvent event) {
+        if(_menu == null || event.getPill() == null)
             return;
 
         runOnUiThread(new Runnable(){
             public void run(){
-                if(pill.isFavourite()){
-                    addPillToMenu(pill);
+                if(event.getPill().isFavourite()){
+                    addPillToMenu(event.getPill());
                 }
                 else{
-                    _menu.removeItem(pill.getId());
+                    _menu.removeItem(event.getPill().getId());
                 }
             }
         });

@@ -25,6 +25,7 @@ import com.echo.holographlibrary.BarGraph;
 import com.echo.holographlibrary.LineGraph;
 import com.echo.holographlibrary.PieGraph;
 import com.echo.holographlibrary.StackBarGraph;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,6 +35,7 @@ import java.util.UUID;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
+import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.fragments.ConsumptionInfoDialogFragment;
 import uk.co.pilllogger.fragments.InfoDialogFragment;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
@@ -58,7 +60,7 @@ import org.joda.time.Days;
  * Created by nick on 22/10/13.
  */
 public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> implements
-        ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, Observer.IConsumptionAdded, Observer.IPillsUpdated {
+        ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, Observer.IConsumptionAdded {
 
     private static String TAG = "ConsumptionListAdapter";
     private List<Consumption> _consumptions;
@@ -72,9 +74,10 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         _fragment = fragment;
         _consumptions = consumptions;
 
-        Observer.getSingleton().registerPillsUpdatedObserver(this);
         Observer.getSingleton().registerConsumptionAddedObserver(this);
         Observer.getSingleton().registerConsumptionDialogObserver(this);
+
+        State.getSingleton().getBus().register(this);
     }
 
     public ConsumptionListAdapter(Activity activity, Fragment fragment, int textViewResourceId, List<Consumption> consumptions, List<Pill> pills) {
@@ -140,8 +143,8 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         }
     }
 
-    @Override
-    public void pillsUpdated(Pill pill) {
+    @Subscribe
+    public void pillsUpdated(UpdatedPillEvent event) {
         _activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -279,9 +282,9 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
 
     @Override
     public void destroy() {
-        Observer.getSingleton().unregisterPillsUpdatedObserver(this);
         Observer.getSingleton().unregisterConsumptionAddedObserver(this);
         Observer.getSingleton().unregisterConsumptionDialogObserver(this);
+        State.getSingleton().getBus().unregister(this);
     }
 
     private void setUpGraphPillsList(View v) {

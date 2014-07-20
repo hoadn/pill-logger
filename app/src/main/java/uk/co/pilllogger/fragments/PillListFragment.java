@@ -28,6 +28,7 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillsListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.events.LoadedPillsEvent;
+import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.helpers.TrackerHelper;
@@ -42,7 +43,6 @@ import uk.co.pilllogger.views.ColourIndicator;
 
 public class PillListFragment extends PillLoggerFragmentBase implements
         InsertPillTask.ITaskComplete,
-        Observer.IPillsUpdated,
         SharedPreferences.OnSharedPreferenceChangeListener{
 
     public static final String TAG = "PillListFragment";
@@ -59,20 +59,6 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
-
-    @Override
-    public void onStart(){
-        super.onStart();
-
-        Observer.getSingleton().registerPillsUpdatedObserver(this);
-    }
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-
-        Observer.getSingleton().unregisterPillsUpdatedObserver(this);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -233,8 +219,8 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         LayoutHelper.hideKeyboard(getActivity());
     }
 
-    @Override
-    public void pillsUpdated(Pill pill) {
+    @Subscribe
+    public void pillsUpdated(UpdatedPillEvent event) {
         new GetPillsTask(this.getActivity()).execute();
     }
 

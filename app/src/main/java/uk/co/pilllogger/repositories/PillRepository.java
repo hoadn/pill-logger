@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.util.SparseIntArray;
 
+import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import hugo.weaving.DebugLog;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.events.LoadedPillsEvent;
+import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.Logger;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -33,6 +35,7 @@ import uk.co.pilllogger.state.State;
 public class PillRepository extends BaseRepository<Pill>{
     private static final String TAG = "PillRepository";
     private static PillRepository _instance;
+    private static Bus _bus;
     private Map<Integer, Pill> _cache = new HashMap<Integer, Pill>();
     private boolean _getAllCalled = false;
 
@@ -48,7 +51,8 @@ public class PillRepository extends BaseRepository<Pill>{
         if (_instance == null) {
             _instance = new PillRepository(context);
 
-            State.getSingleton().getBus().register(_instance);
+            _bus = State.getSingleton().getBus();
+            _bus.register(_instance);
         }
         return _instance;
     }
@@ -310,6 +314,7 @@ public class PillRepository extends BaseRepository<Pill>{
         notifyUpdated(pill, false);
     }
 
+    @DebugLog
     private void notifyUpdated(Pill pill, boolean remove){
         if(remove)
             _cache.remove(pill.getId());
@@ -318,6 +323,6 @@ public class PillRepository extends BaseRepository<Pill>{
 
         Logger.d(TAG, "notifyUpdated");
 
-        Observer.getSingleton().notifyPillsUpdated(pill);
+        _bus.post(new UpdatedPillEvent(pill));
     }
 }

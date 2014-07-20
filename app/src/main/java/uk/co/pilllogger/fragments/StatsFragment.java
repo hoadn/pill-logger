@@ -20,6 +20,7 @@ import java.util.Map;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.LoadedPillsEvent;
+import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.models.Consumption;
@@ -42,8 +43,7 @@ import uk.co.pilllogger.views.HourOfDayView;
 public class StatsFragment extends PillLoggerFragmentBase implements
         GetConsumptionsTask.ITaskComplete,
         Observer.IConsumptionAdded,
-        Observer.IConsumptionDeleted,
-        Observer.IPillsUpdated{
+        Observer.IConsumptionDeleted{
 
     TextView _medicineMostTaken1st;
     TextView _medicineMostTaken2nd;
@@ -149,7 +149,6 @@ public class StatsFragment extends PillLoggerFragmentBase implements
 
         setFont();
 
-        Observer.getSingleton().registerPillsUpdatedObserver(this);
         Observer.getSingleton().registerConsumptionAddedObserver(this);
         Observer.getSingleton().registerConsumptionDeletedObserver(this);
 
@@ -165,7 +164,6 @@ public class StatsFragment extends PillLoggerFragmentBase implements
     public void onDestroyView(){
         super.onDestroyView();
 
-        Observer.getSingleton().unregisterPillsUpdatedObserver(this);
         Observer.getSingleton().unregisterConsumptionAddedObserver(this);
         Observer.getSingleton().unregisterConsumptionDeletedObserver(this);
     }
@@ -307,8 +305,8 @@ public class StatsFragment extends PillLoggerFragmentBase implements
         new GetConsumptionsTask(getActivity(), this, false).execute();
     }
 
-    @Override
-    public void pillsUpdated(Pill pill) {
+    @Subscribe
+    public void pillsUpdated(UpdatedPillEvent event) {
         new GetConsumptionsTask(getActivity(), this, false).execute();
     }
 }
