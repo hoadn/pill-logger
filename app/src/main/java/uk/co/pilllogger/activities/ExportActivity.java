@@ -24,6 +24,7 @@ import java.util.Set;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.LoadedPillsEvent;
+import uk.co.pilllogger.events.PurchasedFeatureEvent;
 import uk.co.pilllogger.fragments.ExportMainFragment;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.models.Consumption;
@@ -46,7 +47,7 @@ public class ExportActivity extends FragmentActivity
         implements
         IExportService,
         GetMaxDosagesTask.ITaskComplete,
-        GetConsumptionsTask.ITaskComplete, Observer.IFeaturePurchased {
+        GetConsumptionsTask.ITaskComplete {
 
     private static final String TAG = "ExportActivity";
     private List<Pill> _pillsList;
@@ -95,8 +96,6 @@ public class ExportActivity extends FragmentActivity
                     .add(R.id.export_container, new ExportMainFragment())
                     .commit();
         }
-
-        Observer.getSingleton().registerFeaturePurchasedObserver(this);
 
         if(State.getSingleton().hasFeature(FeatureType.export)){
             _exportUnlockTitle.setVisibility(View.GONE);
@@ -309,16 +308,9 @@ public class ExportActivity extends FragmentActivity
         }
     }
 
-    @Override
-    protected void onDestroy(){
-        Observer.getSingleton().unregisterFeaturePurchasedObserver(this);
-
-        super.onDestroy();
-    }
-
-    @Override
-    public void featurePurchased(FeatureType featureType) {
-        if(_exportUnlockTitle != null){
+    @Subscribe
+    public void featurePurchased(PurchasedFeatureEvent event) {
+        if(_exportUnlockTitle != null && event.getFeatureType() == FeatureType.export){
             _exportUnlockTitle.setVisibility(View.GONE);
         }
     }

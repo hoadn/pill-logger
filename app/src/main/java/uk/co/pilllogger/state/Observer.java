@@ -20,7 +20,6 @@ public class Observer {
 
     private static final String TAG = "Observer";
     private static Observer _instance;
-    private Map<IFeaturePurchased, WeakReference<IFeaturePurchased>> _featuredPurchasedListeners = new ConcurrentHashMap<IFeaturePurchased, WeakReference<IFeaturePurchased>>();
     private Map<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, WeakReference<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>> _consumptionInfoDialogListeners = new ConcurrentHashMap<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, WeakReference<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>>();
     private Map<PillInfoDialogFragment.PillInfoDialogListener, WeakReference<PillInfoDialogFragment.PillInfoDialogListener>> _pillInfoDialogListeners = new ConcurrentHashMap<PillInfoDialogFragment.PillInfoDialogListener, WeakReference<PillInfoDialogFragment.PillInfoDialogListener>>();
 
@@ -29,14 +28,6 @@ public class Observer {
             _instance = new Observer();
 
         return _instance;
-    }
-
-    public void registerFeaturePurchasedObserver(IFeaturePurchased observer) {
-        _featuredPurchasedListeners.put(observer, new WeakReference<IFeaturePurchased>(observer));
-    }
-
-    public void unregisterFeaturePurchasedObserver(IFeaturePurchased observer) {
-        _featuredPurchasedListeners.remove(observer);
     }
 
     public void registerConsumptionDialogObserver(ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener listener) {
@@ -75,15 +66,6 @@ public class Observer {
         }
 
         collection.values().removeAll(deadrefs);
-    }
-
-    public void notifyFeaturePurchased(final FeatureType featureType) {
-        notify(_featuredPurchasedListeners, new INotifiable<IFeaturePurchased>() {
-            @Override
-            public void notify(IFeaturePurchased observer) {
-                observer.featurePurchased(featureType);
-            }
-        });
     }
 
     public void notifyOnConsumptionDialogTakeAgain(final Consumption consumption, final InfoDialogFragment dialog) {
@@ -165,10 +147,6 @@ public class Observer {
                 observer.onDialogChangeNameDosage(pill, dialog);
             }
         });
-    }
-
-    public interface IFeaturePurchased {
-        void featurePurchased(FeatureType featureType);
     }
 
     private interface INotifiable<T> {

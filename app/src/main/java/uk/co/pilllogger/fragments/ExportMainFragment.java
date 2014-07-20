@@ -23,6 +23,7 @@ import uk.co.pilllogger.billing.IabResult;
 import uk.co.pilllogger.billing.Purchase;
 import uk.co.pilllogger.billing.SkuDetails;
 import uk.co.pilllogger.events.LoadedPillsEvent;
+import uk.co.pilllogger.events.PurchasedFeatureEvent;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.ExportHelper;
 import uk.co.pilllogger.helpers.Logger;
@@ -179,7 +180,8 @@ public class ExportMainFragment extends ExportFragmentBase {
                                 Logger.d(TAG, info.getSku());
 
                                 State.getSingleton().getEnabledFeatures().add(FeatureType.export);
-                                Observer.getSingleton().notifyFeaturePurchased(FeatureType.export);
+                                _bus.post(new PurchasedFeatureEvent(FeatureType.export));
+
                                 setExportButtonText();
                             }
                         }, TrackerHelper.getUniqueId(activity));
