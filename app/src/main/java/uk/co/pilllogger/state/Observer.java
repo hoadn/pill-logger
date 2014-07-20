@@ -20,7 +20,6 @@ public class Observer {
 
     private static final String TAG = "Observer";
     private static Observer _instance;
-    private Map<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, WeakReference<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>> _consumptionInfoDialogListeners = new ConcurrentHashMap<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener, WeakReference<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>>();
     private Map<PillInfoDialogFragment.PillInfoDialogListener, WeakReference<PillInfoDialogFragment.PillInfoDialogListener>> _pillInfoDialogListeners = new ConcurrentHashMap<PillInfoDialogFragment.PillInfoDialogListener, WeakReference<PillInfoDialogFragment.PillInfoDialogListener>>();
 
     public static Observer getSingleton() {
@@ -28,16 +27,6 @@ public class Observer {
             _instance = new Observer();
 
         return _instance;
-    }
-
-    public void registerConsumptionDialogObserver(ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener listener) {
-        _consumptionInfoDialogListeners.put(listener, new WeakReference<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>(listener));
-    }
-
-    public void unregisterConsumptionDialogObserver(ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener observer) {
-        if (observer != null) {
-            _consumptionInfoDialogListeners.remove(observer);
-        }
     }
 
     public void registerPillDialogObserver(PillInfoDialogFragment.PillInfoDialogListener listener) {
@@ -66,42 +55,6 @@ public class Observer {
         }
 
         collection.values().removeAll(deadrefs);
-    }
-
-    public void notifyOnConsumptionDialogTakeAgain(final Consumption consumption, final InfoDialogFragment dialog) {
-        notify(_consumptionInfoDialogListeners, new INotifiable<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>() {
-            @Override
-            public void notify(ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener observer) {
-                observer.onDialogTakeAgain(consumption, dialog);
-            }
-        });
-    }
-
-    public void notifyOnConsumptionDialogIncrease(final Consumption consumption, final InfoDialogFragment dialog) {
-        notify(_consumptionInfoDialogListeners, new INotifiable<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>() {
-            @Override
-            public void notify(ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener observer) {
-                observer.onDialogIncrease(consumption, dialog);
-            }
-        });
-    }
-
-    public void notifyOnConsumptionDialogDecrease(final Consumption consumption, final InfoDialogFragment dialog) {
-        notify(_consumptionInfoDialogListeners, new INotifiable<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>() {
-            @Override
-            public void notify(ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener observer) {
-                observer.onDialogDecrease(consumption, dialog);
-            }
-        });
-    }
-
-    public void notifyOnConsumptionDialogDelete(final Consumption consumption, final InfoDialogFragment dialog) {
-        notify(_consumptionInfoDialogListeners, new INotifiable<ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener>() {
-            @Override
-            public void notify(ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener observer) {
-                observer.onDialogDelete(consumption, dialog);
-            }
-        });
     }
 
     public void notifyOnPillDialogAddConsumption(final Pill pill, final InfoDialogFragment dialog){

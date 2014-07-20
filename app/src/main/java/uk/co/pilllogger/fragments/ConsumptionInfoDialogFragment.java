@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.events.DecreaseConsumptionEvent;
+import uk.co.pilllogger.events.IncreaseConsumptionEvent;
+import uk.co.pilllogger.events.TakeConsumptionAgainEvent;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.state.Observer;
 import uk.co.pilllogger.state.State;
@@ -91,25 +94,25 @@ public class ConsumptionInfoDialogFragment extends InfoDialogFragment {
         takeAgainContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Observer.getSingleton().notifyOnConsumptionDialogTakeAgain(_consumption, ConsumptionInfoDialogFragment.this);
+                _bus.post(new TakeConsumptionAgainEvent(_consumption, ConsumptionInfoDialogFragment.this));
             }
         });
         increase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Observer.getSingleton().notifyOnConsumptionDialogIncrease(_consumption, ConsumptionInfoDialogFragment.this);
+                _bus.post(new IncreaseConsumptionEvent(_consumption, ConsumptionInfoDialogFragment.this));
             }
         });
         decrease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Observer.getSingleton().notifyOnConsumptionDialogDecrease(_consumption, ConsumptionInfoDialogFragment.this);
+                _bus.post(new DecreaseConsumptionEvent(_consumption, ConsumptionInfoDialogFragment.this));
             }
         });
         deleteContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Observer.getSingleton().notifyOnConsumptionDialogDelete(_consumption, ConsumptionInfoDialogFragment.this);
+                _bus.post(new DeleteConsumptionEvent(_consumption, ConsumptionInfoDialogFragment.this));
             }
         });
     }
@@ -123,12 +126,5 @@ public class ConsumptionInfoDialogFragment extends InfoDialogFragment {
         _quantitySummary.setTypeface(typeface);
         _delete.setTypeface(typeface);
         _deleteSummary.setTypeface(typeface);
-    }
-
-    public interface ConsumptionInfoDialogListener {
-        public void onDialogTakeAgain(Consumption consumption, InfoDialogFragment dialog);
-        public void onDialogIncrease(Consumption consumption, InfoDialogFragment dialog);
-        public void onDialogDecrease(Consumption consumption, InfoDialogFragment dialog);
-        public void onDialogDelete(Consumption consumption, InfoDialogFragment dialog);
     }
 }

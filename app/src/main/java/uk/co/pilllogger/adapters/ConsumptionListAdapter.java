@@ -36,8 +36,12 @@ import java.util.UUID;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
+import uk.co.pilllogger.events.DecreaseConsumptionEvent;
+import uk.co.pilllogger.events.IncreaseConsumptionEvent;
+import uk.co.pilllogger.events.TakeConsumptionAgainEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.fragments.ConsumptionInfoDialogFragment;
+import uk.co.pilllogger.fragments.DeleteConsumptionEvent;
 import uk.co.pilllogger.fragments.InfoDialogFragment;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.helpers.DateHelper;
@@ -60,8 +64,7 @@ import org.joda.time.Days;
 /**
  * Created by nick on 22/10/13.
  */
-public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> implements
-        ConsumptionInfoDialogFragment.ConsumptionInfoDialogListener {
+public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
     private static String TAG = "ConsumptionListAdapter";
     private List<Consumption> _consumptions;
@@ -75,8 +78,6 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         _fragment = fragment;
         _consumptions = consumptions;
 
-        Observer.getSingleton().registerConsumptionDialogObserver(this);
-
         State.getSingleton().getBus().register(this);
     }
 
@@ -85,13 +86,13 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         _pills = pills;
     }
 
-    @Override
-    public void onDialogTakeAgain(Consumption consumption, InfoDialogFragment dialog) {
+    @Subscribe
+    public void onDialogTakeAgain(TakeConsumptionAgainEvent event) {
         Date consumptionDate = new Date();
         String consumptionGroup = UUID.randomUUID().toString();
 
-        for(int i = 0; i < consumption.getQuantity(); i++){
-            Consumption newC = new Consumption(consumption);
+        for(int i = 0; i < event.getConsumption().getQuantity(); i++){
+            Consumption newC = new Consumption(event.getConsumption());
             newC.setId(0);
             newC.setGroup(consumptionGroup);
             newC.setDate(consumptionDate);
@@ -101,33 +102,33 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
         }
 
         TrackerHelper.addConsumptionEvent(_activity, "DialogTakeAgain");
-        dialog.getActivity().finish();
+        event.getConsumptionInfoDialogFragment().getActivity().finish();
     }
 
-    @Override
-    public void onDialogIncrease(Consumption consumption, InfoDialogFragment dialog) {
-        Consumption newC = new Consumption(consumption);
+    @Subscribe
+    public void onDialogIncrease(IncreaseConsumptionEvent event) {
+        Consumption newC = new Consumption(event.getConsumption());
         newC.setId(0);
         newC.setQuantity(1);
         new InsertConsumptionTask(_activity, newC).execute();
         TrackerHelper.addConsumptionEvent(_activity, "DialogIncrease");
         Toast.makeText(_activity, R.string.consumption_info_dialog_increase_toast, Toast.LENGTH_SHORT).show();
-        dialog.getActivity().finish();
+        event.getConsumptionInfoDialogFragment().getActivity().finish();
     }
 
-    @Override
-    public void onDialogDecrease(Consumption consumption, InfoDialogFragment dialog) {
-        new DeleteConsumptionTask(_activity, consumption, false).execute();
+    @Subscribe
+    public void onDialogDecrease(DecreaseConsumptionEvent event) {
+        new DeleteConsumptionTask(_activity, event.getConsumption(), false).execute();
         TrackerHelper.deleteConsumptionEvent(_activity, "DialogDecrease");
         Toast.makeText(_activity, R.string.consumption_info_dialog_decrease_toast, Toast.LENGTH_SHORT).show();
-        dialog.getActivity().finish();
+        event.getConsumptionInfoDialogFragment().getActivity().finish();
     }
 
-    @Override
-    public void onDialogDelete(Consumption consumption, InfoDialogFragment dialog) {
-        new DeleteConsumptionTask(_activity, consumption, true).execute();
+    @Subscribe
+    public void onDialogDelete(DeleteConsumptionEvent event) {
+        new DeleteConsumptionTask(_activity, event.getConsumption(), true).execute();
         TrackerHelper.deleteConsumptionEvent(_activity, "DialogDelete");
-        dialog.getActivity().finish();
+        event.getConsumptionInfoDialogFragment().getActivity().finish();
     }
 
     @Subscribe
@@ -282,7 +283,6 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> i
 
     @Override
     public void destroy() {
-        Observer.getSingleton().unregisterConsumptionDialogObserver(this);
         State.getSingleton().getBus().unregister(this);
     }
 
