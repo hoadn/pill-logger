@@ -30,9 +30,9 @@ public class PillLoggerFragmentBase extends Fragment {
 
     @Override
     public void onPause(){
-        super.onPause();
-
         _bus.unregister(this);
+
+        super.onPause();
     }
 
     @Override
@@ -43,6 +43,11 @@ public class PillLoggerFragmentBase extends Fragment {
         this.tracker = EasyTracker.getInstance(this.getActivity());
 
         _bus = State.getSingleton().getBus();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)

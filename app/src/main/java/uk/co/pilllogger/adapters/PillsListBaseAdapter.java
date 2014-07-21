@@ -9,6 +9,7 @@ import com.squareup.otto.Bus;
 
 import java.util.List;
 
+import hugo.weaving.DebugLog;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.NumberHelper;
@@ -24,6 +25,7 @@ public abstract class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
 
     protected final Bus _bus;
 
+    @DebugLog
     public PillsListBaseAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
         super(activity, textViewResourceId, pills);
         _bus = State.getSingleton().getBus();

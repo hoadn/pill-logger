@@ -49,7 +49,7 @@ public class PillRepository extends BaseRepository<Pill>{
         return _instance;
     }
 
-    @Produce @DebugLog
+    @Produce
     public LoadedPillsEvent produceLoadedPills(){
         List<Pill> pills = new ArrayList<Pill>();
 

@@ -1,6 +1,7 @@
 package uk.co.pilllogger.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -261,5 +262,16 @@ public class StatsFragment extends PillLoggerFragmentBase implements
     @Subscribe
     public void pillsUpdated(UpdatedPillEvent event) {
         new GetConsumptionsTask(getActivity(), this, false).execute();
+    }
+
+    public static Fragment newInstance(int num) {
+        StatsFragment f = new StatsFragment();
+
+        // Supply num input as an argument.
+        Bundle args = new Bundle();
+        args.putInt("num", num);
+        f.setArguments(args);
+
+        return f;
     }
 }

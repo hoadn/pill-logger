@@ -16,6 +16,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
@@ -100,7 +101,7 @@ public class PillsListAdapter extends PillsListBaseAdapter {
         return v;
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void onDialogAddConsumption(CreateConsumptionEvent event) {
         if (event.getPill() != null) {
             Consumption consumption = new Consumption(event.getPill(), new Date());

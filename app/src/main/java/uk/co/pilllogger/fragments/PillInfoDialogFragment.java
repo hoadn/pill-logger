@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import hugo.weaving.DebugLog;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.CreateConsumptionEvent;
 import uk.co.pilllogger.events.DeletePillEvent;
@@ -40,7 +41,7 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
         return R.layout.pill_info_dialog;
     }
 
-    @Override
+    @Override @DebugLog
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 

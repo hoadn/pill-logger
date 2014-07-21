@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.ConsumptionListAdapter;
@@ -64,6 +65,18 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     private List<Pill> _pills;
     private List<Consumption> _consumptions;
     private View _loading;
+
+    @DebugLog
+    public static ConsumptionListFragment newInstance(int num){
+        ConsumptionListFragment f = new ConsumptionListFragment();
+
+        // Supply num input as an argument.
+        Bundle args = new Bundle();
+        args.putInt("num", num);
+        f.setArguments(args);
+
+        return f;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -160,7 +173,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         Timber.d("onResume");
     }
 
-    @Override
+    @Override @DebugLog
     public void consumptionsReceived(List<Consumption> consumptions) {
         _consumptions = consumptions;
         Activity activity = getActivity();

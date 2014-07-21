@@ -1,6 +1,7 @@
 package uk.co.pilllogger.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.squareup.otto.Subscribe;
 import java.util.List;
 
 import hugo.weaving.DebugLog;
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillsListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
@@ -45,8 +47,15 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     private Spinner _unitSpinner;
     ColourIndicator _colour;
 
+    @DebugLog
 	public PillListFragment() {
 	}
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        Timber.d("onStart");
+    }
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -122,7 +131,12 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         });
 
         View completed = v.findViewById(R.id.pill_fragment_add_pill_completed);
-        completed.setOnClickListener(new AddPillClickListener(this));
+        completed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                completed();
+            }
+        });
 
         _addPillSize.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -176,13 +190,13 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 //						: ListView.CHOICE_MODE_NONE);
 	}
 
-    @Subscribe @DebugLog
+    @Subscribe
     public void pillsLoaded(LoadedPillsEvent event) {
         updatePills(event.getPills());
     }
 
     private void updatePills(List<Pill> pills){
-        if(_list == null)
+        if(_list == null || pills.size() == 0)
             return;
 
         if (_list.getAdapter() == null){ //we need to init the adapter
@@ -191,6 +205,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             if(activity == null) // it's not gonna work without this
                 return;
 
+            Timber.d("Creating PillsListAdapter");
             PillsListAdapter adapter = new PillsListAdapter(activity, R.layout.pill_list_item, pills);
 
             _list.setAdapter(adapter);
@@ -225,17 +240,15 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         }
     }
 
-    private class AddPillClickListener implements View.OnClickListener {
+    public static Fragment newInstance(int num) {
+        PillListFragment f = new PillListFragment();
 
-        PillListFragment _fragment;
-        public AddPillClickListener(PillListFragment fragment) {
-            _fragment = fragment;
-        }
+        // Supply num input as an argument.
+        Bundle args = new Bundle();
+        args.putInt("num", num);
+        f.setArguments(args);
 
-        @Override
-        public void onClick(View view) {
-            _fragment.completed();
-        }
+        return f;
     }
 
     public void completed() {

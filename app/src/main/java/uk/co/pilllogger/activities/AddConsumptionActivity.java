@@ -33,6 +33,7 @@ import android.widget.TimePicker;
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
@@ -115,6 +116,7 @@ public class AddConsumptionActivity extends FragmentActivity implements
     ViewGroup _reminderHoursContainer;
     EditText _reminderHours;
     TextView _reminderHoursSuffix;
+    Bus _bus;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,6 +125,9 @@ public class AddConsumptionActivity extends FragmentActivity implements
         setTheme(State.getSingleton().getTheme().getStyleResourceId());
 
         setContentView(R.layout.add_consumption_activity);
+
+
+        _bus = State.getSingleton().getBus();
 
         _pillsList = (ListView)findViewById(R.id.add_consumption_pill_list);
 
@@ -271,6 +276,19 @@ public class AddConsumptionActivity extends FragmentActivity implements
         new GetTutorialSeenTask(this, TAG, this).execute();
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        _bus.register(this);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+        _bus.unregister(this);
+    }
 
     private void setUpRadioGroups() {
         _choosePillRadioGroup = (RadioGroup) findViewById(R.id.add_consumption_pill_type_selection);

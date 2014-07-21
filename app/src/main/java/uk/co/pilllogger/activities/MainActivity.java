@@ -2,6 +2,7 @@ package uk.co.pilllogger.activities;
 
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -93,7 +94,6 @@ public class MainActivity extends PillLoggerActivityBase implements
     private int _colour3 = Color.argb(120, 81, 81, 81);
     View _colourBackground;
     private Menu _menu;
-    Fragment _consumptionFragment;
     private TutorialService _tutorialService;
     private boolean _themeChanged;
     private IabHelper _billingHelper;
@@ -127,13 +127,9 @@ public class MainActivity extends PillLoggerActivityBase implements
         State.getSingleton().setTypeface(ttf);
         State.getSingleton().setRobotoTypeface(roboto);
 
-        _consumptionFragment = new ConsumptionListFragment();
-        final Fragment fragment2 = new PillListFragment();
-        final Fragment fragment3 = new StatsFragment();
+        final MainActivity activity = this;
 
         _fragmentPager = (MyViewPager)findViewById(R.id.fragment_pager);
-
-        final MainActivity activity = this;
 
         _fragmentPager.setOffscreenPageLimit(2);
         _fragmentPager.setOnPageChangeListener(
@@ -164,10 +160,7 @@ public class MainActivity extends PillLoggerActivityBase implements
                     }
                 });
 
-        _fragmentPagerAdapter = new SlidePagerAdapter(getFragmentManager(),
-                _consumptionFragment,
-                fragment2,
-                fragment3);
+        _fragmentPagerAdapter = new SlidePagerAdapter(getFragmentManager());
 
         _fragmentPager.setAdapter(_fragmentPagerAdapter);
 

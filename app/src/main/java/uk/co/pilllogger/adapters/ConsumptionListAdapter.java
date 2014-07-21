@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
@@ -128,7 +129,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
         event.getConsumptionInfoDialogFragment().getActivity().finish();
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void consumptionAdded(CreatedConsumptionEvent event) {
         if(_activity != null) {
             _activity.runOnUiThread(new Runnable() {

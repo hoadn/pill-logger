@@ -112,7 +112,7 @@ public class DialogActivity extends FragmentActivity{
 
             String dosageText = getString(R.string.twenty_four_hour_short_hand);
             if(_pill.getSize() > 0)
-                dosageText += dosage24 + " " + _pill.getUnits() + " (" + quantity24 + " x " + _pill.getFormattedSize() + _pill.getUnits() + ")";
+                dosageText += " " + dosage24  + _pill.getUnits() + " (" + quantity24 + " x " + _pill.getFormattedSize() + _pill.getUnits() + ")";
             else
                 dosageText += " " + quantity24;
             _dosage.setText(dosageText);

@@ -90,7 +90,7 @@
         <ImageView
             android:id="@+id/consumption_info_dialog_decrease"
             android:text="@string/consumption_info_dialog_decrease"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:clickable="false"
             android:src="@drawable/chevron_down_red"
@@ -109,7 +109,7 @@
         <ImageView
             android:id="@+id/consumption_info_dialog_increase"
             android:text="@string/consumption_info_dialog_increase"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:clickable="true"
             android:padding="16dp"

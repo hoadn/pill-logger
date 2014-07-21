@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
@@ -450,6 +451,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         return grouped;
     }
 
+    @DebugLog
     public void notifyUpdated(Consumption consumption) {
         _consumptionsCache.put(consumption.getId(), consumption);
         if (_pillConsumptionCache.size() > 0) {

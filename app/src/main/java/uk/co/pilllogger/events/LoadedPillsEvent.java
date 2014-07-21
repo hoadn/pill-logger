@@ -1,5 +1,7 @@
 package uk.co.pilllogger.events;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class LoadedPillsEvent {
         }
     }
 
+    @NotNull
     public List<Pill> getPills() {
         return _pills;
     }
