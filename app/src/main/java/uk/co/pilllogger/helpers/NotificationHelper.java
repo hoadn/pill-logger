@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import java.util.Date;
@@ -117,8 +118,8 @@ public abstract class NotificationHelper {
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
         builder.setContentIntent(resultPendingIntent);
-        NotificationManager notificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManagerCompat notificationManager =
+                NotificationManagerCompat.from(context);
 
         Intent takeAgainIntent = new Intent(context.getString(R.string.intent_take_again));
         takeAgainIntent.putExtra(context.getString(R.string.intent_extra_notification_consumption_group), group);
