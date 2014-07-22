@@ -9,6 +9,7 @@ import com.squareup.otto.Bus;
 import java.util.ArrayList;
 import java.util.List;
 
+import hugo.weaving.DebugLog;
 import uk.co.pilllogger.database.DatabaseCreator;
 import uk.co.pilllogger.helpers.ArrayHelper;
 import uk.co.pilllogger.state.State;
@@ -22,6 +23,7 @@ public abstract class BaseRepository<T> implements IRepository<T>{
 
     protected Bus _bus;
 
+    @DebugLog
     protected BaseRepository(Context context){
         _dbCreator = new DatabaseCreator(context);
         _context = context;

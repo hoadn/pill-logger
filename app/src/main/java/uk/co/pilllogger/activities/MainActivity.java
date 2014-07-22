@@ -104,12 +104,13 @@ public class MainActivity extends PillLoggerActivityBase implements
         boolean isDebuggable = 0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE);
         State.getSingleton().setIsDebuggable(isDebuggable);
 
-        if(!isDebuggable) {
-            Crashlytics.start(this);
-            Timber.plant(new CrashlyticsTree());
-        }
-        else{
-            Timber.plant(new Timber.DebugTree());
+        if(savedInstanceState == null) {
+            if (!isDebuggable) {
+                Crashlytics.start(this);
+                Timber.plant(new CrashlyticsTree());
+            } else {
+                Timber.plant(new Timber.DebugTree());
+            }
         }
 
         _themeChanged = false;
@@ -207,7 +208,7 @@ public class MainActivity extends PillLoggerActivityBase implements
         String billingKey = getString(R.string.billingKey);
 
         _billingHelper = new IabHelper(this, billingKey);
-        _billingHelper.enableDebugLogging(true, TAG);
+        _billingHelper.enableDebugLogging(false, TAG);
 
         _billingHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
             @Override

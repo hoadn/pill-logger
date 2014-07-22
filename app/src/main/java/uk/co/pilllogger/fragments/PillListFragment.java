@@ -46,16 +46,10 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     private EditText _addPillSize;
     private Spinner _unitSpinner;
     ColourIndicator _colour;
+    private Activity _activity;
 
-    @DebugLog
 	public PillListFragment() {
 	}
-
-    @Override
-    public void onStart(){
-        super.onStart();
-        Timber.d("onStart");
-    }
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -67,11 +61,11 @@ public class PillListFragment extends PillLoggerFragmentBase implements
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.pill_list_fragment, container, false);
-        Activity activity = getActivity();
-        if(activity == null || v == null){
+        _activity = getActivity();
+        if(_activity == null || v == null){
             return null;
         }
-        int color = activity.getResources().getColor(State.getSingleton().getTheme().getPillListBackgroundResourceId());
+        int color = getResources().getColor(State.getSingleton().getTheme().getPillListBackgroundResourceId());
         v.setTag(R.id.tag_page_colour, color);
         v.setTag(R.id.tag_tab_icon_position, 1);
 
@@ -166,19 +160,35 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         });
 
         _unitSpinner = (Spinner) v.findViewById(R.id.units_spinner);
-        String[] units = activity.getResources().getStringArray(R.array.units_array);
-        UnitAdapter adapter = new UnitAdapter(activity, android.R.layout.simple_spinner_item, units);
+        String[] units = getResources().getStringArray(R.array.units_array);
+        UnitAdapter adapter = new UnitAdapter(_activity, android.R.layout.simple_spinner_item, units);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _unitSpinner.setAdapter(adapter);
 
-        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(_activity);
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         return v;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
 
-	/**
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(_activity);
+        defaultSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+
+        if(_list == null || _list.getAdapter() == null){
+            return;
+        }
+
+        try {
+            _bus.unregister(_list.getAdapter());
+        }
+        catch(IllegalArgumentException ignored){} // if this throws, we're not registered anyway
+    }
+
+    /**
 	 * Turns on activate-on-click mode. When this mode is on, list items will be
 	 * given the 'activated' state when touched.
 	 */
@@ -190,7 +200,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 //						: ListView.CHOICE_MODE_NONE);
 	}
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void pillsLoaded(LoadedPillsEvent event) {
         updatePills(event.getPills());
     }
@@ -205,7 +215,6 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             if(activity == null) // it's not gonna work without this
                 return;
 
-            Timber.d("Creating PillsListAdapter");
             PillsListAdapter adapter = new PillsListAdapter(activity, R.layout.pill_list_item, pills);
 
             _list.setAdapter(adapter);

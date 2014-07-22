@@ -27,6 +27,20 @@ public class ExportSelectPillsFragment extends ExportFragmentBase {
     ListView _pillsList;
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if(_pillsList == null || _pillsList.getAdapter() == null){
+            return;
+        }
+
+        try {
+            _bus.unregister(_pillsList.getAdapter());
+        }
+        catch(IllegalArgumentException ignored){} // if this throws, we're not registered anyway
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 

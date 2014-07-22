@@ -41,6 +41,7 @@ public class PillsListAdapter extends PillsListBaseAdapter {
     private static final String TAG = "PillsListAdapter";
     private final Activity _activity;
 
+    @DebugLog
     public PillsListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
         super(activity, textViewResourceId, pills);
         _activity = activity;

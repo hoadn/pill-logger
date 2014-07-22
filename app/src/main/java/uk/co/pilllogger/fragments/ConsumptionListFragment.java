@@ -82,7 +82,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Timber.d("onCreateView");
         // Inflate the layout for this fragment
         this.setRetainInstance(true);
         View v = inflater.inflate(R.layout.main_fragment, container, false);
@@ -127,7 +126,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        Timber.d("onCreate");
     }
 
     @Override
@@ -138,39 +136,40 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     @Override
     public void onStart(){
         super.onStart();
-        Timber.d("onStart");
     }
 
     @Override
     public void onPause(){
         super.onPause();
-        Timber.d("onPause");
     }
 
     @Override
     public void onStop(){
         super.onStop();
-        Timber.d("onStop");
     }
 
     @Override
     public void onDestroyView(){
         super.onDestroyView();
 
-        Timber.d("onDestroyView");
+        if(_listView == null || _listView.getAdapter() == null){
+            return;
+        }
+
+        try {
+            _bus.unregister(_listView.getAdapter());
+        }
+        catch(IllegalArgumentException ignored){} // if this throws, we're not registered anyway
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
-        Timber.d("onDestroy");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        Timber.d("onResume");
     }
 
     @Override @DebugLog

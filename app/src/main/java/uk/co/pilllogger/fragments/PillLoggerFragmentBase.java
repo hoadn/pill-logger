@@ -12,6 +12,7 @@ import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
 import com.squareup.otto.Bus;
 
+import hugo.weaving.DebugLog;
 import uk.co.pilllogger.state.State;
 
 /**
