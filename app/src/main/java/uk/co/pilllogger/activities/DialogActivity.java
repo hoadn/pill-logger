@@ -1,6 +1,7 @@
 package uk.co.pilllogger.activities;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Typeface;
@@ -121,7 +122,7 @@ public class DialogActivity extends FragmentActivity{
         }
     }
 
-    private void setFragment(){
+    private void setFragment() {
         Fragment fragment = null;
 
         Intent intent = getIntent();
@@ -131,11 +132,11 @@ public class DialogActivity extends FragmentActivity{
             DialogType dialogType = DialogType.values()[dialogTypeInt];
 
             int pillId = intent.getIntExtra("PillId", -1);
-            if(pillId >= 0) {
+            if (pillId >= 0) {
                 _pill = PillRepository.getSingleton(this).get(pillId);
             }
 
-            switch(dialogType){
+            switch (dialogType) {
 
                 case Consumption:
                     String consumptionGroup = intent.getStringExtra("ConsumptionGroup");
@@ -145,7 +146,7 @@ public class DialogActivity extends FragmentActivity{
                     consumptions = ConsumptionRepository.getSingleton(this).groupConsumptions(consumptions);
 
                     for (Consumption consumption : consumptions) {
-                        if(consumption.getPillId() != pillId) {
+                        if (consumption.getPillId() != pillId) {
                             continue;
                         }
 
@@ -154,12 +155,17 @@ public class DialogActivity extends FragmentActivity{
                     }
                     break;
                 case Pill:
-                        fragment = new PillInfoDialogFragment(_pill);
+                    fragment = new PillInfoDialogFragment(_pill);
                     break;
             }
         }
 
-        getFragmentManager()
+        FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager == null){
+            return;
+        }
+
+        fragmentManager
                 .beginTransaction()
                 .add(R.id.export_container, fragment)
                 .commitAllowingStateLoss();
