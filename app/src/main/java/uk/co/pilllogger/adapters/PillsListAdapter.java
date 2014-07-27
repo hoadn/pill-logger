@@ -148,7 +148,7 @@ public class PillsListAdapter extends PillsListBaseAdapter {
                     Collections.sort(_data, new Comparator<Pill>(){
                         @Override
                         public int compare(Pill lhs, Pill rhs) {
-                            if(lhs == null && rhs == null)
+                            if(lhs == rhs)
                                 return 0;
 
                             if(lhs == null)
@@ -157,8 +157,14 @@ public class PillsListAdapter extends PillsListBaseAdapter {
                             if(rhs == null)
                                 return 1;
 
-                            if(rhs.getLatestConsumption(_activity) == null || lhs.getLatestConsumption(_activity) == null)
+                            if(rhs.getLatestConsumption(_activity) == null && lhs.getLatestConsumption(_activity) == null)
                                 return 0;
+
+                            if(lhs.getLatestConsumption(_activity) == null)
+                                return -1;
+
+                            if(rhs.getLatestConsumption(_activity) == null)
+                                return 1;
 
                             return rhs.getLatestConsumption(_activity).getDate().compareTo(lhs.getLatestConsumption(_activity).getDate());
                         }
