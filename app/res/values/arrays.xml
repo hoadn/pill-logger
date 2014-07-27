@@ -4,6 +4,7 @@
         <item>mg</item>
         <item>ml</item>
         <item>mcg</item>
+        <item>IU</item>
     </string-array>
     <string-array name="themeNames">
         <item>@string/rainbowTheme</item>
