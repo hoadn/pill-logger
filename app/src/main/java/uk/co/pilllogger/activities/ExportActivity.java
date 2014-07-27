@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.joda.time.LocalTime;
@@ -55,6 +56,7 @@ public class ExportActivity extends FragmentActivity
     private List<Consumption> _consumptions;
     private TextView _exportUnlockTitle;
     private TextView _exportSubTitle;
+    private Bus _bus;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +66,8 @@ public class ExportActivity extends FragmentActivity
         if (!PillRepository.getSingleton(this).isCached()) {
             new GetPillsTask(this).execute();
         }
+
+        _bus = State.getSingleton().getBus();
 
         new GetConsumptionsTask(this, this, true).execute();
         new GetMaxDosagesTask(this, this).execute();
@@ -99,6 +103,22 @@ public class ExportActivity extends FragmentActivity
         if(State.getSingleton().hasFeature(FeatureType.export)){
             _exportUnlockTitle.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        State.getSingleton().setAppVisible(true);
+        _bus.register(this);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+        State.getSingleton().setAppVisible(false);
+        _bus.unregister(this);
     }
 
     @Subscribe
