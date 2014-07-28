@@ -5,6 +5,7 @@ package uk.co.pilllogger.adapters;
  */
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,10 +86,11 @@ public class
                 holder.units = (TextView) v.findViewById(R.id.pill_list_units);
                 holder.lastTaken = (TextView) v.findViewById(R.id.pill_list_last_taken);
                 holder.color = (ColourIndicator) v.findViewById(R.id.add_consumption_pill_colour);
-                holder.name.setTypeface(State.getSingleton().getTypeface());
-                holder.size.setTypeface(State.getSingleton().getTypeface());
-                holder.units.setTypeface(State.getSingleton().getTypeface());
-                holder.lastTaken.setTypeface(State.getSingleton().getTypeface());
+                Typeface typeface = State.getSingleton().getTypeface();
+                holder.name.setTypeface(typeface);
+                holder.size.setTypeface(typeface);
+                holder.units.setTypeface(typeface);
+                holder.lastTaken.setTypeface(typeface);
                 holder.buttonLayout = v.findViewById(R.id.add_consumption_after_click_layout);
                 holder.container = v;
                 holder.amount = (TextView) v.findViewById(R.id.add_consumption_amount);
@@ -112,13 +114,13 @@ public class
                 holder.units.setVisibility(View.VISIBLE);
             }
             holder.color.setColour(pill.getColour());
-            if (State.getSingleton().getOpenPills().containsKey(pill)) {
+            /*if (State.getSingleton().getOpenPills().containsKey(pill)) {
                 v = open(v);
                 holder.amount.setText(State.getSingleton().getOpenPills().get(pill).toString());
             }
             else {
                 v = close(v);
-            }
+            }*/
 
             Consumption latest = pill.getLatestConsumption(_context);
             if(latest != null){
@@ -183,12 +185,17 @@ public class
     public void clearConsumedPills() {
         State.getSingleton().clearConsumpedPills();
     }
+    
     public void addConsumedPill(Pill pill) {
         State.getSingleton().addConsumedPill(pill);
+
+        _consumptionSelectedListener.setDoneEnabled(State.getSingleton().getConsumptionPills().size() > 0);
     }
 
     public void removeConsumedPill(Pill pill) {
         State.getSingleton().removeConsumedPill(pill);
+
+        _consumptionSelectedListener.setDoneEnabled(State.getSingleton().getConsumptionPills().size() > 0);
     }
 
     /*
@@ -237,6 +244,7 @@ public class
                 State.getSingleton().getOpenPills().put(pill, value + 1);
                 _amount.setText(String.valueOf(amount));
                 _adapter.addConsumedPill(pill);
+
             }
             else {
                 int amount = Integer.parseInt(_amount.getText().toString()) - 1;

@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +13,10 @@ import android.widget.ListView;
 
 import com.squareup.otto.Subscribe;
 
+import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
@@ -67,7 +71,7 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements AddCon
         if (pillsList != null) {
             final AddConsumptionPillListAdapter adapter = new AddConsumptionPillListAdapter(this, this, R.layout.add_consumption_pill_list, event.getPills());
             pillsList.setAdapter(adapter);
-            pillsList.setOnItemClickListener(new AddConsumptionPillItemClickListener(this, (AddConsumptionPillListAdapter)pillsList.getAdapter(), false));
+            // pillsList.setOnItemClickListener(new AddConsumptionPillItemClickListener(this, (AddConsumptionPillListAdapter)pillsList.getAdapter(), false));
 
             View button = findViewById(R.id.widget_configure_add);
 
@@ -78,29 +82,48 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements AddCon
                     if(pillsConsumed.size() == 0)
                         return;
 
-                    int quantity = pillsConsumed.size();
-                    Pill pill = pillsConsumed.get(0);
+                    Map<Pill, Integer> pills = new HashMap<Pill, Integer>();
+                    for(Pill pill : pillsConsumed){
+                        if(pills.containsKey(pill)){
+                            pills.put(pill, pills.get(pill) + 1);
+                        }
+                        else {
+                            pills.put(pill, 1);
+                        }
+                    }
 
-                    addWidget(pill, quantity);
+                    addWidget(pills, Color.RED, "XXX");
                 }
             });
         }
     }
 
-    private void addWidget(Pill pill, int quantity){
-        if(pill == null)
+    private void addWidget(Map<Pill, Integer> pills, int colour, String name){
+        if(pills == null || pills.isEmpty())
             return;
 
         Intent intent = new Intent(this, MyAppWidgetProvider.class);
         intent.setAction(CLICK_ACTION);
-        intent.putExtra(AppWidgetConfigure.PILL_ID, pill.getId());
-        intent.putExtra(AppWidgetConfigure.PILL_QUANTITY, quantity);
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
 
         SharedPreferences.Editor editor = this.getSharedPreferences("widgets", Context.MODE_MULTI_PROCESS).edit();
-        editor.putInt("widgetPill" + _appWidgetId, pill.getId());
-        editor.putInt("widgetQuantity" + _appWidgetId, quantity);
+
+        editor.putString("widgetName" + _appWidgetId, name);
+        editor.putInt("widgetColour" + _appWidgetId, colour);
+
+        int i = 0;
+        for(Pill pill : pills.keySet()) {
+            intent.putExtra(AppWidgetConfigure.PILL_ID + i, pill.getId());
+            Integer quantity = pills.get(pill);
+
+            intent.putExtra(AppWidgetConfigure.PILL_QUANTITY + i, quantity);
+
+            editor.putInt("widgetPill" + i + _appWidgetId, pill.getId());
+            editor.putInt("widgetQuantity" + i + _appWidgetId, quantity);
+
+            i++;
+        }
         editor.commit();
 
         MyAppWidgetProvider.updateWidget(this, _appWidgetId, appWidgetManager);

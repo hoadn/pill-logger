@@ -126,7 +126,6 @@ public class AddConsumptionActivity extends FragmentActivity implements
 
         setContentView(R.layout.add_consumption_activity);
 
-
         _bus = State.getSingleton().getBus();
 
         _pillsList = (ListView)findViewById(R.id.add_consumption_pill_list);
@@ -519,7 +518,7 @@ public class AddConsumptionActivity extends FragmentActivity implements
 
         _adapter = new AddConsumptionPillListAdapter(this, this, R.layout.add_consumption_pill_list, event.getPills());
          _pillsList.setAdapter(_adapter);
-        _pillsList.setOnItemClickListener(new AddConsumptionPillItemClickListener(this, (AddConsumptionPillListAdapter)_pillsList.getAdapter()));
+        //_pillsList.setOnItemClickListener(new AddConsumptionPillItemClickListener(this, (AddConsumptionPillListAdapter)_pillsList.getAdapter()));
 
         _adapter.updateAdapter(event.getPills());
     }

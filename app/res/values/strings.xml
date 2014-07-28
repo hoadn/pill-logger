@@ -44,7 +44,7 @@
     <string name="sunday">Sunday</string>
     <string name="no_consumptions_message">No consumptions recorded</string>
     <string name="last_taken_message_prefix">Last taken</string>
-    <string name="add_consumption_quantity_default">1</string>
+    <string name="add_consumption_quantity_default">0</string>
     <string name="action_settings">Settings</string>
     <string name="action_stats">Statistics</string>
     <string name="title_activity_stats">StatsActivity</string>

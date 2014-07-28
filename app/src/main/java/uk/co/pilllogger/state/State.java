@@ -89,6 +89,7 @@ public class State {
     public void clearConsumpedPills() {
         _consumptionPills.clear();
     }
+
     public void addConsumedPill(Pill pill) {
         _consumptionPills.add(pill);
     }
