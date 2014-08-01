@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.events.LoadedPillsEvent;
@@ -107,24 +108,56 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements AddCon
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
 
-        SharedPreferences.Editor editor = this.getSharedPreferences("widgets", Context.MODE_MULTI_PROCESS).edit();
+        SharedPreferences preferences = this.getSharedPreferences("widgets", Context.MODE_MULTI_PROCESS);
+        SharedPreferences.Editor editor = preferences.edit();;
 
         editor.putString("widgetName" + _appWidgetId, name);
         editor.putInt("widgetColour" + _appWidgetId, colour);
 
         int i = 0;
-        for(Pill pill : pills.keySet()) {
-            intent.putExtra(AppWidgetConfigure.PILL_ID + i, pill.getId());
-            Integer quantity = pills.get(pill);
+        boolean found;
 
-            intent.putExtra(AppWidgetConfigure.PILL_QUANTITY + i, quantity);
+        // clear the preferences of old widget data
+        do{
+            found = false;
 
-            editor.putInt("widgetPill" + i + _appWidgetId, pill.getId());
-            editor.putInt("widgetQuantity" + i + _appWidgetId, quantity);
+            String widgetIndexModifier = i > 0 ? i + "_" : "";
+
+            String wp = "widgetPill" + widgetIndexModifier + _appWidgetId;
+            String wq = "widgetQuantity" + widgetIndexModifier + _appWidgetId;
+
+            Timber.d(wp);
+            Timber.d(wq);
+
+            if(preferences.contains(wp)) {
+                editor.remove(wp);
+                Timber.d("wp -> found");
+                found = true;
+            }
+            if(preferences.contains(wq)) {
+                editor.remove(wq);
+                Timber.d("wq -> found");
+                found = true;
+            }
 
             i++;
+        } while(found);
+
+        int j = 0;
+        for(Pill pill : pills.keySet()) {
+            intent.putExtra(AppWidgetConfigure.PILL_ID + j, pill.getId());
+            Integer quantity = pills.get(pill);
+
+            intent.putExtra(AppWidgetConfigure.PILL_QUANTITY + j, quantity);
+
+            String widgetIndexModifier = j > 0 ? j + "_" : "";
+            editor.putInt("widgetPill" + widgetIndexModifier + _appWidgetId, pill.getId());
+            editor.putInt("widgetQuantity" + widgetIndexModifier + _appWidgetId, quantity);
+
+            j++;
         }
-        editor.commit();
+
+        editor.apply();
 
         MyAppWidgetProvider.updateWidget(this, _appWidgetId, appWidgetManager);
 

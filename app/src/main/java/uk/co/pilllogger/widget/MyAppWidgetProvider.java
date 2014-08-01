@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.AppWidgetConfigure;
 import uk.co.pilllogger.helpers.ColourHelper;
@@ -70,8 +71,15 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         do{
             found = false;
 
-            int pillId = preferences.getInt("widgetPill" + i + id, -1);
-            int quantity = preferences.getInt("widgetQuantity" + i + id, 1);
+            String widgetIndexModifier = i > 0 ? i + "_" : "";
+            String wp = "widgetPill" + widgetIndexModifier + id;
+            String wq = "widgetQuantity" + widgetIndexModifier + id;
+
+            int pillId = preferences.getInt(wp, -1);
+            int quantity = preferences.getInt(wq, 1);
+
+            Timber.d(wp);
+            Timber.d(wq);
 
             totalQuantity += quantity;
 
@@ -88,6 +96,15 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             found = true;
 
             pills.put(pill, quantity);
+
+            // legacy widget support
+            if(name.equals("")){
+                name = pill.getName();
+            }
+
+            if(colour == -1){
+                colour = pill.getColour();
+            }
 
             i++;
         } while(found);
