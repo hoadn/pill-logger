@@ -81,8 +81,6 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             Timber.d(wp);
             Timber.d(wq);
 
-            totalQuantity += quantity;
-
             if(pillId == -1) {
                 continue;
             }
@@ -94,6 +92,8 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             }
 
             found = true;
+
+            totalQuantity += quantity;
 
             pills.put(pill, quantity);
 
@@ -127,8 +127,9 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
                 firstPill = pill;
             }
 
-            newIntent.putExtra(AppWidgetConfigure.PILL_ID + i, pill.getId());
-            newIntent.putExtra(AppWidgetConfigure.PILL_QUANTITY + i, pills.get(pill));
+            String widgetIndexModifier = i > 0 ? i + "_" : "";
+            newIntent.putExtra(AppWidgetConfigure.PILL_ID + widgetIndexModifier, pill.getId());
+            newIntent.putExtra(AppWidgetConfigure.PILL_QUANTITY + widgetIndexModifier, pills.get(pill));
 
             i++;
         }
@@ -183,23 +184,44 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent)
     {
         super.onReceive(context, intent);
+        SharedPreferences preferences = context.getSharedPreferences("widgets", Context.MODE_MULTI_PROCESS);
 
         if (intent.getAction().equals(CLICK_ACTION)) {
 
-            int pillId = intent.getIntExtra(AppWidgetConfigure.PILL_ID, 0);
-            int quantity = intent.getIntExtra(AppWidgetConfigure.PILL_QUANTITY, 1);
-            Pill pill = PillRepository.getSingleton(context).get(pillId);
+            boolean found;
+            int i = 0;
+            do{
+                found = false;
 
-            String group = UUID.randomUUID().toString();
-            Date d = new Date();
-            if (pill != null) {
-                for(int i = 0; i < quantity; i++) {
+                String widgetIndexModifier = i > 0 ? i + "_" : "";
+
+                int pillId = intent.getIntExtra(AppWidgetConfigure.PILL_ID + widgetIndexModifier, 0);
+                int quantity = intent.getIntExtra(AppWidgetConfigure.PILL_QUANTITY + widgetIndexModifier, 1);
+
+                if(pillId == -1) {
+                    continue;
+                }
+
+                Pill pill = PillRepository.getSingleton(context).get(pillId);
+
+                if(pill == null){
+                    continue;
+                }
+
+                found = true;
+
+                String group = UUID.randomUUID().toString();
+                Date d = new Date();
+                for(int j = 0; j < quantity; j++) {
                     Consumption consumption = new Consumption(pill, d, group);
                     new InsertConsumptionTask(context, consumption).execute();
                 }
-            }
+                Toast.makeText(context, quantity + " " + pill.getName() + " added", Toast.LENGTH_SHORT).show();
+
+                i++;
+            } while(found);
+
             TrackerHelper.addConsumptionEvent(context, "Widget");
-            Toast.makeText(context, quantity + " " + pill.getName() + " added", Toast.LENGTH_SHORT).show();
         }
         else {
             updateAllWidgets(context);

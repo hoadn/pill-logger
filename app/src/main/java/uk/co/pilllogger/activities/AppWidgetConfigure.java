@@ -93,9 +93,45 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements AddCon
                         }
                     }
 
-                    addWidget(pills, Color.RED, "XXX");
+                    addWidget(pills, getWidgetColour(pillsConsumed), getWidgetName(pills));
+
+                    adapter.clearConsumedPills();
                 }
             });
+        }
+    }
+
+    private String getWidgetName(Map<Pill, Integer> pills){
+        if(pills.size() == 1){
+            return pills.keySet().iterator().next().getName();
+        }
+        else{
+            // todo: get the name the user has input
+            return "XXX";
+        }
+    }
+
+    private int getWidgetColour(List<Pill> pills){
+        int colour = -1;
+
+        for(Pill pill : pills){
+            if(colour == -1){
+                colour = pill.getColour();
+            }
+            else{
+                if(colour != pill.getColour()){
+                    colour = -1;
+                    break;
+                }
+            }
+        }
+
+        if(colour != -1) {
+            return colour;
+        }
+        else{
+            // todo: return the colour the user has set
+            return Color.BLACK;
         }
     }
 
@@ -103,13 +139,15 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements AddCon
         if(pills == null || pills.isEmpty())
             return;
 
+        Timber.d("Creating widget, name: " + name + " colour: " + colour);
+
         Intent intent = new Intent(this, MyAppWidgetProvider.class);
         intent.setAction(CLICK_ACTION);
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
 
         SharedPreferences preferences = this.getSharedPreferences("widgets", Context.MODE_MULTI_PROCESS);
-        SharedPreferences.Editor editor = preferences.edit();;
+        SharedPreferences.Editor editor = preferences.edit();
 
         editor.putString("widgetName" + _appWidgetId, name);
         editor.putInt("widgetColour" + _appWidgetId, colour);
@@ -145,12 +183,12 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements AddCon
 
         int j = 0;
         for(Pill pill : pills.keySet()) {
-            intent.putExtra(AppWidgetConfigure.PILL_ID + j, pill.getId());
+            String widgetIndexModifier = j > 0 ? j + "_" : "";
+            intent.putExtra(AppWidgetConfigure.PILL_ID + widgetIndexModifier, pill.getId());
             Integer quantity = pills.get(pill);
 
-            intent.putExtra(AppWidgetConfigure.PILL_QUANTITY + j, quantity);
+            intent.putExtra(AppWidgetConfigure.PILL_QUANTITY + widgetIndexModifier, quantity);
 
-            String widgetIndexModifier = j > 0 ? j + "_" : "";
             editor.putInt("widgetPill" + widgetIndexModifier + _appWidgetId, pill.getId());
             editor.putInt("widgetQuantity" + widgetIndexModifier + _appWidgetId, quantity);
 
