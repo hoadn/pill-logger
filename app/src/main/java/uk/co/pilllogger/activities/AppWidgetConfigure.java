@@ -8,7 +8,9 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.squareup.otto.Subscribe;
@@ -18,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
@@ -27,6 +31,7 @@ import uk.co.pilllogger.listeners.AddConsumptionPillItemClickListener;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
+import uk.co.pilllogger.views.ColourIndicator;
 import uk.co.pilllogger.widget.MyAppWidgetProvider;
 
 /**
@@ -34,12 +39,19 @@ import uk.co.pilllogger.widget.MyAppWidgetProvider;
  */
 public class AppWidgetConfigure extends PillLoggerActivityBase implements AddConsumptionPillListAdapter.IConsumptionSelected {
 
+    @InjectView(R.id.widget_custom_text)
+    public EditText _customText;
+
+    @InjectView(R.id.colour_container)
+    public ViewGroup _colourContainer;
+
     public static String CLICK_ACTION = "ClickAction";
     public static String PILL_ID = "uk.co.pilllogger.activities.AppWidgetConfigure.PILL_ID";
     public static String PILL_QUANTITY = "uk.co.pilllogger.activities.AppWidgetConfigure.PILL_QUANTITY";
     int _appWidgetId = -1;
     Typeface _typeface;
     Intent _newIntent;
+    private int _selectedColour = -1;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +62,10 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements AddCon
         setContentView(R.layout.activity_app_widget_configure);
 
         _typeface = State.getSingleton().getTypeface();
+
+        ButterKnife.inject(this);
+
+        setupColourIndicators();
 
         this.setResult(RESULT_CANCELED);
         new GetPillsTask(this).execute();
@@ -72,7 +88,6 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements AddCon
         if (pillsList != null) {
             final AddConsumptionPillListAdapter adapter = new AddConsumptionPillListAdapter(this, this, R.layout.add_consumption_pill_list, event.getPills());
             pillsList.setAdapter(adapter);
-            // pillsList.setOnItemClickListener(new AddConsumptionPillItemClickListener(this, (AddConsumptionPillListAdapter)pillsList.getAdapter(), false));
 
             View button = findViewById(R.id.widget_configure_add);
 
@@ -95,6 +110,7 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements AddCon
 
                     addWidget(pills, getWidgetColour(pillsConsumed), getWidgetName(pills));
 
+                    // we have added the widgets, clear the selection, ready for next time
                     adapter.clearConsumedPills();
                 }
             });
@@ -102,12 +118,13 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements AddCon
     }
 
     private String getWidgetName(Map<Pill, Integer> pills){
-        if(pills.size() == 1){
+        String customName = String.valueOf(_customText.getText());
+
+        if(pills.size() == 1 && customName.isEmpty()){
             return pills.keySet().iterator().next().getName();
         }
         else{
-            // todo: get the name the user has input
-            return "XXX";
+            return customName;
         }
     }
 
@@ -126,12 +143,33 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements AddCon
             }
         }
 
-        if(colour != -1) {
+        if(colour != -1 && _selectedColour == -1) {
             return colour;
         }
         else{
-            // todo: return the colour the user has set
-            return Color.BLACK;
+            return _selectedColour;
+        }
+    }
+
+    private void setupColourIndicators() {
+        if(_colourContainer != null) {
+            for (int i = 0; i < _colourContainer.getChildCount(); i++) {
+                ColourIndicator ci = (ColourIndicator) _colourContainer.getChildAt(i);
+
+                if (ci == null)
+                    continue;
+
+                ci.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        _selectedColour = ((ColourIndicator) view).getColour();
+                        setupColourIndicators();
+                    }
+                });
+                int colour = ci.getColour();
+
+                ci.setColour(colour, false, colour == _selectedColour);
+            }
         }
     }
 

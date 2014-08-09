@@ -156,7 +156,7 @@
     <string name="pref_title_display">Display</string>
     <string name="chooseTheme">Theme</string>
     <string name="medicationListOrder">Medicine Sort Order</string>
-    <string name="add_widget_title">Select medicine to use for this widget</string>
+    <string name="add_widget_title">Select medicine(s) to use for this widget</string>
     <string name="dialog_change_theme">We have introduced a new \"Simple\" theme in this update, would you like to try it? \n\nIf you would like to switch back to the old theme, you can do so from the settings page.</string>
     <string name="dialog_change_theme_yes">Yes, use new theme</string>
     <string name="dialog_change_theme_no">No, use old theme</string>

@@ -114,13 +114,6 @@ public class
                 holder.units.setVisibility(View.VISIBLE);
             }
             holder.color.setColour(pill.getColour());
-            /*if (State.getSingleton().getOpenPills().containsKey(pill)) {
-                v = open(v);
-                holder.amount.setText(State.getSingleton().getOpenPills().get(pill).toString());
-            }
-            else {
-                v = close(v);
-            }*/
 
             Consumption latest = pill.getLatestConsumption(_context);
             if(latest != null){
@@ -136,37 +129,6 @@ public class
         add.setOnClickListener(new buttonClick(true, holder.amount, position, this));
         View minus = v.findViewById(R.id.add_consumption_minus);
         minus.setOnClickListener(new buttonClick(false, holder.amount, position, this));
-        return v;
-    }
-
-    private View open(View v) {
-        int backgroundColor = _context.getResources().getColor(State.getSingleton().getTheme().getSelectedBackgroundColourResourceId());
-        v.setBackgroundColor(backgroundColor);
-        View view = v.findViewById(R.id.add_consumption_after_click_layout);
-        if(view != null){
-            view.bringToFront();
-            view.setBackgroundColor(backgroundColor);
-            View rightLayout = v.findViewById(R.id.add_consumption_right_info);
-            rightLayout.setBackgroundColor(backgroundColor);
-            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-            if(layoutParams != null)
-                layoutParams.width = (int) LayoutHelper.dpToPx(_context, 125);
-        }
-        return v;
-    }
-
-    private View close(View v) {
-        int backgroundColor = _context.getResources().getColor(android.R.color.transparent);
-        v.setBackgroundColor(backgroundColor);
-        View view = v.findViewById(R.id.add_consumption_after_click_layout);
-        if(view != null){
-            view.setBackgroundColor(backgroundColor);
-            View rightLayout = v.findViewById(R.id.add_consumption_right_info);
-            rightLayout.setBackgroundColor(backgroundColor);
-            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-            if(layoutParams != null)
-                layoutParams.width = (int) LayoutHelper.dpToPx(_context, 0);
-        }
         return v;
     }
 
@@ -244,7 +206,6 @@ public class
                 State.getSingleton().getOpenPills().put(pill, value + 1);
                 _amount.setText(String.valueOf(amount));
                 _adapter.addConsumedPill(pill);
-
             }
             else {
                 int amount = Integer.parseInt(_amount.getText().toString()) - 1;
