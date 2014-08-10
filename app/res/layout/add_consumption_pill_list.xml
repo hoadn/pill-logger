@@ -6,6 +6,7 @@
     android:layout_height="@dimen/add_consumption_pill_list_item_height"
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
+    android:id="@+id/pill_list_item"
     tools:layout_height="@dimen/add_consumption_pill_list_item_height">
 
     <uk.co.pilllogger.views.ColourIndicator

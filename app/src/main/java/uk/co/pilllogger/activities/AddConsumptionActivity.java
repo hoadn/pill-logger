@@ -57,7 +57,6 @@ import uk.co.pilllogger.helpers.AlarmHelper;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
-import uk.co.pilllogger.listeners.AddConsumptionPillItemClickListener;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
@@ -100,11 +99,6 @@ public class AddConsumptionActivity extends FragmentActivity implements
     RadioGroup _choosePillRadioGroup;
     RadioGroup _dateRadioGroup;
     private RadioGroup _reminderRadioGroup;
-
-    private DatePickerDialog _startDateDialog;
-    private DatePickerDialog _endDateDialog;
-    DatePickerDialog.OnDateSetListener _endDateListener;
-    DatePickerDialog.OnDateSetListener _startDateListener;
 
     Date _consumptionDate = new Date();
     Date _reminderDate = new Date();
@@ -193,7 +187,7 @@ public class AddConsumptionActivity extends FragmentActivity implements
         });
 
         View addPillCompleted = findViewById(R.id.pill_fragment_add_pill_completed);
-        addPillCompleted.setOnClickListener(new addNewPillClickListener());
+        addPillCompleted.setOnClickListener(new AddNewPillClickListener());
 
         _newPillSize.setOnEditorActionListener(new TextView.OnEditorActionListener(){
             @Override
@@ -659,7 +653,7 @@ public class AddConsumptionActivity extends FragmentActivity implements
         }
     }
 
-    private class addNewPillClickListener implements View.OnClickListener {
+    private class AddNewPillClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {

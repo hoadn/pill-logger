@@ -5,6 +5,7 @@ package uk.co.pilllogger.adapters;
  */
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,6 +87,7 @@ public class
                 holder.units = (TextView) v.findViewById(R.id.pill_list_units);
                 holder.lastTaken = (TextView) v.findViewById(R.id.pill_list_last_taken);
                 holder.color = (ColourIndicator) v.findViewById(R.id.add_consumption_pill_colour);
+
                 Typeface typeface = State.getSingleton().getTypeface();
                 holder.name.setTypeface(typeface);
                 holder.size.setTypeface(typeface);
@@ -126,9 +128,9 @@ public class
             }
         }
         View add = v.findViewById(R.id.add_consumption_add);
-        add.setOnClickListener(new buttonClick(true, holder.amount, position, this));
+        add.setOnClickListener(new buttonClick(true, holder.amount, holder.container, position, this));
         View minus = v.findViewById(R.id.add_consumption_minus);
-        minus.setOnClickListener(new buttonClick(false, holder.amount, position, this));
+        minus.setOnClickListener(new buttonClick(false, holder.amount, holder.container, position, this));
         return v;
     }
 
@@ -185,12 +187,14 @@ public class
 
         private boolean _add;
         private TextView _amount;
+        private final View _row;
         private int _position;
         private AddConsumptionPillListAdapter _adapter;
 
-        public buttonClick(boolean add, TextView amount, int position, AddConsumptionPillListAdapter adapter) {
+        public buttonClick(boolean add, TextView amount, View row, int position, AddConsumptionPillListAdapter adapter) {
             _add = add;
             _amount = amount;
+            _row = row;
             _position = position;
             _adapter = adapter;
         }
@@ -201,19 +205,27 @@ public class
             Integer value = State.getSingleton().getOpenPills().get(pill);
             if(value == null) value = 0;
 
+            int amount;
             if (_add) {
-                int amount = Integer.parseInt(_amount.getText().toString()) + 1;
+                amount = Integer.parseInt(_amount.getText().toString()) + 1;
                 State.getSingleton().getOpenPills().put(pill, value + 1);
                 _amount.setText(String.valueOf(amount));
                 _adapter.addConsumedPill(pill);
             }
             else {
-                int amount = Integer.parseInt(_amount.getText().toString()) - 1;
+                amount = Integer.parseInt(_amount.getText().toString()) - 1;
                 if (amount >= 0 && value > 0) {
                     State.getSingleton().getOpenPills().put(pill, value - 1);
                     _amount.setText(String.valueOf(amount));
                     _adapter.removeConsumedPill(pill);
                 }
+            }
+
+            if(amount > 0){
+                _row.setBackgroundColor(_context.getResources().getColor(R.color.highlight_blue));
+            }
+            else{
+                _row.setBackgroundColor(Color.TRANSPARENT);
             }
         }
     }
