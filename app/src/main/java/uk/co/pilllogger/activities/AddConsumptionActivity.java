@@ -97,7 +97,6 @@ public class AddConsumptionActivity extends FragmentActivity implements
     private Spinner _reminderTimeSpinner;
 
     RadioGroup _choosePillRadioGroup;
-    RadioGroup _dateRadioGroup;
     private RadioGroup _reminderRadioGroup;
 
     Date _consumptionDate = new Date();
@@ -291,18 +290,6 @@ public class AddConsumptionActivity extends FragmentActivity implements
                     showSelectPillOptions();
                 } else {
                     showNewPillOptions();
-                }
-            }
-        });
-
-        _dateRadioGroup = (RadioGroup) findViewById(R.id.add_consumption_time_type_selection);
-        _dateRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                View datePickers = findViewById(R.id.add_consumption_date_pickers_layout);
-                if (checkedId == R.id.add_consumption_select_select_now) {
-                    datePickers.setVisibility(View.GONE);
-                } else {
-                    datePickers.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -510,9 +497,8 @@ public class AddConsumptionActivity extends FragmentActivity implements
             }
         });
 
-        _adapter = new AddConsumptionPillListAdapter(this, this, R.layout.add_consumption_pill_list, event.getPills());
+        _adapter = new AddConsumptionPillListAdapter(this, this, R.layout.add_consumption_pill_list, event.getPills(), true);
          _pillsList.setAdapter(_adapter);
-        //_pillsList.setOnItemClickListener(new AddConsumptionPillItemClickListener(this, (AddConsumptionPillListAdapter)_pillsList.getAdapter()));
 
         _adapter.updateAdapter(event.getPills());
     }
@@ -563,15 +549,10 @@ public class AddConsumptionActivity extends FragmentActivity implements
         AddConsumptionPillListAdapter adapter = (AddConsumptionPillListAdapter) _pillsList.getAdapter();
         List<Pill> consumptionPills = adapter.getPillsConsumed();
 
-        Date consumptionDate = new Date();
+        Date consumptionDate = getDateFromSpinners(_dateSpinner, _timeSpinner, new Date());
         String consumptionGroup = UUID.randomUUID().toString();
         Date reminderDate = null;
-        RadioButton dateSelectorNow = (RadioButton) findViewById(R.id.add_consumption_select_select_now);
         RadioButton reminderDateSelectorHours = (RadioButton)findViewById(R.id.add_consumption_select_reminder_hours);
-        if (!dateSelectorNow.isChecked()) {
-            consumptionDate = getDateFromSpinners(_dateSpinner, _timeSpinner, new Date());
-        }
-
 
         if(_reminderToggle.isChecked()){
             if(!reminderDateSelectorHours.isChecked()){

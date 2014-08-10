@@ -169,30 +169,11 @@
         android:id="@+id/add_consumption_select_time_title_divider"
         android:layout_height="1dp"
         android:layout_width="match_parent"
-        android:layout_above="@+id/add_consumption_time_type_selection"
+        android:layout_above="@+id/add_consumption_date_pickers_layout"
         android:layout_margin="5dp"
         android:background="#CCCCCC" />
 
-    <RadioGroup
-        android:id="@+id/add_consumption_time_type_selection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/add_consumption_date_pickers_layout"
-        android:orientation="horizontal">
-        <RadioButton android:id="@+id/add_consumption_select_select_now"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:checked="true"
-            android:text="@string/now"
-            style="?DefaultText"/>
-        <RadioButton android:id="@+id/add_consumption_select_select_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="@string/add_consumption_time_select_date_label"
-            style="?DefaultText"/>
-    </RadioGroup>
+
     <LinearLayout
         android:id="@+id/add_consumption_date_pickers_layout"
         android:layout_width="match_parent"
@@ -202,7 +183,7 @@
         android:layout_marginTop="5dp"
         android:paddingBottom="10dp"
         android:orientation="horizontal"
-        android:visibility="gone"
+        android:visibility="visible"
         android:baselineAligned="false">
 
         <LinearLayout
@@ -252,7 +233,7 @@
         android:layout_width="wrap_content"
         android:padding="7dp"
         android:text="@string/add_consumption_reminder_title"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="0dp"
         android:layout_marginLeft="0dp"
         android:textAllCaps="true"
         style="?SecondaryText"/>

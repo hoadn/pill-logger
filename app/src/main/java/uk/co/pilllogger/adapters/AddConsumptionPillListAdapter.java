@@ -12,9 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.Optional;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
@@ -28,14 +32,15 @@ import uk.co.pilllogger.views.ColourIndicator;
 /**
  * Created by nick on 22/10/13.
  */
-public class
-        AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
+public class AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
 
+    private static final int NEW = 0;
+    private static final int EXISTING = 1;
     private List<Pill> _pills;
     private IConsumptionSelected _consumptionSelectedListener;
     private Context _context;
     private int _resourceId;
-
+    private final boolean _showNewPill;
 
     public void addOpenPill(Pill pill) {
         State.getSingleton().addOpenPill(pill);
@@ -54,91 +59,155 @@ public class
         _consumptionSelectedListener.setDoneEnabled(false);
     }
 
-    public AddConsumptionPillListAdapter(Context context, IConsumptionSelected activity, int textViewResourceId, List<Pill> pills) {
+    public AddConsumptionPillListAdapter(Context context, IConsumptionSelected activity, int textViewResourceId, List<Pill> pills, boolean showNewPill) {
         super(context, textViewResourceId, pills);
         _consumptionSelectedListener = activity;
         _context = context;
         _pills = pills;
         _resourceId = textViewResourceId;
+        _showNewPill = showNewPill;
     }
 
     public static class ViewHolder {
-        public TextView name;
-        public TextView size;
-        public TextView units;
-        public TextView lastTaken;
-        public View buttonLayout;
         public View container;
-        public TextView amount;
-        public ColourIndicator color;
+
+        public ViewHolder(View view) {
+            container = view;
+        }
+    }
+
+    public static class NewViewHolder extends ViewHolder{
+        @InjectView(R.id.pill_list_create_new) public TextView create_new;
+
+        public NewViewHolder(View view){
+            super(view);
+            ButterKnife.inject(this, view);
+            setTypeFace();
+        }
+
+        private void setTypeFace(){
+            Typeface typeface = State.getSingleton().getTypeface();
+            create_new.setTypeface(typeface);
+        }
+    }
+
+    public static class ExistingViewHolder extends ViewHolder {
+        @InjectView(R.id.pill_list_name) public TextView name;
+        @InjectView(R.id.pill_list_size) public TextView size;
+        @InjectView(R.id.pill_list_units) public TextView units;
+        @InjectView(R.id.pill_list_last_taken) public TextView lastTaken;
+        @InjectView(R.id.add_consumption_after_click_layout) public View buttonLayout;
+        @InjectView(R.id.add_consumption_amount) public TextView amount;
+        @InjectView(R.id.add_consumption_pill_colour) public ColourIndicator color;
+
+        public ExistingViewHolder(View view){
+            super(view);
+            ButterKnife.inject(this, view);
+            setTypeFace();
+        }
+
+        private void setTypeFace(){
+            Typeface typeface = State.getSingleton().getTypeface();
+            name.setTypeface(typeface);
+            size.setTypeface(typeface);
+            units.setTypeface(typeface);
+            lastTaken.setTypeface(typeface);
+        }
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
         ViewHolder holder = null;
+        int rowType = getItemViewType(position);
+
         if (v == null) {
             LayoutInflater inflater = (LayoutInflater)_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(_resourceId, null);
-            if(v != null){
-                holder = new ViewHolder();
-                holder.name = (TextView) v.findViewById(R.id.pill_list_name);
-                holder.size = (TextView) v.findViewById(R.id.pill_list_size);
-                holder.units = (TextView) v.findViewById(R.id.pill_list_units);
-                holder.lastTaken = (TextView) v.findViewById(R.id.pill_list_last_taken);
-                holder.color = (ColourIndicator) v.findViewById(R.id.add_consumption_pill_colour);
 
-                Typeface typeface = State.getSingleton().getTypeface();
-                holder.name.setTypeface(typeface);
-                holder.size.setTypeface(typeface);
-                holder.units.setTypeface(typeface);
-                holder.lastTaken.setTypeface(typeface);
-                holder.buttonLayout = v.findViewById(R.id.add_consumption_after_click_layout);
-                holder.container = v;
-                holder.amount = (TextView) v.findViewById(R.id.add_consumption_amount);
-                v.setTag(holder);
+            switch (rowType){
+                case NEW:
+                    v = inflater.inflate(R.layout.add_consumption_pill_list_new, null);
+                    if(v != null){
+                        holder = new NewViewHolder(v);
+                        v.setTag(holder);
+                    }
+                    break;
+
+                case EXISTING:
+                    v = inflater.inflate(_resourceId, null);
+                    if(v != null){
+                        holder = new ExistingViewHolder(v);
+                        v.setTag(holder);
+                    }
+                    break;
             }
         }
         else
-            holder=(ViewHolder) v.getTag();
+            holder = (ViewHolder)v.getTag();
 
-        Pill pill = _pills.get(position);
-        if (pill != null && holder != null) {
-            holder.name.setText(pill.getName());
-            if(pill.getSize() <= 0){
-                holder.size.setVisibility(View.INVISIBLE);
-                holder.units.setVisibility(View.INVISIBLE);
-            }
-            else{
-                holder.size.setText(NumberHelper.getNiceFloatString(pill.getSize()));
-                holder.units.setText(pill.getUnits());
-                holder.size.setVisibility(View.VISIBLE);
-                holder.units.setVisibility(View.VISIBLE);
-            }
-            holder.color.setColour(pill.getColour());
+        switch(rowType) {
+            case NEW:
+                holder.container.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(_context, "Testing", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
 
-            Consumption latest = pill.getLatestConsumption(_context);
-            if(latest != null){
-                String prefix = _context.getString(R.string.last_taken_message_prefix);
-                String lastTaken = DateHelper.getRelativeDateTime(_context, latest.getDate());
-                holder.lastTaken.setText(prefix + " " + lastTaken);
-            }
-            else{
-                holder.lastTaken.setText(_context.getString(R.string.no_consumptions_message));
-            }
+            case EXISTING:
+                ExistingViewHolder existingViewHolder = (ExistingViewHolder) holder;
+                Pill pill = _pills.get(position);
+                if (pill != null && holder != null) {
+                    existingViewHolder.name.setText(pill.getName());
+                    if (pill.getSize() <= 0) {
+                        existingViewHolder.size.setVisibility(View.INVISIBLE);
+                        existingViewHolder.units.setVisibility(View.INVISIBLE);
+                    } else {
+                        existingViewHolder.size.setText(NumberHelper.getNiceFloatString(pill.getSize()));
+                        existingViewHolder.units.setText(pill.getUnits());
+                        existingViewHolder.size.setVisibility(View.VISIBLE);
+                        existingViewHolder.units.setVisibility(View.VISIBLE);
+                    }
+                    existingViewHolder.color.setColour(pill.getColour());
+
+                    Consumption latest = pill.getLatestConsumption(_context);
+                    if (latest != null) {
+                        String prefix = _context.getString(R.string.last_taken_message_prefix);
+                        String lastTaken = DateHelper.getRelativeDateTime(_context, latest.getDate());
+                        existingViewHolder.lastTaken.setText(prefix + " " + lastTaken);
+                    } else {
+                        existingViewHolder.lastTaken.setText(_context.getString(R.string.no_consumptions_message));
+                    }
+                }
+                View add = v.findViewById(R.id.add_consumption_add);
+                add.setOnClickListener(new buttonClick(true, existingViewHolder.amount, holder.container, position, this));
+                View minus = v.findViewById(R.id.add_consumption_minus);
+                minus.setOnClickListener(new buttonClick(false, existingViewHolder.amount, holder.container, position, this));
+
         }
-        View add = v.findViewById(R.id.add_consumption_add);
-        add.setOnClickListener(new buttonClick(true, holder.amount, holder.container, position, this));
-        View minus = v.findViewById(R.id.add_consumption_minus);
-        minus.setOnClickListener(new buttonClick(false, holder.amount, holder.container, position, this));
         return v;
     }
 
     @Override
     public int getCount() {
-        if (_pills != null)
-            return _pills.size();
-        return 0;
+        int count = 0;
+
+        if (_pills != null) {
+            count = _pills.size();
+        }
+
+        return _showNewPill ? count + 1 : count;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position == _pills.size() ? NEW : EXISTING;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
     }
 
     public void updateAdapter(List<Pill> pills) {
