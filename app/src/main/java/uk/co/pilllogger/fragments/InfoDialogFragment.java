@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import uk.co.pilllogger.R;
 import uk.co.pilllogger.models.Pill;
 
 
@@ -34,11 +35,7 @@ public abstract class InfoDialogFragment extends PillLoggerFragmentBase{
         if(activity == null)
             return null;
 
-        View view = inflater.inflate(getLayoutId(), container, false);
-
-        if(view == null)
-            return null;
-
-        return view;
+        return inflater.inflate(getLayoutId(), container, false);
     }
 }
+

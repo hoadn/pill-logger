@@ -196,6 +196,7 @@
     <string name="thirty_day_short_hand">30d</string>
     <string name="twenty_four_hour_short_hand">24h: </string>
     <string name="edit_pill_fragment_title">Edit Medicine</string>
+    <string name="new_pill_fragment_title">New Medicine</string>
     <string name="edit_pill_summary_text">Edit name, dosage, colour etc.</string>
     <string name="info_dialog_take_again">Take again</string>
 </resources>

@@ -5,6 +5,7 @@ package uk.co.pilllogger.adapters;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -12,16 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.Optional;
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.activities.DialogActivity;
 import uk.co.pilllogger.helpers.DateHelper;
-import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -115,6 +114,12 @@ public class AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
         }
     }
 
+    private void showNewPillDialog() {
+        Intent intent = new Intent(_context, DialogActivity.class);
+        intent.putExtra("DialogType", DialogActivity.DialogType.NewPill.ordinal());
+        _context.startActivity(intent);
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
@@ -150,7 +155,7 @@ public class AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
                 holder.container.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(_context, "Testing", Toast.LENGTH_SHORT).show();
+                        showNewPillDialog();
                     }
                 });
                 break;

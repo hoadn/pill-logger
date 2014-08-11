@@ -3,8 +3,10 @@ package uk.co.pilllogger.tasks;
 import android.app.Activity;
 import android.os.AsyncTask;
 
+import uk.co.pilllogger.events.CreatedPillEvent;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
+import uk.co.pilllogger.state.State;
 
 /**
  * Created by nick on 22/10/13.
@@ -37,6 +39,8 @@ public class InsertPillTask extends AsyncTask<Void, Void, Void> {
         if (_listener != null) {
             Pill pill = PillRepository.getSingleton(_activity).get((int)_pillId);
             _listener.pillInserted(pill);
+
+            State.getSingleton().getBus().post(new CreatedPillEvent(pill));
         }
 
     }

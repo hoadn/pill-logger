@@ -52,6 +52,7 @@ import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.events.CreatedPillEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.helpers.AlarmHelper;
 import uk.co.pilllogger.helpers.DateHelper;
@@ -72,7 +73,6 @@ import uk.co.pilllogger.views.ColourIndicator;
  * Created by nick on 24/10/13.
  */
 public class AddConsumptionActivity extends FragmentActivity implements
-        InsertPillTask.ITaskComplete,
         DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener,
         GetTutorialSeenTask.ITaskComplete,
@@ -607,13 +607,14 @@ public class AddConsumptionActivity extends FragmentActivity implements
         }
     }
 
-
-    @Override
-    public void pillInserted(Pill pill) {
+    @Subscribe
+    public void pillInserted(CreatedPillEvent event) {
         if (_adapter != null) {
+            _addedPills.add(event.getPill());
+
             new GetPillsTask(_activity).execute();
-            _adapter.addOpenPill(pill);
-            _adapter.addConsumedPill(pill);
+            _adapter.addOpenPill(event.getPill());
+            _adapter.addConsumedPill(event.getPill());
 
             LayoutHelper.hideKeyboard(this);
         }

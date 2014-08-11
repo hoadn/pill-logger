@@ -20,10 +20,12 @@ import com.squareup.otto.Subscribe;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import butterknife.InjectView;
 import hugo.weaving.DebugLog;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.fragments.ConsumptionInfoDialogFragment;
+import uk.co.pilllogger.fragments.NewPillDialogFragment;
 import uk.co.pilllogger.fragments.PillInfoDialogFragment;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.NumberHelper;
@@ -33,6 +35,7 @@ import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.views.ColourIndicator;
+import static butterknife.ButterKnife.findById;
 
 /**
  * Created by Alex on 22/05/2014
@@ -56,6 +59,7 @@ public class DialogActivity extends FragmentActivity{
     private TextView _lastTaken;
     private TextView _dosage;
     private Bus _bus;
+    private ViewGroup _dialogTop;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,12 +84,13 @@ public class DialogActivity extends FragmentActivity{
             layoutParams.width = (int) (width * 0.9);
         }
 
-        setFragment();
-
         _colour = (ColourIndicator)findViewById(R.id.colour);
         _title = (TextView) findViewById(R.id.info_dialog_title);
         _lastTaken = (TextView) findViewById(R.id.info_dialog_last_taken);
         _dosage = (TextView) findViewById(R.id.info_dialog_dosage);
+        _dialogTop = findById(this, R.id.info_dialog_top);
+
+        setFragment();
 
         Typeface typeface = State.getSingleton().getTypeface();
         _title.setTypeface(typeface);
@@ -156,6 +161,11 @@ public class DialogActivity extends FragmentActivity{
                     break;
                 case Pill:
                     fragment = new PillInfoDialogFragment(_pill);
+                    break;
+
+                case NewPill:
+                    _dialogTop.setVisibility(View.GONE);
+                    fragment = new NewPillDialogFragment();
                     break;
             }
         }
@@ -263,6 +273,6 @@ public class DialogActivity extends FragmentActivity{
 
     public enum DialogType{
         Consumption,
-        Pill
+        NewPill, Pill
     }
 }
