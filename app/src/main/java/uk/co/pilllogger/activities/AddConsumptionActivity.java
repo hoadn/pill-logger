@@ -284,16 +284,6 @@ public class AddConsumptionActivity extends FragmentActivity implements
     }
 
     private void setUpRadioGroups() {
-        _choosePillRadioGroup = (RadioGroup) findViewById(R.id.add_consumption_pill_type_selection);
-        _choosePillRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.add_consumption_select_select_pill) {
-                    showSelectPillOptions();
-                } else {
-                    showNewPillOptions();
-                }
-            }
-        });
 
         _reminderRadioGroup = (RadioGroup) findViewById(R.id.add_consumption_reminder_type_selection);
         _reminderRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -315,18 +305,6 @@ public class AddConsumptionActivity extends FragmentActivity implements
                 }
             }
         });
-    }
-
-    private void showNewPillOptions(){
-        _selectPillLayout.setVisibility(View.GONE);
-        _newPillLayout.setVisibility(View.VISIBLE);
-        _choosePillRadioGroup.check(R.id.add_consumption_select_new_pill);
-    }
-
-    private void showSelectPillOptions(){
-        _newPillLayout.setVisibility(View.GONE);
-        _selectPillLayout.setVisibility(View.VISIBLE);
-        _choosePillRadioGroup.check(R.id.add_consumption_select_select_pill);
     }
 
     private void setUpSpinners() {
@@ -462,13 +440,6 @@ public class AddConsumptionActivity extends FragmentActivity implements
 
     @Subscribe @DebugLog
     public void pillsReceived(LoadedPillsEvent event) {
-        if(event.getPills().size() == 0){
-            showNewPillOptions();
-        }
-        else{
-            showSelectPillOptions();
-        }
-
         /*
         Sorts pill collection based on its last consumption date
          */
@@ -670,9 +641,6 @@ public class AddConsumptionActivity extends FragmentActivity implements
 
             _newPillLayout.setVisibility(View.GONE);
             _selectPillLayout.setVisibility(View.VISIBLE);
-
-            RadioButton selectPill = (RadioButton) findViewById(R.id.add_consumption_select_select_pill);
-            selectPill.setChecked(true);
         }
     }
 

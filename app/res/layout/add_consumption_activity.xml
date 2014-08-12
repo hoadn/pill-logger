@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
+    android:orientation="vertical"
     style="?AddConsumptionBackground">
-    <RelativeLayout
-        android:id="@+id/main_gradient"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        style="?attr/AddConsumptionGradient">
     <LinearLayout
         android:id="@+id/add_consumption_top_buttons"
         android:layout_height="50dp"
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:background="@color/done_cancel_grey">
-
         <LinearLayout
             android:id="@+id/add_consumption_cancel_layout"
             android:layout_height="match_parent"
@@ -29,14 +24,12 @@
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:onClick="cancel">
-
             <ImageView
                 android:id="@+id/add_consumption_cancel_icon"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:gravity="center_vertical"
                 android:src="@drawable/cross_light"/>
-
             <TextView
                 android:id="@+id/add_consumption_cancel_text"
                 android:layout_height="match_parent"
@@ -87,10 +80,8 @@
 
     </LinearLayout>
 
-
     <TextView
         android:id="@+id/add_consumption_select_pill_title"
-        android:layout_below="@id/add_consumption_top_buttons"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:text="@string/add_consumption_title"
@@ -102,36 +93,14 @@
         android:id="@+id/add_consumption_select_pill_title_divider"
         android:layout_height="1dp"
         android:layout_width="match_parent"
-        android:layout_below="@id/add_consumption_select_pill_title"
         android:layout_margin="5dp"
         android:background="#CCCCCC" />
-    <RadioGroup
-        android:id="@+id/add_consumption_pill_type_selection"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/add_consumption_select_pill_title_divider"
-        android:orientation="horizontal">
-        <RadioButton android:id="@+id/add_consumption_select_select_pill"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:checked="true"
-            style="?DefaultText"
-            android:text="@string/add_consumption_existing_pill_label"/>
-        <RadioButton android:id="@+id/add_consumption_select_new_pill"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            style="?DefaultText"
-            android:text="@string/new_pill_label"/>
-    </RadioGroup>
 
     <LinearLayout
         android:id="@+id/add_consumption_select_pill_layout"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_above="@+id/add_consumption_select_time_title"
-        android:layout_below="@id/add_consumption_pill_type_selection"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:orientation="vertical">
@@ -157,7 +126,6 @@
 <!-- TIME -->
     <TextView
         android:id="@+id/add_consumption_select_time_title"
-        android:layout_above="@+id/add_consumption_select_time_title_divider"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:text="@string/add_consumption_time_title"
@@ -169,16 +137,13 @@
         android:id="@+id/add_consumption_select_time_title_divider"
         android:layout_height="1dp"
         android:layout_width="match_parent"
-        android:layout_above="@+id/add_consumption_date_pickers_layout"
         android:layout_margin="5dp"
         android:background="#CCCCCC" />
-
 
     <LinearLayout
         android:id="@+id/add_consumption_date_pickers_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/add_consumption_set_reminder_title"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:paddingBottom="10dp"
@@ -220,15 +185,11 @@
     </LinearLayout>
 
     <!-- REMINDER -->
-    <CheckBox
-        android:id="@+id/add_consumption_set_reminder_toggle"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/add_consumption_set_reminder_title_divider"
-        android:layout_toRightOf="@+id/add_consumption_set_reminder_title"/>
+        android:layout_height="wrap_content">
     <TextView
         android:id="@+id/add_consumption_set_reminder_title"
-        android:layout_above="@+id/add_consumption_set_reminder_title_divider"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:padding="7dp"
@@ -237,11 +198,15 @@
         android:layout_marginLeft="0dp"
         android:textAllCaps="true"
         style="?SecondaryText"/>
+        <CheckBox
+            android:id="@+id/add_consumption_set_reminder_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
     <View
         android:id="@+id/add_consumption_set_reminder_title_divider"
         android:layout_height="1dp"
         android:layout_width="match_parent"
-        android:layout_above="@+id/add_consumption_reminder_type_selection"
         android:layout_margin="5dp"
         android:background="#CCCCCC" />
 
@@ -249,7 +214,6 @@
         android:id="@+id/add_consumption_reminder_type_selection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/add_consumption_reminder_layout"
         android:orientation="horizontal">
         <RadioButton android:id="@+id/add_consumption_select_reminder_hours"
                      android:layout_width="wrap_content"
@@ -271,81 +235,79 @@
         android:id="@+id/add_consumption_reminder_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:visibility="invisible">
-    <LinearLayout
-        android:id="@+id/add_consumption_reminder_hours_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingTop="3dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:text="@string/add_consumption_hours_prefix"
-            android:textSize="16sp"/>
-        <EditText
-            android:id="@+id/add_consumption_reminder_hours"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint="@string/add_consumption_hours_hint"/>
-        <TextView
-            android:id="@+id/add_consumption_reminder_hours_suffix"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add_consumption_hours_suffix"
-            android:textSize="16sp"/>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/add_consumption_reminder_date_pickers_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:paddingBottom="10dp"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:baselineAligned="false">
-
         <LinearLayout
-            android:id="@+id/add_consumption_reminder_date_container"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:id="@+id/add_consumption_reminder_hours_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <Spinner
-                android:id="@+id/add_consumption_reminder_date"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="15dp"
-                android:clickable="false"
-                android:textSize="18sp"
-                android:textColor="@color/text_grey"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/add_consumption_reminder_time_container"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <Spinner
-                android:id="@+id/add_consumption_reminder_time"
-                android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingTop="3dp">
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:clickable="false"
-                android:textSize="18sp"
-                android:textColor="@color/text_grey"/>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:text="@string/add_consumption_hours_prefix"
+                android:textSize="16sp"/>
+            <EditText
+                android:id="@+id/add_consumption_reminder_hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint="@string/add_consumption_hours_hint"/>
+            <TextView
+                android:id="@+id/add_consumption_reminder_hours_suffix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_consumption_hours_suffix"
+                android:textSize="16sp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/add_consumption_reminder_date_pickers_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:paddingBottom="10dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:id="@+id/add_consumption_reminder_date_container"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <Spinner
+                    android:id="@+id/add_consumption_reminder_date"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:clickable="false"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_grey"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/add_consumption_reminder_time_container"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <Spinner
+                    android:id="@+id/add_consumption_reminder_time"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:clickable="false"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_grey"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-    </LinearLayout>
-        </RelativeLayout>
-</RelativeLayout>
+</LinearLayout>
