@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
@@ -459,7 +460,7 @@ public class AddConsumptionActivity extends FragmentActivity implements
         reminderTimePickerContainer.setOnClickListener(timeListener);
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void pillsReceived(LoadedPillsEvent event) {
         if(event.getPills().size() == 0){
             showNewPillOptions();
@@ -607,7 +608,7 @@ public class AddConsumptionActivity extends FragmentActivity implements
         }
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void pillInserted(CreatedPillEvent event) {
         if (_adapter != null) {
             _addedPills.add(event.getPill());

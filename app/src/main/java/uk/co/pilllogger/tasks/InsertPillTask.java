@@ -36,13 +36,12 @@ public class InsertPillTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
+        Pill pill = PillRepository.getSingleton(_activity).get((int)_pillId);
         if (_listener != null) {
-            Pill pill = PillRepository.getSingleton(_activity).get((int)_pillId);
             _listener.pillInserted(pill);
-
-            State.getSingleton().getBus().post(new CreatedPillEvent(pill));
         }
 
+        State.getSingleton().getBus().post(new CreatedPillEvent(pill));
     }
 
     public interface ITaskComplete{
