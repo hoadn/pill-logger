@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -238,7 +239,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
                     holder.quantity.setText(String.valueOf(consumption.getQuantity()));
                     holder.consumption = consumption;
 
-                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.container.getLayoutParams();
+                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) holder.container.getLayoutParams();
                     DateTime currentDate = new DateTime(consumption.getDate());
 
                     holder.dayText.setText("");

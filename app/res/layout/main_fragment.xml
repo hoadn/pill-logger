@@ -36,12 +36,12 @@
     <ListView
         android:id="@+id/main_consumption_list"
         android:layout_width="match_parent"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="@dimen/list_divider_height"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
         android:layout_height="match_parent"
         android:layout_marginTop="0dp"
         android:layout_below="@id/consumption_fragment_title"
-        tools:visibility="gone"
+        tools:visibility="visible"
         tools:listitem="@layout/consumption_list_item"/>
 
 
