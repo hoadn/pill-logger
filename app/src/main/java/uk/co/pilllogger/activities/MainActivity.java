@@ -224,27 +224,31 @@ public class MainActivity extends PillLoggerActivityBase implements
                     for (FeatureType featureType : FeatureType.values()) {
                         features.add(featureType.toString());
                     }
-                    _billingHelper.queryInventoryAsync(true, features, new IabHelper.QueryInventoryFinishedListener() {
-                        @Override
-                        public void onQueryInventoryFinished(IabResult result, final Inventory inv) {
-                            if (result.isFailure() || inv == null) {
-                                Timber.e("Querying billing inventory failed: " + result.getMessage());
-                            }
-                            else {
-                                for (FeatureType feature : FeatureType.values()) {
-                                    SkuDetails skuDetails = inv.getSkuDetails(feature.toString());
-                                    if (skuDetails == null) {
-                                        continue;
-                                    }
-                                    State.getSingleton().getAvailableFeatures().put(feature, skuDetails);
+                    try {
+                        _billingHelper.queryInventoryAsync(true, features, new IabHelper.QueryInventoryFinishedListener() {
+                            @Override
+                            public void onQueryInventoryFinished(IabResult result, final Inventory inv) {
+                                if (result.isFailure() || inv == null) {
+                                    Timber.e("Querying billing inventory failed: " + result.getMessage());
+                                } else {
+                                    for (FeatureType feature : FeatureType.values()) {
+                                        SkuDetails skuDetails = inv.getSkuDetails(feature.toString());
+                                        if (skuDetails == null) {
+                                            continue;
+                                        }
+                                        State.getSingleton().getAvailableFeatures().put(feature, skuDetails);
 
-                                    if (inv.hasPurchase(feature.toString())) {
-                                        State.getSingleton().getEnabledFeatures().add(feature);
+                                        if (inv.hasPurchase(feature.toString())) {
+                                            State.getSingleton().getEnabledFeatures().add(feature);
+                                        }
                                     }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
+                    catch(IllegalStateException ise){
+                        Timber.e(ise, "Problem setting up In-app Billing");
+                    }
                 }
             }
         });
