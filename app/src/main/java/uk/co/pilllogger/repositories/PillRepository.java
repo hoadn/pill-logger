@@ -12,9 +12,9 @@ import com.squareup.otto.Produce;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
@@ -31,7 +31,7 @@ import uk.co.pilllogger.models.Pill;
 public class PillRepository extends BaseRepository<Pill>{
     private static final String TAG = "PillRepository";
     private static PillRepository _instance;
-    private Map<Integer, Pill> _cache = new HashMap<Integer, Pill>();
+    private Map<Integer, Pill> _cache = new ConcurrentHashMap<Integer, Pill>();
     private boolean _getAllCalled = false;
 
     public boolean isCached(){
