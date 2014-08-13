@@ -22,8 +22,10 @@ public abstract class InfoDialogFragment extends PillLoggerFragmentBase{
     }
 
     public InfoDialogFragment(Pill pill) {
-        _title = pill.getName() + " " + pill.getFormattedSize() + pill.getUnits();
-        _pill = pill;
+        if(pill != null) {
+            _title = pill.getName() + " " + pill.getFormattedSize() + pill.getUnits();
+            _pill = pill;
+        }
     }
 
     protected abstract int getLayoutId();
