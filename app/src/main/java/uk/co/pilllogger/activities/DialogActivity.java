@@ -171,7 +171,7 @@ public class DialogActivity extends FragmentActivity{
         }
 
         FragmentManager fragmentManager = getFragmentManager();
-        if (fragmentManager == null){
+        if (fragmentManager == null || fragment == null){
             return;
         }
 
