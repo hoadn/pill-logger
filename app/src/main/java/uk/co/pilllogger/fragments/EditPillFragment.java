@@ -63,6 +63,7 @@ public class EditPillFragment extends PillLoggerFragmentBase {
 
         if (_pill == null) {
             activity.getFragmentManager().popBackStack();
+            return null;
         }
 
         if (editPillName != null) {
