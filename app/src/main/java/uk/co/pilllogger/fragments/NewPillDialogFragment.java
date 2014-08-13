@@ -120,7 +120,7 @@ public class NewPillDialogFragment extends PillLoggerFragmentBase {
         _newPillFavourite.setImageDrawable(getResources().getDrawable(drawable));
     }
 
-    @OnClick(R.id.new_pill_done)
+    @OnClick(R.id.new_pill_done_container)
     public void submit(){
         _newPill.setName(String.valueOf(_newPillName.getText()));
         String pillSize = _newPillSize.getText().toString();
