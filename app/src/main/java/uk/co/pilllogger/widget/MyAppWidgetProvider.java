@@ -78,9 +78,6 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             int pillId = preferences.getInt(wp, -1);
             int quantity = preferences.getInt(wq, 1);
 
-            Timber.d(wp);
-            Timber.d(wq);
-
             if(pillId == -1) {
                 continue;
             }

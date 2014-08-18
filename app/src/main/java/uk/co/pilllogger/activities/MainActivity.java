@@ -39,6 +39,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.SlidePagerAdapter;
@@ -97,6 +98,7 @@ public class MainActivity extends PillLoggerActivityBase implements
     private TutorialService _tutorialService;
     private boolean _themeChanged;
     private IabHelper _billingHelper;
+    private boolean _dialogShown = false;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -304,6 +306,11 @@ public class MainActivity extends PillLoggerActivityBase implements
     }
 
     private void showChangesDialog(){
+        if(_dialogShown){
+            return;
+        }
+
+        _dialogShown = true;
         Intent composeIntent = new Intent(this, WebViewActivity.class);
         composeIntent.putExtra(getString(R.string.key_show_feedback_button), true);
         composeIntent.putExtra(getString(R.string.key_web_address), "file:///android_asset/html/changelog.html");
@@ -483,7 +490,7 @@ public class MainActivity extends PillLoggerActivityBase implements
         this.startActivity(intent);
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void pillsReceived(LoadedPillsEvent event) {
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -491,9 +498,12 @@ public class MainActivity extends PillLoggerActivityBase implements
             int version = pInfo.versionCode;
 
             SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            Timber.d(event.getPills().size() + "");
             if(event.getPills().size() > 0) { // if they've setup a pill (ie. they are using the app). Show recent changes
                 int seenVersion = defaultSharedPreferences.getInt(getString(R.string.seenVersionKey), 0);
 
+                Timber.d("version:" + version);
+                Timber.d("seenVersion:" + seenVersion);
                 if (version > seenVersion)
                     showChangesDialog();
 
