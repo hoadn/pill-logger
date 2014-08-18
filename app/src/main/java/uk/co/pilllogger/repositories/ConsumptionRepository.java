@@ -377,6 +377,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
     @Override
     public List<Consumption> getAll() {
+        /*
         if(_consumptionsCache != null && _consumptionsCache.size() > 0) {
             ArrayList<Consumption> consumptions = new ArrayList<Consumption>(_consumptionsCache.values());
             try {
@@ -388,6 +389,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                 Timber.e(ex, "Error whilst sorting consumptions, falling back to retrieving from db");
             }
         }
+        */
 
         SQLiteDatabase db = _dbCreator.getReadableDatabase();
 

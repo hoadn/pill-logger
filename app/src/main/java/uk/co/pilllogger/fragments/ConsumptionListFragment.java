@@ -62,7 +62,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     HashMap<Integer, Pill> _allPills = new HashMap<Integer, Pill>();
     Fragment _fragment;
     Activity _activity;
-    private List<Pill> _pills;
+    private List<Pill> _pills = new ArrayList<Pill>();
     private List<Consumption> _consumptions;
     private View _loading;
 
@@ -172,6 +172,13 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         super.onResume();
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        setupPills(_pills);
+    }
+
     @Override @DebugLog
     public void consumptionsReceived(List<Consumption> consumptions) {
         _consumptions = consumptions;
@@ -264,6 +271,10 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         State.getSingleton().setGraphExcludePills(graphPills);
 
         final List<Pill> pillList = _pills;
+        setupPills(pillList);
+    }
+
+    private void setupPills(final List<Pill> pillList) {
         Activity activity = getActivity();
         if (activity != null) {
             ListView list = (ListView) activity.findViewById(R.id.graph_drawer);

@@ -230,13 +230,14 @@ public class PillRepository extends BaseRepository<Pill>{
 
     @Override
     public List<Pill> getAll() {
-        List<Pill> pills;
+        List<Pill> pills = getList(null, null, false);
+        /*
         if(isCached())
             pills = new ArrayList<Pill>(_cache.values());
-        else {
+        else {*/
             _getAllCalled = true;
-            pills = getList(null, null, false);
-        }
+        /*    pills = getList(null, null, false);
+        }*/
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(_context);
         String sortOrder = preferences.getString(_context.getResources().getString(R.string.pref_key_medication_list_order), "");
