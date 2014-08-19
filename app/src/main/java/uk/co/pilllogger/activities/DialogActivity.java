@@ -20,6 +20,8 @@ import com.squareup.otto.Subscribe;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.InjectView;
 import hugo.weaving.DebugLog;
 import uk.co.pilllogger.R;
@@ -43,6 +45,9 @@ import static butterknife.ButterKnife.findById;
  */
 public class DialogActivity extends FragmentActivity{
 
+    @Inject
+    ConsumptionRepository _consumptionRepository;
+
     private static final String TAG = "DialogActivity";
     private Pill _pill;
     private List<Consumption> _consumptions;
@@ -60,6 +65,7 @@ public class DialogActivity extends FragmentActivity{
     private TextView _dosage;
     private Bus _bus;
     private ViewGroup _dialogTop;
+    @Inject PillRepository _pillRepository;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +112,7 @@ public class DialogActivity extends FragmentActivity{
         if(_pill != null) {
             _colour.setColour(_pill.getColour());
 
-            Consumption lastConsumption = _pill.getLatestConsumption(this);
+            Consumption lastConsumption = _pill.getLatestConsumption(_consumptionRepository);
             if (lastConsumption != null) {
                 String lastTakenText = getString(R.string.info_dialog_last_taken) + " " + DateHelper.formatDateAndTime(this, lastConsumption.getDate());
                 lastTakenText += " " + DateHelper.getTime(this, lastConsumption.getDate());
@@ -138,7 +144,7 @@ public class DialogActivity extends FragmentActivity{
 
             int pillId = intent.getIntExtra("PillId", -1);
             if (pillId >= 0) {
-                _pill = PillRepository.getSingleton(this).get(pillId);
+                _pill = _pillRepository.get(pillId);
             }
 
             switch (dialogType) {
@@ -146,9 +152,9 @@ public class DialogActivity extends FragmentActivity{
                 case Consumption:
                     String consumptionGroup = intent.getStringExtra("ConsumptionGroup");
 
-                    List<Consumption> consumptions = ConsumptionRepository.getSingleton(this).getForGroup(consumptionGroup);
+                    List<Consumption> consumptions = _consumptionRepository.getForGroup(consumptionGroup);
 
-                    consumptions = ConsumptionRepository.getSingleton(this).groupConsumptions(consumptions);
+                    consumptions = _consumptionRepository.groupConsumptions(consumptions);
 
                     for (Consumption consumption : consumptions) {
                         if (consumption.getPillId() != pillId) {

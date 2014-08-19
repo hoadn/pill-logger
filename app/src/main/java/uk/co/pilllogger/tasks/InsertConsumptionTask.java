@@ -3,6 +3,8 @@ package uk.co.pilllogger.tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import javax.inject.Inject;
+
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 
@@ -14,6 +16,8 @@ public class InsertConsumptionTask  extends AsyncTask<Void, Void, Void> {
     Context _context;
     Consumption _consumption;
     ITaskComplete _listener;
+    @Inject
+    ConsumptionRepository _consumptionRepository;
 
     public InsertConsumptionTask(Context context, Consumption consumption) {
         _context = context;
@@ -27,7 +31,7 @@ public class InsertConsumptionTask  extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        ConsumptionRepository.getSingleton(_context).insert(_consumption);
+        _consumptionRepository.insert(_consumption);
         return null;
     }
 

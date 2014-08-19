@@ -12,10 +12,14 @@ import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillsListExportAdapter;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
 
@@ -25,6 +29,12 @@ import uk.co.pilllogger.tasks.GetPillsTask;
 public class ExportSelectPillsFragment extends ExportFragmentBase {
 
     ListView _pillsList;
+
+    @Inject
+    Provider<GetPillsTask> _getPillsTaskProvider;
+
+    @Inject
+    ConsumptionRepository _consumptionRepository;
 
     @Override
     public void onDestroyView() {
@@ -64,7 +74,7 @@ public class ExportSelectPillsFragment extends ExportFragmentBase {
             if (pills != null)
                 setUpPillsListAdapter(pills);
             else
-                new GetPillsTask(getActivity()).execute();
+                _getPillsTaskProvider.get().execute();
         }
 
         _exportService.getPillSummary(_exportService.getSummaryTextView());
@@ -74,7 +84,7 @@ public class ExportSelectPillsFragment extends ExportFragmentBase {
 
     private void setUpPillsListAdapter(List<Pill> pills) {
         if (_pillsList != null)
-            _pillsList.setAdapter(new PillsListExportAdapter(getActivity(), R.layout.export_pills_list_item, pills, _exportService));
+            _pillsList.setAdapter(new PillsListExportAdapter(getActivity(), R.layout.export_pills_list_item, pills, _exportService, _consumptionRepository));
     }
 
     @Subscribe

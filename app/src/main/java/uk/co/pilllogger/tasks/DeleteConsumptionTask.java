@@ -3,6 +3,8 @@ package uk.co.pilllogger.tasks;
 import android.app.Activity;
 import android.os.AsyncTask;
 
+import javax.inject.Inject;
+
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 
@@ -14,6 +16,8 @@ public class DeleteConsumptionTask extends AsyncTask<Void, Void, Void> {
     Activity _activity;
     Consumption _consumption;
     private boolean _deleteGroup;
+    @Inject
+    ConsumptionRepository _consumptionRepository;
 
     public DeleteConsumptionTask(Activity activity, Consumption consumption, boolean deleteGroup) {
         _activity = activity;
@@ -24,9 +28,9 @@ public class DeleteConsumptionTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         if(_deleteGroup)
-            ConsumptionRepository.getSingleton(_activity).deleteGroupPill(_consumption);
+            _consumptionRepository.deleteGroupPill(_consumption);
         else
-            ConsumptionRepository.getSingleton(_activity).delete(_consumption);
+            _consumptionRepository.delete(_consumption);
 
         return null;
     }

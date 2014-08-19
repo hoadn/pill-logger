@@ -3,6 +3,8 @@ package uk.co.pilllogger.tasks;
 import android.app.Activity;
 import android.os.AsyncTask;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
@@ -13,6 +15,8 @@ import uk.co.pilllogger.repositories.PillRepository;
 public class UpdatePillTask extends AsyncTask<Void, Void, Void> {
     Activity _activity;
     Pill _pill;
+    @Inject
+    PillRepository _pillRepository;
 
     public UpdatePillTask(Activity activity, Pill pill) {
         _activity = activity;
@@ -22,7 +26,7 @@ public class UpdatePillTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         Timber.d("Updating pill");
-        PillRepository.getSingleton(_activity).update(_pill);
+        _pillRepository.update(_pill);
         return null;
     }
 }

@@ -35,13 +35,18 @@ import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.UiModule;
 import uk.co.pilllogger.adapters.SlidePagerAdapter;
 import uk.co.pilllogger.animations.FadeBackgroundPageTransformer;
 import uk.co.pilllogger.billing.IabHelper;
@@ -86,6 +91,12 @@ public class MainActivity extends PillLoggerActivityBase implements
         GetFavouritePillsTask.ITaskComplete,
         GetTutorialSeenTask.ITaskComplete,
         SharedPreferences.OnSharedPreferenceChangeListener, GetConsumptionsTask.ITaskComplete {
+
+    @Inject
+    PillRepository _pillRepository;
+
+    @Inject
+    Provider<GetPillsTask> _getPillsTaskProvider;
 
     private static final String TAG = "MainActivity";
     private MyViewPager _fragmentPager;
@@ -184,8 +195,8 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-        if(PillRepository.getSingleton(this).isCached() == false) {
-            new GetPillsTask(this).execute();
+        if(_pillRepository.isCached() == false) {
+            _getPillsTaskProvider.get().execute();
         }
 
         Integer gradientBackgroundResourceId = State.getSingleton().getTheme().getWindowBackgroundResourceId();

@@ -7,6 +7,8 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Consumption;
@@ -20,8 +22,12 @@ import uk.co.pilllogger.repositories.PillRepository;
 public class InitTestDbTask extends AsyncTask<Void, Void, Void>{
     private String TAG = "InitTestDbTask";
 
+    @Inject
+    ConsumptionRepository _consumptionRepository;
+
     private Context _context;
     private ITaskComplete _listener;
+    @Inject PillRepository _pillRepository;
 
     public InitTestDbTask(Context context, ITaskComplete listener){
         _context = context;
@@ -43,23 +49,20 @@ public class InitTestDbTask extends AsyncTask<Void, Void, Void>{
     }
 
     private void insertPills(){
-        PillRepository repository = PillRepository.getSingleton(_context);
-        List<Pill> pills = repository.getAll();
+        List<Pill> pills = _pillRepository.getAll();
 
         if (pills.size() == 0) { //This will insert 2 pills as test data if your database doesn't have any in
-            repository.insert(new Pill("Paracetamol", 500));
-            repository.insert(new Pill("Ibuprofen", 200));
-            repository.insert(new Pill("Paracetamol Extra", 500));
-            repository.insert(new Pill("Ibuprofen", 400));
-            repository.insert(new Pill("Asprin", 300));
+            _pillRepository.insert(new Pill("Paracetamol", 500));
+            _pillRepository.insert(new Pill("Ibuprofen", 200));
+            _pillRepository.insert(new Pill("Paracetamol Extra", 500));
+            _pillRepository.insert(new Pill("Ibuprofen", 400));
+            _pillRepository.insert(new Pill("Asprin", 300));
         }
     }
 
     private void insertConsumptions(){
-        ConsumptionRepository consumptionRepository = ConsumptionRepository.getSingleton(_context);
-        PillRepository pillRepository = PillRepository.getSingleton(_context);
-        List<Consumption> consumptions = consumptionRepository.getAll();
-        List<Pill> pills = pillRepository.getAll();
+        List<Consumption> consumptions = _consumptionRepository.getAll();
+        List<Pill> pills = _pillRepository.getAll();
 
         if (consumptions.size() == 0) { //This will insert some consumptions as test data if your data doesn't have any in
             for (int i = 0; i < 60; i ++) { //I am only doing this to see what a list of consumption would look like
@@ -74,7 +77,7 @@ public class InitTestDbTask extends AsyncTask<Void, Void, Void>{
 
                 Consumption consumption = new Consumption(pill, consumptionDate.toDate());
 
-                consumptionRepository.insert(consumption);
+                _consumptionRepository.insert(consumption);
             }
         }
     }

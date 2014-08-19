@@ -18,6 +18,8 @@ import org.joda.time.DateTime;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -75,6 +77,8 @@ public class StatsFragment extends PillLoggerFragmentBase implements
     @InjectView(R.id.stats_outer) View _statsOuter;
 
     private Context _context;
+    @Inject
+    Statistics _statistics;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -139,12 +143,12 @@ public class StatsFragment extends PillLoggerFragmentBase implements
             handleMostTakenDay(consumptions);
 
             Context context = getActivity();
-            _averageTimeBetween.setText(Statistics.getInstance(context).getAverageTimeBetweenConsumptions(consumptions, context));
-            _longestTimeBetween.setText(Statistics.getInstance(context).getLongestTimeBetweenConsumptions(consumptions));
+            _averageTimeBetween.setText(_statistics.getAverageTimeBetweenConsumptions(consumptions, context));
+            _longestTimeBetween.setText(_statistics.getLongestTimeBetweenConsumptions(consumptions));
 
-            _totalConsumptions.setText(String.valueOf(Statistics.getInstance(context).getTotalConsumptions(consumptions)));
-            _longestStreak.setText(String.valueOf(Statistics.getInstance(context).getLongestStreak(consumptions)));
-            _currentStreak.setText(String.valueOf(Statistics.getInstance(context).getCurrentStreak(consumptions)));
+            _totalConsumptions.setText(String.valueOf(_statistics.getTotalConsumptions(consumptions)));
+            _longestStreak.setText(String.valueOf(_statistics.getLongestStreak(consumptions)));
+            _currentStreak.setText(String.valueOf(_statistics.getCurrentStreak(consumptions)));
         }
         else {
             setNoInformation(true);
@@ -164,8 +168,8 @@ public class StatsFragment extends PillLoggerFragmentBase implements
 
     private void handleMostTakenDay(List<Consumption> consumptions){
         Activity activity = getActivity();
-        Map<Integer, Map<Integer, Integer>> hours = Statistics.getInstance(activity).getDaysWithHourAmounts(consumptions);
-        int day = Statistics.getInstance(activity).getDayWithMostConsumptions(consumptions);
+        Map<Integer, Map<Integer, Integer>> hours = _statistics.getDaysWithHourAmounts(consumptions);
+        int day = _statistics.getDayWithMostConsumptions(consumptions);
 
         DateTime dateTime = new DateTime().withHourOfDay(day).withMinuteOfHour(0);
         DateTime nextHour = dateTime.plusHours(1);
@@ -176,8 +180,8 @@ public class StatsFragment extends PillLoggerFragmentBase implements
     }
 
     private void handleMostTakenHour(List<Consumption> consumptions){
-        Map<Integer, Integer> hours = Statistics.getInstance(getActivity()).getHoursWithAmounts(consumptions);
-        int hour = Statistics.getInstance(getActivity()).getHourWithMostConsumptions(consumptions);
+        Map<Integer, Integer> hours = _statistics.getHoursWithAmounts(consumptions);
+        int hour = _statistics.getHourWithMostConsumptions(consumptions);
 
         DateTime dateTime = new DateTime().withHourOfDay(hour).withMinuteOfHour(0);
         DateTime nextHour = dateTime.plusHours(1);
@@ -189,7 +193,7 @@ public class StatsFragment extends PillLoggerFragmentBase implements
     }
 
     private void handleMostTaken(List<Consumption> consumptions){
-        List<PillAmount> pills = Statistics.getInstance(getActivity()).getPillsWithAmounts(consumptions);
+        List<PillAmount> pills = _statistics.getPillsWithAmounts(consumptions);
 
         String countFormat = "(%d)";
 

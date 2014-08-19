@@ -16,7 +16,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import timber.log.Timber;
+import javax.inject.Inject;
+
+import dagger.ObjectGraph;
+import uk.co.pilllogger.App;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.AppWidgetConfigure;
 import uk.co.pilllogger.helpers.ColourHelper;
@@ -35,16 +38,19 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
     private static final String TAG = "MyAppWidgetProvider";
     public static String CLICK_ACTION = "ClickAction";
+    @Inject
+    PillRepository _pillRepository;
+    private ObjectGraph _objectGraph;
 
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
         // Perform this loop procedure for each App Widget that belongs to this provider
         for(int id : appWidgetIds){
-            updateWidget(context, id, appWidgetManager);
+            updateWidget(context, id, appWidgetManager, _pillRepository);
         }
     }
 
-    public static void updateAllWidgets(Context context){
+    public static void updateAllWidgets(Context context, PillRepository pillRepository){
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         int[] appWidgetIds = new int[0];
         if (appWidgetManager != null) {
@@ -53,11 +59,11 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         }
 
         for(int id : appWidgetIds){
-            updateWidget(context, id, appWidgetManager);
+            updateWidget(context, id, appWidgetManager, pillRepository);
         }
     }
 
-    public static void updateWidget(Context context, int id, AppWidgetManager appWidgetManager){
+    public static void updateWidget(Context context, int id, AppWidgetManager appWidgetManager, PillRepository pillRepository){
         SharedPreferences preferences = context.getSharedPreferences("widgets", Context.MODE_MULTI_PROCESS);
 
         Map<Pill, Integer> pills = new HashMap<Pill, Integer>();
@@ -82,7 +88,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
                 continue;
             }
 
-            Pill pill = PillRepository.getSingleton(context).get(pillId);
+            Pill pill = pillRepository.get(pillId);
 
             if(pill == null){
                 continue;
@@ -180,7 +186,13 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent)
     {
+        // extend the application-scope object graph with the modules for this broadcast receiver
+        _objectGraph = ((App) context.getApplicationContext()).getObjectGraph();
+        // then inject ourselves
+        _objectGraph.inject(this);
+
         super.onReceive(context, intent);
+
         SharedPreferences preferences = context.getSharedPreferences("widgets", Context.MODE_MULTI_PROCESS);
 
         if (intent.getAction().equals(CLICK_ACTION)) {
@@ -199,7 +211,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
                     continue;
                 }
 
-                Pill pill = PillRepository.getSingleton(context).get(pillId);
+                Pill pill = _pillRepository.get(pillId);
 
                 if(pill == null){
                     continue;
@@ -221,7 +233,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             TrackerHelper.addConsumptionEvent(context, "Widget");
         }
         else {
-            updateAllWidgets(context);
+            updateAllWidgets(context, _pillRepository);
         }
     }
 
@@ -235,7 +247,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         }
 
         for(int id : appWidgetIds){
-            updateWidget(context, id, appWidgetManager);
+            updateWidget(context, id, appWidgetManager, _pillRepository);
         }
     }
 }

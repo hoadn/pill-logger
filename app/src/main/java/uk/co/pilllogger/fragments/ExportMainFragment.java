@@ -14,6 +14,9 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.billing.IabHelper;
@@ -40,6 +43,9 @@ public class ExportMainFragment extends ExportFragmentBase {
     private ExportSelectDateFragment _selectDateFragment;
     private ExportSelectDosageFragment _selectDosageFragment;
     private ExportSelectTimeFragment _selectTimeFragment;
+
+    @Inject
+    Provider<GetPillsTask> _getPillsTaskProvider;
 
     List<Pill> _pills = new ArrayList<Pill>();
     private TextView _pillSummary;
@@ -215,7 +221,7 @@ public class ExportMainFragment extends ExportFragmentBase {
         Timber.d("onActivityCreated");
 
         if(_pills == null || _pills.size() == 0) {
-            new GetPillsTask(activity).execute();
+            _getPillsTaskProvider.get().execute();
         }
 
         setExportButtonText();

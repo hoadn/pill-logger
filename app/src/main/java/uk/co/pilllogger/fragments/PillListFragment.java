@@ -20,6 +20,9 @@ import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
@@ -30,6 +33,7 @@ import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.InsertPillTask;
@@ -40,6 +44,12 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         InsertPillTask.ITaskComplete,
         SharedPreferences.OnSharedPreferenceChangeListener{
 
+    @Inject
+    Provider<GetPillsTask> _getPillsTaskProvider;
+
+    @Inject
+    ConsumptionRepository _consumptionRepository;
+
     public static final String TAG = "PillListFragment";
     private ListView _list;
     private EditText _addPillName;
@@ -48,7 +58,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     ColourIndicator _colour;
     private Activity _activity;
 
-	public PillListFragment() {
+    public PillListFragment() {
 	}
 
 	@Override
@@ -215,7 +225,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             if(activity == null) // it's not gonna work without this
                 return;
 
-            PillsListAdapter adapter = new PillsListAdapter(activity, R.layout.pill_list_item, pills);
+            PillsListAdapter adapter = new PillsListAdapter(activity, R.layout.pill_list_item, pills, _consumptionRepository);
 
             _list.setAdapter(adapter);
         }
@@ -228,7 +238,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     @Override
     public void pillInserted(Pill pill) {
-        new GetPillsTask(getActivity()).execute();
+        _getPillsTaskProvider.get().execute();
         _addPillName.setText("");
         _addPillSize.setText("");
         _addPillSize.clearFocus();
@@ -238,14 +248,14 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     @Subscribe
     public void pillsUpdated(UpdatedPillEvent event) {
-        new GetPillsTask(this.getActivity()).execute();
+        _getPillsTaskProvider.get().execute();
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(isAdded() && getActivity() != null) {
             if (key.equals(getActivity().getResources().getString(R.string.pref_key_medication_list_order)) || key.equals(getActivity().getResources().getString(R.string.pref_key_reverse_order)))
-                new GetPillsTask(getActivity()).execute();
+                _getPillsTaskProvider.get().execute();
         }
     }
 

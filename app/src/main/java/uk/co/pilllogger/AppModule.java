@@ -10,10 +10,24 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import uk.co.pilllogger.events.AndroidBus;
+import uk.co.pilllogger.jobs.JobModule;
+import uk.co.pilllogger.models.ModelModule;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
+import uk.co.pilllogger.repositories.PillRepository;
+import uk.co.pilllogger.stats.Statistics;
+import uk.co.pilllogger.tasks.TasksModule;
+import uk.co.pilllogger.widget.MyAppWidgetProvider;
 
 @Module(
         injects = {
-            App.class
+            App.class,
+            MyAppWidgetProvider.class
+        },
+        includes = {
+                JobModule.class,
+                UiModule.class,
+                ModelModule.class,
+                TasksModule.class
         }
 )
 public class AppModule {
@@ -35,5 +49,23 @@ public class AppModule {
     @Singleton
     public Bus provideBus(){
         return new AndroidBus(ThreadEnforcer.ANY);
+    }
+
+    @Provides
+    @Singleton
+    public PillRepository providePillRepository(Context context, Bus bus, ConsumptionRepository consumptionRepository){
+        return new PillRepository(context, bus, consumptionRepository);
+    }
+
+    @Provides
+    @Singleton
+    public ConsumptionRepository provideConsumptionRepository(Context context, Bus bus){
+        return new ConsumptionRepository(context, bus);
+    }
+
+    @Provides
+    @Singleton
+    public Statistics provideStatistics(Context context, Bus bus, ConsumptionRepository consumptionRepository){
+        return new Statistics(context, bus, consumptionRepository);
     }
 }

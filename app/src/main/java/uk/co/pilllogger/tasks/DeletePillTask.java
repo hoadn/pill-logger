@@ -3,6 +3,8 @@ package uk.co.pilllogger.tasks;
 import android.app.Activity;
 import android.os.AsyncTask;
 
+import javax.inject.Inject;
+
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
 
@@ -14,6 +16,8 @@ public class DeletePillTask extends AsyncTask<Void, Void, Void> {
     Activity _activity;
     Pill _pill;
 
+    @Inject PillRepository _pillRepository;
+
     public DeletePillTask(Activity activity, Pill pill) {
         _activity = activity;
         _pill = pill;
@@ -21,7 +25,7 @@ public class DeletePillTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        PillRepository.getSingleton(_activity).delete(_pill);
+        _pillRepository.delete(_pill);
         return null;
     }
 }

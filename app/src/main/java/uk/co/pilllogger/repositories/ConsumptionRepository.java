@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.squareup.otto.Bus;
+
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -14,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import javax.inject.Inject;
 
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
@@ -34,15 +38,8 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     private Map<Integer, Consumption> _consumptionsCache = new ConcurrentHashMap<Integer, Consumption>();
     private Map<String, Map<Integer, Consumption>> _groupConsumptionCache = new ConcurrentHashMap<String, Map<Integer, Consumption>>();
 
-    private ConsumptionRepository(Context context) {
-        super(context);
-    }
-
-    public static ConsumptionRepository getSingleton(Context context) {
-        if (_instance == null) {
-            _instance = new ConsumptionRepository(context);
-        }
-        return _instance;
+    public ConsumptionRepository(Context context, Bus bus) {
+        super(context, bus);
     }
 
     public boolean isCachedForPill(int pillId){
@@ -89,10 +86,6 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         consumption.setDate(new Date(c.getLong(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_DATE_TIME))));
         consumption.setGroup(c.getString(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_GROUP)));
         int pillId = c.getInt(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_PILL_ID));
-
-        if(pill == null){
-            pill = PillRepository.getSingleton(_context).get(pillId);
-        }
 
         consumption.setPill(pill);
 
@@ -361,7 +354,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
             c.moveToFirst();
             while (!c.isAfterLast()) {
-                Consumption consumption = getFromCursor(c, null); // we don't want to recursively cause ourselves trouble, we already have the pill
+                Consumption consumption = getFromCursor(c);
                 consumptions.add(consumption);
                 c.moveToNext();
             }

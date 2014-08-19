@@ -2,6 +2,7 @@ package uk.co.pilllogger.stats;
 
 import android.content.Context;
 
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
@@ -14,6 +15,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
@@ -45,18 +48,13 @@ public class Statistics{
     private int _longestStreakCache = -1;
     private int _currentStreakCache = -1;
 
-    private static Statistics _instance;
+    private final Bus _bus;
+    ConsumptionRepository _consumptionRepository;
 
-    public static Statistics getInstance(Context context) {
-        if(_instance == null) {
-            _instance = new Statistics(context);
-            State.getSingleton().getBus().register(_instance);
-        }
-        return _instance;
-    }
-
-    private Statistics(Context context){
+    public Statistics(Context context, Bus bus, ConsumptionRepository consumptionRepository){
         _context = context;
+        _bus = bus;
+        _consumptionRepository = consumptionRepository;
     }
 
     private List<Consumption> filterConsumptions(Date startDate, Date endDate, List<Consumption> consumptions) {
@@ -282,7 +280,7 @@ public class Statistics{
         if (!(consumptions.size() > 0))
             return null;
         Collections.sort(consumptions);
-        consumptions = ConsumptionRepository.getSingleton(context).groupConsumptions(consumptions); //Need grouped consumptions for this to be accurate
+        consumptions = _consumptionRepository.groupConsumptions(consumptions); //Need grouped consumptions for this to be accurate
         Consumption lastConsumption = consumptions.get(0);
         Consumption firstConsumption = consumptions.get(consumptions.size() - 1);
 

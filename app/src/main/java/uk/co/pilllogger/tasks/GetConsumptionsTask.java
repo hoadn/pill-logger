@@ -5,13 +5,22 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
+import uk.co.pilllogger.repositories.PillRepository;
 
 /**
  * Created by alex on 23/10/13.
  */
-public class GetConsumptionsTask extends AsyncTask<Void, Void, List<Consumption>>{
+public class GetConsumptionsTask extends PillLoggerAsyncTask<Void, Void, List<Consumption>>{
+
+    @Inject
+    ConsumptionRepository _consumptionRepository;
+
+    @Inject
+    PillRepository _pillRepository;
 
     Context _context;
     ITaskComplete _listener;
@@ -23,27 +32,30 @@ public class GetConsumptionsTask extends AsyncTask<Void, Void, List<Consumption>
     }
 
     public GetConsumptionsTask(Context context, ITaskComplete listener, boolean shouldGroup, String group) {
+        super(context);
         _context = context;
         _listener = listener;
         _shouldGroup = shouldGroup;
         _group = group;
     }
+
     @Override
     protected List<Consumption> doInBackground(Void... voids) {
-        ConsumptionRepository repository = ConsumptionRepository.getSingleton(_context);
-
         List<Consumption> consumptions;
         if(_group == null){
-            consumptions = repository.getAll();
+            consumptions = _consumptionRepository.getAll();
         }
         else{
-            consumptions = repository.getForGroup(_group);
+            consumptions = _consumptionRepository.getForGroup(_group);
+        }
+
+        for(Consumption c : consumptions){
+            c.setPill(_pillRepository.get(c.getPillId()));
         }
 
         if(_shouldGroup && consumptions.size() > 0) {
-            return repository.groupConsumptions(consumptions);
+            return _consumptionRepository.groupConsumptions(consumptions);
         }
-
 
         return consumptions;
     }

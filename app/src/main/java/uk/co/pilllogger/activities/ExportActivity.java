@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.PurchasedFeatureEvent;
@@ -49,6 +52,9 @@ public class ExportActivity extends FragmentActivity
         GetMaxDosagesTask.ITaskComplete,
         GetConsumptionsTask.ITaskComplete {
 
+    @Inject
+    Provider<GetPillsTask> _getPillsTaskProvider;
+
     private static final String TAG = "ExportActivity";
     private List<Pill> _pillsList;
     private ExportSettings _exportSettings = new ExportSettings();
@@ -57,14 +63,15 @@ public class ExportActivity extends FragmentActivity
     private TextView _exportUnlockTitle;
     private TextView _exportSubTitle;
     private Bus _bus;
+    @Inject PillRepository _pillRepository;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_export);
 
-        if (!PillRepository.getSingleton(this).isCached()) {
-            new GetPillsTask(this).execute();
+        if (_pillRepository.isCached() == false) {
+            _getPillsTaskProvider.get().execute();
         }
 
         _bus = State.getSingleton().getBus();

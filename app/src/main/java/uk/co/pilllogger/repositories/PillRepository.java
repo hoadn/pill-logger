@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 
+import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import javax.inject.Inject;
 
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
@@ -29,6 +32,9 @@ import uk.co.pilllogger.models.Pill;
  * Created by alex on 14/11/2013.
  */
 public class PillRepository extends BaseRepository<Pill>{
+
+    ConsumptionRepository _consumptionRepository;
+
     private static final String TAG = "PillRepository";
     private static PillRepository _instance;
     private Map<Integer, Pill> _cache = new ConcurrentHashMap<Integer, Pill>();
@@ -38,15 +44,9 @@ public class PillRepository extends BaseRepository<Pill>{
         return _cache != null && _cache.size() > 0 && _getAllCalled;
     }
 
-    private PillRepository(Context context){
-        super(context);
-    }
-
-    public static PillRepository getSingleton(Context context) {
-        if (_instance == null) {
-            _instance = new PillRepository(context);
-        }
-        return _instance;
+    public PillRepository(Context context, Bus bus, ConsumptionRepository consumptionRepository){
+        super(context, bus);
+        _consumptionRepository = consumptionRepository;
     }
 
     @Produce @DebugLog
@@ -103,7 +103,7 @@ public class PillRepository extends BaseRepository<Pill>{
         pill.setFavourite(fav != 0);
 
         if(getConsumptions) {
-            List<Consumption> consumptions = ConsumptionRepository.getSingleton(_context).getForPill(pill);
+            List<Consumption> consumptions = _consumptionRepository.getForPill(pill);
             pill.getConsumptions().addAll(consumptions);
         }
 
@@ -166,9 +166,9 @@ public class PillRepository extends BaseRepository<Pill>{
                     new String[]{id});
         }
 
-        List<Consumption> pillConsumptions = ConsumptionRepository.getSingleton(_context).getForPill(pill);
+        List<Consumption> pillConsumptions = _consumptionRepository.getForPill(pill);
         for (Consumption consumption : pillConsumptions) {
-            ConsumptionRepository.getSingleton(_context).delete(consumption);
+            _consumptionRepository.delete(consumption);
         }
         notifyUpdated(pill, true);
     }
@@ -263,11 +263,11 @@ public class PillRepository extends BaseRepository<Pill>{
             comparator = new Comparator<Pill>() {
                 @Override
                 public int compare(Pill pill1, Pill pill2) {
-                    if(pill1.getLatestConsumption(_context) == null)
+                    if(pill1.getLatestConsumption(_consumptionRepository) == null)
                         return 1;
-                    if(pill2.getLatestConsumption(_context) == null)
+                    if(pill2.getLatestConsumption(_consumptionRepository) == null)
                         return -1;
-                    return pill2.getLatestConsumption(_context).getDate().compareTo(pill1.getLatestConsumption(_context).getDate());
+                    return pill2.getLatestConsumption(_consumptionRepository).getDate().compareTo(pill1.getLatestConsumption(_consumptionRepository).getDate());
                 }
             };
         }
@@ -275,9 +275,9 @@ public class PillRepository extends BaseRepository<Pill>{
             comparator = new Comparator<Pill>() {
                 @Override
                 public int compare(Pill pill1, Pill pill2) {
-                    if(pill1.getLatestConsumption(_context) == null)
+                    if(pill1.getLatestConsumption(_consumptionRepository) == null)
                         return 1;
-                    if(pill2.getLatestConsumption(_context) == null)
+                    if(pill2.getLatestConsumption(_consumptionRepository) == null)
                         return -1;
                     return (((Integer)pill2.getConsumptions().size()).compareTo(pill1.getConsumptions().size()));
                 }

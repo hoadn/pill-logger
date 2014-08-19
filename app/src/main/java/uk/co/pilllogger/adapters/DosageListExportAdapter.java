@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Pill;
@@ -23,6 +25,7 @@ import uk.co.pilllogger.state.State;
  */
 public class DosageListExportAdapter extends ArrayAdapter<String> {
 
+    @Inject PillRepository _pillRepository;
     private Activity _activity;
     private int _resourceId;
     private List<String> _dosageTypes;
@@ -35,8 +38,8 @@ public class DosageListExportAdapter extends ArrayAdapter<String> {
         _dosageTypes = objects;
 
         for (Integer pillId : consumptions.keySet()) {
-            if(PillRepository.getSingleton(activity).isCached()) {
-                Pill pill = PillRepository.getSingleton(activity).get(pillId);
+            if(_pillRepository.isCached()) {
+                Pill pill = _pillRepository.get(pillId);
                 float dosage = pill.getSize() * consumptions.get(pillId);
                 if (_dosageMax.get(pill.getUnits()) == null || _dosageMax.get(pill.getUnits()) < dosage)
                     _dosageMax.put(pill.getUnits(), dosage);

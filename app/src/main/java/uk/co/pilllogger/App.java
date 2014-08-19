@@ -44,6 +44,10 @@ public class App extends Application {
         return Arrays.<Object>asList(new AppModule(this));
     }
 
+    public static void injectMembers(Object object){
+        getInstance().getObjectGraph().inject(object);
+    }
+
     public ObjectGraph getObjectGraph() {
         return _objectGraph;
     }

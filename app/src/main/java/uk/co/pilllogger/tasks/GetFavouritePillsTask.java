@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
 
@@ -16,14 +18,15 @@ public class GetFavouritePillsTask extends AsyncTask<Void, Void, List<Pill>>{
     Context _context;
     ITaskComplete _listener;
 
+    @Inject PillRepository _pillRepository;
+
     public GetFavouritePillsTask(Context context, ITaskComplete listener) {
         _context = context;
         _listener = listener;
     }
     @Override
     protected List<Pill> doInBackground(Void... voids) {
-        List<Pill> pills = PillRepository.getSingleton(_context).getFavouritePills();
-        return pills;
+        return _pillRepository.getFavouritePills();
     }
 
     @Override

@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
@@ -29,9 +31,6 @@ import uk.co.pilllogger.state.State;
  *
  */
 public class Pill implements Serializable {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
     private static final String TAG = "Pill";
     private int _id;
@@ -121,10 +120,10 @@ public class Pill implements Serializable {
         return _consumptions;
     }
 
-    public Consumption getLatestConsumption(Context context){
+    public Consumption getLatestConsumption(ConsumptionRepository consumptionRepository){
         if(_consumptions.isEmpty()) {
-            if(ConsumptionRepository.getSingleton(context).isCachedForPill(getId())) {
-                List<Consumption> consumptions = ConsumptionRepository.getSingleton(context).getForPill(this);
+            if(consumptionRepository.isCachedForPill(getId())) {
+                List<Consumption> consumptions = consumptionRepository.getForPill(this);
                 if (consumptions == null || consumptions.size() == 0)
                     return null;
 

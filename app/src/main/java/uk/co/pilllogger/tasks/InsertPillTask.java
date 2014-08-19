@@ -3,6 +3,8 @@ package uk.co.pilllogger.tasks;
 import android.app.Activity;
 import android.os.AsyncTask;
 
+import javax.inject.Inject;
+
 import uk.co.pilllogger.events.CreatedPillEvent;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
@@ -17,6 +19,7 @@ public class InsertPillTask extends AsyncTask<Void, Void, Void> {
     Pill _pill;
     long _pillId;
     ITaskComplete _listener;
+    @Inject PillRepository _pillRepository;
 
     public InsertPillTask(Activity activity, Pill pill) {
         _activity = activity;
@@ -30,13 +33,13 @@ public class InsertPillTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        _pillId = PillRepository.getSingleton(_activity).insert(_pill);
+        _pillId = _pillRepository.insert(_pill);
         return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        Pill pill = PillRepository.getSingleton(_activity).get((int)_pillId);
+        Pill pill = _pillRepository.get((int)_pillId);
         if (_listener != null) {
             _listener.pillInserted(pill);
         }

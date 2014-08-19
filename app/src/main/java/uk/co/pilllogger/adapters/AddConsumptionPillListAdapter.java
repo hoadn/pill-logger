@@ -24,6 +24,7 @@ import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.views.ColourIndicator;
 
@@ -40,6 +41,7 @@ public class AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
     private Context _context;
     private int _resourceId;
     private final boolean _showNewPill;
+    private final ConsumptionRepository _consumptionRepository;
 
     public void addOpenPill(Pill pill) {
         State.getSingleton().addOpenPill(pill);
@@ -58,13 +60,14 @@ public class AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
         _consumptionSelectedListener.setDoneEnabled(false);
     }
 
-    public AddConsumptionPillListAdapter(Context context, IConsumptionSelected activity, int textViewResourceId, List<Pill> pills, boolean showNewPill) {
+    public AddConsumptionPillListAdapter(Context context, IConsumptionSelected activity, int textViewResourceId, List<Pill> pills, boolean showNewPill, ConsumptionRepository consumptionRepository) {
         super(context, textViewResourceId, pills);
         _consumptionSelectedListener = activity;
         _context = context;
         _pills = pills;
         _resourceId = textViewResourceId;
         _showNewPill = showNewPill;
+        _consumptionRepository = consumptionRepository;
     }
 
     public static class ViewHolder {
@@ -176,7 +179,7 @@ public class AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
                     }
                     existingViewHolder.color.setColour(pill.getColour());
 
-                    Consumption latest = pill.getLatestConsumption(_context);
+                    Consumption latest = pill.getLatestConsumption(_consumptionRepository);
                     if (latest != null) {
                         String prefix = _context.getString(R.string.last_taken_message_prefix);
                         String lastTaken = DateHelper.getRelativeDateTime(_context, latest.getDate());

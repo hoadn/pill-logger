@@ -16,6 +16,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
@@ -29,6 +31,7 @@ import uk.co.pilllogger.events.UpdatePillEvent;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.tasks.DeletePillTask;
 import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.tasks.UpdatePillTask;
@@ -42,8 +45,8 @@ public class PillsListAdapter extends PillsListBaseAdapter {
     private final Activity _activity;
 
     @DebugLog
-    public PillsListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
-        super(activity, textViewResourceId, pills);
+    public PillsListAdapter(Activity activity, int textViewResourceId, List<Pill> pills, ConsumptionRepository consumptionRepository) {
+        super(activity, textViewResourceId, pills, consumptionRepository);
         _activity = activity;
     }
 
@@ -157,16 +160,16 @@ public class PillsListAdapter extends PillsListBaseAdapter {
                             if(rhs == null)
                                 return 1;
 
-                            if(rhs.getLatestConsumption(_activity) == null && lhs.getLatestConsumption(_activity) == null)
+                            if(rhs.getLatestConsumption(_consumptionRepository) == null && lhs.getLatestConsumption(_consumptionRepository) == null)
                                 return 0;
 
-                            if(lhs.getLatestConsumption(_activity) == null)
+                            if(lhs.getLatestConsumption(_consumptionRepository) == null)
                                 return -1;
 
-                            if(rhs.getLatestConsumption(_activity) == null)
+                            if(rhs.getLatestConsumption(_consumptionRepository) == null)
                                 return 1;
 
-                            return rhs.getLatestConsumption(_activity).getDate().compareTo(lhs.getLatestConsumption(_activity).getDate());
+                            return rhs.getLatestConsumption(_consumptionRepository).getDate().compareTo(lhs.getLatestConsumption(_consumptionRepository).getDate());
                         }
                     });
                     notifyDataSetChanged();

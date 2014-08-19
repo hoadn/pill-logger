@@ -9,6 +9,8 @@ import com.squareup.otto.Bus;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import hugo.weaving.DebugLog;
 import uk.co.pilllogger.database.DatabaseCreator;
 import uk.co.pilllogger.helpers.ArrayHelper;
@@ -18,16 +20,15 @@ import uk.co.pilllogger.state.State;
  * Created by alex on 14/11/2013.
  */
 public abstract class BaseRepository<T> implements IRepository<T>{
+    protected final Context _context;
     protected DatabaseCreator _dbCreator;
-    protected Context _context;
-
-    protected Bus _bus;
+    Bus _bus;
 
     @DebugLog
-    protected BaseRepository(Context context){
-        _dbCreator = new DatabaseCreator(context);
+    protected BaseRepository(Context context, Bus bus){
         _context = context;
-        _bus = State.getSingleton().getBus();
+        _bus = bus;
+        _dbCreator = new DatabaseCreator(context);
         _bus.register(this);
     }
 

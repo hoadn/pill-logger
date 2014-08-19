@@ -48,6 +48,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
@@ -61,6 +64,7 @@ import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
@@ -78,6 +82,15 @@ public class AddConsumptionActivity extends FragmentActivity implements
         TimePickerDialog.OnTimeSetListener,
         GetTutorialSeenTask.ITaskComplete,
         AddConsumptionPillListAdapter.IConsumptionSelected{
+
+    @Inject
+    PillRepository _pillRepository;
+
+    @Inject
+    ConsumptionRepository _consumptionRepository;
+
+    @Inject
+    Provider<GetPillsTask> _getPillsTaskProvider;
 
     private static final String TAG = "AddConsumptionActivity";
     public static String DATE_FORMAT = "E, MMM dd, yyyy";
@@ -124,8 +137,8 @@ public class AddConsumptionActivity extends FragmentActivity implements
 
         _pillsList = (ListView)findViewById(R.id.add_consumption_pill_list);
 
-        if(PillRepository.getSingleton(this).isCached() == false) { // this should be handled by the producer
-            new GetPillsTask(this).execute();
+        if(_pillRepository.isCached() == false) { // this should be handled by the producer
+            _getPillsTaskProvider.get().execute();
         }
 
         _activity = this;
@@ -454,8 +467,8 @@ public class AddConsumptionActivity extends FragmentActivity implements
                 if (_addedPills.contains(pill2) && !_addedPills.contains(pill1)) {
                     return 1;
                 }
-                Consumption pill1Consumption = pill1.getLatestConsumption(_activity);
-                Consumption pill2Consumption = pill2.getLatestConsumption(_activity);
+                Consumption pill1Consumption = pill1.getLatestConsumption(_consumptionRepository);
+                Consumption pill2Consumption = pill2.getLatestConsumption(_consumptionRepository);
                 if (pill1Consumption == null && pill2Consumption == null) {
                     return 0;
                 }
@@ -465,11 +478,11 @@ public class AddConsumptionActivity extends FragmentActivity implements
                 if (pill2Consumption == null && pill1Consumption != null) {
                     return -1;
                 }
-                return pill2.getLatestConsumption(_activity).getDate().compareTo(pill1.getLatestConsumption(_activity).getDate());
+                return pill2.getLatestConsumption(_consumptionRepository).getDate().compareTo(pill1.getLatestConsumption(_consumptionRepository).getDate());
             }
         });
 
-        _adapter = new AddConsumptionPillListAdapter(this, this, R.layout.add_consumption_pill_list, event.getPills(), true);
+        _adapter = new AddConsumptionPillListAdapter(this, this, R.layout.add_consumption_pill_list, event.getPills(), true, _consumptionRepository);
          _pillsList.setAdapter(_adapter);
 
         _adapter.updateAdapter(event.getPills());
@@ -584,7 +597,7 @@ public class AddConsumptionActivity extends FragmentActivity implements
         if (_adapter != null) {
             _addedPills.add(event.getPill());
 
-            new GetPillsTask(_activity).execute();
+            _getPillsTaskProvider.get().execute();
             _adapter.addOpenPill(event.getPill());
             _adapter.addConsumedPill(event.getPill());
 

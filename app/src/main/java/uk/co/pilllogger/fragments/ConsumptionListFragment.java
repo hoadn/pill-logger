@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
@@ -56,6 +58,9 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         InitTestDbTask.ITaskComplete,
         GetConsumptionsTask.ITaskComplete{
 
+    @Inject
+    ConsumptionRepository _consumptionRepository;
+
     public static final String TAG = "ConsumptionListFragment";
     ListView _listView;
     View _mainLayout;
@@ -65,6 +70,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     private List<Pill> _pills = new ArrayList<Pill>();
     private List<Consumption> _consumptions;
     private View _loading;
+    @Inject Statistics _statistics;
 
     @DebugLog
     public static ConsumptionListFragment newInstance(int num){
@@ -219,9 +225,9 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                 }
             });
         }
-        TrackerHelper.updateUserProfile(activity, _pills.size(), _consumptions);
+        TrackerHelper.updateUserProfile(activity, _pills.size(), _consumptions, _statistics);
 
-        Statistics.getInstance(activity).refreshConsumptionCaches(consumptions);
+        _statistics.refreshConsumptionCaches(consumptions);
     }
 
     private int getGraphDays(){
@@ -325,7 +331,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                 if (_consumptions != null && !(_consumptions.contains(consumption1))) {
                     _consumptions.add(consumption1);
                     Collections.sort(_consumptions);
-                    _consumptions = ConsumptionRepository.getSingleton(_activity).groupConsumptions(_consumptions);
+                    _consumptions = _consumptionRepository.groupConsumptions(_consumptions);
                     consumptionsReceived(_consumptions);
 
                     Timber.d(TAG, "Consumption list updated");

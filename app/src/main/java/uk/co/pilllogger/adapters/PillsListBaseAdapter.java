@@ -15,6 +15,7 @@ import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.views.ColourIndicator;
 
@@ -24,10 +25,12 @@ import uk.co.pilllogger.views.ColourIndicator;
 public abstract class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
 
     protected final Bus _bus;
+    protected ConsumptionRepository _consumptionRepository;
 
     @DebugLog
-    public PillsListBaseAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
+    public PillsListBaseAdapter(Activity activity, int textViewResourceId, List<Pill> pills, ConsumptionRepository consumptionRepository) {
         super(activity, textViewResourceId, pills);
+        _consumptionRepository = consumptionRepository;
         _bus = State.getSingleton().getBus();
 
         _bus.register(this);
@@ -84,7 +87,7 @@ public abstract class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
             if (pill != null) {
                 holder.name.setText(pill.getName());
 
-                Consumption latest = pill.getLatestConsumption(_activity);
+                Consumption latest = pill.getLatestConsumption(_consumptionRepository);
                 if(latest != null){
                     String prefix = _activity.getString(R.string.last_taken_message_prefix);
                     String lastTaken = DateHelper.getRelativeDateTime(_activity, latest.getDate(), true);
