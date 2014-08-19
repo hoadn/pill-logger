@@ -106,15 +106,6 @@ public class MainActivity extends PillLoggerActivityBase implements
         boolean isDebuggable = 0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE);
         State.getSingleton().setIsDebuggable(isDebuggable);
 
-        if(savedInstanceState == null) {
-            if (!isDebuggable) {
-                Crashlytics.start(this);
-                Timber.plant(new CrashlyticsTree());
-            } else {
-                Timber.plant(new Timber.DebugTree());
-            }
-        }
-
         _themeChanged = false;
 
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
