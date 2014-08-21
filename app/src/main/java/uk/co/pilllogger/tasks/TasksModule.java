@@ -2,8 +2,11 @@ package uk.co.pilllogger.tasks;
 
 import android.content.Context;
 
+import com.squareup.otto.Bus;
+
 import dagger.Module;
 import dagger.Provides;
+import hugo.weaving.DebugLog;
 import uk.co.pilllogger.repositories.PillRepository;
 
 /**
@@ -29,8 +32,8 @@ import uk.co.pilllogger.repositories.PillRepository;
         library = true
 )
 public class TasksModule {
-    @Provides
-    public GetPillsTask provideGetPillsTask(Context context, PillRepository pillRepository){
-        return new GetPillsTask(context, pillRepository);
+    @Provides @DebugLog
+    public GetPillsTask provideGetPillsTask(Context context, PillRepository pillRepository, Bus bus){
+        return new GetPillsTask(context, pillRepository, bus);
     }
 }

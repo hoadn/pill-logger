@@ -15,6 +15,8 @@ import com.squareup.otto.Bus;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import dagger.ObjectGraph;
 import hugo.weaving.DebugLog;
 import uk.co.pilllogger.activities.PillLoggerActivityBase;
@@ -25,7 +27,7 @@ import uk.co.pilllogger.state.State;
  */
 public class PillLoggerFragmentBase extends Fragment {
     private Tracker tracker;
-    Bus _bus;
+    @Inject Bus _bus;
     private Activity _activity;
     private boolean _attached;
     private ObjectGraph _fragmentGraph;
@@ -64,8 +66,6 @@ public class PillLoggerFragmentBase extends Fragment {
         super.onCreate(savedInstanceState);
 
         this.tracker = EasyTracker.getInstance(this.getActivity());
-
-        _bus = State.getSingleton().getBus();
     }
 
     @Override

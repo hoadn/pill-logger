@@ -25,6 +25,7 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
+import uk.co.pilllogger.factories.PillFactory;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 
@@ -39,14 +40,16 @@ public class PillRepository extends BaseRepository<Pill>{
     private static PillRepository _instance;
     private Map<Integer, Pill> _cache = new ConcurrentHashMap<Integer, Pill>();
     private boolean _getAllCalled = false;
+    private PillFactory _pillFactory;
 
     public boolean isCached(){
         return _cache != null && _cache.size() > 0 && _getAllCalled;
     }
 
-    public PillRepository(Context context, Bus bus, ConsumptionRepository consumptionRepository){
+    public PillRepository(Context context, Bus bus, ConsumptionRepository consumptionRepository, PillFactory pillFactory){
         super(context, bus);
         _consumptionRepository = consumptionRepository;
+        _pillFactory = pillFactory;
     }
 
     @Produce @DebugLog
@@ -92,7 +95,7 @@ public class PillRepository extends BaseRepository<Pill>{
     }
 
     protected Pill getFromCursor(Cursor c, boolean getConsumptions) {
-        Pill pill = new Pill();
+        Pill pill = _pillFactory.Create();
         pill.setId(getInt(c, DatabaseContract.Pills._ID));
         pill.setName(getString(c, DatabaseContract.Pills.COLUMN_NAME));
         pill.setSize(getFloat(c, DatabaseContract.Pills.COLUMN_SIZE));
@@ -228,7 +231,7 @@ public class PillRepository extends BaseRepository<Pill>{
         return getList(selection, selectionArgs, true);
     }
 
-    @Override
+    @Override @DebugLog
     public List<Pill> getAll() {
         List<Pill> pills = getList(null, null, false);
         /*

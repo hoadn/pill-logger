@@ -13,11 +13,14 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.factories.PillFactory;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.InsertPillTask;
@@ -46,7 +49,10 @@ public class NewPillDialogFragment extends PillLoggerFragmentBase {
     @InjectView(R.id.new_pill_title)
     TextView _newPillTitle;
 
-    Pill _newPill = new Pill();
+    @Inject
+    PillFactory _pillFactory;
+
+    Pill _newPill;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -55,6 +61,8 @@ public class NewPillDialogFragment extends PillLoggerFragmentBase {
         if(activity == null){
             return null;
         }
+
+        _newPill = _pillFactory.Create();
 
         View view = inflater.inflate(R.layout.fragment_new_pill, container, false);
 
@@ -132,7 +140,7 @@ public class NewPillDialogFragment extends PillLoggerFragmentBase {
         im.hideSoftInputFromWindow(_newPillName.getWindowToken(), 0);
 
         if (_newPill.getName().equals("") == false) {
-            new InsertPillTask(activity, _newPill).execute();
+            new InsertPillTask(activity, _newPill, _bus).execute();
         }
 
         activity.finish();

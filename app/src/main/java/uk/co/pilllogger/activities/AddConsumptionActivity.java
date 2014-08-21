@@ -58,6 +58,7 @@ import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.events.CreatedPillEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
+import uk.co.pilllogger.factories.PillFactory;
 import uk.co.pilllogger.helpers.AlarmHelper;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
@@ -123,7 +124,12 @@ public class AddConsumptionActivity extends FragmentActivity implements
     ViewGroup _reminderHoursContainer;
     EditText _reminderHours;
     TextView _reminderHoursSuffix;
+
+    @Inject
     Bus _bus;
+
+    @Inject
+    PillFactory _pillFactory;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,8 +138,6 @@ public class AddConsumptionActivity extends FragmentActivity implements
         setTheme(State.getSingleton().getTheme().getStyleResourceId());
 
         setContentView(R.layout.add_consumption_activity);
-
-        _bus = State.getSingleton().getBus();
 
         _pillsList = (ListView)findViewById(R.id.add_consumption_pill_list);
 
@@ -639,12 +643,12 @@ public class AddConsumptionActivity extends FragmentActivity implements
             if(!_newPillSize.getText().toString().equals("")){
                 size = Float.parseFloat(String.valueOf(_newPillSize.getText()));
             }
-            Pill pill = new Pill(name, size);
+            Pill pill = _pillFactory.Create(name, size);
             String units = String.valueOf(_unitSpinner.getSelectedItem());
             pill.setUnits(units);
             pill.setColour(_colour.getColour());
 
-            new InsertPillTask(_activity, pill, (InsertPillTask.ITaskComplete)_activity).execute();
+            new InsertPillTask(_activity, pill, (InsertPillTask.ITaskComplete)_activity, _bus).execute();
 
             TrackerHelper.createPillEvent(_activity, TAG);
             _addedPills.add(pill);

@@ -25,6 +25,7 @@ import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
+import uk.co.pilllogger.factories.PillFactory;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 
@@ -34,12 +35,14 @@ import uk.co.pilllogger.models.Pill;
 public class ConsumptionRepository extends BaseRepository<Consumption>{
     private static final String TAG = "ConsumptionRepository";
     private static ConsumptionRepository _instance;
+    private final PillFactory _pillFactory;
     private Map<Integer, Map<Integer, Consumption>> _pillConsumptionCache = new ConcurrentHashMap<Integer, Map<Integer, Consumption>>();
     private Map<Integer, Consumption> _consumptionsCache = new ConcurrentHashMap<Integer, Consumption>();
     private Map<String, Map<Integer, Consumption>> _groupConsumptionCache = new ConcurrentHashMap<String, Map<Integer, Consumption>>();
 
-    public ConsumptionRepository(Context context, Bus bus) {
+    public ConsumptionRepository(Context context, Bus bus, PillFactory pillFactory) {
         super(context, bus);
+        _pillFactory = pillFactory;
     }
 
     public boolean isCachedForPill(int pillId){
@@ -86,6 +89,11 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         consumption.setDate(new Date(c.getLong(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_DATE_TIME))));
         consumption.setGroup(c.getString(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_GROUP)));
         int pillId = c.getInt(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_PILL_ID));
+
+        if(pill == null){
+            pill = _pillFactory.Create();
+            pill.setId(pillId);
+        }
 
         consumption.setPill(pill);
 

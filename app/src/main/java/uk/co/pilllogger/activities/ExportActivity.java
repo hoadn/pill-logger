@@ -62,7 +62,7 @@ public class ExportActivity extends FragmentActivity
     private List<Consumption> _consumptions;
     private TextView _exportUnlockTitle;
     private TextView _exportSubTitle;
-    private Bus _bus;
+    @Inject Bus _bus;
     @Inject PillRepository _pillRepository;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -73,8 +73,6 @@ public class ExportActivity extends FragmentActivity
         if (_pillRepository.isCached() == false) {
             _getPillsTaskProvider.get().execute();
         }
-
-        _bus = State.getSingleton().getBus();
 
         new GetConsumptionsTask(this, this, true).execute();
         new GetMaxDosagesTask(this, this).execute();

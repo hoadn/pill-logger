@@ -24,21 +24,17 @@ import uk.co.pilllogger.views.ColourIndicator;
  */
 public abstract class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
 
-    protected final Bus _bus;
     protected ConsumptionRepository _consumptionRepository;
 
     @DebugLog
     public PillsListBaseAdapter(Activity activity, int textViewResourceId, List<Pill> pills, ConsumptionRepository consumptionRepository) {
         super(activity, textViewResourceId, pills);
         _consumptionRepository = consumptionRepository;
-        _bus = State.getSingleton().getBus();
-
-        _bus.register(this);
     }
 
     @Override
     public void destroy() {
-        _bus.unregister(this);
+
     }
 
     public static class ViewHolder extends ActionBarArrayAdapter.ViewHolder {
@@ -56,7 +52,7 @@ public abstract class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
         public View shadow;
     }
 
-    @Override
+    @Override @DebugLog
     protected ActionBarArrayAdapter.ViewHolder initViewHolder(View v) {
         ViewHolder holder = new ViewHolder();
         holder.container = (ViewGroup) v.findViewById(R.id.selector_container);

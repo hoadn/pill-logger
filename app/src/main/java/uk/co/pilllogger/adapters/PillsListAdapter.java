@@ -84,7 +84,7 @@ public class PillsListAdapter extends PillsListBaseAdapter {
         _activity.startActivity(intent);
     }
 
-    @Override
+    @Override @DebugLog
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = super.getView(position, convertView, parent);
 

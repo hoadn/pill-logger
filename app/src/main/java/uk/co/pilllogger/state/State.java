@@ -39,7 +39,6 @@ public class State {
     private MixpanelAPI _mixpanelAPI = null;
     private IabHelper _iabHelper;
     private boolean _isDebuggable;
-    private Bus _bus;
 
     private State() {
     }
@@ -182,14 +181,6 @@ public class State {
 
     public boolean isDebuggable() {
         return _isDebuggable;
-    }
-
-    public Bus getBus(){
-        if(_bus == null){
-            _bus = new AndroidBus(ThreadEnforcer.ANY);
-        }
-
-        return _bus;
     }
 }
 

@@ -63,7 +63,7 @@ public class DialogActivity extends FragmentActivity{
     private TextView _title;
     private TextView _lastTaken;
     private TextView _dosage;
-    private Bus _bus;
+    @Inject Bus _bus;
     private ViewGroup _dialogTop;
     @Inject PillRepository _pillRepository;
 
@@ -71,8 +71,6 @@ public class DialogActivity extends FragmentActivity{
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_dialog);
-
-        _bus = State.getSingleton().getBus();
 
         Display display = getWindowManager().getDefaultDisplay();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);

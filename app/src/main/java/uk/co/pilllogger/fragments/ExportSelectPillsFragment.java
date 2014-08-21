@@ -83,8 +83,11 @@ public class ExportSelectPillsFragment extends ExportFragmentBase {
     }
 
     private void setUpPillsListAdapter(List<Pill> pills) {
-        if (_pillsList != null)
-            _pillsList.setAdapter(new PillsListExportAdapter(getActivity(), R.layout.export_pills_list_item, pills, _exportService, _consumptionRepository));
+        if (_pillsList != null) {
+            PillsListExportAdapter adapter = new PillsListExportAdapter(getActivity(), R.layout.export_pills_list_item, pills, _exportService, _consumptionRepository);
+            _bus.register(adapter);
+            _pillsList.setAdapter(adapter);
+        }
     }
 
     @Subscribe

@@ -30,6 +30,7 @@ import uk.co.pilllogger.adapters.PillsListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
+import uk.co.pilllogger.factories.PillFactory;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Pill;
@@ -57,6 +58,9 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     private Spinner _unitSpinner;
     ColourIndicator _colour;
     private Activity _activity;
+
+    @Inject
+    PillFactory _pillFactory;
 
     public PillListFragment() {
 	}
@@ -226,7 +230,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
                 return;
 
             PillsListAdapter adapter = new PillsListAdapter(activity, R.layout.pill_list_item, pills, _consumptionRepository);
-
+            _bus.register(adapter);
             _list.setAdapter(adapter);
         }
         else
@@ -272,7 +276,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     public void completed() {
         if (!_addPillName.getText().toString().equals("")) {
-            Pill newPill = new Pill();
+            Pill newPill = _pillFactory.Create();
             String pillName = _addPillName.getText().toString();
             String units = _unitSpinner.getSelectedItem().toString();
             newPill.setUnits(units);
@@ -285,7 +289,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             }
             newPill.setSize(pillSize);
 
-            new InsertPillTask(getActivity(), newPill, this).execute();
+            new InsertPillTask(getActivity(), newPill, this, _bus).execute();
 
             TrackerHelper.createPillEvent(getActivity(), TAG);
         }

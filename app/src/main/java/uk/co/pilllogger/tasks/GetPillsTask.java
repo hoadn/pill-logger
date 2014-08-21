@@ -3,6 +3,8 @@ package uk.co.pilllogger.tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.squareup.otto.Bus;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -20,10 +22,12 @@ public class GetPillsTask extends AsyncTask<Void, Void, List<Pill>>{
     Context _context;
 
     PillRepository _pillRepository;
+    private final Bus _bus;
 
-    public GetPillsTask(Context context, PillRepository pillRepository) {
+    public GetPillsTask(Context context, PillRepository pillRepository, Bus bus) {
         _context = context;
         _pillRepository = pillRepository;
+        _bus = bus;
     }
     @Override
     protected List<Pill> doInBackground(Void... voids) {
@@ -32,6 +36,6 @@ public class GetPillsTask extends AsyncTask<Void, Void, List<Pill>>{
 
     @Override
     protected void onPostExecute(List<Pill> pills) {
-        State.getSingleton().getBus().post(new LoadedPillsEvent(pills));
+        _bus.post(new LoadedPillsEvent(pills));
     }
 }

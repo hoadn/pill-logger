@@ -195,6 +195,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
+        Timber.d("Is PillRepository cached: " + _pillRepository.isCached());
         if(_pillRepository.isCached() == false) {
             _getPillsTaskProvider.get().execute();
         }

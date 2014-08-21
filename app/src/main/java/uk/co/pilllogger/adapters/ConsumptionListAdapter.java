@@ -75,8 +75,6 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
         _activity = activity;
         _fragment = fragment;
         _consumptions = consumptions;
-
-        State.getSingleton().getBus().register(this);
     }
 
     public ConsumptionListAdapter(Activity activity, Fragment fragment, int textViewResourceId, List<Consumption> consumptions, List<Pill> pills) {
@@ -281,7 +279,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
     @Override
     public void destroy() {
-        State.getSingleton().getBus().unregister(this);
+
     }
 
     private void setUpGraphPillsList(View v) {

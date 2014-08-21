@@ -3,6 +3,8 @@ package uk.co.pilllogger.tasks;
 import android.app.Activity;
 import android.os.AsyncTask;
 
+import com.squareup.otto.Bus;
+
 import javax.inject.Inject;
 
 import uk.co.pilllogger.events.CreatedPillEvent;
@@ -17,17 +19,19 @@ public class InsertPillTask extends AsyncTask<Void, Void, Void> {
 
     Activity _activity;
     Pill _pill;
+    Bus _bus;
     long _pillId;
     ITaskComplete _listener;
     @Inject PillRepository _pillRepository;
 
-    public InsertPillTask(Activity activity, Pill pill) {
+    public InsertPillTask(Activity activity, Pill pill, Bus bus) {
         _activity = activity;
         _pill = pill;
+        _bus = bus;
     }
 
-    public InsertPillTask(Activity activity, Pill pill, ITaskComplete listener) {
-        this(activity, pill);
+    public InsertPillTask(Activity activity, Pill pill, ITaskComplete listener, Bus bus) {
+        this(activity, pill, bus);
         _listener = listener;
     }
 
@@ -44,7 +48,7 @@ public class InsertPillTask extends AsyncTask<Void, Void, Void> {
             _listener.pillInserted(pill);
         }
 
-        State.getSingleton().getBus().post(new CreatedPillEvent(pill));
+        _bus.post(new CreatedPillEvent(pill));
     }
 
     public interface ITaskComplete{

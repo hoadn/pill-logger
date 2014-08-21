@@ -45,7 +45,6 @@ public class Pill implements Serializable {
     private List<Consumption> _consumptions = new ArrayList<Consumption>();
 
     public Pill() {
-        State.getSingleton().getBus().register(this);
     }
 
     public Pill(CharSequence name, float size) {

@@ -24,6 +24,8 @@ import uk.co.pilllogger.state.State;
 public abstract class PillLoggerActivityBase extends Activity {
 
     private ObjectGraph _activityGraph;
+
+    @Inject
     Bus _bus;
 
     @Override
@@ -33,8 +35,6 @@ public abstract class PillLoggerActivityBase extends Activity {
         App application = (App) getApplication();
         _activityGraph = application.createScopedGraph(getModules().toArray());
         _activityGraph.inject(this);
-
-        _bus = State.getSingleton().getBus();
     }
 
     @Override

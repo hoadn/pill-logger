@@ -209,9 +209,13 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
 
             adapter = new ConsumptionListAdapter(activity, this, R.layout.consumption_list_item, consumptions, _pills);
 
+            _bus.register(adapter);
+
             if (_listView.getAdapter() != null) {
                 ConsumptionListAdapter currentAdapter = (ConsumptionListAdapter) _listView.getAdapter();
                 currentAdapter.destroy(); // tidy up Observer events
+
+                _bus.unregister(currentAdapter);
             }
 
             _listView.setAdapter(adapter);
