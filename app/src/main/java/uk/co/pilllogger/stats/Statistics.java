@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
@@ -31,6 +32,7 @@ import uk.co.pilllogger.tasks.GetConsumptionsTask;
 /**
  * Created by nick on 07/03/14.
  */
+@Singleton
 public class Statistics{
 
     private Context _context;
@@ -51,6 +53,7 @@ public class Statistics{
     private final Bus _bus;
     ConsumptionRepository _consumptionRepository;
 
+    @Inject
     public Statistics(Context context, Bus bus, ConsumptionRepository consumptionRepository){
         _context = context;
         _bus = bus;

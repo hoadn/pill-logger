@@ -5,6 +5,7 @@ package uk.co.pilllogger.models;
 
 import android.content.Context;
 
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
@@ -44,13 +45,9 @@ public class Pill implements Serializable {
 
     private List<Consumption> _consumptions = new ArrayList<Consumption>();
 
-    public Pill() {
-    }
-
-    public Pill(CharSequence name, float size) {
-        this();
-        _name = String.valueOf(name);
-        _size = size;
+    @Inject
+    public Pill(Bus bus) {
+        bus.register(this);
     }
 
 	/**

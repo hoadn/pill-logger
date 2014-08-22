@@ -24,6 +24,7 @@ public class GetPillsTask extends AsyncTask<Void, Void, List<Pill>>{
     PillRepository _pillRepository;
     private final Bus _bus;
 
+    @Inject
     public GetPillsTask(Context context, PillRepository pillRepository, Bus bus) {
         _context = context;
         _pillRepository = pillRepository;

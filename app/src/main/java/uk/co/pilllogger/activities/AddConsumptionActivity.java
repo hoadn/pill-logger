@@ -58,7 +58,6 @@ import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.events.CreatedPillEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
-import uk.co.pilllogger.factories.PillFactory;
 import uk.co.pilllogger.helpers.AlarmHelper;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
@@ -129,7 +128,7 @@ public class AddConsumptionActivity extends FragmentActivity implements
     Bus _bus;
 
     @Inject
-    PillFactory _pillFactory;
+    Provider<Pill> _pillProvider;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -643,7 +642,10 @@ public class AddConsumptionActivity extends FragmentActivity implements
             if(!_newPillSize.getText().toString().equals("")){
                 size = Float.parseFloat(String.valueOf(_newPillSize.getText()));
             }
-            Pill pill = _pillFactory.Create(name, size);
+            Pill pill = _pillProvider.get();
+
+            pill.setName(String.valueOf(name));
+            pill.setSize(size);
             String units = String.valueOf(_unitSpinner.getSelectedItem());
             pill.setUnits(units);
             pill.setColour(_colour.getColour());

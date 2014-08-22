@@ -14,13 +14,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.UnitAdapter;
-import uk.co.pilllogger.factories.PillFactory;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.InsertPillTask;
@@ -50,7 +50,7 @@ public class NewPillDialogFragment extends PillLoggerFragmentBase {
     TextView _newPillTitle;
 
     @Inject
-    PillFactory _pillFactory;
+    Provider<Pill> _pillProvider;
 
     Pill _newPill;
 
@@ -62,7 +62,7 @@ public class NewPillDialogFragment extends PillLoggerFragmentBase {
             return null;
         }
 
-        _newPill = _pillFactory.Create();
+        _newPill = _pillProvider.get();
 
         View view = inflater.inflate(R.layout.fragment_new_pill, container, false);
 

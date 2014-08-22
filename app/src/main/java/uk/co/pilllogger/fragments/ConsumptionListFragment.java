@@ -49,13 +49,11 @@ import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.stats.Statistics;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
-import uk.co.pilllogger.tasks.InitTestDbTask;
 
 /**
  * Created by nick on 23/10/13.
  */
 public class ConsumptionListFragment extends PillLoggerFragmentBase implements
-        InitTestDbTask.ITaskComplete,
         GetConsumptionsTask.ITaskComplete{
 
     @Inject
@@ -122,11 +120,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         }
 
         return v;
-    }
-
-
-    @Override
-    public void initComplete() {
     }
 
     @Override

@@ -24,13 +24,11 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import hugo.weaving.DebugLog;
-import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillsListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
-import uk.co.pilllogger.factories.PillFactory;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Pill;
@@ -60,7 +58,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     private Activity _activity;
 
     @Inject
-    PillFactory _pillFactory;
+    Provider<Pill> _pillProvider;
 
     public PillListFragment() {
 	}
@@ -276,7 +274,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     public void completed() {
         if (!_addPillName.getText().toString().equals("")) {
-            Pill newPill = _pillFactory.Create();
+            Pill newPill = _pillProvider.get();
             String pillName = _addPillName.getText().toString();
             String units = _unitSpinner.getSelectedItem().toString();
             newPill.setUnits(units);

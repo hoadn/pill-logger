@@ -22,7 +22,6 @@ import uk.co.pilllogger.repositories.PillRepository;
                 GetMaxDosagesTask.class,
                 GetPillsTask.class,
                 GetTutorialSeenTask.class,
-                InitTestDbTask.class,
                 InsertConsumptionTask.class,
                 InsertPillTask.class,
                 SetTutorialSeenTask.class,
@@ -32,8 +31,4 @@ import uk.co.pilllogger.repositories.PillRepository;
         library = true
 )
 public class TasksModule {
-    @Provides @DebugLog
-    public GetPillsTask provideGetPillsTask(Context context, PillRepository pillRepository, Bus bus){
-        return new GetPillsTask(context, pillRepository, bus);
-    }
 }

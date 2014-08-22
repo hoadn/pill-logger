@@ -10,7 +10,6 @@ import com.squareup.otto.Bus;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +17,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
 
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
@@ -25,24 +26,25 @@ import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
-import uk.co.pilllogger.factories.PillFactory;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 
 /**
  * Created by alex on 14/11/2013.
  */
+@Singleton
 public class ConsumptionRepository extends BaseRepository<Consumption>{
     private static final String TAG = "ConsumptionRepository";
     private static ConsumptionRepository _instance;
-    private final PillFactory _pillFactory;
+    private final Provider<Pill> _pillProvider;
     private Map<Integer, Map<Integer, Consumption>> _pillConsumptionCache = new ConcurrentHashMap<Integer, Map<Integer, Consumption>>();
     private Map<Integer, Consumption> _consumptionsCache = new ConcurrentHashMap<Integer, Consumption>();
     private Map<String, Map<Integer, Consumption>> _groupConsumptionCache = new ConcurrentHashMap<String, Map<Integer, Consumption>>();
 
-    public ConsumptionRepository(Context context, Bus bus, PillFactory pillFactory) {
+    @Inject
+    public ConsumptionRepository(Context context, Bus bus, Provider<Pill> pillProvider) {
         super(context, bus);
-        _pillFactory = pillFactory;
+        _pillProvider = pillProvider;
     }
 
     public boolean isCachedForPill(int pillId){
@@ -91,7 +93,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         int pillId = c.getInt(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_PILL_ID));
 
         if(pill == null){
-            pill = _pillFactory.Create();
+            pill = _pillProvider.get();
             pill.setId(pillId);
         }
 
