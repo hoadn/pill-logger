@@ -3,8 +3,6 @@
  */
 package uk.co.pilllogger.models;
 
-import android.content.Context;
-
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -25,7 +23,6 @@ import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
-import uk.co.pilllogger.state.State;
 
 /**
  * @author alex

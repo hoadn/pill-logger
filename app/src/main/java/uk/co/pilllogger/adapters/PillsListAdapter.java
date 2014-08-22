@@ -109,7 +109,8 @@ public class PillsListAdapter extends PillsListBaseAdapter {
     public void onDialogAddConsumption(CreateConsumptionEvent event) {
         if (event.getPill() != null) {
             Consumption consumption = new Consumption(event.getPill(), new Date());
-            new InsertConsumptionTask(_activity, consumption).execute();
+            // todo: use job
+            // new InsertConsumptionTask(_context, consumption).execute();
             TrackerHelper.addConsumptionEvent(_activity, "PillDialog");
             Toast.makeText(_activity, "Added consumption of " + event.getPill().getName(), Toast.LENGTH_SHORT).show();
         }

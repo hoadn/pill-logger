@@ -47,13 +47,14 @@ public class TakeAgainReceiver extends BroadcastReceiver implements GetConsumpti
             newC.setDate(consumptionDate);
             newC.setGroup(consumptionGroup);
 
-            try {
-                new InsertConsumptionTask(_context, newC).execute().get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
+//            try {
+//
+//                new InsertConsumptionTask(_context, newC).execute().get();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            } catch (ExecutionException e) {
+//                e.printStackTrace();
+//            }
         }
 
         NotificationHelper.clearNotification(_context, R.id.notification_consumption_reminder);

@@ -1,8 +1,10 @@
 package uk.co.pilllogger.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
@@ -21,12 +23,15 @@ import uk.co.pilllogger.state.State;
 /**
  * Created by alex on 25/01/2014.
  */
-public abstract class PillLoggerActivityBase extends Activity {
+public abstract class PillLoggerActivityBase extends FragmentActivity {
 
     private ObjectGraph _activityGraph;
 
     @Inject
     Bus _bus;
+
+    @Inject
+    Context _context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){

@@ -33,6 +33,7 @@ import android.widget.TimePicker;
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -62,6 +63,7 @@ import uk.co.pilllogger.helpers.AlarmHelper;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.InsertConsumptionJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
@@ -77,7 +79,7 @@ import uk.co.pilllogger.views.ColourIndicator;
 /**
  * Created by nick on 24/10/13.
  */
-public class AddConsumptionActivity extends FragmentActivity implements
+public class AddConsumptionActivity extends PillLoggerActivityBase implements
         DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener,
         GetTutorialSeenTask.ITaskComplete,
@@ -91,6 +93,9 @@ public class AddConsumptionActivity extends FragmentActivity implements
 
     @Inject
     Provider<GetPillsTask> _getPillsTaskProvider;
+
+    @Inject
+    JobManager _jobManager;
 
     private static final String TAG = "AddConsumptionActivity";
     public static String DATE_FORMAT = "E, MMM dd, yyyy";
@@ -283,20 +288,6 @@ public class AddConsumptionActivity extends FragmentActivity implements
             setDoneEnabled(false);
 
         new GetTutorialSeenTask(this, TAG, this).execute();
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-
-        _bus.register(this);
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-
-        _bus.unregister(this);
     }
 
     private void setUpRadioGroups() {
@@ -579,7 +570,7 @@ public class AddConsumptionActivity extends FragmentActivity implements
         else {
             for (Pill pill : consumptionPills) {
                 Consumption consumption = new Consumption(pill, consumptionDate, consumptionGroup);
-                new InsertConsumptionTask(this, consumption).execute();
+                _jobManager.addJobInBackground(new InsertConsumptionJob(consumption));
             }
 
             if(reminderDate != null){

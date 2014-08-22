@@ -35,6 +35,7 @@ import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.ConsumptionListAdapter;
+import uk.co.pilllogger.adapters.ConsumptionListAdapterFactory;
 import uk.co.pilllogger.adapters.GraphPillListAdapter;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
@@ -58,6 +59,9 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
 
     @Inject
     ConsumptionRepository _consumptionRepository;
+
+    @Inject
+    ConsumptionListAdapterFactory _consumptionListAdapterFactory;
 
     public static final String TAG = "ConsumptionListFragment";
     ListView _listView;
@@ -198,9 +202,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                 noConsumption.setVisibility(View.GONE);
             }
             //List<Consumption> grouped = ConsumptionRepository.getSingleton(activity).groupConsumptions(consumptions);
-            ConsumptionListAdapter adapter;
-
-            adapter = new ConsumptionListAdapter(activity, this, R.layout.consumption_list_item, consumptions, _pills);
+            ConsumptionListAdapter adapter = _consumptionListAdapterFactory.create(R.layout.consumption_list_item, consumptions, _pills);
 
             _bus.register(adapter);
 

@@ -22,6 +22,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +33,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -63,8 +65,10 @@ import uk.co.pilllogger.helpers.CrashlyticsTree;
 import uk.co.pilllogger.helpers.ExportHelper;
 import uk.co.pilllogger.helpers.FeedbackHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.InsertConsumptionJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.FeatureType;
 import uk.co.pilllogger.state.State;
@@ -96,6 +100,9 @@ public class MainActivity extends PillLoggerActivityBase implements
     PillRepository _pillRepository;
 
     @Inject
+    ConsumptionRepository _consumptionRepository;
+
+    @Inject
     Provider<GetPillsTask> _getPillsTaskProvider;
 
     private static final String TAG = "MainActivity";
@@ -110,6 +117,7 @@ public class MainActivity extends PillLoggerActivityBase implements
     private boolean _themeChanged;
     private IabHelper _billingHelper;
     private boolean _dialogShown = false;
+    @Inject JobManager _jobManager;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -564,7 +572,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
     private void addConsumption(Pill pill){
         Consumption consumption = new Consumption(pill, new Date());
-        new InsertConsumptionTask(MainActivity.this, consumption).execute();
+        _jobManager.addJobInBackground(new InsertConsumptionJob(consumption));
 
         TrackerHelper.addConsumptionEvent(MainActivity.this, "FavouriteMenu");
 
@@ -660,7 +668,9 @@ public class MainActivity extends PillLoggerActivityBase implements
             _colour2 = getResources().getColor(theme.getPillListBackgroundResourceId());
             _colour3 = getResources().getColor(theme.getStatsBackgroundResourceId());
 
-            setTheme(State.getSingleton().getTheme().getStyleResourceId());
+            int styleResourceId = State.getSingleton().getTheme().getStyleResourceId();
+            setTheme(styleResourceId);
+            _context.setTheme(styleResourceId);
 
             return true;
         }

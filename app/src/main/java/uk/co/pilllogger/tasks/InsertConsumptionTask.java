@@ -19,14 +19,10 @@ public class InsertConsumptionTask  extends AsyncTask<Void, Void, Void> {
     @Inject
     ConsumptionRepository _consumptionRepository;
 
-    public InsertConsumptionTask(Context context, Consumption consumption) {
+    public InsertConsumptionTask(Context context, Consumption consumption, ConsumptionRepository consumptionRepository){
         _context = context;
         _consumption = consumption;
-    }
-
-    public InsertConsumptionTask(Context context, Consumption consumption, ITaskComplete listener) {
-        this(context, consumption);
-        _listener = listener;
+        _consumptionRepository = consumptionRepository;
     }
 
     @Override

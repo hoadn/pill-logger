@@ -2,44 +2,41 @@ package uk.co.pilllogger.jobs;
 
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
-import com.squareup.otto.Bus;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
-import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.models.Consumption;
-import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
-import uk.co.pilllogger.repositories.PillRepository;
 
-public class LoadPillsJob extends Job {
+/**
+ * Created by Alex on 22/08/2014
+ * in uk.co.pilllogger.jobs.
+ */
+public class InsertConsumptionJob extends Job {
+
+    private final Consumption _consumption;
     @Inject
-    Bus _bus;
+    ConsumptionRepository _consumptionRepository;
 
-    @Inject
-    PillRepository _pillRepository;
+    public InsertConsumptionJob(Consumption consumption){
+        super(new Params(Priority.LOW).persist());
 
-    protected LoadPillsJob() {
-        super(new Params(Priority.HIGH));
+        _consumption = consumption;
     }
 
     @Override
     public void onAdded() {
-
+        // todo: send event to add consumption to screen
     }
 
     @Override
     public void onRun() throws Throwable {
-        List<Pill> pills = _pillRepository.getAll();
-
-        _bus.post(new LoadedPillsEvent(pills));
+        _consumptionRepository.insert(_consumption);
     }
 
     @Override
     protected void onCancel() {
-
+        // todo: send error to user
     }
 
     @Override

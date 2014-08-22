@@ -46,7 +46,7 @@ import uk.co.pilllogger.tasks.GetPillsTask;
  * Created by Alex on 22/05/2014
  * in uk.co.pilllogger.activities.
  */
-public class ExportActivity extends FragmentActivity
+public class ExportActivity extends PillLoggerActivityBase
         implements
         IExportService,
         GetMaxDosagesTask.ITaskComplete,
@@ -108,22 +108,6 @@ public class ExportActivity extends FragmentActivity
         if(State.getSingleton().hasFeature(FeatureType.export)){
             _exportUnlockTitle.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-
-        State.getSingleton().setAppVisible(true);
-        _bus.register(this);
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-
-        State.getSingleton().setAppVisible(false);
-        _bus.unregister(this);
     }
 
     @Subscribe

@@ -1,6 +1,5 @@
 package uk.co.pilllogger.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,14 +21,14 @@ import uk.co.pilllogger.state.State;
 public class GraphPillListAdapter extends ArrayAdapter<Pill> {
 
     private List<Pill> _pills;
-    private Activity _activity;
+    private Context _context;
     private int _resourceId;
     private List<Integer> _graphPills;
     private static String TAG = "GraphPillsListAdapter";
 
-    public GraphPillListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
-        super(activity, textViewResourceId, pills);
-        _activity = activity;
+    public GraphPillListAdapter(Context context, int textViewResourceId, List<Pill> pills) {
+        super(context, textViewResourceId, pills);
+        _context = context;
         _pills = pills;
         _resourceId = textViewResourceId;
         _graphPills = State.getSingleton().getGraphExcludePills();
@@ -48,7 +47,7 @@ public class GraphPillListAdapter extends ArrayAdapter<Pill> {
         View v = convertView;
         ViewHolder holder = null;
         if (v == null) {
-            LayoutInflater inflater = (LayoutInflater)_activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(_resourceId, null);
             if(v != null){
                 holder = new ViewHolder();

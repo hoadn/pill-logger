@@ -223,7 +223,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
                 Date d = new Date();
                 for(int j = 0; j < quantity; j++) {
                     Consumption consumption = new Consumption(pill, d, group);
-                    new InsertConsumptionTask(context, consumption).execute();
+                    //new InsertConsumptionTask(context, consumption).execute();
                 }
                 Toast.makeText(context, quantity + " " + pill.getName() + " added", Toast.LENGTH_SHORT).show();
 

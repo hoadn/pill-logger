@@ -10,7 +10,9 @@ import uk.co.pilllogger.App;
 
 @Module(
         injects = {
-            LoadPillsJob.class
+                LoadPillsJob.class,
+                InsertConsumptionJob.class,
+                DeleteConsumptionJob.class
         },
         library = true,
         complete = false

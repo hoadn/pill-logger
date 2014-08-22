@@ -85,12 +85,12 @@ public abstract class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
 
                 Consumption latest = pill.getLatestConsumption(_consumptionRepository);
                 if(latest != null){
-                    String prefix = _activity.getString(R.string.last_taken_message_prefix);
-                    String lastTaken = DateHelper.getRelativeDateTime(_activity, latest.getDate(), true);
+                    String prefix = _context.getString(R.string.last_taken_message_prefix);
+                    String lastTaken = DateHelper.getRelativeDateTime(_context, latest.getDate(), true);
                     holder.lastTaken.setText(prefix + " " + lastTaken);
                 }
                 else{
-                    holder.lastTaken.setText(_activity.getString(R.string.no_consumptions_message));
+                    holder.lastTaken.setText(_context.getString(R.string.no_consumptions_message));
                 }
 
                 if(pill.getSize() <= 0){

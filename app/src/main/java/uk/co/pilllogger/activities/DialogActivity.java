@@ -43,7 +43,7 @@ import static butterknife.ButterKnife.findById;
  * Created by Alex on 22/05/2014
  * in uk.co.pilllogger.activities.
  */
-public class DialogActivity extends FragmentActivity{
+public class DialogActivity extends PillLoggerActivityBase{
 
     @Inject
     ConsumptionRepository _consumptionRepository;
@@ -193,22 +193,6 @@ public class DialogActivity extends FragmentActivity{
             return;
         }
         super.onBackPressed();
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-
-        State.getSingleton().setAppVisible(true);
-        _bus.register(this);
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-
-        State.getSingleton().setAppVisible(false);
-        _bus.unregister(this);
     }
 
     private void setupStats() {
