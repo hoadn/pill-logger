@@ -8,13 +8,11 @@ import android.util.Log;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.helpers.NotificationHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
-import uk.co.pilllogger.tasks.InsertConsumptionTask;
 
 /**
  * Created by Alex on 05/03/14.

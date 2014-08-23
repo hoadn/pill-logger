@@ -311,7 +311,5 @@ public class PillRepository extends BaseRepository<Pill>{
             _cache.remove(pill.getId());
         else
             _cache.put(pill.getId(), pill);
-
-        _bus.post(new UpdatedPillEvent(pill));
     }
 }

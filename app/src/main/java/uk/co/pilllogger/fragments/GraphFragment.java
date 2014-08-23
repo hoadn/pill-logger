@@ -64,7 +64,6 @@ public class GraphFragment extends PillLoggerFragmentBase implements GetConsumpt
         graph2Cover.setVisibility(View.INVISIBLE);
         graph3Cover.setVisibility(View.INVISIBLE);
         graph4Cover.setVisibility(View.INVISIBLE);
-        // todo: hide the covers over the charts
     }
 
     @Override

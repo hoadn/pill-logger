@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.path.android.jobqueue.JobManager;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -21,9 +23,9 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.jobs.InsertPillJob;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.InsertPillTask;
 import uk.co.pilllogger.views.ColourIndicator;
 
 public class NewPillDialogFragment extends PillLoggerFragmentBase {
@@ -53,6 +55,7 @@ public class NewPillDialogFragment extends PillLoggerFragmentBase {
     Provider<Pill> _pillProvider;
 
     Pill _newPill;
+    @Inject JobManager _jobManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -140,7 +143,7 @@ public class NewPillDialogFragment extends PillLoggerFragmentBase {
         im.hideSoftInputFromWindow(_newPillName.getWindowToken(), 0);
 
         if (_newPill.getName().equals("") == false) {
-            new InsertPillTask(activity, _newPill, _bus).execute();
+            _jobManager.addJobInBackground(new InsertPillJob(_newPill));
         }
 
         activity.finish();

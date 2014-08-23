@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
@@ -28,20 +29,19 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillListAdapterFactory;
 import uk.co.pilllogger.adapters.PillsListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.events.CreatedPillEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.InsertPillJob;
 import uk.co.pilllogger.models.Pill;
-import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
-import uk.co.pilllogger.tasks.InsertPillTask;
 import uk.co.pilllogger.views.ColourIndicator;
 
 
 public class PillListFragment extends PillLoggerFragmentBase implements
-        InsertPillTask.ITaskComplete,
         SharedPreferences.OnSharedPreferenceChangeListener{
 
     @Inject
@@ -60,6 +60,8 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     @Inject
     Provider<Pill> _pillProvider;
+
+    @Inject JobManager _jobManager;
 
     public PillListFragment() {
 	}
@@ -239,8 +241,8 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         }
     }
 
-    @Override
-    public void pillInserted(Pill pill) {
+    @Subscribe
+    public void pillInserted(CreatedPillEvent event) {
         _getPillsTaskProvider.get().execute();
         _addPillName.setText("");
         _addPillSize.setText("");
@@ -288,7 +290,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             }
             newPill.setSize(pillSize);
 
-            new InsertPillTask(getActivity(), newPill, this, _bus).execute();
+            _jobManager.addJobInBackground(new InsertPillJob(newPill));
 
             TrackerHelper.createPillEvent(getActivity(), TAG);
         }

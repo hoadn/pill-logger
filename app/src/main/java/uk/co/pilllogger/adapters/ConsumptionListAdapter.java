@@ -169,21 +169,27 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
         if (getItemViewType(position) == 0) {
+
+            int dayCount = getGraphDays();
             if (v == null) {
                 LayoutInflater inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = inflater.inflate(R.layout.consumption_graph_layout, null);
-
-                int dayCount = getGraphDays();
-
-                View view = v.findViewById(R.id.main_graph);
                 setUpSlidingPane(v);
                 setUpGraphPillsList(v);
+
+                View view = v.findViewById(R.id.main_graph);
 
                 if (_consumptions.size() > 0) {
                     Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(_consumptions, dayCount);
                     if (xPoints != null)
                         plotGraph(xPoints, dayCount, view);
                 }
+            }
+            else {
+                View view = v.findViewById(R.id.main_graph);
+
+                Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(_consumptions, dayCount);
+                plotGraph(xPoints, dayCount, view);
             }
         }
         else {

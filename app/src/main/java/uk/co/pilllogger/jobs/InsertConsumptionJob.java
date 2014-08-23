@@ -2,10 +2,12 @@ package uk.co.pilllogger.jobs;
 
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
+import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
 import hugo.weaving.DebugLog;
+import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
@@ -21,6 +23,9 @@ public class InsertConsumptionJob extends Job {
     @Inject
     ConsumptionRepository _consumptionRepository;
 
+    @Inject
+    Bus _bus;
+
     @DebugLog
     public InsertConsumptionJob(Consumption consumption){
         super(new Params(Priority.LOW).persist());
@@ -30,7 +35,7 @@ public class InsertConsumptionJob extends Job {
 
     @Override @DebugLog
     public void onAdded() {
-        // todo: send event to add consumption to screen
+        _bus.post(new CreatedConsumptionEvent(_consumption));
     }
 
     @Override @DebugLog

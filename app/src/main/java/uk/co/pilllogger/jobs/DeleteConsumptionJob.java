@@ -2,9 +2,12 @@ package uk.co.pilllogger.jobs;
 
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
+import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
+import uk.co.pilllogger.events.DeletedConsumptionEvent;
+import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 
@@ -15,6 +18,9 @@ public class DeleteConsumptionJob extends Job {
     @Inject
     ConsumptionRepository _consumptionRepository;
 
+    @Inject
+    Bus _bus;
+
     public DeleteConsumptionJob(Consumption consumption, boolean deleteGroup){
         super(new Params(Priority.LOW).persist());
 
@@ -24,7 +30,12 @@ public class DeleteConsumptionJob extends Job {
 
     @Override
     public void onAdded() {
-        // todo: send event to add consumption to screen
+        if(_deleteGroup) {
+            _bus.post(new DeletedConsumptionGroupEvent(_consumption.getGroup(), _consumption.getPillId()));
+        }
+        else {
+            _bus.post(new DeletedConsumptionEvent(_consumption));
+        }
     }
 
     @Override

@@ -28,6 +28,7 @@ import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.events.UpdatePillEvent;
 import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.InsertConsumptionJob;
 import uk.co.pilllogger.jobs.UpdatePillJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -108,8 +109,7 @@ public class PillsListAdapter extends PillsListBaseAdapter {
     public void onDialogAddConsumption(CreateConsumptionEvent event) {
         if (event.getPill() != null) {
             Consumption consumption = new Consumption(event.getPill(), new Date());
-            // todo: use job
-            // new InsertConsumptionTask(_context, consumption).execute();
+            _jobManager.addJobInBackground(new InsertConsumptionJob(consumption));
             TrackerHelper.addConsumptionEvent(_context, "PillDialog");
             Toast.makeText(_context, "Added consumption of " + event.getPill().getName(), Toast.LENGTH_SHORT).show();
         }

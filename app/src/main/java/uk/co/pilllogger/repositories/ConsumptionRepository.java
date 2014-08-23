@@ -464,12 +464,9 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
             if (map != null)
               map.put(consumption.getId(), consumption);
         }
-
-        _bus.post(new CreatedConsumptionEvent(consumption));
     }
 
     private void notifyDeleted(Consumption consumption) {
-        _bus.post(new DeletedConsumptionEvent(consumption));
     }
 
     private void notifyDeletedGroupPill(Consumption consumption){
@@ -484,7 +481,5 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
             }
         }
         _consumptionsCache.remove(consumption.getId());
-
-        _bus.post(new DeletedConsumptionGroupEvent(consumption.getGroup(), consumption.getPillId()));
     }
 }

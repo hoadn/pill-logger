@@ -15,15 +15,12 @@ import uk.co.pilllogger.repositories.PillRepository;
  */
 @Module(
         injects = {
-                DeleteConsumptionTask.class,
                 DeletePillTask.class,
                 GetConsumptionsTask.class,
                 GetFavouritePillsTask.class,
                 GetMaxDosagesTask.class,
                 GetPillsTask.class,
                 GetTutorialSeenTask.class,
-                InsertConsumptionTask.class,
-                InsertPillTask.class,
                 SetTutorialSeenTask.class
         },
         complete = false,

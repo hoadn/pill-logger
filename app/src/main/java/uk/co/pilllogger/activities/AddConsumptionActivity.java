@@ -64,6 +64,7 @@ import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.jobs.InsertConsumptionJob;
+import uk.co.pilllogger.jobs.InsertPillJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
@@ -71,8 +72,6 @@ import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.GetTutorialSeenTask;
-import uk.co.pilllogger.tasks.InsertConsumptionTask;
-import uk.co.pilllogger.tasks.InsertPillTask;
 import uk.co.pilllogger.tasks.SetTutorialSeenTask;
 import uk.co.pilllogger.views.ColourIndicator;
 
@@ -641,7 +640,7 @@ public class AddConsumptionActivity extends PillLoggerActivityBase implements
             pill.setUnits(units);
             pill.setColour(_colour.getColour());
 
-            new InsertPillTask(_activity, pill, (InsertPillTask.ITaskComplete)_activity, _bus).execute();
+            _jobManager.addJobInBackground(new InsertPillJob(pill));
 
             TrackerHelper.createPillEvent(_activity, TAG);
             _addedPills.add(pill);

@@ -28,7 +28,6 @@ import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
-import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.views.WidgetIndicator;
 
 /**

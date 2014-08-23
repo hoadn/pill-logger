@@ -6,11 +6,15 @@ import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
-import uk.co.pilllogger.events.UpdatedPillEvent;
+import uk.co.pilllogger.events.CreatedPillEvent;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
 
-public class UpdatePillJob extends Job {
+/**
+ * Created by Alex on 23/08/2014
+ * in uk.co.pilllogger.jobs.
+ */
+public class InsertPillJob extends Job {
 
     private final Pill _pill;
 
@@ -20,19 +24,21 @@ public class UpdatePillJob extends Job {
     @Inject
     Bus _bus;
 
-    public UpdatePillJob(Pill pill){
+    public InsertPillJob(Pill pill){
         super(new Params(Priority.LOW).persist());
         _pill = pill;
     }
 
     @Override
     public void onAdded() {
-        _bus.post(new UpdatedPillEvent(_pill));
+
     }
 
     @Override
     public void onRun() throws Throwable {
-        _pillRepository.update(_pill);
+        _pillRepository.insert(_pill);
+
+        _bus.post(new CreatedPillEvent(_pill));
     }
 
     @Override
