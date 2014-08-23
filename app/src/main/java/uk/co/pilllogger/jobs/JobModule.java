@@ -1,5 +1,7 @@
 package uk.co.pilllogger.jobs;
 
+import android.content.Context;
+
 import com.path.android.jobqueue.JobManager;
 
 import javax.inject.Singleton;
@@ -20,7 +22,7 @@ import uk.co.pilllogger.App;
 public class JobModule{
     @Provides
     @Singleton
-    public JobManager provideJobManager(){
-        return new PillLoggerJobManager(App.getInstance());
+    public JobManager provideJobManager(Context context){
+        return new PillLoggerJobManager(context);
     }
 }
