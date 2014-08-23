@@ -129,6 +129,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
     @Subscribe
     public void pillsUpdated(UpdatedPillEvent event) {
+        _data.removeAll(event.getPill().getConsumptions());
         notifyDataSetChanged();
     }
 
@@ -208,17 +209,18 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
                         }
                     });
 
-                    if(consumption.getPill() != null){
-                        holder.name.setText(consumption.getPill().getName());
+                    Pill pill = consumption.getPill();
+                    if(pill != null){
+                        holder.name.setText(pill.getName());
 
-                        if(consumption.getPill().getSize() == 0) {
+                        if(pill.getSize() == 0) {
                             holder.size.setVisibility(View.INVISIBLE);
                         }
                         else {
-                            holder.size.setText(NumberHelper.getNiceFloatString(consumption.getPill().getSize()) + consumption.getPill().getUnits());
+                            holder.size.setText(NumberHelper.getNiceFloatString(pill.getSize()) + pill.getUnits());
                             holder.size.setVisibility(View.VISIBLE);
                         }
-                        holder.colour.setColour(consumption.getPill().getColour());
+                        holder.colour.setColour(pill.getColour());
                     }
                     holder.date.setText(DateHelper.getRelativeDateTime(_context, consumption.getDate()));
                     holder.quantity.setText(String.valueOf(consumption.getQuantity()));

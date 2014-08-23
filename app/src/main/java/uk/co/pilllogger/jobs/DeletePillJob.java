@@ -25,13 +25,13 @@ public class DeletePillJob extends Job {
     Bus _bus;
 
     public DeletePillJob(Pill pill){
-        super(new Params(Priority.LOW).persist());
+        super(new Params(Priority.HIGH).persist());
         _pill = pill;
     }
 
     @Override
     public void onAdded() {
-        _bus.post(new UpdatedPillEvent(_pill));
+        _bus.post(new UpdatedPillEvent(_pill, true));
     }
 
     @Override

@@ -313,12 +313,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     }
 
     @Subscribe
-    public void pillsUpdated(UpdatedPillEvent event) {
-        //new GetPillsTask(this.getActivity(), this).execute();
-        Timber.d("Pills Updated");
-    }
-
-    @Subscribe
     public void consumptionAdded(CreatedConsumptionEvent event) {
         final Consumption consumption1 = event.getConsumption();
 

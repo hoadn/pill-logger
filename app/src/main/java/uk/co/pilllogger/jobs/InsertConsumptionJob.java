@@ -28,7 +28,7 @@ public class InsertConsumptionJob extends Job {
 
     @DebugLog
     public InsertConsumptionJob(Consumption consumption){
-        super(new Params(Priority.LOW).persist());
+        super(new Params(Priority.MID).persist());
 
         _consumption = consumption;
     }
