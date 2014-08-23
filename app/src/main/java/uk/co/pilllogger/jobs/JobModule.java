@@ -16,7 +16,8 @@ import uk.co.pilllogger.App;
                 InsertConsumptionJob.class,
                 DeleteConsumptionJob.class,
                 InsertPillJob.class,
-                UpdatePillJob.class
+                UpdatePillJob.class,
+                DeletePillJob.class
         },
         library = true,
         complete = false

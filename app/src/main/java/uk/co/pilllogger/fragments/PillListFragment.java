@@ -227,7 +227,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             if(activity == null) // it's not gonna work without this
                 return;
 
-            PillsListAdapter adapter = _pillListAdapterFactory.create(R.layout.pill_list_item, pills);
+            PillsListAdapter adapter = _pillListAdapterFactory.create(activity, R.layout.pill_list_item, pills);
             _bus.register(adapter);
             _list.setAdapter(adapter);
         }

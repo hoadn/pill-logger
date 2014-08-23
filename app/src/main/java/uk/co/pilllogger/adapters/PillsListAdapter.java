@@ -1,5 +1,6 @@
 package uk.co.pilllogger.adapters;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,12 +29,12 @@ import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.events.UpdatePillEvent;
 import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.DeletePillJob;
 import uk.co.pilllogger.jobs.InsertConsumptionJob;
 import uk.co.pilllogger.jobs.UpdatePillJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
-import uk.co.pilllogger.tasks.DeletePillTask;
 
 /**
  * Created by nick on 22/10/13.
@@ -42,24 +43,26 @@ public class PillsListAdapter extends PillsListBaseAdapter {
 
     private static final String TAG = "PillsListAdapter";
     JobManager _jobManager;
+    private final Activity _activity;
 
     @DebugLog
-    public PillsListAdapter(Context context, JobManager jobManager, int textViewResourceId, List<Pill> pills, ConsumptionRepository consumptionRepository) {
+    public PillsListAdapter(Context context, JobManager jobManager, Activity activity, int textViewResourceId, List<Pill> pills, ConsumptionRepository consumptionRepository) {
         super(context, textViewResourceId, pills, consumptionRepository);
         _jobManager = jobManager;
+        _activity = activity;
     }
 
     private AlertDialog createCancelDialog(Pill pill, String deleteTrackerType) {
         final Pill finalPill = pill;
         final String deleteTrackerType1 = deleteTrackerType;
         if (finalPill != null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(_context);
+            AlertDialog.Builder builder = new AlertDialog.Builder(_activity);
             builder.setTitle(_context.getString(R.string.confirm_delete_title));
             builder.setMessage(_context.getString(R.string.confirm_delete_message));
             builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    new DeletePillTask(finalPill).execute();
+                    _jobManager.addJobInBackground(new DeletePillJob(finalPill));
                     TrackerHelper.deletePillEvent(_context, deleteTrackerType1);
                     notifyDataSetChanged();
                     dialog.dismiss();

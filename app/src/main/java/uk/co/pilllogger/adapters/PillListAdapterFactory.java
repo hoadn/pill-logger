@@ -1,5 +1,6 @@
 package uk.co.pilllogger.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.path.android.jobqueue.JobManager;
@@ -23,7 +24,7 @@ public class PillListAdapterFactory{
         _consumptionRepository = consumptionRepository;
     }
 
-    public PillsListAdapter create(int resourceId, List<Pill> pills){
-        return new PillsListAdapter(_context, _jobManager, resourceId, pills, _consumptionRepository);
+    public PillsListAdapter create(Activity activity, int resourceId, List<Pill> pills){
+        return new PillsListAdapter(_context, _jobManager, activity, resourceId, pills, _consumptionRepository);
     }
 }
