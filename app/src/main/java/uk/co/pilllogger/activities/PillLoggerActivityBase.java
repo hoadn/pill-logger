@@ -35,11 +35,13 @@ public abstract class PillLoggerActivityBase extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-
         App application = (App) getApplication();
         _activityGraph = application.createScopedGraph(getModules().toArray());
         _activityGraph.inject(this);
+
+        // inject before calling super.onCreate, to ensure the object graph
+        // is available to fragments which will inject in onAttach
+        super.onCreate(savedInstanceState);
     }
 
     @Override

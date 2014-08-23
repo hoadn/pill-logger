@@ -39,7 +39,8 @@ public class PillLoggerFragmentBase extends Fragment {
         _activity = activity;
 
         if(!_attached){
-            _fragmentGraph = ((PillLoggerActivityBase)activity).getActivityGraph().plus(getModules().toArray());
+            PillLoggerActivityBase pillLoggerActivityBase = (PillLoggerActivityBase) activity;
+            _fragmentGraph = pillLoggerActivityBase.getActivityGraph().plus(getModules().toArray());
             _fragmentGraph.inject(this);
 
             _attached = true;
