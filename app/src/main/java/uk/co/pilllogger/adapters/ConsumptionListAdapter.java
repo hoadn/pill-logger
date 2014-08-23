@@ -318,6 +318,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
         intent.putExtra("DialogType", DialogActivity.DialogType.Consumption.ordinal());
         intent.putExtra("ConsumptionGroup", consumptionGroup);
         intent.putExtra("PillId", pillId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         _context.startActivity(intent);
     }
 

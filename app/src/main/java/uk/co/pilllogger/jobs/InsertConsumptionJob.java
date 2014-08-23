@@ -5,6 +5,7 @@ import com.path.android.jobqueue.Params;
 
 import javax.inject.Inject;
 
+import hugo.weaving.DebugLog;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 
@@ -18,28 +19,29 @@ public class InsertConsumptionJob extends Job {
     @Inject
     ConsumptionRepository _consumptionRepository;
 
+    @DebugLog
     public InsertConsumptionJob(Consumption consumption){
         super(new Params(Priority.LOW).persist());
 
         _consumption = consumption;
     }
 
-    @Override
+    @Override @DebugLog
     public void onAdded() {
         // todo: send event to add consumption to screen
     }
 
-    @Override
+    @Override @DebugLog
     public void onRun() throws Throwable {
         _consumptionRepository.insert(_consumption);
     }
 
-    @Override
+    @Override @DebugLog
     protected void onCancel() {
         // todo: send error to user
     }
 
-    @Override
+    @Override @DebugLog
     protected boolean shouldReRunOnThrowable(Throwable throwable) {
         return false;
     }
