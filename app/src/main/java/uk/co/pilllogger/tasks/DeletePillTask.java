@@ -13,13 +13,11 @@ import uk.co.pilllogger.repositories.PillRepository;
  */
 public class DeletePillTask extends AsyncTask<Void, Void, Void> {
 
-    Activity _activity;
     Pill _pill;
 
     @Inject PillRepository _pillRepository;
 
-    public DeletePillTask(Activity activity, Pill pill) {
-        _activity = activity;
+    public DeletePillTask(Pill pill) {
         _pill = pill;
     }
 

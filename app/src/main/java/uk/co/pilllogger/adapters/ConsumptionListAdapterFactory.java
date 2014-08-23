@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 
 public class ConsumptionListAdapterFactory{
     private final Context _context;
@@ -29,3 +30,4 @@ public class ConsumptionListAdapterFactory{
         return new ConsumptionListAdapter(_context, _jobManager, resourceId, consumptions, pills);
     }
 }
+

@@ -24,8 +24,7 @@ import uk.co.pilllogger.repositories.PillRepository;
                 GetTutorialSeenTask.class,
                 InsertConsumptionTask.class,
                 InsertPillTask.class,
-                SetTutorialSeenTask.class,
-                UpdatePillTask.class
+                SetTutorialSeenTask.class
         },
         complete = false,
         library = true

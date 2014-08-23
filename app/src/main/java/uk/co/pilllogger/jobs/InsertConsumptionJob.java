@@ -7,7 +7,9 @@ import javax.inject.Inject;
 
 import hugo.weaving.DebugLog;
 import uk.co.pilllogger.models.Consumption;
+import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
+import uk.co.pilllogger.repositories.PillRepository;
 
 /**
  * Created by Alex on 22/08/2014

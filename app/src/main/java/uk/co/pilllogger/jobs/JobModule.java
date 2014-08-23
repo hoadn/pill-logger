@@ -14,7 +14,8 @@ import uk.co.pilllogger.App;
         injects = {
                 LoadPillsJob.class,
                 InsertConsumptionJob.class,
-                DeleteConsumptionJob.class
+                DeleteConsumptionJob.class,
+                UpdatePillJob.class
         },
         library = true,
         complete = false

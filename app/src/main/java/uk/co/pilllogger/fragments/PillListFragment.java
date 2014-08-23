@@ -25,6 +25,7 @@ import javax.inject.Provider;
 
 import hugo.weaving.DebugLog;
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.adapters.PillListAdapterFactory;
 import uk.co.pilllogger.adapters.PillsListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.events.LoadedPillsEvent;
@@ -47,7 +48,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     Provider<GetPillsTask> _getPillsTaskProvider;
 
     @Inject
-    ConsumptionRepository _consumptionRepository;
+    PillListAdapterFactory _pillListAdapterFactory;
 
     public static final String TAG = "PillListFragment";
     private ListView _list;
@@ -227,7 +228,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             if(activity == null) // it's not gonna work without this
                 return;
 
-            PillsListAdapter adapter = new PillsListAdapter(activity, R.layout.pill_list_item, pills, _consumptionRepository);
+            PillsListAdapter adapter = _pillListAdapterFactory.create(R.layout.pill_list_item, pills);
             _bus.register(adapter);
             _list.setAdapter(adapter);
         }

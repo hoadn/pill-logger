@@ -1,6 +1,7 @@
 package uk.co.pilllogger.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -27,8 +28,8 @@ public abstract class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
     protected ConsumptionRepository _consumptionRepository;
 
     @DebugLog
-    public PillsListBaseAdapter(Activity activity, int textViewResourceId, List<Pill> pills, ConsumptionRepository consumptionRepository) {
-        super(activity, textViewResourceId, pills);
+    public PillsListBaseAdapter(Context context, int textViewResourceId, List<Pill> pills, ConsumptionRepository consumptionRepository) {
+        super(context, textViewResourceId, pills);
         _consumptionRepository = consumptionRepository;
     }
 
