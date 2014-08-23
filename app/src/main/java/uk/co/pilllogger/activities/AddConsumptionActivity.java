@@ -65,12 +65,12 @@ import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.jobs.InsertConsumptionJob;
 import uk.co.pilllogger.jobs.InsertPillJob;
+import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.GetTutorialSeenTask;
 import uk.co.pilllogger.tasks.SetTutorialSeenTask;
 import uk.co.pilllogger.views.ColourIndicator;
@@ -89,9 +89,6 @@ public class AddConsumptionActivity extends PillLoggerActivityBase implements
 
     @Inject
     ConsumptionRepository _consumptionRepository;
-
-    @Inject
-    Provider<GetPillsTask> _getPillsTaskProvider;
 
     @Inject
     JobManager _jobManager;
@@ -145,7 +142,7 @@ public class AddConsumptionActivity extends PillLoggerActivityBase implements
         _pillsList = (ListView)findViewById(R.id.add_consumption_pill_list);
 
         if(_pillRepository.isCached() == false) { // this should be handled by the producer
-            _getPillsTaskProvider.get().execute();
+            _jobManager.addJobInBackground(new LoadPillsJob());
         }
 
         _activity = this;
@@ -590,7 +587,7 @@ public class AddConsumptionActivity extends PillLoggerActivityBase implements
         if (_adapter != null) {
             _addedPills.add(event.getPill());
 
-            _getPillsTaskProvider.get().execute();
+            _jobManager.addJobInBackground(new LoadPillsJob());
             _adapter.addOpenPill(event.getPill());
             _adapter.addConsumedPill(event.getPill());
 

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -27,11 +28,11 @@ import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.PurchasedFeatureEvent;
 import uk.co.pilllogger.helpers.ExportHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.FeatureType;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.GetPillsTask;
 
 /**
  * Created by Alex on 01/06/2014
@@ -44,9 +45,6 @@ public class ExportMainFragment extends ExportFragmentBase {
     private ExportSelectDosageFragment _selectDosageFragment;
     private ExportSelectTimeFragment _selectTimeFragment;
 
-    @Inject
-    Provider<GetPillsTask> _getPillsTaskProvider;
-
     List<Pill> _pills = new ArrayList<Pill>();
     private TextView _pillSummary;
     private TextView _dosageSummary;
@@ -55,6 +53,7 @@ public class ExportMainFragment extends ExportFragmentBase {
 
     private View _finishedView;
     private TextView _unlock;
+    @Inject JobManager _jobManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -221,7 +220,7 @@ public class ExportMainFragment extends ExportFragmentBase {
         Timber.d("onActivityCreated");
 
         if(_pills == null || _pills.size() == 0) {
-            _getPillsTaskProvider.get().execute();
+            _jobManager.addJobInBackground(new LoadPillsJob());
         }
 
         setExportButtonText();

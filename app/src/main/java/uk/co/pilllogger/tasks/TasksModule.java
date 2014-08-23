@@ -19,7 +19,6 @@ import uk.co.pilllogger.repositories.PillRepository;
                 GetConsumptionsTask.class,
                 GetFavouritePillsTask.class,
                 GetMaxDosagesTask.class,
-                GetPillsTask.class,
                 GetTutorialSeenTask.class,
                 SetTutorialSeenTask.class
         },

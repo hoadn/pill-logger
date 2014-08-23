@@ -21,7 +21,7 @@ public class LoadPillsJob extends Job {
     @Inject
     PillRepository _pillRepository;
 
-    protected LoadPillsJob() {
+    public LoadPillsJob() {
         super(new Params(Priority.HIGH));
     }
 

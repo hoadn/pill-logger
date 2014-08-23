@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -31,6 +32,7 @@ import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.PurchasedFeatureEvent;
 import uk.co.pilllogger.fragments.ExportMainFragment;
 import uk.co.pilllogger.helpers.DateHelper;
+import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.ExportSettings;
 import uk.co.pilllogger.models.Pill;
@@ -40,7 +42,6 @@ import uk.co.pilllogger.state.FeatureType;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetMaxDosagesTask;
-import uk.co.pilllogger.tasks.GetPillsTask;
 
 /**
  * Created by Alex on 22/05/2014
@@ -52,9 +53,6 @@ public class ExportActivity extends PillLoggerActivityBase
         GetMaxDosagesTask.ITaskComplete,
         GetConsumptionsTask.ITaskComplete {
 
-    @Inject
-    Provider<GetPillsTask> _getPillsTaskProvider;
-
     private static final String TAG = "ExportActivity";
     private List<Pill> _pillsList;
     private ExportSettings _exportSettings = new ExportSettings();
@@ -64,6 +62,7 @@ public class ExportActivity extends PillLoggerActivityBase
     private TextView _exportSubTitle;
     @Inject Bus _bus;
     @Inject PillRepository _pillRepository;
+    @Inject JobManager _jobManager;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +70,7 @@ public class ExportActivity extends PillLoggerActivityBase
         setContentView(R.layout.activity_export);
 
         if (_pillRepository.isCached() == false) {
-            _getPillsTaskProvider.get().execute();
+            _jobManager.addJobInBackground(new LoadPillsJob());
         }
 
         new GetConsumptionsTask(this, this, true).execute();

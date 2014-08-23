@@ -35,17 +35,14 @@ import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.jobs.InsertPillJob;
+import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.views.ColourIndicator;
 
 
 public class PillListFragment extends PillLoggerFragmentBase implements
         SharedPreferences.OnSharedPreferenceChangeListener{
-
-    @Inject
-    Provider<GetPillsTask> _getPillsTaskProvider;
 
     @Inject
     PillListAdapterFactory _pillListAdapterFactory;
@@ -243,7 +240,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     @Subscribe
     public void pillInserted(CreatedPillEvent event) {
-        _getPillsTaskProvider.get().execute();
+        _jobManager.addJobInBackground(new LoadPillsJob());
         _addPillName.setText("");
         _addPillSize.setText("");
         _addPillSize.clearFocus();
@@ -253,14 +250,14 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     @Subscribe
     public void pillsUpdated(UpdatedPillEvent event) {
-        _getPillsTaskProvider.get().execute();
+        _jobManager.addJobInBackground(new LoadPillsJob());
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(isAdded() && getActivity() != null) {
             if (key.equals(getActivity().getResources().getString(R.string.pref_key_medication_list_order)) || key.equals(getActivity().getResources().getString(R.string.pref_key_reverse_order)))
-                _getPillsTaskProvider.get().execute();
+                _jobManager.addJobInBackground(new LoadPillsJob());
         }
     }
 

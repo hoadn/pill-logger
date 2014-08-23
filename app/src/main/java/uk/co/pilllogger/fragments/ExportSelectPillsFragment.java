@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
@@ -18,10 +19,10 @@ import javax.inject.Provider;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillsListExportAdapter;
 import uk.co.pilllogger.events.LoadedPillsEvent;
+import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.GetPillsTask;
 
 /**
  * Created by nick on 23/05/14.
@@ -31,10 +32,8 @@ public class ExportSelectPillsFragment extends ExportFragmentBase {
     ListView _pillsList;
 
     @Inject
-    Provider<GetPillsTask> _getPillsTaskProvider;
-
-    @Inject
     ConsumptionRepository _consumptionRepository;
+    @Inject JobManager _jobManager;
 
     @Override
     public void onDestroyView() {
@@ -74,7 +73,7 @@ public class ExportSelectPillsFragment extends ExportFragmentBase {
             if (pills != null)
                 setUpPillsListAdapter(pills);
             else
-                _getPillsTaskProvider.get().execute();
+                _jobManager.addJobInBackground(new LoadPillsJob());
         }
 
         _exportService.getPillSummary(_exportService.getSummaryTextView());

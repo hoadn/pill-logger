@@ -12,6 +12,7 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Subscribe;
 
 import java.util.HashMap;
@@ -28,11 +29,11 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.views.ColourIndicator;
 import uk.co.pilllogger.widget.MyAppWidgetProvider;
 
@@ -40,9 +41,6 @@ import uk.co.pilllogger.widget.MyAppWidgetProvider;
  * Created by nick on 01/11/13.
  */
 public class AppWidgetConfigure extends PillLoggerActivityBase implements AddConsumptionPillListAdapter.IConsumptionSelected {
-
-    @Inject
-    Provider<GetPillsTask> _getPillsTaskProvider;
 
     @InjectView(R.id.widget_custom_text)
     public EditText _customText;
@@ -63,6 +61,9 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements AddCon
     @Inject
     PillRepository _pillRepository;
 
+    @Inject
+    JobManager _jobManager;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -78,7 +79,7 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements AddCon
         setupColourIndicators();
 
         this.setResult(RESULT_CANCELED);
-        _getPillsTaskProvider.get().execute();
+        _jobManager.addJobInBackground(new LoadPillsJob());
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
