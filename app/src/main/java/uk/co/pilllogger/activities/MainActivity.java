@@ -69,12 +69,10 @@ import uk.co.pilllogger.jobs.InsertConsumptionJob;
 import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
-import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.FeatureType;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.tasks.GetConsumptionsTask;
-import uk.co.pilllogger.tasks.GetFavouritePillsTask;
 import uk.co.pilllogger.tasks.GetTutorialSeenTask;
 import uk.co.pilllogger.themes.ITheme;
 import uk.co.pilllogger.themes.ProfessionalTheme;
@@ -91,7 +89,6 @@ import uk.co.pilllogger.widget.MyAppWidgetProvider;
  * Created by nick on 22/10/13.
  */
 public class MainActivity extends PillLoggerActivityBase implements
-        GetFavouritePillsTask.ITaskComplete,
         GetTutorialSeenTask.ITaskComplete,
         SharedPreferences.OnSharedPreferenceChangeListener, GetConsumptionsTask.ITaskComplete {
 
@@ -593,18 +590,6 @@ public class MainActivity extends PillLoggerActivityBase implements
         int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), MyAppWidgetProvider.class));
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         sendBroadcast(intent);
-    }
-
-    @Override
-    public void favouritePillsReceived(List<Pill> pills) {
-        if(_menu == null)
-            return;
-
-        for (Pill pill : pills) {
-            if (_menu.findItem(pill.getId()) == null) {
-                addPillToMenu(pill);
-            }
-        }
     }
 
     public void startTutorial(String tag) {

@@ -16,7 +16,6 @@ import uk.co.pilllogger.repositories.PillRepository;
 @Module(
         injects = {
                 GetConsumptionsTask.class,
-                GetFavouritePillsTask.class,
                 GetMaxDosagesTask.class,
                 GetTutorialSeenTask.class,
                 SetTutorialSeenTask.class
