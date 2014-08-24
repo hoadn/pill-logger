@@ -18,6 +18,7 @@ import com.echo.holographlibrary.BarGraph;
 import com.echo.holographlibrary.LineGraph;
 import com.echo.holographlibrary.PieGraph;
 import com.echo.holographlibrary.StackBarGraph;
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
@@ -41,22 +42,21 @@ import uk.co.pilllogger.adapters.GraphPillListAdapter;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
+import uk.co.pilllogger.events.LoadedConsumptionsEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
-import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.LoadConsumptionsJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.stats.Statistics;
-import uk.co.pilllogger.tasks.GetConsumptionsTask;
 
 /**
  * Created by nick on 23/10/13.
  */
-public class ConsumptionListFragment extends PillLoggerFragmentBase implements
-        GetConsumptionsTask.ITaskComplete{
+public class ConsumptionListFragment extends PillLoggerFragmentBase{
 
     @Inject
     ConsumptionRepository _consumptionRepository;
@@ -74,6 +74,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     private List<Consumption> _consumptions;
     private View _loading;
     @Inject Statistics _statistics;
+    @Inject JobManager _jobManager;
 
     @DebugLog
     public static ConsumptionListFragment newInstance(int num){
@@ -183,16 +184,16 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         setupPills(_pills);
     }
 
-    @Override @DebugLog
-    public void consumptionsReceived(List<Consumption> consumptions) {
-        _consumptions = consumptions;
+    @Subscribe @DebugLog
+    public void consumptionsReceived(LoadedConsumptionsEvent event) {
+        _consumptions = event.getConsumptions();
         Activity activity = getActivity();
 
         if(activity == null) // the method won't work without the activity, so let's not crash trying.
             return;
 
         TextView noConsumption = (TextView) activity.findViewById(R.id.no_consumption_text);
-        if (consumptions.size() == 0) {
+        if (_consumptions.size() == 0) {
             noConsumption.setVisibility(View.VISIBLE);
             _loading.setVisibility(View.INVISIBLE);
             _listView.setVisibility(View.GONE);
@@ -204,15 +205,15 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
             }
 
             List<Consumption> removeConsumptions = new ArrayList<Consumption>();
-            for(Consumption c : consumptions){
+            for(Consumption c : _consumptions){
                 if(_allPills.containsKey(c.getPillId()) == false){
                     removeConsumptions.add(c);
                 }
             }
 
-            consumptions.removeAll(removeConsumptions);
+            _consumptions.removeAll(removeConsumptions);
 
-            ConsumptionListAdapter adapter = _consumptionListAdapterFactory.create(R.layout.consumption_list_item, consumptions, _pills);
+            ConsumptionListAdapter adapter = _consumptionListAdapterFactory.create(R.layout.consumption_list_item, _consumptions, _pills);
 
             _bus.register(adapter);
 
@@ -236,7 +237,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         }
         TrackerHelper.updateUserProfile(activity, _pills.size(), _consumptions, _statistics);
 
-        _statistics.refreshConsumptionCaches(consumptions);
+        _statistics.refreshConsumptionCaches(_consumptions);
     }
 
     private int getGraphDays(){
@@ -320,11 +321,11 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                 });
             }
             if(_consumptions == null || _consumptions.size() == 0) {
-                new GetConsumptionsTask(this.getActivity(), this, true).execute();
+                _jobManager.addJobInBackground(new LoadConsumptionsJob(true));
             }
             else{
                 if(_listView.getAdapter() == null){
-                    consumptionsReceived(_consumptions);
+                    consumptionsReceived(new LoadedConsumptionsEvent(_consumptions));
                 }
             }
         }
@@ -342,7 +343,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                             consumption2.setQuantity(consumption2.getQuantity() - 1);
                         }
                     }
-                    consumptionsReceived(_consumptions);
+                    consumptionsReceived(new LoadedConsumptionsEvent(_consumptions));
                 }
             }
         };
@@ -377,8 +378,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
             public void run(){
                 _consumptions.removeAll(toRemove);
                 Collections.sort(_consumptions);
-                //_consumptions = ConsumptionRepository.getSingleton(_activity).groupConsumptions(_consumptions);
-                consumptionsReceived(_consumptions);
+                consumptionsReceived(new LoadedConsumptionsEvent(_consumptions));
             }
         };
 

@@ -69,10 +69,10 @@ import uk.co.pilllogger.jobs.InsertConsumptionJob;
 import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.FeatureType;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetTutorialSeenTask;
 import uk.co.pilllogger.themes.ITheme;
 import uk.co.pilllogger.themes.ProfessionalTheme;
@@ -90,7 +90,7 @@ import uk.co.pilllogger.widget.MyAppWidgetProvider;
  */
 public class MainActivity extends PillLoggerActivityBase implements
         GetTutorialSeenTask.ITaskComplete,
-        SharedPreferences.OnSharedPreferenceChangeListener, GetConsumptionsTask.ITaskComplete {
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Inject
     PillRepository _pillRepository;
@@ -659,11 +659,5 @@ public class MainActivity extends PillLoggerActivityBase implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         _themeChanged = updateTheme(key);
-    }
-
-    @Override
-    public void consumptionsReceived(List<Consumption> consumptions) {
-        ExportHelper export = ExportHelper.getSingleton(this);
-        export.exportToCsv(consumptions);
     }
 }

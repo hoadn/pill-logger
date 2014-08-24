@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -25,13 +24,14 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.events.LoadedConsumptionsEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.PurchasedFeatureEvent;
 import uk.co.pilllogger.fragments.ExportMainFragment;
 import uk.co.pilllogger.helpers.DateHelper;
+import uk.co.pilllogger.jobs.LoadConsumptionsJob;
 import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.ExportSettings;
@@ -40,7 +40,6 @@ import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.services.IExportService;
 import uk.co.pilllogger.state.FeatureType;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetMaxDosagesTask;
 
 /**
@@ -50,8 +49,7 @@ import uk.co.pilllogger.tasks.GetMaxDosagesTask;
 public class ExportActivity extends PillLoggerActivityBase
         implements
         IExportService,
-        GetMaxDosagesTask.ITaskComplete,
-        GetConsumptionsTask.ITaskComplete {
+        GetMaxDosagesTask.ITaskComplete {
 
     private static final String TAG = "ExportActivity";
     private List<Pill> _pillsList;
@@ -73,7 +71,8 @@ public class ExportActivity extends PillLoggerActivityBase
             _jobManager.addJobInBackground(new LoadPillsJob());
         }
 
-        new GetConsumptionsTask(this, this, true).execute();
+        _jobManager.addJobInBackground(new LoadConsumptionsJob(true));
+
         new GetMaxDosagesTask(this, this).execute();
         Display display = getWindowManager().getDefaultDisplay();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
@@ -290,9 +289,9 @@ public class ExportActivity extends PillLoggerActivityBase
         _maxDosages = pillConsumptionMaxQuantityMap;
     }
 
-    @Override
-    public void consumptionsReceived(List<Consumption> consumptions) {
-        _consumptions = consumptions;
+    @Subscribe
+    public void consumptionsReceived(LoadedConsumptionsEvent event) {
+        _consumptions = event.getConsumptions();
     }
 
     @Override
