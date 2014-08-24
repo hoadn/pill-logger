@@ -15,19 +15,21 @@ import uk.co.pilllogger.repositories.ConsumptionRepository;
 public class ConsumptionListAdapterFactory{
     private final Context _context;
     private final JobManager _jobManager;
+    private final ConsumptionRepository _consumptionRepository;
 
     @Inject
-    public ConsumptionListAdapterFactory(Context context, JobManager jobManager){
+    public ConsumptionListAdapterFactory(Context context, JobManager jobManager, ConsumptionRepository consumptionRepository){
         _context = context;
         _jobManager = jobManager;
+        _consumptionRepository = consumptionRepository;
     }
 
     public ConsumptionListAdapter create(int resourceId, List<Consumption> consumptions){
-        return new ConsumptionListAdapter(_context, _jobManager, resourceId, consumptions);
+        return new ConsumptionListAdapter(_context, _jobManager, _consumptionRepository, resourceId, consumptions);
     }
 
     public ConsumptionListAdapter create(int resourceId, List<Consumption> consumptions, List<Pill> pills){
-        return new ConsumptionListAdapter(_context, _jobManager, resourceId, consumptions, pills);
+        return new ConsumptionListAdapter(_context, _jobManager, _consumptionRepository, resourceId, consumptions, pills);
     }
 }
 

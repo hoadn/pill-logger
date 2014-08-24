@@ -159,6 +159,8 @@ public class DialogActivity extends PillLoggerActivityBase{
                             continue;
                         }
 
+                        consumption.setPill(_pill);
+
                         fragment = new ConsumptionInfoDialogFragment(this, consumption);
                         break;
                     }

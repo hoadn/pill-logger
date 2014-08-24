@@ -31,6 +31,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,7 @@ import uk.co.pilllogger.jobs.InsertConsumptionJob;
 import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.views.ColourIndicator;
 
@@ -62,16 +64,16 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
     private static String TAG = "ConsumptionListAdapter";
     private JobManager _jobManager;
-    private List<Consumption> _consumptions;
+    private final ConsumptionRepository _consumptionRepository;
     private List<Pill> _pills;
 
-    public ConsumptionListAdapter(Context context, JobManager jobManager, int textViewResourceId, List<Consumption> consumptions) {
+    public ConsumptionListAdapter(Context context, JobManager jobManager, ConsumptionRepository consumptionRepository, int textViewResourceId, List<Consumption> consumptions) {
         super(context, textViewResourceId, consumptions);
         _jobManager = jobManager;
-        _consumptions = consumptions;
+        _consumptionRepository = consumptionRepository;
     }
-    public ConsumptionListAdapter(Context context, JobManager jobManager, int textViewResourceId, List<Consumption> consumptions, List<Pill> pills) {
-        this(context, jobManager, textViewResourceId, consumptions);
+    public ConsumptionListAdapter(Context context, JobManager jobManager, ConsumptionRepository consumptionRepository,int textViewResourceId, List<Consumption> consumptions, List<Pill> pills) {
+        this(context, jobManager, consumptionRepository, textViewResourceId, consumptions);
         _pills = pills;
     }
 
@@ -123,7 +125,11 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
     @Subscribe @DebugLog
     public void consumptionAdded(CreatedConsumptionEvent event) {
-        Timber.d("consumptionAdded");
+        _data.add(event.getConsumption());
+        Collections.sort(_data);
+        _data = _consumptionRepository.groupConsumptions(_data);
+
+        Timber.d(TAG, "Consumption list updated");
         notifyDataSetChanged();
     }
 
@@ -180,8 +186,8 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
                 View view = v.findViewById(R.id.main_graph);
 
-                if (_consumptions.size() > 0) {
-                    Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(_consumptions, dayCount);
+                if (_data.size() > 0) {
+                    Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(_data, dayCount);
                     if (xPoints != null)
                         plotGraph(xPoints, dayCount, view);
                 }
@@ -189,7 +195,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
             else {
                 View view = v.findViewById(R.id.main_graph);
 
-                Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(_consumptions, dayCount);
+                Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(_data, dayCount);
                 plotGraph(xPoints, dayCount, view);
             }
         }

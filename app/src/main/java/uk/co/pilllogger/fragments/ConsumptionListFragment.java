@@ -24,6 +24,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -196,12 +197,21 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
             _loading.setVisibility(View.INVISIBLE);
             _listView.setVisibility(View.GONE);
         }
-        else if(consumptions != null && consumptions.size() > 0){
+        else {
             if (_listView.getVisibility() == View.GONE) {
                 _listView.setVisibility(View.VISIBLE);
                 noConsumption.setVisibility(View.GONE);
             }
-            //List<Consumption> grouped = ConsumptionRepository.getSingleton(activity).groupConsumptions(consumptions);
+
+            List<Consumption> removeConsumptions = new ArrayList<Consumption>();
+            for(Consumption c : consumptions){
+                if(_allPills.containsKey(c.getPillId()) == false){
+                    removeConsumptions.add(c);
+                }
+            }
+
+            consumptions.removeAll(removeConsumptions);
+
             ConsumptionListAdapter adapter = _consumptionListAdapterFactory.create(R.layout.consumption_list_item, consumptions, _pills);
 
             _bus.register(adapter);
@@ -263,7 +273,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         view.setTag(data);
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void pillsLoaded(LoadedPillsEvent event) {
         _pills = event.getPills();
         List<Integer> graphPills = State.getSingleton().getGraphExcludePills();
@@ -279,6 +289,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         setupPills(pillList);
     }
 
+    @DebugLog
     private void setupPills(final List<Pill> pillList) {
         Activity activity = getActivity();
         if (activity != null) {
@@ -308,31 +319,15 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                     }
                 });
             }
-            new GetConsumptionsTask(this.getActivity(), this, true).execute();
-        }
-    }
-
-    @Subscribe
-    public void consumptionAdded(CreatedConsumptionEvent event) {
-        final Consumption consumption1 = event.getConsumption();
-
-        Timber.d("Consumption added. Updating consumption list.");
-
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                if (_consumptions != null && !(_consumptions.contains(consumption1))) {
-                    _consumptions.add(consumption1);
-                    Collections.sort(_consumptions);
-                    _consumptions = _consumptionRepository.groupConsumptions(_consumptions);
+            if(_consumptions == null || _consumptions.size() == 0) {
+                new GetConsumptionsTask(this.getActivity(), this, true).execute();
+            }
+            else{
+                if(_listView.getAdapter() == null){
                     consumptionsReceived(_consumptions);
-
-                    Timber.d(TAG, "Consumption list updated");
                 }
             }
-        };
-
-        executeRunnable(runnable);
+        }
     }
 
     @Subscribe

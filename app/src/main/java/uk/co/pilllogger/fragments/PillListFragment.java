@@ -248,11 +248,6 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         LayoutHelper.hideKeyboard(getActivity());
     }
 
-    @Subscribe
-    public void pillsUpdated(UpdatedPillEvent event) {
-        _jobManager.addJobInBackground(new LoadPillsJob());
-    }
-
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(isAdded() && getActivity() != null) {

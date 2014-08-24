@@ -28,6 +28,7 @@ import uk.co.pilllogger.events.DeletePillEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.events.UpdatePillEvent;
+import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.jobs.DeletePillJob;
 import uk.co.pilllogger.jobs.InsertConsumptionJob;
@@ -143,6 +144,12 @@ public class PillsListAdapter extends PillsListBaseAdapter {
 
     @Subscribe
     public void consumptionDeleted(DeletedConsumptionEvent event) {
+        sortThenUpdate();
+    }
+
+    @Subscribe
+    public void pillUpdated(UpdatedPillEvent event){
+        _data.remove(event.getPill());
         sortThenUpdate();
     }
 
