@@ -5,56 +5,67 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.path.android.jobqueue.JobManager;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.inject.Inject;
+
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.events.LoadedConsumptionsEvent;
 import uk.co.pilllogger.helpers.NotificationHelper;
+import uk.co.pilllogger.jobs.InsertConsumptionJob;
+import uk.co.pilllogger.jobs.LoadConsumptionsJob;
 import uk.co.pilllogger.models.Consumption;
-import uk.co.pilllogger.tasks.GetConsumptionsTask;
 
 /**
  * Created by Alex on 05/03/14.
  */
-public class TakeAgainReceiver extends BroadcastReceiver implements GetConsumptionsTask.ITaskComplete {
+public class TakeAgainReceiver extends InjectingBroadcastReceiver {
     private static final String TAG = "TakeAgainReceiver";
     private Context _context;
 
+    @Inject
+    JobManager _jobManager;
+
+    @Inject
+    Bus _bus;
+
     @Override
     public void onReceive(final Context context, Intent intent) {
+        super.onReceive(context, intent);
+
         _context = context;
         Log.d(TAG, "Intent received");
 
         String group = intent.getStringExtra(context.getString(R.string.intent_extra_notification_consumption_group));
 
         Log.d(TAG, "Group: " + group);
-
-        new GetConsumptionsTask(context, this, false, group).execute();
+        _bus.register(this);
+        _jobManager.addJobInBackground(new LoadConsumptionsJob(false, group));
 
     }
 
-    @Override
-    public void consumptionsReceived(List<Consumption> consumptions) {
+    @Subscribe
+    public void consumptionsReceived(LoadedConsumptionsEvent event) {
 
         String consumptionGroup = UUID.randomUUID().toString();
         Date consumptionDate = new Date();
-        for(Consumption c : consumptions){
+        for(Consumption c : event.getConsumptions()){
             Consumption newC = new Consumption(c);
             newC.setId(0);
             newC.setDate(consumptionDate);
             newC.setGroup(consumptionGroup);
 
-//            try {
-//
-//                new InsertConsumptionTask(_context, newC).execute().get();
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            } catch (ExecutionException e) {
-//                e.printStackTrace();
-//            }
+            _jobManager.addJobInBackground(new InsertConsumptionJob(newC));
         }
 
         NotificationHelper.clearNotification(_context, R.id.notification_consumption_reminder);
+
+        _bus.unregister(this);
     }
 }

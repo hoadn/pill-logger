@@ -18,7 +18,6 @@ import uk.co.pilllogger.fragments.ExportSelectDateFragment;
 import uk.co.pilllogger.fragments.ExportSelectDosageFragment;
 import uk.co.pilllogger.fragments.ExportSelectPillsFragment;
 import uk.co.pilllogger.fragments.ExportSelectTimeFragment;
-import uk.co.pilllogger.fragments.GraphFragment;
 import uk.co.pilllogger.fragments.InfoDialogFragment;
 import uk.co.pilllogger.fragments.NewPillDialogFragment;
 import uk.co.pilllogger.fragments.PillInfoDialogFragment;
@@ -47,7 +46,6 @@ import uk.co.pilllogger.fragments.StatsFragment;
                 ExportSelectDosageFragment.class,
                 ExportSelectPillsFragment.class,
                 ExportSelectTimeFragment.class,
-                GraphFragment.class,
                 InfoDialogFragment.class,
                 NewPillDialogFragment.class,
                 PillInfoDialogFragment.class,

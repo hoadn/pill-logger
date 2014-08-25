@@ -10,7 +10,7 @@ import uk.co.pilllogger.models.Consumption;
  * in uk.co.pilllogger.events.
  */
 public class LoadedConsumptionsEvent {
-    private final List<Consumption> _consumptions;
+    private List<Consumption> _consumptions;
 
     public LoadedConsumptionsEvent(List<Consumption> consumptions) {
         _consumptions = consumptions;

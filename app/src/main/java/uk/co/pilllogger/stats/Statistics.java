@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -23,11 +24,10 @@ import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
+import uk.co.pilllogger.events.UpdatedStatisticsEvent;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
-import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.GetConsumptionsTask;
 
 /**
  * Created by nick on 07/03/14.
@@ -52,6 +52,7 @@ public class Statistics{
 
     private final Bus _bus;
     ConsumptionRepository _consumptionRepository;
+    private List<Consumption> _consumptions;
 
     @Inject
     public Statistics(Context context, Bus bus, ConsumptionRepository consumptionRepository){
@@ -434,6 +435,8 @@ public class Statistics{
     }
 
     public void refreshConsumptionCaches(List<Consumption> consumptions){
+        _consumptions = consumptions;
+
         _pillAmountsCache = null;
         _dayWithMostConsumptionsCache = -1;
         _hourWithMostConsumptionsCache = -1;
@@ -458,6 +461,8 @@ public class Statistics{
         getTotalConsumptions(consumptions);
         getLongestStreak(consumptions);
         getCurrentStreak(consumptions);
+
+        _bus.post(new UpdatedStatisticsEvent(consumptions));
     }
 
     private void refreshPillCaches(List<Consumption> consumptions){
@@ -468,41 +473,35 @@ public class Statistics{
 
     @Subscribe
     public void consumptionAdded(CreatedConsumptionEvent event) {
-        new GetConsumptionsTask(_context, new GetConsumptionsTask.ITaskComplete() {
-            @Override
-            public void consumptionsReceived(List<Consumption> consumptions) {
-                refreshConsumptionCaches(consumptions);
-            }
-        }, false).execute();
+        _consumptions.add(event.getConsumption());
+
+        refreshConsumptionCaches(_consumptions);
     }
 
     @Subscribe
     public void consumptionDeleted(DeletedConsumptionEvent event) {
-        new GetConsumptionsTask(_context, new GetConsumptionsTask.ITaskComplete() {
-            @Override
-            public void consumptionsReceived(List<Consumption> consumptions) {
-                refreshConsumptionCaches(consumptions);
-            }
-        }, false).execute();
+        _consumptions.remove(event.getConsumption());
+
+        refreshConsumptionCaches(_consumptions);
     }
 
     @Subscribe
     public void consumptionPillGroupDeleted(DeletedConsumptionGroupEvent event) {
-        new GetConsumptionsTask(_context, new GetConsumptionsTask.ITaskComplete() {
-            @Override
-            public void consumptionsReceived(List<Consumption> consumptions) {
-                refreshConsumptionCaches(consumptions);
+        List<Consumption> removeConsumptions = new ArrayList<Consumption>();
+        for(Consumption c : _consumptions){
+            if(c.getPillId() == event.getPillId()
+                    && c.getGroup().equals(event.getGroup())){
+                removeConsumptions.add(c);
             }
-        }, false).execute();
+        }
+
+        _consumptions.removeAll(removeConsumptions);
+
+        refreshConsumptionCaches(_consumptions);
     }
 
     @Subscribe
     public void pillsUpdated(UpdatedPillEvent event) {
-        new GetConsumptionsTask(_context, new GetConsumptionsTask.ITaskComplete() {
-            @Override
-            public void consumptionsReceived(List<Consumption> consumptions) {
-                refreshPillCaches(consumptions);
-            }
-        }, false).execute();
+        refreshConsumptionCaches(_consumptions);
     }
 }

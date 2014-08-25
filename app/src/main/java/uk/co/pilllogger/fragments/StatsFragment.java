@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.echo.holographlibrary.PieGraph;
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
@@ -27,15 +28,17 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
+import uk.co.pilllogger.events.LoadedConsumptionsEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
+import uk.co.pilllogger.events.UpdatedStatisticsEvent;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
+import uk.co.pilllogger.jobs.LoadConsumptionsJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.stats.PillAmount;
 import uk.co.pilllogger.stats.Statistics;
-import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.themes.ITheme;
 import uk.co.pilllogger.views.ColourIndicator;
 import uk.co.pilllogger.views.DayOfWeekView;
@@ -44,8 +47,7 @@ import uk.co.pilllogger.views.HourOfDayView;
 /**
  * Created by nick on 18/03/14.
  */
-public class StatsFragment extends PillLoggerFragmentBase implements
-        GetConsumptionsTask.ITaskComplete{
+public class StatsFragment extends PillLoggerFragmentBase{
 
     @InjectView(R.id.stats_most_taken_medicine_1st) TextView _medicineMostTaken1st;
     @InjectView(R.id.stats_most_taken_medicine_2nd) TextView _medicineMostTaken2nd;
@@ -79,6 +81,7 @@ public class StatsFragment extends PillLoggerFragmentBase implements
     private Context _context;
     @Inject
     Statistics _statistics;
+    @Inject JobManager _jobManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -128,13 +131,15 @@ public class StatsFragment extends PillLoggerFragmentBase implements
 
     @Subscribe
     public void pillsLoaded(LoadedPillsEvent event) {
-        new GetConsumptionsTask(getActivity(), this, true).execute();
+        _jobManager.addJobInBackground(new LoadConsumptionsJob(true));
     }
 
-    @Override
-    public void consumptionsReceived(List<Consumption> consumptions) {
+    @Subscribe
+    public void statisticsUpdated(UpdatedStatisticsEvent event) {
         if(!isAdded())
             return;
+
+        List<Consumption> consumptions = event.getConsumptions();
 
         if (consumptions != null && consumptions.size() > 0) {
             setNoInformation(false);
@@ -246,26 +251,6 @@ public class StatsFragment extends PillLoggerFragmentBase implements
         _longestTimeBetweenTitle.setTypeface(State.getSingleton().getTypeface());
         _statsTitle.setTypeface(State.getSingleton().getTypeface());
         _noInformation.setTypeface(State.getSingleton().getTypeface());
-    }
-
-    @Subscribe
-    public void consumptionAdded(CreatedConsumptionEvent event) {
-        new GetConsumptionsTask(getActivity(), this, false).execute();
-    }
-
-    @Subscribe
-    public void consumptionDeleted(DeletedConsumptionEvent event) {
-        new GetConsumptionsTask(getActivity(), this, false).execute();
-    }
-
-    @Subscribe
-    public void consumptionPillGroupDeleted(DeletedConsumptionGroupEvent event) {
-        new GetConsumptionsTask(getActivity(), this, false).execute();
-    }
-
-    @Subscribe
-    public void pillsUpdated(UpdatedPillEvent event) {
-        new GetConsumptionsTask(getActivity(), this, false).execute();
     }
 
     public static Fragment newInstance(int num) {

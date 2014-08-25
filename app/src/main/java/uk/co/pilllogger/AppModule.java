@@ -12,13 +12,19 @@ import dagger.Provides;
 import uk.co.pilllogger.events.AndroidBus;
 import uk.co.pilllogger.jobs.JobModule;
 import uk.co.pilllogger.models.ModelModule;
+import uk.co.pilllogger.receivers.DelayReminderReceiver;
+import uk.co.pilllogger.receivers.ReminderReceiver;
+import uk.co.pilllogger.receivers.TakeAgainReceiver;
 import uk.co.pilllogger.tasks.TasksModule;
 import uk.co.pilllogger.widget.MyAppWidgetProvider;
 
 @Module(
         injects = {
-            App.class,
-            MyAppWidgetProvider.class
+                App.class,
+                MyAppWidgetProvider.class,
+                ReminderReceiver.class,
+                DelayReminderReceiver.class,
+                TakeAgainReceiver.class
         },
         includes = {
                 JobModule.class,

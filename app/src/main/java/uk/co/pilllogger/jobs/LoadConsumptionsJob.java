@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import hugo.weaving.DebugLog;
 import uk.co.pilllogger.events.LoadedConsumptionsEvent;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
@@ -31,12 +32,14 @@ public class LoadConsumptionsJob extends Job {
     private final boolean _shouldGroup;
     private String _group;
 
+    @DebugLog
     public LoadConsumptionsJob(boolean shouldGroup){
         super(new Params(Priority.HIGH));
 
         _shouldGroup = shouldGroup;
     }
 
+    @DebugLog
     public LoadConsumptionsJob(boolean shouldGroup, String group){
         this(shouldGroup);
         _group = group;
@@ -47,7 +50,7 @@ public class LoadConsumptionsJob extends Job {
 
     }
 
-    @Override
+    @Override @DebugLog
     public void onRun() throws Throwable {
         List<Consumption> consumptions;
         if(_group == null){
