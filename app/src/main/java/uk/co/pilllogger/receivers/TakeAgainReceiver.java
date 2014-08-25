@@ -1,6 +1,5 @@
 package uk.co.pilllogger.receivers;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -10,7 +9,6 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import javax.inject.Inject;
