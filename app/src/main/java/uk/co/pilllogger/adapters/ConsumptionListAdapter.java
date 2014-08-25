@@ -25,6 +25,7 @@ import com.echo.holographlibrary.LineGraph;
 import com.echo.holographlibrary.PieGraph;
 import com.echo.holographlibrary.StackBarGraph;
 import com.path.android.jobqueue.JobManager;
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
@@ -44,6 +45,7 @@ import uk.co.pilllogger.activities.DialogActivity;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DecreaseConsumptionEvent;
 import uk.co.pilllogger.events.IncreaseConsumptionEvent;
+import uk.co.pilllogger.events.RedrawGraphEvent;
 import uk.co.pilllogger.events.TakeConsumptionAgainEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.fragments.DeleteConsumptionEvent;
@@ -65,15 +67,17 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
     private static String TAG = "ConsumptionListAdapter";
     private JobManager _jobManager;
     private final ConsumptionRepository _consumptionRepository;
+    private final Bus _bus;
     private List<Pill> _pills;
 
-    public ConsumptionListAdapter(Context context, JobManager jobManager, ConsumptionRepository consumptionRepository, int textViewResourceId, List<Consumption> consumptions) {
+    public ConsumptionListAdapter(Context context, JobManager jobManager, ConsumptionRepository consumptionRepository, Bus bus, int textViewResourceId, List<Consumption> consumptions) {
         super(context, textViewResourceId, consumptions);
         _jobManager = jobManager;
         _consumptionRepository = consumptionRepository;
+        _bus = bus;
     }
-    public ConsumptionListAdapter(Context context, JobManager jobManager, ConsumptionRepository consumptionRepository,int textViewResourceId, List<Consumption> consumptions, List<Pill> pills) {
-        this(context, jobManager, consumptionRepository, textViewResourceId, consumptions);
+    public ConsumptionListAdapter(Context context, JobManager jobManager, ConsumptionRepository consumptionRepository, Bus bus, int textViewResourceId, List<Consumption> consumptions, List<Pill> pills) {
+        this(context, jobManager, consumptionRepository, bus, textViewResourceId, consumptions);
         _pills = pills;
     }
 
@@ -321,6 +325,8 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
                             }
                         }
                         TrackerHelper.filterGraphEvent(_context, TAG);
+
+                        _bus.post(new RedrawGraphEvent());
                         // todo: send event to get the plot redrawn
                         //((ConsumptionListFragment)_fragment).replotGraph();
                     }
@@ -366,15 +372,12 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
             boolean moving = false;
             @Override
             public void onPanelSlide(View view, float v) {
-                Timber.v("moving = " + moving + " V = " + v);
                 if (moving == false) {
                     if (v < 0.5) {
-                        Timber.v("V = Setting to previous");
                         graphSettings.setImageDrawable(_context.getResources().getDrawable(R.drawable.previous));
                         moving = true;
                     }
                     else {
-                        Timber.v("V = Setting to next");
                         graphSettings.setImageDrawable(_context.getResources().getDrawable(R.drawable.next));
                         moving = true;
                     }
@@ -397,14 +400,12 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
         graphSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (slidingView.isOpen()) {
                     slidingView.closePane();
                 }
                 else {
                     slidingView.openPane();
                 }
-
             }
         });
     }

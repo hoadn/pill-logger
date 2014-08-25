@@ -44,6 +44,7 @@ import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.events.LoadedConsumptionsEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
+import uk.co.pilllogger.events.RedrawGraphEvent;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.jobs.LoadConsumptionsJob;
@@ -244,6 +245,11 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
         DateTime aWeekAgo = new DateTime().minusWeeks(1);
         Days totalDays = Days.daysBetween(aWeekAgo.withTimeAtStartOfDay(), new DateTime().withTimeAtStartOfDay());
         return totalDays.getDays();
+    }
+
+    @Subscribe
+    public void replotGraph(RedrawGraphEvent event){
+        replotGraph();
     }
 
     public void replotGraph(){
