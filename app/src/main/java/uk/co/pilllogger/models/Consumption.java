@@ -1,12 +1,13 @@
 package uk.co.pilllogger.models;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 /**
  * Created by nick on 22/10/13.
  */
-public class Consumption implements Comparable {
+public class Consumption implements Comparable, Serializable {
 
     private Pill _pill;
     private Date _date;

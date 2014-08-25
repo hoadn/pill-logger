@@ -13,14 +13,19 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.path.android.jobqueue.JobManager;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.jobs.InsertPillJob;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.InsertPillTask;
 import uk.co.pilllogger.views.ColourIndicator;
 
 public class NewPillDialogFragment extends PillLoggerFragmentBase {
@@ -46,7 +51,11 @@ public class NewPillDialogFragment extends PillLoggerFragmentBase {
     @InjectView(R.id.new_pill_title)
     TextView _newPillTitle;
 
-    Pill _newPill = new Pill();
+    @Inject
+    Provider<Pill> _pillProvider;
+
+    Pill _newPill;
+    @Inject JobManager _jobManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -55,6 +64,8 @@ public class NewPillDialogFragment extends PillLoggerFragmentBase {
         if(activity == null){
             return null;
         }
+
+        _newPill = _pillProvider.get();
 
         View view = inflater.inflate(R.layout.fragment_new_pill, container, false);
 
@@ -120,7 +131,7 @@ public class NewPillDialogFragment extends PillLoggerFragmentBase {
         _newPillFavourite.setImageDrawable(getResources().getDrawable(drawable));
     }
 
-    @OnClick(R.id.new_pill_done)
+    @OnClick(R.id.new_pill_done_container)
     public void submit(){
         _newPill.setName(String.valueOf(_newPillName.getText()));
         String pillSize = _newPillSize.getText().toString();
@@ -132,7 +143,7 @@ public class NewPillDialogFragment extends PillLoggerFragmentBase {
         im.hideSoftInputFromWindow(_newPillName.getWindowToken(), 0);
 
         if (_newPill.getName().equals("") == false) {
-            new InsertPillTask(activity, _newPill).execute();
+            _jobManager.addJobInBackground(new InsertPillJob(_newPill));
         }
 
         activity.finish();

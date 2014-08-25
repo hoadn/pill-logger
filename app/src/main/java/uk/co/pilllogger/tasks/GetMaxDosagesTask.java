@@ -9,6 +9,8 @@ import android.os.AsyncTask;
 
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 
 
@@ -16,6 +18,9 @@ import uk.co.pilllogger.repositories.ConsumptionRepository;
  * Created by alex on 23/10/13.
  */
 public class GetMaxDosagesTask extends AsyncTask<Void, Void, Map<Integer, Integer>> {
+
+    @Inject
+    ConsumptionRepository _consumptionRepository;
 
     Context _context;
     ITaskComplete _listener;
@@ -26,8 +31,7 @@ public class GetMaxDosagesTask extends AsyncTask<Void, Void, Map<Integer, Intege
     }
     @Override
     protected Map<Integer, Integer> doInBackground(Void... voids) {
-        ConsumptionRepository repository = ConsumptionRepository.getSingleton(_context);
-        return repository.getMaxDosages();
+        return _consumptionRepository.getMaxDosages();
     }
 
     @Override

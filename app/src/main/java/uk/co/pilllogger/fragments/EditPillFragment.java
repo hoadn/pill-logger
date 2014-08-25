@@ -13,12 +13,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import com.path.android.jobqueue.JobManager;
+
+import javax.inject.Inject;
+
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.helpers.NumberHelper;
+import uk.co.pilllogger.jobs.UpdatePillJob;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.UpdatePillTask;
 import uk.co.pilllogger.views.ColourIndicator;
 
 /**
@@ -27,8 +31,9 @@ import uk.co.pilllogger.views.ColourIndicator;
 public class EditPillFragment extends PillLoggerFragmentBase {
 
     private Pill _pill;
+    @Inject JobManager _jobManager;
 
-    public EditPillFragment() {
+    public EditPillFragment(){
 
     }
 
@@ -63,6 +68,7 @@ public class EditPillFragment extends PillLoggerFragmentBase {
 
         if (_pill == null) {
             activity.getFragmentManager().popBackStack();
+            return null;
         }
 
         if (editPillName != null) {
@@ -107,7 +113,7 @@ public class EditPillFragment extends PillLoggerFragmentBase {
                 view.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        new UpdatePillTask(activity, _pill).execute();
+                        _jobManager.addJobInBackground(new UpdatePillJob(_pill));
                     }
                 }, delayMillis);
 

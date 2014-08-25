@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import com.squareup.otto.Bus;
 
+import javax.inject.Inject;
+
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.events.UpdatePillEvent;
@@ -30,12 +32,12 @@ import uk.co.pilllogger.state.State;
  */
 public class ChangePillInfoDialog extends DialogFragment {
 
-    private final Bus _bus;
+    @Inject Bus _bus;
     private Pill _pill;
     private Activity _activity;
 
     public ChangePillInfoDialog() {
-        _bus = State.getSingleton().getBus();
+
     }
 
     @SuppressLint("ValidFragment")

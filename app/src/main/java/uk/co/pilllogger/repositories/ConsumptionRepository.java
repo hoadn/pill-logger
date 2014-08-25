@@ -5,15 +5,20 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.squareup.otto.Bus;
+
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
 
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
@@ -27,22 +32,19 @@ import uk.co.pilllogger.models.Pill;
 /**
  * Created by alex on 14/11/2013.
  */
+@Singleton
 public class ConsumptionRepository extends BaseRepository<Consumption>{
     private static final String TAG = "ConsumptionRepository";
     private static ConsumptionRepository _instance;
+    private final Provider<Pill> _pillProvider;
     private Map<Integer, Map<Integer, Consumption>> _pillConsumptionCache = new ConcurrentHashMap<Integer, Map<Integer, Consumption>>();
     private Map<Integer, Consumption> _consumptionsCache = new ConcurrentHashMap<Integer, Consumption>();
     private Map<String, Map<Integer, Consumption>> _groupConsumptionCache = new ConcurrentHashMap<String, Map<Integer, Consumption>>();
 
-    private ConsumptionRepository(Context context) {
-        super(context);
-    }
-
-    public static ConsumptionRepository getSingleton(Context context) {
-        if (_instance == null) {
-            _instance = new ConsumptionRepository(context);
-        }
-        return _instance;
+    @Inject
+    public ConsumptionRepository(Context context, Bus bus, Provider<Pill> pillProvider) {
+        super(context, bus);
+        _pillProvider = pillProvider;
     }
 
     public boolean isCachedForPill(int pillId){
@@ -91,7 +93,8 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         int pillId = c.getInt(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_PILL_ID));
 
         if(pill == null){
-            pill = PillRepository.getSingleton(_context).get(pillId);
+            pill = _pillProvider.get();
+            pill.setId(pillId);
         }
 
         consumption.setPill(pill);
@@ -361,7 +364,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
             c.moveToFirst();
             while (!c.isAfterLast()) {
-                Consumption consumption = getFromCursor(c, null); // we don't want to recursively cause ourselves trouble, we already have the pill
+                Consumption consumption = getFromCursor(c);
                 consumptions.add(consumption);
                 c.moveToNext();
             }
@@ -377,6 +380,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
     @Override
     public List<Consumption> getAll() {
+        /*
         if(_consumptionsCache != null && _consumptionsCache.size() > 0) {
             ArrayList<Consumption> consumptions = new ArrayList<Consumption>(_consumptionsCache.values());
             try {
@@ -388,6 +392,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                 Timber.e(ex, "Error whilst sorting consumptions, falling back to retrieving from db");
             }
         }
+        */
 
         SQLiteDatabase db = _dbCreator.getReadableDatabase();
 
@@ -459,12 +464,9 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
             if (map != null)
               map.put(consumption.getId(), consumption);
         }
-
-        _bus.post(new CreatedConsumptionEvent(consumption));
     }
 
     private void notifyDeleted(Consumption consumption) {
-        _bus.post(new DeletedConsumptionEvent(consumption));
     }
 
     private void notifyDeletedGroupPill(Consumption consumption){
@@ -479,7 +481,5 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
             }
         }
         _consumptionsCache.remove(consumption.getId());
-
-        _bus.post(new DeletedConsumptionGroupEvent(consumption.getGroup(), consumption.getPillId()));
     }
 }

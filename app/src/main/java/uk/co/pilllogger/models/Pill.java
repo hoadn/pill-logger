@@ -3,8 +3,7 @@
  */
 package uk.co.pilllogger.models;
 
-import android.content.Context;
-
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
@@ -15,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
@@ -22,16 +23,12 @@ import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
-import uk.co.pilllogger.state.State;
 
 /**
  * @author alex
  *
  */
 public class Pill implements Serializable {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
     private static final String TAG = "Pill";
     private int _id;
@@ -45,14 +42,9 @@ public class Pill implements Serializable {
 
     private List<Consumption> _consumptions = new ArrayList<Consumption>();
 
-    public Pill() {
-        State.getSingleton().getBus().register(this);
-    }
-
-    public Pill(CharSequence name, float size) {
-        this();
-        _name = String.valueOf(name);
-        _size = size;
+    @Inject
+    public Pill(Bus bus) {
+        bus.register(this);
     }
 
 	/**
@@ -121,10 +113,10 @@ public class Pill implements Serializable {
         return _consumptions;
     }
 
-    public Consumption getLatestConsumption(Context context){
+    public Consumption getLatestConsumption(ConsumptionRepository consumptionRepository){
         if(_consumptions.isEmpty()) {
-            if(ConsumptionRepository.getSingleton(context).isCachedForPill(getId())) {
-                List<Consumption> consumptions = ConsumptionRepository.getSingleton(context).getForPill(this);
+            if(consumptionRepository.isCachedForPill(getId())) {
+                List<Consumption> consumptions = consumptionRepository.getForPill(this);
                 if (consumptions == null || consumptions.size() == 0)
                     return null;
 
@@ -318,5 +310,11 @@ public class Pill implements Serializable {
             return total;
 
         return total / (float)days;
+    }
+
+    public void refreshConsumptions(){
+        for(Consumption c : _consumptions){
+            c.setPill(this);
+        }
     }
 }

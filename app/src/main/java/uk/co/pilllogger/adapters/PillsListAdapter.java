@@ -2,6 +2,7 @@ package uk.co.pilllogger.adapters;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Subscribe;
 
 import java.util.Collections;
@@ -26,12 +28,14 @@ import uk.co.pilllogger.events.DeletePillEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.events.UpdatePillEvent;
+import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.DeletePillJob;
+import uk.co.pilllogger.jobs.InsertConsumptionJob;
+import uk.co.pilllogger.jobs.UpdatePillJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
-import uk.co.pilllogger.tasks.DeletePillTask;
-import uk.co.pilllogger.tasks.InsertConsumptionTask;
-import uk.co.pilllogger.tasks.UpdatePillTask;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 
 /**
  * Created by nick on 22/10/13.
@@ -39,26 +43,28 @@ import uk.co.pilllogger.tasks.UpdatePillTask;
 public class PillsListAdapter extends PillsListBaseAdapter {
 
     private static final String TAG = "PillsListAdapter";
+    JobManager _jobManager;
     private final Activity _activity;
 
     @DebugLog
-    public PillsListAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
-        super(activity, textViewResourceId, pills);
+    public PillsListAdapter(Context context, JobManager jobManager, Activity activity, int textViewResourceId, List<Pill> pills, ConsumptionRepository consumptionRepository) {
+        super(context, textViewResourceId, pills, consumptionRepository);
+        _jobManager = jobManager;
         _activity = activity;
     }
 
     private AlertDialog createCancelDialog(Pill pill, String deleteTrackerType) {
-        final Pill pill1 = pill;
+        final Pill finalPill = pill;
         final String deleteTrackerType1 = deleteTrackerType;
-        if (pill1 != null) {
+        if (finalPill != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(_activity);
-            builder.setTitle(_activity.getString(R.string.confirm_delete_title));
-            builder.setMessage(_activity.getString(R.string.confirm_delete_message));
+            builder.setTitle(_context.getString(R.string.confirm_delete_title));
+            builder.setMessage(_context.getString(R.string.confirm_delete_message));
             builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    new DeletePillTask(_activity, pill1).execute();
-                    TrackerHelper.deletePillEvent(_activity, deleteTrackerType1);
+                    _jobManager.addJobInBackground(new DeletePillJob(finalPill));
+                    TrackerHelper.deletePillEvent(_context, deleteTrackerType1);
                     notifyDataSetChanged();
                     dialog.dismiss();
                 }
@@ -75,10 +81,11 @@ public class PillsListAdapter extends PillsListBaseAdapter {
     }
 
     private void startDialog(int pillId) {
-        Intent intent = new Intent(_activity, DialogActivity.class);
+        Intent intent = new Intent(_context, DialogActivity.class);
         intent.putExtra("DialogType", DialogActivity.DialogType.Pill.ordinal());
         intent.putExtra("PillId", pillId);
-        _activity.startActivity(intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        _context.startActivity(intent);
     }
 
     @Override
@@ -92,7 +99,7 @@ public class PillsListAdapter extends PillsListBaseAdapter {
                 @Override
                 public void onClick(View v) {
                     if (pill != null) {
-                        TrackerHelper.showInfoDialogEvent(_activity, TAG);
+                        TrackerHelper.showInfoDialogEvent(_context, TAG);
                         startDialog(pill.getId());
                     }
                 }
@@ -106,9 +113,9 @@ public class PillsListAdapter extends PillsListBaseAdapter {
     public void onDialogAddConsumption(CreateConsumptionEvent event) {
         if (event.getPill() != null) {
             Consumption consumption = new Consumption(event.getPill(), new Date());
-            new InsertConsumptionTask(_activity, consumption).execute();
-            TrackerHelper.addConsumptionEvent(_activity, "PillDialog");
-            Toast.makeText(_activity, "Added consumption of " + event.getPill().getName(), Toast.LENGTH_SHORT).show();
+            _jobManager.addJobInBackground(new InsertConsumptionJob(consumption));
+            TrackerHelper.addConsumptionEvent(_context, "PillDialog");
+            Toast.makeText(_context, "Added consumption of " + event.getPill().getName(), Toast.LENGTH_SHORT).show();
         }
         event.getPillInfoDialogFragment().getActivity().finish();
     }
@@ -127,56 +134,55 @@ public class PillsListAdapter extends PillsListBaseAdapter {
 
     @Subscribe
     public void onDialogInfomationChanged(UpdatePillEvent event) {
-        new UpdatePillTask(_activity, event.getPill()).execute();
+        _jobManager.addJobInBackground(new UpdatePillJob(event.getPill()));
     }
 
     @Subscribe
     public void consumptionAdded(CreatedConsumptionEvent event) {
-        notifyDataSetChangedOnUiThread();
+        sortThenUpdate();
     }
 
     @Subscribe
     public void consumptionDeleted(DeletedConsumptionEvent event) {
-        notifyDataSetChangedOnUiThread();
+        sortThenUpdate();
     }
 
-    private void notifyDataSetChangedOnUiThread(){
-        if(_activity != null) {
-            _activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Collections.sort(_data, new Comparator<Pill>(){
-                        @Override
-                        public int compare(Pill lhs, Pill rhs) {
-                            if(lhs == rhs)
-                                return 0;
+    @Subscribe
+    public void pillUpdated(UpdatedPillEvent event){
+        _data.remove(event.getPill());
+        sortThenUpdate();
+    }
 
-                            if(lhs == null)
-                                return -1;
+    private void sortThenUpdate() {
+        Collections.sort(_data, new Comparator<Pill>() {
+            @Override
+            public int compare(Pill lhs, Pill rhs) {
+                if (lhs == rhs)
+                    return 0;
 
-                            if(rhs == null)
-                                return 1;
+                if (lhs == null)
+                    return -1;
 
-                            if(rhs.getLatestConsumption(_activity) == null && lhs.getLatestConsumption(_activity) == null)
-                                return 0;
+                if (rhs == null)
+                    return 1;
 
-                            if(lhs.getLatestConsumption(_activity) == null)
-                                return -1;
+                if (rhs.getLatestConsumption(_consumptionRepository) == null && lhs.getLatestConsumption(_consumptionRepository) == null)
+                    return 0;
 
-                            if(rhs.getLatestConsumption(_activity) == null)
-                                return 1;
+                if (lhs.getLatestConsumption(_consumptionRepository) == null)
+                    return -1;
 
-                            return rhs.getLatestConsumption(_activity).getDate().compareTo(lhs.getLatestConsumption(_activity).getDate());
-                        }
-                    });
-                    notifyDataSetChanged();
-                }
-            });
-        }
+                if (rhs.getLatestConsumption(_consumptionRepository) == null)
+                    return 1;
+
+                return rhs.getLatestConsumption(_consumptionRepository).getDate().compareTo(lhs.getLatestConsumption(_consumptionRepository).getDate());
+            }
+        });
+        notifyDataSetChanged();
     }
 
     @Subscribe
     public void consumptionPillGroupDeleted(DeletedConsumptionGroupEvent event) {
-        notifyDataSetChangedOnUiThread();
+        sortThenUpdate();
     }
 }

@@ -22,6 +22,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,15 +33,22 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
+import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.UiModule;
 import uk.co.pilllogger.adapters.SlidePagerAdapter;
 import uk.co.pilllogger.animations.FadeBackgroundPageTransformer;
 import uk.co.pilllogger.billing.IabHelper;
@@ -57,16 +65,15 @@ import uk.co.pilllogger.helpers.CrashlyticsTree;
 import uk.co.pilllogger.helpers.ExportHelper;
 import uk.co.pilllogger.helpers.FeedbackHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.InsertConsumptionJob;
+import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.FeatureType;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.GetConsumptionsTask;
-import uk.co.pilllogger.tasks.GetFavouritePillsTask;
-import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.GetTutorialSeenTask;
-import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.themes.ITheme;
 import uk.co.pilllogger.themes.ProfessionalTheme;
 import uk.co.pilllogger.themes.RainbowTheme;
@@ -82,9 +89,11 @@ import uk.co.pilllogger.widget.MyAppWidgetProvider;
  * Created by nick on 22/10/13.
  */
 public class MainActivity extends PillLoggerActivityBase implements
-        GetFavouritePillsTask.ITaskComplete,
         GetTutorialSeenTask.ITaskComplete,
-        SharedPreferences.OnSharedPreferenceChangeListener, GetConsumptionsTask.ITaskComplete {
+        SharedPreferences.OnSharedPreferenceChangeListener {
+
+    @Inject
+    PillRepository _pillRepository;
 
     private static final String TAG = "MainActivity";
     private MyViewPager _fragmentPager;
@@ -97,21 +106,14 @@ public class MainActivity extends PillLoggerActivityBase implements
     private TutorialService _tutorialService;
     private boolean _themeChanged;
     private IabHelper _billingHelper;
+    private boolean _dialogShown = false;
+    @Inject JobManager _jobManager;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         boolean isDebuggable = 0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE);
         State.getSingleton().setIsDebuggable(isDebuggable);
-
-        if(savedInstanceState == null) {
-            if (!isDebuggable) {
-                Crashlytics.start(this);
-                Timber.plant(new CrashlyticsTree());
-            } else {
-                Timber.plant(new Timber.DebugTree());
-            }
-        }
 
         _themeChanged = false;
 
@@ -191,8 +193,9 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-        if(PillRepository.getSingleton(this).isCached() == false) {
-            new GetPillsTask(this).execute();
+        Timber.d("Is PillRepository cached: " + _pillRepository.isCached());
+        if(_pillRepository.isCached() == false) {
+            _jobManager.addJobInBackground(new LoadPillsJob());
         }
 
         Integer gradientBackgroundResourceId = State.getSingleton().getTheme().getWindowBackgroundResourceId();
@@ -224,27 +227,31 @@ public class MainActivity extends PillLoggerActivityBase implements
                     for (FeatureType featureType : FeatureType.values()) {
                         features.add(featureType.toString());
                     }
-                    _billingHelper.queryInventoryAsync(true, features, new IabHelper.QueryInventoryFinishedListener() {
-                        @Override
-                        public void onQueryInventoryFinished(IabResult result, final Inventory inv) {
-                            if (result.isFailure() || inv == null) {
-                                Timber.e("Querying billing inventory failed: " + result.getMessage());
-                            }
-                            else {
-                                for (FeatureType feature : FeatureType.values()) {
-                                    SkuDetails skuDetails = inv.getSkuDetails(feature.toString());
-                                    if (skuDetails == null) {
-                                        continue;
-                                    }
-                                    State.getSingleton().getAvailableFeatures().put(feature, skuDetails);
+                    try {
+                        _billingHelper.queryInventoryAsync(true, features, new IabHelper.QueryInventoryFinishedListener() {
+                            @Override
+                            public void onQueryInventoryFinished(IabResult result, final Inventory inv) {
+                                if (result.isFailure() || inv == null) {
+                                    Timber.e("Querying billing inventory failed: " + result.getMessage());
+                                } else {
+                                    for (FeatureType feature : FeatureType.values()) {
+                                        SkuDetails skuDetails = inv.getSkuDetails(feature.toString());
+                                        if (skuDetails == null) {
+                                            continue;
+                                        }
+                                        State.getSingleton().getAvailableFeatures().put(feature, skuDetails);
 
-                                    if (inv.hasPurchase(feature.toString())) {
-                                        State.getSingleton().getEnabledFeatures().add(feature);
+                                        if (inv.hasPurchase(feature.toString())) {
+                                            State.getSingleton().getEnabledFeatures().add(feature);
+                                        }
                                     }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
+                    catch(IllegalStateException ise){
+                        Timber.e(ise, "Problem setting up In-app Billing");
+                    }
                 }
             }
         });
@@ -300,6 +307,11 @@ public class MainActivity extends PillLoggerActivityBase implements
     }
 
     private void showChangesDialog(){
+        if(_dialogShown){
+            return;
+        }
+
+        _dialogShown = true;
         Intent composeIntent = new Intent(this, WebViewActivity.class);
         composeIntent.putExtra(getString(R.string.key_show_feedback_button), true);
         composeIntent.putExtra(getString(R.string.key_web_address), "file:///android_asset/html/changelog.html");
@@ -479,7 +491,7 @@ public class MainActivity extends PillLoggerActivityBase implements
         this.startActivity(intent);
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void pillsReceived(LoadedPillsEvent event) {
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -487,9 +499,12 @@ public class MainActivity extends PillLoggerActivityBase implements
             int version = pInfo.versionCode;
 
             SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            Timber.d(event.getPills().size() + "");
             if(event.getPills().size() > 0) { // if they've setup a pill (ie. they are using the app). Show recent changes
                 int seenVersion = defaultSharedPreferences.getInt(getString(R.string.seenVersionKey), 0);
 
+                Timber.d("version:" + version);
+                Timber.d("seenVersion:" + seenVersion);
                 if (version > seenVersion)
                     showChangesDialog();
 
@@ -547,7 +562,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
     private void addConsumption(Pill pill){
         Consumption consumption = new Consumption(pill, new Date());
-        new InsertConsumptionTask(MainActivity.this, consumption).execute();
+        _jobManager.addJobInBackground(new InsertConsumptionJob(consumption));
 
         TrackerHelper.addConsumptionEvent(MainActivity.this, "FavouriteMenu");
 
@@ -575,18 +590,6 @@ public class MainActivity extends PillLoggerActivityBase implements
         int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), MyAppWidgetProvider.class));
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         sendBroadcast(intent);
-    }
-
-    @Override
-    public void favouritePillsReceived(List<Pill> pills) {
-        if(_menu == null)
-            return;
-
-        for (Pill pill : pills) {
-            if (_menu.findItem(pill.getId()) == null) {
-                addPillToMenu(pill);
-            }
-        }
     }
 
     public void startTutorial(String tag) {
@@ -643,7 +646,9 @@ public class MainActivity extends PillLoggerActivityBase implements
             _colour2 = getResources().getColor(theme.getPillListBackgroundResourceId());
             _colour3 = getResources().getColor(theme.getStatsBackgroundResourceId());
 
-            setTheme(State.getSingleton().getTheme().getStyleResourceId());
+            int styleResourceId = State.getSingleton().getTheme().getStyleResourceId();
+            setTheme(styleResourceId);
+            _context.setTheme(styleResourceId);
 
             return true;
         }
@@ -654,11 +659,5 @@ public class MainActivity extends PillLoggerActivityBase implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         _themeChanged = updateTheme(key);
-    }
-
-    @Override
-    public void consumptionsReceived(List<Consumption> consumptions) {
-        ExportHelper export = ExportHelper.getSingleton(this);
-        export.exportToCsv(consumptions);
     }
 }

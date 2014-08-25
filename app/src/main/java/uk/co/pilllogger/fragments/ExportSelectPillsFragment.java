@@ -8,16 +8,21 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillsListExportAdapter;
 import uk.co.pilllogger.events.LoadedPillsEvent;
+import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.GetPillsTask;
 
 /**
  * Created by nick on 23/05/14.
@@ -25,6 +30,10 @@ import uk.co.pilllogger.tasks.GetPillsTask;
 public class ExportSelectPillsFragment extends ExportFragmentBase {
 
     ListView _pillsList;
+
+    @Inject
+    ConsumptionRepository _consumptionRepository;
+    @Inject JobManager _jobManager;
 
     @Override
     public void onDestroyView() {
@@ -64,7 +73,7 @@ public class ExportSelectPillsFragment extends ExportFragmentBase {
             if (pills != null)
                 setUpPillsListAdapter(pills);
             else
-                new GetPillsTask(getActivity()).execute();
+                _jobManager.addJobInBackground(new LoadPillsJob());
         }
 
         _exportService.getPillSummary(_exportService.getSummaryTextView());
@@ -73,8 +82,11 @@ public class ExportSelectPillsFragment extends ExportFragmentBase {
     }
 
     private void setUpPillsListAdapter(List<Pill> pills) {
-        if (_pillsList != null)
-            _pillsList.setAdapter(new PillsListExportAdapter(getActivity(), R.layout.export_pills_list_item, pills, _exportService));
+        if (_pillsList != null) {
+            PillsListExportAdapter adapter = new PillsListExportAdapter(getActivity(), R.layout.export_pills_list_item, pills, _exportService, _consumptionRepository);
+            _bus.register(adapter);
+            _pillsList.setAdapter(adapter);
+        }
     }
 
     @Subscribe

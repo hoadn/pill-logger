@@ -18,43 +18,52 @@ import com.echo.holographlibrary.BarGraph;
 import com.echo.holographlibrary.LineGraph;
 import com.echo.holographlibrary.PieGraph;
 import com.echo.holographlibrary.StackBarGraph;
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.ConsumptionListAdapter;
+import uk.co.pilllogger.adapters.ConsumptionListAdapterFactory;
 import uk.co.pilllogger.adapters.GraphPillListAdapter;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
+import uk.co.pilllogger.events.LoadedConsumptionsEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
-import uk.co.pilllogger.events.UpdatedPillEvent;
+import uk.co.pilllogger.events.RedrawGraphEvent;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.LoadConsumptionsJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.stats.Statistics;
-import uk.co.pilllogger.tasks.GetConsumptionsTask;
-import uk.co.pilllogger.tasks.InitTestDbTask;
 
 /**
  * Created by nick on 23/10/13.
  */
-public class ConsumptionListFragment extends PillLoggerFragmentBase implements
-        InitTestDbTask.ITaskComplete,
-        GetConsumptionsTask.ITaskComplete{
+public class ConsumptionListFragment extends PillLoggerFragmentBase{
+
+    @Inject
+    ConsumptionRepository _consumptionRepository;
+
+    @Inject
+    ConsumptionListAdapterFactory _consumptionListAdapterFactory;
 
     public static final String TAG = "ConsumptionListFragment";
     ListView _listView;
@@ -62,9 +71,11 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
     HashMap<Integer, Pill> _allPills = new HashMap<Integer, Pill>();
     Fragment _fragment;
     Activity _activity;
-    private List<Pill> _pills;
+    private List<Pill> _pills = new ArrayList<Pill>();
     private List<Consumption> _consumptions;
     private View _loading;
+    @Inject Statistics _statistics;
+    @Inject JobManager _jobManager;
 
     @DebugLog
     public static ConsumptionListFragment newInstance(int num){
@@ -118,11 +129,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         return v;
     }
 
-
-    @Override
-    public void initComplete() {
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -172,33 +178,51 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         super.onResume();
     }
 
-    @Override @DebugLog
-    public void consumptionsReceived(List<Consumption> consumptions) {
-        _consumptions = consumptions;
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        setupPills(_pills);
+    }
+
+    @Subscribe @DebugLog
+    public void consumptionsReceived(LoadedConsumptionsEvent event) {
+        _consumptions = event.getConsumptions();
         Activity activity = getActivity();
 
         if(activity == null) // the method won't work without the activity, so let's not crash trying.
             return;
 
         TextView noConsumption = (TextView) activity.findViewById(R.id.no_consumption_text);
-        if (consumptions.size() == 0) {
+        if (_consumptions.size() == 0) {
             noConsumption.setVisibility(View.VISIBLE);
             _loading.setVisibility(View.INVISIBLE);
             _listView.setVisibility(View.GONE);
         }
-        else if(consumptions != null && consumptions.size() > 0){
+        else {
             if (_listView.getVisibility() == View.GONE) {
                 _listView.setVisibility(View.VISIBLE);
                 noConsumption.setVisibility(View.GONE);
             }
-            //List<Consumption> grouped = ConsumptionRepository.getSingleton(activity).groupConsumptions(consumptions);
-            ConsumptionListAdapter adapter;
 
-            adapter = new ConsumptionListAdapter(activity, this, R.layout.consumption_list_item, consumptions, _pills);
+            List<Consumption> removeConsumptions = new ArrayList<Consumption>();
+            for(Consumption c : _consumptions){
+                if(_allPills.containsKey(c.getPillId()) == false){
+                    removeConsumptions.add(c);
+                }
+            }
+
+            _consumptions.removeAll(removeConsumptions);
+
+            ConsumptionListAdapter adapter = _consumptionListAdapterFactory.create(R.layout.consumption_list_item, _consumptions, _pills);
+
+            _bus.register(adapter);
 
             if (_listView.getAdapter() != null) {
                 ConsumptionListAdapter currentAdapter = (ConsumptionListAdapter) _listView.getAdapter();
                 currentAdapter.destroy(); // tidy up Observer events
+
+                _bus.unregister(currentAdapter);
             }
 
             _listView.setAdapter(adapter);
@@ -212,15 +236,20 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                 }
             });
         }
-        TrackerHelper.updateUserProfile(activity, _pills.size(), _consumptions);
+        TrackerHelper.updateUserProfile(activity, _pills.size(), _consumptions, _statistics);
 
-        Statistics.getInstance(activity).refreshConsumptionCaches(consumptions);
+        _statistics.refreshConsumptionCaches(_consumptions);
     }
 
     private int getGraphDays(){
         DateTime aWeekAgo = new DateTime().minusWeeks(1);
         Days totalDays = Days.daysBetween(aWeekAgo.withTimeAtStartOfDay(), new DateTime().withTimeAtStartOfDay());
         return totalDays.getDays();
+    }
+
+    @Subscribe
+    public void replotGraph(RedrawGraphEvent event){
+        replotGraph();
     }
 
     public void replotGraph(){
@@ -251,7 +280,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         view.setTag(data);
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void pillsLoaded(LoadedPillsEvent event) {
         _pills = event.getPills();
         List<Integer> graphPills = State.getSingleton().getGraphExcludePills();
@@ -264,6 +293,11 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
         State.getSingleton().setGraphExcludePills(graphPills);
 
         final List<Pill> pillList = _pills;
+        setupPills(pillList);
+    }
+
+    @DebugLog
+    private void setupPills(final List<Pill> pillList) {
         Activity activity = getActivity();
         if (activity != null) {
             ListView list = (ListView) activity.findViewById(R.id.graph_drawer);
@@ -292,37 +326,15 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                     }
                 });
             }
-            new GetConsumptionsTask(this.getActivity(), this, true).execute();
-        }
-    }
-
-    @Subscribe
-    public void pillsUpdated(UpdatedPillEvent event) {
-        //new GetPillsTask(this.getActivity(), this).execute();
-        Timber.d("Pills Updated");
-    }
-
-    @Subscribe
-    public void consumptionAdded(CreatedConsumptionEvent event) {
-        final Consumption consumption1 = event.getConsumption();
-
-        Timber.d("Consumption added. Updating consumption list.");
-
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                if (_consumptions != null && !(_consumptions.contains(consumption1))) {
-                    _consumptions.add(consumption1);
-                    Collections.sort(_consumptions);
-                    _consumptions = ConsumptionRepository.getSingleton(_activity).groupConsumptions(_consumptions);
-                    consumptionsReceived(_consumptions);
-
-                    Timber.d(TAG, "Consumption list updated");
+            if(_consumptions == null || _consumptions.size() == 0) {
+                _jobManager.addJobInBackground(new LoadConsumptionsJob(true));
+            }
+            else{
+                if(_listView.getAdapter() == null){
+                    consumptionsReceived(new LoadedConsumptionsEvent(_consumptions));
                 }
             }
-        };
-
-        executeRunnable(runnable);
+        }
     }
 
     @Subscribe
@@ -337,20 +349,22 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
                             consumption2.setQuantity(consumption2.getQuantity() - 1);
                         }
                     }
-                    consumptionsReceived(_consumptions);
+                    consumptionsReceived(new LoadedConsumptionsEvent(_consumptions));
                 }
             }
         };
         executeRunnable(runnable);
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void consumptionPillGroupDeleted(DeletedConsumptionGroupEvent event) {
 
         if(_consumptions == null || event.getGroup() == null)
             return;
 
         final List<Consumption> toRemove = new ArrayList<Consumption>();
+
+        Timber.d("Going to remove consumptions from pill: " + event.getPillId() + " and group: " + event.getGroup());
 
         Consumption[] consumptions = new Consumption[_consumptions.size()];
         for(Consumption c : _consumptions.toArray(consumptions)){
@@ -372,8 +386,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase implements
             public void run(){
                 _consumptions.removeAll(toRemove);
                 Collections.sort(_consumptions);
-                //_consumptions = ConsumptionRepository.getSingleton(_activity).groupConsumptions(_consumptions);
-                consumptionsReceived(_consumptions);
+                consumptionsReceived(new LoadedConsumptionsEvent(_consumptions));
             }
         };
 

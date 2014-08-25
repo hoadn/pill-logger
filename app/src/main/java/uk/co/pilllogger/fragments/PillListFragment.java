@@ -16,29 +16,36 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import hugo.weaving.DebugLog;
-import timber.log.Timber;
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.adapters.PillListAdapterFactory;
 import uk.co.pilllogger.adapters.PillsListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.events.CreatedPillEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.InsertPillJob;
+import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.GetPillsTask;
-import uk.co.pilllogger.tasks.InsertPillTask;
 import uk.co.pilllogger.views.ColourIndicator;
 
 
 public class PillListFragment extends PillLoggerFragmentBase implements
-        InsertPillTask.ITaskComplete,
         SharedPreferences.OnSharedPreferenceChangeListener{
+
+    @Inject
+    PillListAdapterFactory _pillListAdapterFactory;
 
     public static final String TAG = "PillListFragment";
     private ListView _list;
@@ -48,7 +55,12 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     ColourIndicator _colour;
     private Activity _activity;
 
-	public PillListFragment() {
+    @Inject
+    Provider<Pill> _pillProvider;
+
+    @Inject JobManager _jobManager;
+
+    public PillListFragment() {
 	}
 
 	@Override
@@ -215,8 +227,8 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             if(activity == null) // it's not gonna work without this
                 return;
 
-            PillsListAdapter adapter = new PillsListAdapter(activity, R.layout.pill_list_item, pills);
-
+            PillsListAdapter adapter = _pillListAdapterFactory.create(activity, R.layout.pill_list_item, pills);
+            _bus.register(adapter);
             _list.setAdapter(adapter);
         }
         else
@@ -226,9 +238,9 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         }
     }
 
-    @Override
-    public void pillInserted(Pill pill) {
-        new GetPillsTask(getActivity()).execute();
+    @Subscribe
+    public void pillInserted(CreatedPillEvent event) {
+        _jobManager.addJobInBackground(new LoadPillsJob());
         _addPillName.setText("");
         _addPillSize.setText("");
         _addPillSize.clearFocus();
@@ -236,16 +248,11 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         LayoutHelper.hideKeyboard(getActivity());
     }
 
-    @Subscribe
-    public void pillsUpdated(UpdatedPillEvent event) {
-        new GetPillsTask(this.getActivity()).execute();
-    }
-
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(isAdded() && getActivity() != null) {
             if (key.equals(getActivity().getResources().getString(R.string.pref_key_medication_list_order)) || key.equals(getActivity().getResources().getString(R.string.pref_key_reverse_order)))
-                new GetPillsTask(getActivity()).execute();
+                _jobManager.addJobInBackground(new LoadPillsJob());
         }
     }
 
@@ -262,7 +269,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     public void completed() {
         if (!_addPillName.getText().toString().equals("")) {
-            Pill newPill = new Pill();
+            Pill newPill = _pillProvider.get();
             String pillName = _addPillName.getText().toString();
             String units = _unitSpinner.getSelectedItem().toString();
             newPill.setUnits(units);
@@ -275,7 +282,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             }
             newPill.setSize(pillSize);
 
-            new InsertPillTask(getActivity(), newPill, this).execute();
+            _jobManager.addJobInBackground(new InsertPillJob(newPill));
 
             TrackerHelper.createPillEvent(getActivity(), TAG);
         }

@@ -73,9 +73,10 @@
         android:layout_height="1dp"
         android:background="@color/grey_divider_lighter" />
     <LinearLayout
-        android:id="@+id/export_pills_list_layout"
+        android:id="@+id/new_pill_done_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:background="?android:attr/selectableItemBackground"
         android:orientation="vertical">
         <TextView
