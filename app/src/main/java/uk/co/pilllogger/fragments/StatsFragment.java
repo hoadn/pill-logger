@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import hugo.weaving.DebugLog;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
@@ -127,11 +128,6 @@ public class StatsFragment extends PillLoggerFragmentBase{
     @Override
     public void onDestroyView(){
         super.onDestroyView();
-    }
-
-    @Subscribe
-    public void pillsLoaded(LoadedPillsEvent event) {
-        _jobManager.addJobInBackground(new LoadConsumptionsJob(true));
     }
 
     @Subscribe

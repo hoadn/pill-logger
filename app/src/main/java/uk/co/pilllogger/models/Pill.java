@@ -311,4 +311,10 @@ public class Pill implements Serializable {
 
         return total / (float)days;
     }
+
+    public void refreshConsumptions(){
+        for(Consumption c : _consumptions){
+            c.setPill(this);
+        }
+    }
 }

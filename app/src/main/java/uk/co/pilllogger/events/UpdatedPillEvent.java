@@ -8,7 +8,7 @@ import uk.co.pilllogger.models.Pill;
  */
 public class UpdatedPillEvent {
     private final Pill _pill;
-    private boolean _deleted = true;
+    private boolean _deleted = false;
 
     public UpdatedPillEvent(Pill pill){
         _pill = pill;

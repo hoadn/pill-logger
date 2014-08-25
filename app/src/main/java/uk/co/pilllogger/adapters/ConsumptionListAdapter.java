@@ -133,9 +133,19 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
         notifyDataSetChanged();
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void pillsUpdated(UpdatedPillEvent event) {
-        _data.removeAll(event.getPill().getConsumptions());
+        if(event.wasDeleted()) {
+            _data.removeAll(event.getPill().getConsumptions());
+        }
+
+        for(Consumption c : _data){
+            if(c.getPillId() == event.getPill().getId()){
+                c.setPill(event.getPill());
+            }
+        }
+
+        Timber.d("Updated: " + event.getPill().getColour());
         notifyDataSetChanged();
     }
 
@@ -227,6 +237,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
                             holder.size.setVisibility(View.VISIBLE);
                         }
                         holder.colour.setColour(pill.getColour());
+                        Timber.d(pill.getColour() + "");
                     }
                     holder.date.setText(DateHelper.getRelativeDateTime(_context, consumption.getDate()));
                     holder.quantity.setText(String.valueOf(consumption.getQuantity()));

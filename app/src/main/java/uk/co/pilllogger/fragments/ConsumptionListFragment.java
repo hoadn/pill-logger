@@ -350,13 +350,15 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
         executeRunnable(runnable);
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void consumptionPillGroupDeleted(DeletedConsumptionGroupEvent event) {
 
         if(_consumptions == null || event.getGroup() == null)
             return;
 
         final List<Consumption> toRemove = new ArrayList<Consumption>();
+
+        Timber.d("Going to remove consumptions from pill: " + event.getPillId() + " and group: " + event.getGroup());
 
         Consumption[] consumptions = new Consumption[_consumptions.size()];
         for(Consumption c : _consumptions.toArray(consumptions)){
