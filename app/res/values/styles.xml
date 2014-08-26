@@ -85,14 +85,14 @@
     <style name="ConsumptionPillName">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">20sp</item>
+
     </style>
 
     <style name="ConsumptionDate">
-        <item name="android:textSize">14dip</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_marginTop">-5dp</item>
     </style>
 
     <style name="ConsumptionSize"/>

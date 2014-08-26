@@ -2,8 +2,11 @@ package uk.co.pilllogger.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -38,7 +41,9 @@ import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.ConsumptionListAdapter;
 import uk.co.pilllogger.adapters.ConsumptionListAdapterFactory;
+import uk.co.pilllogger.adapters.ConsumptionRecyclerAdapter;
 import uk.co.pilllogger.adapters.GraphPillListAdapter;
+import uk.co.pilllogger.decorators.DividerItemDecoration;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
@@ -65,8 +70,11 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
     @Inject
     ConsumptionListAdapterFactory _consumptionListAdapterFactory;
 
+    @Inject
+    Context _context;
+
     public static final String TAG = "ConsumptionListFragment";
-    ListView _listView;
+    RecyclerView _listView;
     View _mainLayout;
     HashMap<Integer, Pill> _allPills = new HashMap<Integer, Pill>();
     Fragment _fragment;
@@ -107,16 +115,16 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
         _fragment = this;
         _activity = getActivity();
 
-        //Doing this to test - will not be needed when working fully
-        //new InitTestDbTask(this.getActivity(), this).execute();
+        _listView = (RecyclerView) (v != null ? v.findViewById(R.id.main_consumption_list) : null);
+        _listView.setHasFixedSize(true);
+        _listView.addItemDecoration(new DividerItemDecoration(_activity, DividerItemDecoration.VERTICAL_LIST));
 
-        _listView = (ListView) (v != null ? v.findViewById(R.id.main_consumption_list) : null);
-        _loading = v.findViewById(R.id.consumptions_loading);
-
-        _listView.setEmptyView(_loading);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(_context);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        _listView.setLayoutManager(layoutManager);
 
         if (_listView.getAdapter() != null) //Trying this to make the list refresh after adding the new consumption
-            ((ConsumptionListAdapter)_listView.getAdapter()).notifyDataSetChanged();
+            _listView.getAdapter().notifyDataSetChanged();
 
         TextView noConsumptions = (TextView) v.findViewById(R.id.no_consumption_text);
         TextView title = (TextView)v.findViewById(R.id.consumption_fragment_title);
@@ -196,7 +204,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
         TextView noConsumption = (TextView) activity.findViewById(R.id.no_consumption_text);
         if (_consumptions.size() == 0) {
             noConsumption.setVisibility(View.VISIBLE);
-            _loading.setVisibility(View.INVISIBLE);
             _listView.setVisibility(View.GONE);
         }
         else {
@@ -214,15 +221,12 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
 
             _consumptions.removeAll(removeConsumptions);
 
-            ConsumptionListAdapter adapter = _consumptionListAdapterFactory.create(R.layout.consumption_list_item, _consumptions, _pills);
+            ConsumptionRecyclerAdapter adapter = new ConsumptionRecyclerAdapter(_consumptions, _context);
 
             _bus.register(adapter);
 
             if (_listView.getAdapter() != null) {
-                ConsumptionListAdapter currentAdapter = (ConsumptionListAdapter) _listView.getAdapter();
-                currentAdapter.destroy(); // tidy up Observer events
-
-                _bus.unregister(currentAdapter);
+                _bus.unregister(_listView.getAdapter());
             }
 
             _listView.setAdapter(adapter);

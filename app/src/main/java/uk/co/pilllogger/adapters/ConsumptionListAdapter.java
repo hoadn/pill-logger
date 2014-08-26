@@ -173,7 +173,6 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
         holder.quantity = (TextView) v.findViewById(R.id.consumption_list_quantity);
         holder.colour = (ColourIndicator) v.findViewById(R.id.consumption_list_colour);
         holder.size = (TextView) v.findViewById(R.id.consumption_list_size);
-        holder.dayText = (TextView) v.findViewById(R.id.day_text);
         holder.container = (RelativeLayout) v.findViewById(R.id.selector_container);
         if(holder.name != null){
             holder.name.setTypeface(State.getSingleton().getTypeface());

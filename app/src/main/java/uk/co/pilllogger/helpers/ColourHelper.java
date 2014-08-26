@@ -23,6 +23,10 @@ public class ColourHelper {
     }
 
     public static boolean isColourLight(int colour) {
+        if(colour == 0){
+            return false;
+        }
+
         int red = Color.red(colour);
         int blue = Color.blue(colour);
         int green = Color.green(colour);
