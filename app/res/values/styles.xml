@@ -1,5 +1,9 @@
 <resources xmlns:custom="http://schemas.android.com/apk/res/uk.co.pilllogger">
 
+    <style name="AppTheme.Fab" parent="FloatingActionButton">
+        <item name="floatingActionButtonColor">#cddc39</item>
+    </style>
+
     <!--
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
@@ -31,6 +35,7 @@
         <item name="android:actionBarTabBarStyle">@android:style/Widget.Holo.ActionBar.TabBar</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.Example</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.Example</item>
+        <item name="floatingActionButtonStyle">@style/AppTheme.Fab</item>
     </style>
 
     <style name="Theme.Transparent" parent="@android:style/Theme.Holo.Light.Dialog">
@@ -45,9 +50,9 @@
     <!-- ActionBar styles -->
     <style name="PartiallyTransparentActionBar"
            parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">#60000000</item>
-        <item name="android:backgroundSplit">#60000000</item>
-        <item name="android:backgroundStacked">#00000000</item>
+        <item name="android:background">#607d8b</item>
+        <item name="android:backgroundSplit">#607d8b</item>
+        <item name="android:backgroundStacked">#607d8b</item>
     </style>
 
     <style name="PartiallyTransparentActionBarTab"
