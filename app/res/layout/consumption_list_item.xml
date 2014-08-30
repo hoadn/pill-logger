@@ -71,10 +71,9 @@ android:color="@color/pill_colour1"
     <TextView
         android:id="@+id/consumption_list_date"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        tools:text="on 24 Aug at 16:14"
+        tools:text="24 Aug at 16:14"
         style="?ConsumptionDate"
-        android:layout_gravity="center_vertical"
+        android:layout_marginTop="16dp"
         android:layout_weight="1"
         android:gravity="right"/>
 </RelativeLayout>

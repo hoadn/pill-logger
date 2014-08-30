@@ -113,7 +113,7 @@ public class DateHelper {
     private static String setAsDateAndTime(Context context, DateTime date) {
         String dateString;
         // on {date}
-        dateString = (String)DateUtils.getRelativeTimeSpanString(context, date.getMillis(), true);
+        dateString = (String)DateUtils.getRelativeTimeSpanString(context, date.getMillis(), false);
 
         // at {time}
         return dateString += " " + DateUtils.getRelativeTimeSpanString(context, date.withDate(DateTime.now().year().get(), DateTime.now().monthOfYear().get(), DateTime.now().getDayOfMonth()).getMillis(), true);

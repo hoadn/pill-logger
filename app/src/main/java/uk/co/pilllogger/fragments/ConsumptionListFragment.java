@@ -129,11 +129,9 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
             _listView.getAdapter().notifyDataSetChanged();
 
         TextView noConsumptions = (TextView) v.findViewById(R.id.no_consumption_text);
-        TextView title = (TextView)v.findViewById(R.id.consumption_fragment_title);
         Typeface typeface = State.getSingleton().getTypeface();
         if (typeface != null){
             noConsumptions.setTypeface(typeface);
-            title.setTypeface(typeface);
         }
 
         return v;
