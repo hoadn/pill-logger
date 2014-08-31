@@ -126,4 +126,17 @@ public class Consumption implements Comparable, Serializable {
         result = 31 * result + (_group != null ? _group.hashCode() : 0);
         return result;
     }
+
+    public void incrementQuantity(){
+        ++_quantity;
+    }
+
+    public void decrementQuantity(){
+        --_quantity;
+
+        if(_quantity < 1){
+            _quantity = 1;
+        }
+
+    }
 }

@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -63,7 +62,7 @@ import uk.co.pilllogger.helpers.AlarmHelper;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
-import uk.co.pilllogger.jobs.InsertConsumptionJob;
+import uk.co.pilllogger.jobs.InsertConsumptionsJob;
 import uk.co.pilllogger.jobs.InsertPillJob;
 import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Consumption;
@@ -564,10 +563,13 @@ public class AddConsumptionActivity extends PillLoggerActivityBase implements
                     .show();
         }
         else {
+            List<Consumption> consumptions = new ArrayList<Consumption>();
             for (Pill pill : consumptionPills) {
                 Consumption consumption = new Consumption(pill, consumptionDate, consumptionGroup);
-                _jobManager.addJobInBackground(new InsertConsumptionJob(consumption));
+                consumptions.add(consumption);
             }
+
+            _jobManager.addJobInBackground(new InsertConsumptionsJob(consumptions));
 
             if(reminderDate != null){
                 AlarmHelper.addReminderAlarm(this, reminderDate, consumptionGroup, true);

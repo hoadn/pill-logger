@@ -47,6 +47,7 @@ import uk.co.pilllogger.adapters.GraphPillListAdapter;
 import uk.co.pilllogger.adapters.SimpleSectionedRecyclerViewAdapter;
 import uk.co.pilllogger.decorators.DividerItemDecoration;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
+import uk.co.pilllogger.events.DeleteConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.events.LoadedConsumptionsEvent;
@@ -56,6 +57,8 @@ import uk.co.pilllogger.events.TakeConsumptionAgainEvent;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.DeleteConsumptionJob;
+import uk.co.pilllogger.jobs.InsertConsumptionsJob;
 import uk.co.pilllogger.jobs.LoadConsumptionsJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -259,6 +262,13 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
     @Subscribe
     public void consumptionTakenAgain(TakeConsumptionAgainEvent event){
         _listView.scrollToPosition(0);
+
+        _jobManager.addJobInBackground(new InsertConsumptionsJob(event.getConsumptionsToInsert()));
+    }
+
+    @Subscribe
+    public void consumptionDeleted(DeleteConsumptionEvent event){
+        _jobManager.addJobInBackground(new DeleteConsumptionJob(event.getConsumption(), true));
     }
 
     private List<SimpleSectionedRecyclerViewAdapter.Section> getConsumptionSections() {
@@ -415,43 +425,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
                 }
             }
         };
-        executeRunnable(runnable);
-    }
-
-    @Subscribe @DebugLog
-    public void consumptionPillGroupDeleted(DeletedConsumptionGroupEvent event) {
-
-        if(_consumptions == null || event.getGroup() == null)
-            return;
-
-        final List<Consumption> toRemove = new ArrayList<Consumption>();
-
-        Timber.d("Going to remove consumptions from pill: " + event.getPillId() + " and group: " + event.getGroup());
-
-        Consumption[] consumptions = new Consumption[_consumptions.size()];
-        for(Consumption c : _consumptions.toArray(consumptions)){
-            if(c == null){
-                continue;
-            }
-
-            String consumptionGroup = c.getGroup();
-            if(consumptionGroup == null) {
-                continue;
-            }
-
-            if(c.getGroup().equals(event.getGroup()) && c.getPillId() == event.getPillId()) {
-                toRemove.add(c);
-            }
-        }
-
-        Runnable runnable = new Runnable(){
-            public void run(){
-                _consumptions.removeAll(toRemove);
-                Collections.sort(_consumptions);
-                consumptionsReceived(new LoadedConsumptionsEvent(_consumptions));
-            }
-        };
-
         executeRunnable(runnable);
     }
 }

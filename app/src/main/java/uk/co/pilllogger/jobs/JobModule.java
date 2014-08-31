@@ -8,13 +8,12 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import uk.co.pilllogger.App;
 
 @Module(
         injects = {
                 LoadPillsJob.class,
                 LoadConsumptionsJob.class,
-                InsertConsumptionJob.class,
+                InsertConsumptionsJob.class,
                 DeleteConsumptionJob.class,
                 InsertPillJob.class,
                 UpdatePillJob.class,

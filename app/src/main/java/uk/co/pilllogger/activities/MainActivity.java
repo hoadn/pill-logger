@@ -1,8 +1,6 @@
 package uk.co.pilllogger.activities;
 
 import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -22,7 +20,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,23 +29,19 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.UiModule;
 import uk.co.pilllogger.adapters.SlidePagerAdapter;
 import uk.co.pilllogger.animations.FadeBackgroundPageTransformer;
 import uk.co.pilllogger.billing.IabHelper;
@@ -60,16 +53,12 @@ import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
-import uk.co.pilllogger.fragments.StatsFragment;
-import uk.co.pilllogger.helpers.CrashlyticsTree;
-import uk.co.pilllogger.helpers.ExportHelper;
 import uk.co.pilllogger.helpers.FeedbackHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
-import uk.co.pilllogger.jobs.InsertConsumptionJob;
+import uk.co.pilllogger.jobs.InsertConsumptionsJob;
 import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
-import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.FeatureType;
 import uk.co.pilllogger.state.State;
@@ -562,7 +551,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
     private void addConsumption(Pill pill){
         Consumption consumption = new Consumption(pill, new Date());
-        _jobManager.addJobInBackground(new InsertConsumptionJob(consumption));
+        _jobManager.addJobInBackground(new InsertConsumptionsJob(consumption));
 
         TrackerHelper.addConsumptionEvent(MainActivity.this, "FavouriteMenu");
 

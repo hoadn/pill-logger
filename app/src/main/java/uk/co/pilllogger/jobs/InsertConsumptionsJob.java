@@ -4,43 +4,53 @@ import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
 import com.squareup.otto.Bus;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import hugo.weaving.DebugLog;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.models.Consumption;
-import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
-import uk.co.pilllogger.repositories.PillRepository;
 
 /**
  * Created by Alex on 22/08/2014
  * in uk.co.pilllogger.jobs.
  */
-public class InsertConsumptionJob extends Job {
+public class InsertConsumptionsJob extends Job {
 
-    private final Consumption _consumption;
+    private final List<Consumption> _consumptions;
     @Inject
     ConsumptionRepository _consumptionRepository;
 
     @Inject
     Bus _bus;
 
+    public InsertConsumptionsJob(Consumption consumption){
+        this(Arrays.asList(consumption));
+    }
+
     @DebugLog
-    public InsertConsumptionJob(Consumption consumption){
+    public InsertConsumptionsJob(List<Consumption> consumptions){
         super(new Params(Priority.MID).persist());
 
-        _consumption = consumption;
+        _consumptions = consumptions;
     }
 
     @Override @DebugLog
     public void onAdded() {
-        _bus.post(new CreatedConsumptionEvent(_consumption));
+        List<Consumption> groupedConsumptions = _consumptionRepository.groupConsumptions(_consumptions);
+
+        _bus.post(new CreatedConsumptionEvent(groupedConsumptions));
     }
 
     @Override @DebugLog
     public void onRun() throws Throwable {
-        _consumptionRepository.insert(_consumption);
+        for(Consumption c : _consumptions) {
+            _consumptionRepository.insert(c);
+        }
     }
 
     @Override @DebugLog

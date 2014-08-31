@@ -12,13 +12,17 @@ import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
+import uk.co.pilllogger.events.DecreaseConsumptionEvent;
 import uk.co.pilllogger.events.DeleteConsumptionEvent;
+import uk.co.pilllogger.events.IncreaseConsumptionEvent;
 import uk.co.pilllogger.events.TakeConsumptionAgainEvent;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.NumberHelper;
@@ -118,16 +122,58 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
 
     @Subscribe
     public void consumptionTakenAgain(TakeConsumptionAgainEvent event){
-        _consumptions.add(0, event.getConsumption());
+        Consumption eventConsumption = event.getConsumption();
+
+        _consumptions.add(0, eventConsumption);
 
         notifyItemRangeInserted(0, 1);
     }
 
     @Subscribe
     public void consumptionDeleted(DeleteConsumptionEvent event){
-        int indexOf = _consumptions.indexOf(event.getConsumption());
-        _consumptions.remove(event.getConsumption());
 
-        notifyItemRangeRemoved(indexOf, 1);
+        String group = event.getConsumption().getGroup();
+
+        List<Consumption> toRemove = new ArrayList<Consumption>();
+
+        int i = 0;
+        int count = 0;
+        int indexOf = -1;
+        for(Consumption c : _consumptions){
+            if(c.getGroup().equals(group)){
+                ++count;
+
+                if(indexOf == -1) {
+                    indexOf = i;
+                }
+
+                toRemove.add(c);
+            }
+
+            ++i;
+        }
+        Timber.d("Count: " + count);
+        Timber.d("indexOf: " + indexOf);
+        Timber.d("toRemove.size(): " + toRemove.size());
+        _consumptions.removeAll(toRemove);
+        notifyItemRangeRemoved(indexOf, count);
+    }
+
+    @Subscribe
+    public void consumptionIncreased(IncreaseConsumptionEvent event){
+        int indexOf = _consumptions.indexOf(event.getConsumption());
+
+        _consumptions.get(indexOf).incrementQuantity();
+
+        notifyItemRangeChanged(indexOf, 1);
+    }
+
+    @Subscribe
+    public void consumptionDecreased(DecreaseConsumptionEvent event){
+        int indexOf = _consumptions.indexOf(event.getConsumption());
+
+        _consumptions.get(indexOf).decrementQuantity();
+
+        notifyItemRangeChanged(indexOf, 1);
     }
 }

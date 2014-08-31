@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.LoadedConsumptionsEvent;
 import uk.co.pilllogger.helpers.NotificationHelper;
-import uk.co.pilllogger.jobs.InsertConsumptionJob;
+import uk.co.pilllogger.jobs.InsertConsumptionsJob;
 import uk.co.pilllogger.jobs.LoadConsumptionsJob;
 import uk.co.pilllogger.models.Consumption;
 
@@ -59,7 +59,7 @@ public class TakeAgainReceiver extends InjectingBroadcastReceiver {
             newC.setDate(consumptionDate);
             newC.setGroup(consumptionGroup);
 
-            _jobManager.addJobInBackground(new InsertConsumptionJob(newC));
+            _jobManager.addJobInBackground(new InsertConsumptionsJob(newC));
         }
 
         NotificationHelper.clearNotification(_context, R.id.notification_consumption_reminder);

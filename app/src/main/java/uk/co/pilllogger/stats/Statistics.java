@@ -9,7 +9,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -473,7 +472,7 @@ public class Statistics{
 
     @Subscribe
     public void consumptionAdded(CreatedConsumptionEvent event) {
-        _consumptions.add(event.getConsumption());
+        _consumptions.addAll(event.getConsumptions());
 
         refreshConsumptionCaches(_consumptions);
     }

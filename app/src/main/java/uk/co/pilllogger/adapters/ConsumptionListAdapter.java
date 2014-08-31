@@ -54,7 +54,7 @@ import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.jobs.DeleteConsumptionJob;
-import uk.co.pilllogger.jobs.InsertConsumptionJob;
+import uk.co.pilllogger.jobs.InsertConsumptionsJob;
 import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
@@ -93,7 +93,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
             newConsumption.setDate(consumptionDate);
             newConsumption.setQuantity(1);
 
-            _jobManager.addJobInBackground(new InsertConsumptionJob(newConsumption));
+            _jobManager.addJobInBackground(new InsertConsumptionsJob(newConsumption));
         }
 
         TrackerHelper.addConsumptionEvent(_context, "DialogTakeAgain");
@@ -106,7 +106,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
         newConsumption.setId(0);
         newConsumption.setQuantity(1);
 
-        _jobManager.addJobInBackground(new InsertConsumptionJob(newConsumption));
+        _jobManager.addJobInBackground(new InsertConsumptionsJob(newConsumption));
         TrackerHelper.addConsumptionEvent(_context, "DialogIncrease");
         Toast.makeText(_context, R.string.consumption_info_dialog_increase_toast, Toast.LENGTH_SHORT).show();
         event.getConsumptionInfoDialogFragment().getActivity().finish();
@@ -129,7 +129,7 @@ public class ConsumptionListAdapter extends ActionBarArrayAdapter<Consumption> {
 
     @Subscribe @DebugLog
     public void consumptionAdded(CreatedConsumptionEvent event) {
-        _data.add(event.getConsumption());
+        _data.addAll(event.getConsumptions());
         Collections.sort(_data);
         _data = _consumptionRepository.groupConsumptions(_data);
 
