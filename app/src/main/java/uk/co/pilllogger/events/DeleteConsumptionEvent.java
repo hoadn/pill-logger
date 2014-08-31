@@ -1,5 +1,6 @@
-package uk.co.pilllogger.fragments;
+package uk.co.pilllogger.events;
 
+import uk.co.pilllogger.fragments.ConsumptionInfoDialogFragment;
 import uk.co.pilllogger.models.Consumption;
 
 /**

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.DecreaseConsumptionEvent;
+import uk.co.pilllogger.events.DeleteConsumptionEvent;
 import uk.co.pilllogger.events.IncreaseConsumptionEvent;
 import uk.co.pilllogger.events.TakeConsumptionAgainEvent;
 import uk.co.pilllogger.models.Consumption;
@@ -50,7 +51,7 @@ public class ConsumptionInfoDialogFragment extends InfoDialogFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Activity activity = getActivity();
+        final Activity activity = getActivity();
 
         View takeAgainContainer = activity.findViewById(R.id.info_dialog_take_again);
         _takeAgain = (TextView) activity.findViewById(R.id.info_dialog_take_again_title);
@@ -94,24 +95,28 @@ public class ConsumptionInfoDialogFragment extends InfoDialogFragment {
             @Override
             public void onClick(View v) {
                 _bus.post(new TakeConsumptionAgainEvent(_consumption, ConsumptionInfoDialogFragment.this));
+                activity.finish();
             }
         });
         increase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 _bus.post(new IncreaseConsumptionEvent(_consumption, ConsumptionInfoDialogFragment.this));
+                activity.finish();
             }
         });
         decrease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 _bus.post(new DecreaseConsumptionEvent(_consumption, ConsumptionInfoDialogFragment.this));
+                activity.finish();
             }
         });
         deleteContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 _bus.post(new DeleteConsumptionEvent(_consumption, ConsumptionInfoDialogFragment.this));
+                activity.finish();
             }
         });
     }

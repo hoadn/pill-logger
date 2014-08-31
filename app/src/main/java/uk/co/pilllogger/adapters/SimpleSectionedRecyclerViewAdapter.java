@@ -8,56 +8,55 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 public class SimpleSectionedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final Context mContext;
+    private final Context _context;
     private static final int SECTION_TYPE = 0;
 
-    private boolean mValid = true;
-    private int mSectionResourceId;
-    private int mTextResourceId;
-    private LayoutInflater mLayoutInflater;
-    private RecyclerView.Adapter mBaseAdapter;
-    private SparseArray<Section> mSections = new SparseArray<Section>();
+    private boolean _valid = true;
+    private int _sectionResourceId;
+    private int _textResourceId;
+    private LayoutInflater _layoutInflater;
+    private RecyclerView.Adapter _baseAdapter;
+    private SparseArray<Section> _sections = new SparseArray<Section>();
 
 
     public SimpleSectionedRecyclerViewAdapter(Context context, int sectionResourceId, int textResourceId,
                                               RecyclerView.Adapter baseAdapter) {
 
-        mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mSectionResourceId = sectionResourceId;
-        mTextResourceId = textResourceId;
-        mBaseAdapter = baseAdapter;
-        mContext = context;
+        _layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        _sectionResourceId = sectionResourceId;
+        _textResourceId = textResourceId;
+        _baseAdapter = baseAdapter;
+        _context = context;
 
-        mBaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        _baseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
-                mValid = mBaseAdapter.getItemCount()>0;
+                _valid = _baseAdapter.getItemCount() > 0;
                 notifyDataSetChanged();
             }
 
             @Override
             public void onItemRangeChanged(int positionStart, int itemCount) {
-                mValid = mBaseAdapter.getItemCount()>0;
-                notifyItemRangeChanged(positionStart, itemCount);
+                _valid = _baseAdapter.getItemCount() > 0;
+                notifyItemRangeChanged(positionToSectionedPosition(positionStart), itemCount);
             }
 
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
-                mValid = mBaseAdapter.getItemCount()>0;
-                notifyItemRangeInserted(positionStart, itemCount);
+                _valid = _baseAdapter.getItemCount() > 0;
+                notifyItemRangeInserted(positionToSectionedPosition(positionStart), itemCount);
             }
 
             @Override
             public void onItemRangeRemoved(int positionStart, int itemCount) {
-                mValid = mBaseAdapter.getItemCount()>0;
-                notifyItemRangeRemoved(positionStart, itemCount);
+                _valid = _baseAdapter.getItemCount() > 0;
+                notifyItemRangeRemoved(positionToSectionedPosition(positionStart), itemCount);
             }
         });
     }
@@ -76,19 +75,19 @@ public class SimpleSectionedRecyclerViewAdapter extends RecyclerView.Adapter<Rec
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int typeView) {
         if (typeView == SECTION_TYPE) {
-            final View view = LayoutInflater.from(mContext).inflate(mSectionResourceId, parent, false);
-            return new SectionViewHolder(view,mTextResourceId);
+            final View view = LayoutInflater.from(_context).inflate(_sectionResourceId, parent, false);
+            return new SectionViewHolder(view, _textResourceId);
         }else{
-            return mBaseAdapter.onCreateViewHolder(parent, typeView -1);
+            return _baseAdapter.onCreateViewHolder(parent, typeView -1);
         }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder sectionViewHolder, int position) {
         if (isSectionHeaderPosition(position)) {
-            ((SectionViewHolder)sectionViewHolder).title.setText(mSections.get(position).title);
+            ((SectionViewHolder)sectionViewHolder).title.setText(_sections.get(position).title);
         }else{
-            mBaseAdapter.onBindViewHolder(sectionViewHolder,sectionedPositionToPosition(position));
+            _baseAdapter.onBindViewHolder(sectionViewHolder, sectionedPositionToPosition(position));
         }
 
     }
@@ -97,7 +96,7 @@ public class SimpleSectionedRecyclerViewAdapter extends RecyclerView.Adapter<Rec
     public int getItemViewType(int position) {
         return isSectionHeaderPosition(position)
                 ? SECTION_TYPE
-                : mBaseAdapter.getItemViewType(sectionedPositionToPosition(position)) +1 ;
+                : _baseAdapter.getItemViewType(sectionedPositionToPosition(position)) +1 ;
     }
 
 
@@ -118,7 +117,7 @@ public class SimpleSectionedRecyclerViewAdapter extends RecyclerView.Adapter<Rec
 
 
     public void setSections(List<Section> sections) {
-        mSections.clear();
+        _sections.clear();
 
         Collections.sort(sections, new Comparator<Section>() {
             @Override
@@ -132,7 +131,7 @@ public class SimpleSectionedRecyclerViewAdapter extends RecyclerView.Adapter<Rec
         int offset = 0; // offset positions for the headers we're adding
         for (Section section : sections) {
             section.sectionedPosition = section.firstPosition + offset;
-            mSections.append(section.sectionedPosition, section);
+            _sections.append(section.sectionedPosition, section);
             ++offset;
         }
 
@@ -141,8 +140,8 @@ public class SimpleSectionedRecyclerViewAdapter extends RecyclerView.Adapter<Rec
 
     public int positionToSectionedPosition(int position) {
         int offset = 0;
-        for (int i = 0; i < mSections.size(); i++) {
-            if (mSections.valueAt(i).firstPosition > position) {
+        for (int i = 0; i < _sections.size(); i++) {
+            if (_sections.valueAt(i).firstPosition > position) {
                 break;
             }
             ++offset;
@@ -156,8 +155,8 @@ public class SimpleSectionedRecyclerViewAdapter extends RecyclerView.Adapter<Rec
         }
 
         int offset = 0;
-        for (int i = 0; i < mSections.size(); i++) {
-            if (mSections.valueAt(i).sectionedPosition > sectionedPosition) {
+        for (int i = 0; i < _sections.size(); i++) {
+            if (_sections.valueAt(i).sectionedPosition > sectionedPosition) {
                 break;
             }
             --offset;
@@ -166,20 +165,19 @@ public class SimpleSectionedRecyclerViewAdapter extends RecyclerView.Adapter<Rec
     }
 
     public boolean isSectionHeaderPosition(int position) {
-        return mSections.get(position) != null;
+        return _sections.get(position) != null;
     }
-
 
     @Override
     public long getItemId(int position) {
         return isSectionHeaderPosition(position)
-                ? Integer.MAX_VALUE - mSections.indexOfKey(position)
-                : mBaseAdapter.getItemId(sectionedPositionToPosition(position));
+                ? Integer.MAX_VALUE - _sections.indexOfKey(position)
+                : _baseAdapter.getItemId(sectionedPositionToPosition(position));
     }
 
     @Override
     public int getItemCount() {
-        return (mValid ? mBaseAdapter.getItemCount() + mSections.size() : 0);
+        return (_valid ? _baseAdapter.getItemCount() + _sections.size() : 0);
     }
 
 }

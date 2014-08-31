@@ -45,19 +45,24 @@ public class PillLoggerFragmentBase extends Fragment {
 
             _attached = true;
         }
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
 
         _bus.register(this);
     }
 
     @Override
-    public void onPause(){
-        _bus.unregister(this);
+    public void onDetach() {
+        super.onDetach();
 
+        _bus.unregister(this);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+    }
+
+    @Override
+    public void onPause(){
         super.onPause();
     }
 

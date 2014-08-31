@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseIntArray;
@@ -51,6 +52,7 @@ import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.events.LoadedConsumptionsEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.RedrawGraphEvent;
+import uk.co.pilllogger.events.TakeConsumptionAgainEvent;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
@@ -99,7 +101,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
         return f;
     }
 
-    @Override
+    @Override @DebugLog
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -124,6 +126,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
         LinearLayoutManager layoutManager = new LinearLayoutManager(_context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         _listView.setLayoutManager(layoutManager);
+        _listView.setItemAnimator(new DefaultItemAnimator());
 
         if (_listView.getAdapter() != null) //Trying this to make the list refresh after adding the new consumption
             _listView.getAdapter().notifyDataSetChanged();
@@ -224,51 +227,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
             ConsumptionRecyclerAdapter adapter = new ConsumptionRecyclerAdapter(_consumptions, _context);
 
             //This is the code to provide a sectioned list
-            List<SimpleSectionedRecyclerViewAdapter.Section> sections =
-                    new ArrayList<SimpleSectionedRecyclerViewAdapter.Section>();
-
-            DateTime now = DateTime.now();
-            DateTime startOfToday = now.withTimeAtStartOfDay();
-            DateTime startOfTomorrow = startOfToday.plusDays(1);
-            DateTime currentConsumptionDate = DateTime.now().plusDays(1).withTimeAtStartOfDay();
-
-            for(int i = 0; i < _consumptions.size(); i++){
-                Consumption consumption = _consumptions.get(i);
-
-                DateTime consumptionDate = new DateTime(consumption.getDate());
-
-                if(consumptionDate.withTimeAtStartOfDay().isBefore(currentConsumptionDate) == false){
-                    continue;
-                }
-
-                // new earlier date
-                currentConsumptionDate = consumptionDate.withTimeAtStartOfDay();
-
-                String text;
-
-                if(consumptionDate.isBefore(startOfTomorrow)
-                        && consumptionDate.isAfter(startOfToday)){
-                    text = "Today";
-                }
-                else{
-                    if(consumptionDate.plusDays(1).isBefore(startOfTomorrow)
-                            && consumptionDate.plusDays(1).isAfter(startOfToday)) {
-                        text = "Yesterday";
-                    }
-                    else{
-                        text = DateHelper.getPrettyDayOfMonth(consumptionDate);
-                    }
-                }
-
-                sections.add(new SimpleSectionedRecyclerViewAdapter.Section(i, text));
-            }
-
-            //Sections
-            //sections.add(new SimpleSectionedRecyclerViewAdapter.Section(0,"Today"));
-            //sections.add(new SimpleSectionedRecyclerViewAdapter.Section(5,"Last week"));
-            //sections.add(new SimpleSectionedRecyclerViewAdapter.Section(12,"Last month"));
-            //sections.add(new SimpleSectionedRecyclerViewAdapter.Section(14,"2 months ago"));
-            //sections.add(new SimpleSectionedRecyclerViewAdapter.Section(20,"Older"));
+            List<SimpleSectionedRecyclerViewAdapter.Section> sections = getConsumptionSections();
 
             //Add your adapter to the sectionAdapter
             SimpleSectionedRecyclerViewAdapter sectionedAdapter = new
@@ -281,7 +240,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
                 _bus.unregister(_listView.getAdapter());
             }
 
-            _listView.setAdapter(sectionedAdapter);
+            _listView.setAdapter(adapter);
             _listView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -295,6 +254,53 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
         TrackerHelper.updateUserProfile(activity, _pills.size(), _consumptions, _statistics);
 
         _statistics.refreshConsumptionCaches(_consumptions);
+    }
+
+    @Subscribe
+    public void consumptionTakenAgain(TakeConsumptionAgainEvent event){
+        _listView.scrollToPosition(0);
+    }
+
+    private List<SimpleSectionedRecyclerViewAdapter.Section> getConsumptionSections() {
+        List<SimpleSectionedRecyclerViewAdapter.Section> sections =
+                new ArrayList<SimpleSectionedRecyclerViewAdapter.Section>();
+
+        DateTime now = DateTime.now();
+        DateTime startOfToday = now.withTimeAtStartOfDay();
+        DateTime startOfTomorrow = startOfToday.plusDays(1);
+        DateTime currentConsumptionDate = DateTime.now().plusDays(1).withTimeAtStartOfDay();
+
+        for(int i = 0; i < _consumptions.size(); i++){
+            Consumption consumption = _consumptions.get(i);
+
+            DateTime consumptionDate = new DateTime(consumption.getDate());
+
+            if(consumptionDate.withTimeAtStartOfDay().isBefore(currentConsumptionDate) == false){
+                continue;
+            }
+
+            // new earlier date
+            currentConsumptionDate = consumptionDate.withTimeAtStartOfDay();
+
+            String text;
+
+            if(consumptionDate.isBefore(startOfTomorrow)
+                    && consumptionDate.isAfter(startOfToday)){
+                text = "Today";
+            }
+            else{
+                if(consumptionDate.plusDays(1).isBefore(startOfTomorrow)
+                        && consumptionDate.plusDays(1).isAfter(startOfToday)) {
+                    text = "Yesterday";
+                }
+                else{
+                    text = DateHelper.getPrettyDayOfMonth(consumptionDate);
+                }
+            }
+
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(i, text));
+        }
+        return sections;
     }
 
     private int getGraphDays(){
