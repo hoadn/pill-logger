@@ -60,28 +60,27 @@ import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.jobs.DeleteConsumptionJob;
 import uk.co.pilllogger.jobs.InsertConsumptionsJob;
 import uk.co.pilllogger.jobs.LoadConsumptionsJob;
+import uk.co.pilllogger.mappers.ConsumptionMapper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.stats.Statistics;
 
+import static butterknife.ButterKnife.findById;
+
 /**
  * Created by nick on 23/10/13.
  */
 public class ConsumptionListFragment extends PillLoggerFragmentBase{
-
-    @Inject
-    ConsumptionRepository _consumptionRepository;
-
-    @Inject
-    ConsumptionListAdapterFactory _consumptionListAdapterFactory;
-
     @Inject
     Context _context;
+    @Inject Statistics _statistics;
+    @Inject JobManager _jobManager;
 
     public static final String TAG = "ConsumptionListFragment";
     RecyclerView _listView;
+    StackBarGraph _graph;
     View _mainLayout;
     HashMap<Integer, Pill> _allPills = new HashMap<Integer, Pill>();
     Fragment _fragment;
@@ -89,8 +88,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
     private List<Pill> _pills = new ArrayList<Pill>();
     private List<Consumption> _consumptions;
     private View _loading;
-    @Inject Statistics _statistics;
-    @Inject JobManager _jobManager;
 
     @DebugLog
     public static ConsumptionListFragment newInstance(int num){
@@ -121,6 +118,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
         _mainLayout = v;
         _fragment = this;
         _activity = getActivity();
+
+        _graph = findById(v, R.id.consumption_graph);
 
         _listView = (RecyclerView) (v != null ? v.findViewById(R.id.main_consumption_list) : null);
         _listView.setHasFixedSize(true);
@@ -253,6 +252,10 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
                     return false;
                 }
             });
+
+            Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(_consumptions, 7);
+            if (xPoints != null)
+                plotGraph(xPoints, 7, _graph);
         }
         TrackerHelper.updateUserProfile(activity, _pills.size(), _consumptions, _statistics);
 
@@ -264,6 +267,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
         _listView.scrollToPosition(0);
 
         _jobManager.addJobInBackground(new InsertConsumptionsJob(event.getConsumptionsToInsert()));
+
+        replotGraph();
     }
 
     @Subscribe
@@ -327,10 +332,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
     public void replotGraph(){
         int dayCount = getGraphDays();
 
-        View view = _mainLayout.findViewById(R.id.main_graph);
-
-        Map<Pill, SparseIntArray> xPoints = (Map<Pill, SparseIntArray>) view.getTag();
-        plotGraph(xPoints, dayCount, view);
+        Map<Pill, SparseIntArray> xPoints = (Map<Pill, SparseIntArray>) _graph.getTag();
+        plotGraph(xPoints, dayCount, _graph);
     }
 
     public void plotGraph(Map<Pill, SparseIntArray> data, int dayCount, View view){

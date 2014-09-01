@@ -57,8 +57,8 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int i) {
-        final Consumption consumption = _consumptions.get(i);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        final Consumption consumption = _consumptions.get(position);
 
         if (consumption == null) {
             return;

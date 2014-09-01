@@ -171,7 +171,7 @@ public class StackBarGraph extends View {
             if(mShouldDrawGridHorizontal){
                 float singleItemHeight = usableHeight / maxValue;
                 for(int i = 0; i <= maxValue; i++){
-                    if(maxValue > 10){
+                    if(maxValue > 5){
                         if(i % 5 > 0){
                             continue;
                         }
