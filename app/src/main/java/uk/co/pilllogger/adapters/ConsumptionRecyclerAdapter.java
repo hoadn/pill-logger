@@ -102,6 +102,10 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
         return _consumptions.size();
     }
 
+    public List<Consumption> getConsumptions() {
+        return _consumptions;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder{
         @InjectView(R.id.consumption_list_name) public TextView name;
         @InjectView(R.id.consumption_list_date) public TextView date;

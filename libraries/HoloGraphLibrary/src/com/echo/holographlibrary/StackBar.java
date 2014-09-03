@@ -53,7 +53,7 @@ public class StackBar {
         int value = 0;
 
         for(StackBarSection section : mSections){
-            value += section.getValue();
+            value += section.getTargetValue();
         }
 
         return value;

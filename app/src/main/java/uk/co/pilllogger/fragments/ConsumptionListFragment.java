@@ -88,6 +88,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
     private List<Pill> _pills = new ArrayList<Pill>();
     private List<Consumption> _consumptions;
     private View _loading;
+    private ConsumptionRecyclerAdapter _adapter;
 
     @DebugLog
     public static ConsumptionListFragment newInstance(int num){
@@ -226,23 +227,46 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
 
             _consumptions.removeAll(removeConsumptions);
 
-            ConsumptionRecyclerAdapter adapter = new ConsumptionRecyclerAdapter(_consumptions, _context);
+            _adapter = new ConsumptionRecyclerAdapter(_consumptions, _context);
+
+            _adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                @Override
+                public void onItemRangeChanged(int positionStart, int itemCount) {
+                    super.onItemRangeChanged(positionStart, itemCount);
+
+                    plotGraph(_adapter.getConsumptions());
+                }
+
+                @Override
+                public void onItemRangeInserted(int positionStart, int itemCount) {
+                    super.onItemRangeInserted(positionStart, itemCount);
+
+                    plotGraph(_adapter.getConsumptions());
+                }
+
+                @Override
+                public void onItemRangeRemoved(int positionStart, int itemCount) {
+                    super.onItemRangeRemoved(positionStart, itemCount);
+
+                    plotGraph(_adapter.getConsumptions());
+                }
+            });
 
             //This is the code to provide a sectioned list
             List<SimpleSectionedRecyclerViewAdapter.Section> sections = getConsumptionSections();
 
             //Add your adapter to the sectionAdapter
             SimpleSectionedRecyclerViewAdapter sectionedAdapter = new
-                    SimpleSectionedRecyclerViewAdapter(_context, R.layout.section,R.id.section_text, adapter);
+                    SimpleSectionedRecyclerViewAdapter(_context, R.layout.section,R.id.section_text, _adapter);
             sectionedAdapter.setSections(sections);
 
-            _bus.register(adapter);
+            _bus.register(_adapter);
 
             if (_listView.getAdapter() != null) {
                 _bus.unregister(_listView.getAdapter());
             }
 
-            _listView.setAdapter(adapter);
+            _listView.setAdapter(_adapter);
             _listView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -253,13 +277,18 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
                 }
             });
 
-            Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(_consumptions, 7);
-            if (xPoints != null)
-                plotGraph(xPoints, 7, _graph);
+            plotGraph(_consumptions);
         }
         TrackerHelper.updateUserProfile(activity, _pills.size(), _consumptions, _statistics);
 
         _statistics.refreshConsumptionCaches(_consumptions);
+    }
+
+    @DebugLog
+    private void plotGraph(List<Consumption> consumptions) {
+        Map<Pill, SparseIntArray> xPoints = ConsumptionMapper.mapByPillAndDate(consumptions, 7);
+        if (xPoints != null)
+            plotGraph(xPoints, 7, _graph);
     }
 
     @Subscribe
@@ -267,8 +296,6 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
         _listView.scrollToPosition(0);
 
         _jobManager.addJobInBackground(new InsertConsumptionsJob(event.getConsumptionsToInsert()));
-
-        replotGraph();
     }
 
     @Subscribe

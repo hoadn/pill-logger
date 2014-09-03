@@ -201,13 +201,19 @@ public class GraphHelper {
 
         view.setLineColour(lineColour);
 
-        List<StackBar> bars = new ArrayList<StackBar>();
+        List<StackBar> bars = view.getBars();
 
         for(int i = 1; i <= days; i++){
+            boolean isNewBar = true;
             StackBar sb = new StackBar();
-            DateTime dateTime = new DateTime().plusDays((7-i) * -1);
-            sb.setName(dateTime.dayOfWeek().getAsShortText());
-
+            if(bars.size() >= i){
+                sb = bars.get(i - 1);
+                isNewBar = false;
+            }
+            else {
+                DateTime dateTime = new DateTime().plusDays((7 - i) * -1);
+                sb.setName(dateTime.dayOfWeek().getAsShortText());
+            }
 
             List<Pill> pills = new ArrayList<Pill>(data.keySet());
 
@@ -233,24 +239,40 @@ public class GraphHelper {
             });
 
             for(Pill pill : pills){
-                if(State.getSingleton().isPillExcluded(pill))
+                if(State.getSingleton().isPillExcluded(pill)) {
                     continue;
+                }
 
                 SparseIntArray points = data.get(pill);
 
                 int value = 0;
-                if(points.indexOfKey(i) >= 0)
+                if(points.indexOfKey(i) >= 0) {
                     value = points.get(i);
+                }
 
-                StackBarSection sbs = new StackBarSection();
-                sbs.setColor(pill.getColour());
-                sbs.setStrokeColor(ColourHelper.getDarker(pill.getColour()));
-                sbs.setValue(value);
-                sbs.setTranslucent(State.getSingleton().getTheme().isChartTranslucent());
+                StackBarSection newStackBarSection = new StackBarSection(75f, 1.0f);
 
-                sb.getSections().add(sbs);
+                boolean isNew = true;
+                for(StackBarSection sbs : sb.getSections()) {
+                    if (sbs.getPillId() == pill.getId()){
+                        newStackBarSection = sbs;
+                        isNew = false;
+                        break;
+                    }
+                }
+                newStackBarSection.setColor(pill.getColour());
+                newStackBarSection.setStrokeColor(ColourHelper.getDarker(pill.getColour()));
+                newStackBarSection.setTargetValue(value);
+                newStackBarSection.setTranslucent(State.getSingleton().getTheme().isChartTranslucent());
+                newStackBarSection.setPillId(pill.getId());
+
+                if(isNew) {
+                    sb.getSections().add(newStackBarSection);
+                }
             }
-            bars.add(sb);
+            if(isNewBar) {
+                bars.add(sb);
+            }
 
             view.setShowBarText(false);
             view.setBars(bars);
