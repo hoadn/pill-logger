@@ -32,6 +32,13 @@ public final class DatabaseContract {
         public static final String COLUMN_TAG = "pill_id";
     }
 
+    public static abstract class Notes implements BaseColumns {
+        public static final String TABLE_NAME = "notes";
+        public static final String COLUMN_PILL_ID = "pill_id";
+        public static final String COLUMN_NOTE = "note";
+        public static final String COLUMN_DATE_TIME = "date_time";
+    }
+
     public static abstract class CreateTables implements  BaseColumns {
         static String createTableSql = "create table if not exists ";
 
@@ -55,12 +62,22 @@ public final class DatabaseContract {
                         Consumptions.COLUMN_DATE_TIME,
                         Consumptions.COLUMN_GROUP);
 
+
         public static final String CREATE_TUTORIAL_TABLE =
                 String.format("%s%s (%s INTEGER PRIMARY KEY,%s TEXT)",
                         createTableSql,
                         Tutorials.TABLE_NAME,
                         Tutorials._ID,
                         Tutorials.COLUMN_TAG);
+
+        public static final String CREATE_NOTES_TABLE =
+                String.format("%s%s (%s INTEGER PRIMARY KEY,%s INTEGER, %s TEXT, %s LONG)",
+                        createTableSql,
+                        Notes.TABLE_NAME,
+                        Notes._ID,
+                        Notes.COLUMN_PILL_ID,
+                        Notes.COLUMN_NOTE,
+                        Notes.COLUMN_DATE_TIME);
     }
 
     public static abstract class CreateIndicies implements BaseColumns{
@@ -72,6 +89,7 @@ public final class DatabaseContract {
         public static final String DELETE_PILL_TABLE = "DROP TABLE IF EXISTS " + Pills.TABLE_NAME;
         public static final String DELETE_CONSUMPTION_TABLE = "DROP TABLE IF EXISTS " + Consumptions.TABLE_NAME;
         public static final String DELETE_TUTORIALS_TABLE = "DROP TABLE IF EXISTS " + Tutorials.TABLE_NAME;
+        public static final String DELETE_NOTES_TABLE = "DROP TABLE IF EXISTS " + Notes.TABLE_NAME;
     }
 
     public static abstract class DeleteIndicies implements BaseColumns{

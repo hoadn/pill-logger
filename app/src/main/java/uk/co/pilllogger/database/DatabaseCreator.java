@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by root on 21/10/13.
  */
 public class DatabaseCreator extends SQLiteOpenHelper{
-    public static final int DATABASE_VERSION = 9;
+    public static final int DATABASE_VERSION = 10;
     public static final String DATABASE_NAME = "PillLogger.db";
 
     public DatabaseCreator(Context context) {
@@ -20,6 +20,7 @@ public class DatabaseCreator extends SQLiteOpenHelper{
         db.execSQL(DatabaseContract.CreateTables.CREATE_PILL_TABLE);
         db.execSQL(DatabaseContract.CreateTables.CREATE_CONSUMPTION_TABLE);
         db.execSQL(DatabaseContract.CreateTables.CREATE_TUTORIAL_TABLE);
+        db.execSQL(DatabaseContract.CreateTables.CREATE_NOTES_TABLE);
         db.execSQL(DatabaseContract.CreateIndicies.CREATE_CONSUMPTION_DATE_INDEX);
     }
 
@@ -36,6 +37,8 @@ public class DatabaseCreator extends SQLiteOpenHelper{
                 try{
                     db.execSQL(DatabaseContract.CreateIndicies.CREATE_CONSUMPTION_DATE_INDEX);
                 } catch(SQLException ignored) {}
+            case 10:
+                db.execSQL(DatabaseContract.CreateTables.CREATE_NOTES_TABLE);
                 // add alter SQL statement here
         }
     }
