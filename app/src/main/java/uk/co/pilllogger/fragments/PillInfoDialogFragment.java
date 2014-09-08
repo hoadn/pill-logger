@@ -26,6 +26,8 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
     private TextView _editPillSummary;
     private TextView _deletePillSummary;
     private TextView _addConsumptionSummary;
+    private TextView _pillNotesTitle;
+    private TextView _pillNotesSummary;
 
     public PillInfoDialogFragment() {
         super();
@@ -56,6 +58,8 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
         _deletePillSummary = (TextView) activity.findViewById(R.id.info_dialog_delete_pill_summary);
         _editPill = (TextView) activity.findViewById(R.id.info_dialog_edit_pill_title);
         _editPillSummary = (TextView) activity.findViewById(R.id.info_dialog_edit_pill_summary);
+        _pillNotesTitle = (TextView) activity.findViewById(R.id.info_dialog_notes_title);
+        _pillNotesSummary = (TextView) activity.findViewById(R.id.info_dialog_notes_summary);
 
         View editPillContainer = activity.findViewById(R.id.info_dialog_edit_pill);
         View addConsumptionContainer = activity.findViewById(R.id.info_dialog_take_now);
@@ -104,5 +108,7 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
         _deletePillSummary.setTypeface(typeface);
         _editPill.setTypeface(typeface);
         _editPillSummary.setTypeface(typeface);
+        _pillNotesTitle.setTypeface(typeface);
+        _pillNotesSummary.setTypeface(typeface);
     }
 }
