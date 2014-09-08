@@ -35,6 +35,7 @@ public final class DatabaseContract {
     public static abstract class Notes implements BaseColumns {
         public static final String TABLE_NAME = "notes";
         public static final String COLUMN_PILL_ID = "pill_id";
+        public static final String COLUMN_NOTE_TITLE = "title";
         public static final String COLUMN_NOTE = "note";
         public static final String COLUMN_DATE_TIME = "date_time";
     }
@@ -71,11 +72,12 @@ public final class DatabaseContract {
                         Tutorials.COLUMN_TAG);
 
         public static final String CREATE_NOTES_TABLE =
-                String.format("%s%s (%s INTEGER PRIMARY KEY,%s INTEGER, %s TEXT, %s LONG)",
+                String.format("%s%s (%s INTEGER PRIMARY KEY,%s INTEGER, %s TEXT, %s TEXT, %s LONG)",
                         createTableSql,
                         Notes.TABLE_NAME,
                         Notes._ID,
                         Notes.COLUMN_PILL_ID,
+                        Notes.COLUMN_NOTE_TITLE,
                         Notes.COLUMN_NOTE,
                         Notes.COLUMN_DATE_TIME);
     }

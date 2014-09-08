@@ -20,6 +20,7 @@ import uk.co.pilllogger.fragments.ExportSelectPillsFragment;
 import uk.co.pilllogger.fragments.ExportSelectTimeFragment;
 import uk.co.pilllogger.fragments.InfoDialogFragment;
 import uk.co.pilllogger.fragments.NewPillDialogFragment;
+import uk.co.pilllogger.fragments.NotesFragment;
 import uk.co.pilllogger.fragments.PillInfoDialogFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.fragments.PillRecurringFragment;
@@ -52,7 +53,8 @@ import uk.co.pilllogger.fragments.StatsFragment;
                 PillListFragment.class,
                 PillRecurringFragment.class,
                 SettingsFragment.class,
-                StatsFragment.class
+                StatsFragment.class,
+                NotesFragment.class
         },
         complete = false,
         library = true

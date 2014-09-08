@@ -7,6 +7,7 @@ import java.util.Date;
  */
 public class Note {
     private Date _date;
+    private String _title;
     private String _text;
     private Pill _pill;
     private int _id;
@@ -55,5 +56,13 @@ public class Note {
 
     public void setId(int id) {
         _id = id;
+    }
+
+    public String getTitle() {
+        return _title;
+    }
+
+    public void setTitle(String title) {
+        _title = title;
     }
 }

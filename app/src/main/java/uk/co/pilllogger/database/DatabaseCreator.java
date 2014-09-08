@@ -45,6 +45,8 @@ public class DatabaseCreator extends SQLiteOpenHelper{
 
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch(newVersion){
+            case 10:
+                db.execSQL(DatabaseContract.DeleteTables.DELETE_NOTES_TABLE);
             case 9:
                 db.execSQL(DatabaseContract.DeleteIndicies.DELETE_CONSUMPTION_DATE_INDEX);
             case 8:
