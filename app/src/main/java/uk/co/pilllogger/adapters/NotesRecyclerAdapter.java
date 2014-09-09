@@ -27,12 +27,9 @@ import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.views.ColourIndicator;
 
-/**
- * Created by Alex on 25/08/2014
- * in uk.co.pilllogger.adapters.
- */
 public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdapter.ViewHolder> {
 
     private final List<Note> _notes;
@@ -65,6 +62,8 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
 
         holder.title.setText(note.getTitle());
         holder.text.setText(note.getText());
+        holder.text.setTypeface(State.getSingleton().getRobotoTypeface());
+        holder.title.setTypeface(State.getSingleton().getRobotoTypeface());
 
         holder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +94,6 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
     public static class ViewHolder extends RecyclerView.ViewHolder{
         @InjectView(R.id.notes_list_title) public TextView title;
         @InjectView(R.id.notes_list_text) public TextView text;
-        @InjectView(R.id.consumption_list_size) public TextView size;
 
         public ViewHolder(View itemView) {
             super(itemView);

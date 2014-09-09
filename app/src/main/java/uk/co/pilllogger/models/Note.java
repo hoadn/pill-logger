@@ -19,6 +19,7 @@ public class Note {
     public Note(Pill pill) {
         this();
         _pill = pill;
+        _date = new Date();
     }
 
 
