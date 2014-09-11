@@ -96,12 +96,6 @@ public class StackBarSection {
         _velocity += acceleration * dt;
         _value += _velocity * dt;
         _lastTime = now;
-
-        if(isAtRest() == false) {
-            Log.d("StackBarSection", "" + _value + "/" + _targetValue + "/" + dt + "/" + _velocity + "/" + _springiness + "/" + _damping);
-        } else{
-            Log.d("StackBarSection", "Resting: " + _value + "/" + _targetValue);
-        }
     }
 
     public boolean isAtRest() {
