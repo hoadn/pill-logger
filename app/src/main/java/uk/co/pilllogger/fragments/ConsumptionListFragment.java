@@ -190,6 +190,10 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
     @Override
     public void onResume() {
         super.onResume();
+
+        if(_listView != null && _listView.getAdapter() != null) {
+            _listView.getAdapter().notifyDataSetChanged();
+        }
     }
 
     @Override

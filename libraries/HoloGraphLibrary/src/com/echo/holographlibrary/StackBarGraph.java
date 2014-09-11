@@ -150,7 +150,7 @@ public class StackBarGraph extends View {
             float maxValue = 0;
             float padding = 1 * _context.getResources().getDisplayMetrics().density;
             float bottomPadding = 20 * _context.getResources().getDisplayMetrics().density;
-            float leftPadding = padding;
+            float leftPadding = 16 * _context.getResources().getDisplayMetrics().density;
 
             float usableHeight;
             if (mShowBarText) {
