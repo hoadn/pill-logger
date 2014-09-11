@@ -248,6 +248,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
                 public void onItemRangeRemoved(int positionStart, int itemCount) {
                     super.onItemRangeRemoved(positionStart, itemCount);
 
+                    Timber.d("onItemRangeRemoved");
                     plotGraph(_adapter.getConsumptions());
                 }
             });

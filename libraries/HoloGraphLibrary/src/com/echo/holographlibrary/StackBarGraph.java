@@ -218,7 +218,7 @@ public class StackBarGraph extends View {
                     int right = (int)((padding*2)*count + padding + barWidth*(count+1)) + (int)leftPadding;
                     int bottom = (int)(getHeight()-bottomPadding);
 
-                    if(section.getTargetValue() > 0){
+                    if(section.isDrawable()){
                         bottom -= currentTop;
                         top -= currentTop;
                         if(section.getTargetValue() > 1)
@@ -229,7 +229,7 @@ public class StackBarGraph extends View {
 
                     mRectangle.set(left + stroke / 2.0f, top + stroke / 2.0f, right - stroke / 2.0f, bottom - stroke / 2.0f);
 
-                    if(section.getTargetValue() > 0){
+                    if(section.isDrawable()){
                         if(!section.isTranslucent()) {
                             this.mPaint.setColor(Color.WHITE);
                             this.mPaint.setStrokeWidth(stroke);
@@ -258,7 +258,7 @@ public class StackBarGraph extends View {
                     }
                     currentTop += (bottom-top);
 
-                    if(section.getValue() > 0)
+                    if(section.isDrawable())
                         currentTop += padding;
                 }
 

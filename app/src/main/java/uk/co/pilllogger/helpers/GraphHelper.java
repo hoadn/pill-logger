@@ -238,6 +238,10 @@ public class GraphHelper {
                 }
             });
 
+            for (StackBarSection stackBarSection : sb.getSections()) {
+                stackBarSection.setTargetValue(0);
+            }
+
             for(Pill pill : pills){
                 if(State.getSingleton().isPillExcluded(pill)) {
                     continue;
@@ -254,12 +258,12 @@ public class GraphHelper {
 
                 boolean isNew = true;
                 for(StackBarSection sbs : sb.getSections()) {
-                    if (sbs.getPillId() == pill.getId()){
+                    if (sbs.getPillId() == pill.getId()) {
                         newStackBarSection = sbs;
                         isNew = false;
-                        break;
                     }
                 }
+
                 newStackBarSection.setColor(pill.getColour());
                 newStackBarSection.setStrokeColor(ColourHelper.getDarker(pill.getColour()));
                 newStackBarSection.setTargetValue(value);
