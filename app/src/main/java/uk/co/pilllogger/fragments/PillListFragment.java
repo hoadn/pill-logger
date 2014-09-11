@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import hugo.weaving.DebugLog;
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillListAdapterFactory;
 import uk.co.pilllogger.adapters.PillsListAdapter;
@@ -59,6 +60,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     Provider<Pill> _pillProvider;
 
     @Inject JobManager _jobManager;
+    private List<Pill> _pills;
 
     public PillListFragment() {
 	}
@@ -180,6 +182,8 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(_activity);
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
+        updatePills(_pills);
+
         return v;
     }
 
@@ -205,12 +209,12 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 	 * given the 'activated' state when touched.
 	 */
 	public void setActivateOnItemClick(boolean activateOnItemClick) {
-		// When setting CHOICE_MODE_SINGLE, ListView will automatically
-		// give items the 'activated' state when touched.
+        // When setting CHOICE_MODE_SINGLE, ListView will automatically
+        // give items the 'activated' state when touched.
 //		_list.setChoiceMode(
 //				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
 //						: ListView.CHOICE_MODE_NONE);
-	}
+    }
 
     @Subscribe @DebugLog
     public void pillsLoaded(LoadedPillsEvent event) {
@@ -218,6 +222,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     }
 
     private void updatePills(List<Pill> pills){
+        _pills = pills;
         if(_list == null || pills.size() == 0)
             return;
 
@@ -230,6 +235,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             PillsListAdapter adapter = _pillListAdapterFactory.create(activity, R.layout.pill_list_item, pills);
             _bus.register(adapter);
             _list.setAdapter(adapter);
+
         }
         else
         {
