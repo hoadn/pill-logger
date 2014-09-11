@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +29,10 @@ import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillListAdapterFactory;
+import uk.co.pilllogger.adapters.PillRecyclerAdapter;
 import uk.co.pilllogger.adapters.PillsListAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.decorators.DividerItemDecoration;
 import uk.co.pilllogger.events.CreatedPillEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
@@ -49,7 +52,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     PillListAdapterFactory _pillListAdapterFactory;
 
     public static final String TAG = "PillListFragment";
-    private ListView _list;
+    private RecyclerView _list;
     private EditText _addPillName;
     private EditText _addPillSize;
     private Spinner _unitSpinner;
@@ -83,7 +86,10 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         v.setTag(R.id.tag_page_colour, color);
         v.setTag(R.id.tag_tab_icon_position, 1);
 
-        _list = (ListView) v.findViewById(R.id.pill_list);
+        _list = (RecyclerView) v.findViewById(R.id.pill_list);
+
+        _list.setHasFixedSize(true);
+        _list.addItemDecoration(new DividerItemDecoration(_activity, DividerItemDecoration.VERTICAL_LIST));
         //_list.setOnItemClickListener(new PillItemClickListener(getActivity()));
 
         Typeface typeface = State.getSingleton().getTypeface();
@@ -232,15 +238,9 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             if(activity == null) // it's not gonna work without this
                 return;
 
-            PillsListAdapter adapter = _pillListAdapterFactory.create(activity, R.layout.pill_list_item, pills);
+            PillRecyclerAdapter adapter = _pillListAdapterFactory.create(activity, R.layout.pill_list_item, pills);
             _bus.register(adapter);
             _list.setAdapter(adapter);
-
-        }
-        else
-        {
-            PillsListAdapter adapter = (PillsListAdapter)_list.getAdapter();
-            adapter.updateAdapter(pills);
         }
     }
 

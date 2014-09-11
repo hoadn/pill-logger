@@ -26,21 +26,24 @@
         style="?attr/ContainerBackground">
         <include layout="@layout/add_new_medicine"
             />
-        <View
-            android:id="@+id/shadow"
-            android:layout_width="match_parent"
-            style="?attr/ContainerShadow"/>
     </LinearLayout>
-    <ListView
+<!--    <ListView
         android:id="@+id/pill_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/pill_fragment_quick_create"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="@dimen/list_divider_height"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginTop="0dp"
-        tools:listitem="@layout/pill_list_item"/>
+        tools:listitem="@layout/pill_list_item"/>-->
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/pill_list"
+            android:layout_width="match_parent"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="0dp"
+            tools:visibility="visible"
+            tools:listitem="@layout/consumption_list_item"/>
         </RelativeLayout>
 </RelativeLayout>

@@ -65,9 +65,9 @@ public abstract class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
         holder.pickerContainer = (ViewGroup) v.findViewById(R.id.pill_list_colour_picker_container);
         holder.shadow = v.findViewById(R.id.shadow);
 
-        holder.name.setTypeface(State.getSingleton().getTypeface());
-        holder.size.setTypeface(State.getSingleton().getTypeface());
-        holder.lastTaken.setTypeface(State.getSingleton().getTypeface());
+        //holder.name.setTypeface(State.getSingleton().getTypeface());
+        //holder.size.setTypeface(State.getSingleton().getTypeface());
+        //holder.lastTaken.setTypeface(State.getSingleton().getTypeface());
         v.setTag(holder);
 
         return holder;
