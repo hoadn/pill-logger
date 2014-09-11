@@ -2,6 +2,7 @@ package uk.co.pilllogger.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.activities.DialogActivity;
 import uk.co.pilllogger.adapters.NotesRecyclerAdapter;
 import uk.co.pilllogger.decorators.DividerItemDecoration;
 import uk.co.pilllogger.models.Note;
@@ -34,6 +37,9 @@ public class NotesFragment extends PillLoggerFragmentBase {
 
     @InjectView(R.id.notes_title)
     public TextView _notesTitle;
+
+    @InjectView(R.id.add_note)
+    public ImageView _addNote;
 
     private RecyclerView _listView;
     private Pill _pill;
@@ -71,6 +77,16 @@ public class NotesFragment extends PillLoggerFragmentBase {
 
         _adapter = new NotesRecyclerAdapter(_notes, _context);
         _listView.setAdapter(_adapter);
+
+        _addNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(_context, DialogActivity.class);
+                intent.putExtra("DialogType", DialogActivity.DialogType.Note.ordinal());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                _context.startActivity(intent);
+            }
+        });
         return view;
     }
 }

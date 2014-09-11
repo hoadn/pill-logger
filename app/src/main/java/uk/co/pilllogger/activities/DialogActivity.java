@@ -27,6 +27,7 @@ import hugo.weaving.DebugLog;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.fragments.ConsumptionInfoDialogFragment;
+import uk.co.pilllogger.fragments.NewNoteDialogFragment;
 import uk.co.pilllogger.fragments.NewPillDialogFragment;
 import uk.co.pilllogger.fragments.PillInfoDialogFragment;
 import uk.co.pilllogger.helpers.DateHelper;
@@ -173,6 +174,11 @@ public class DialogActivity extends PillLoggerActivityBase{
                     _dialogTop.setVisibility(View.GONE);
                     fragment = new NewPillDialogFragment();
                     break;
+
+                case Note:
+                    _dialogTop.setVisibility(View.GONE);
+                    fragment = new NewNoteDialogFragment();
+                    break;
             }
         }
 
@@ -263,6 +269,7 @@ public class DialogActivity extends PillLoggerActivityBase{
 
     public enum DialogType{
         Consumption,
-        NewPill, Pill
+        NewPill, Pill,
+        Note
     }
 }

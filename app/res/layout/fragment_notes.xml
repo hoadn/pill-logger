@@ -20,6 +20,7 @@
             />
 
         <ImageView
+            android:id="@+id/add_note"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/new_note"

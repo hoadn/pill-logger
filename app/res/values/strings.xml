@@ -5,6 +5,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="pill_name_hint">Name</string>
+    <string name="note_hint">Note</string>
+    <string name="note_title_hint">Note Title</string>
     <string name="pill_size_hint">Size</string>
     <string name="units">g</string>
     <string name="add_button">Add</string>
@@ -198,6 +200,7 @@
     <string name="twenty_four_hour_short_hand">24h: </string>
     <string name="edit_pill_fragment_title">Edit Medicine</string>
     <string name="new_pill_fragment_title">New Medicine</string>
+    <string name="new_note_fragment_title">New Note</string>
     <string name="edit_pill_summary_text">Edit name, dosage, colour etc.</string>
     <string name="pill_notes_summary_text">View or edit notes for this medication</string>
     <string name="info_dialog_take_again">Take again</string>
