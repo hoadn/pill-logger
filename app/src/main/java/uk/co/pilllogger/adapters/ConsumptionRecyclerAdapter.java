@@ -13,6 +13,7 @@ import com.squareup.otto.Subscribe;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -20,6 +21,7 @@ import butterknife.InjectView;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
+import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DecreaseConsumptionEvent;
 import uk.co.pilllogger.events.DeleteConsumptionEvent;
 import uk.co.pilllogger.events.IncreaseConsumptionEvent;
@@ -135,7 +137,6 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
 
     @Subscribe
     public void consumptionDeleted(DeleteConsumptionEvent event){
-
         String group = event.getConsumption().getGroup();
 
         List<Consumption> toRemove = new ArrayList<Consumption>();
@@ -156,9 +157,6 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
 
             ++i;
         }
-        Timber.d("Count: " + count);
-        Timber.d("indexOf: " + indexOf);
-        Timber.d("toRemove.size(): " + toRemove.size());
         _consumptions.removeAll(toRemove);
         notifyItemRangeRemoved(indexOf, count);
     }
@@ -179,5 +177,32 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
         _consumptions.get(indexOf).decrementQuantity();
 
         notifyItemRangeChanged(indexOf, 1);
+    }
+
+    @Subscribe
+    public void consumptionAdded(CreatedConsumptionEvent event){
+        List<Consumption> addedConsumptions = event.getConsumptions();
+
+        if(addedConsumptions.size() == 0){
+            return;
+        }
+
+        DateTime whenAdded = new DateTime(addedConsumptions.get(0).getDate());
+
+        int i = 0;
+        int indexOf = 0;
+        for(Consumption c : _consumptions) {
+            DateTime consumptionDate = new DateTime(c.getDate());
+
+            if (consumptionDate.isBefore(whenAdded)) {
+                indexOf = i;
+                break;
+            }
+
+            ++i;
+        }
+
+        _consumptions.addAll(indexOf, addedConsumptions);
+        notifyItemRangeInserted(indexOf, addedConsumptions.size());
     }
 }

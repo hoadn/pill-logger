@@ -245,6 +245,10 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
                 public void onItemRangeInserted(int positionStart, int itemCount) {
                     super.onItemRangeInserted(positionStart, itemCount);
 
+                    if(positionStart == 0){
+                        _listView.scrollToPosition(0);
+                    }
+
                     plotGraph(_adapter.getConsumptions());
                 }
 
