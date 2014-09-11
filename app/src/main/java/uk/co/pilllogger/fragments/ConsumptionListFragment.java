@@ -190,6 +190,10 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
     @Override
     public void onResume() {
         super.onResume();
+
+        if(_listView != null && _listView.getAdapter() != null) {
+            _listView.getAdapter().notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -241,6 +245,10 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
                 public void onItemRangeInserted(int positionStart, int itemCount) {
                     super.onItemRangeInserted(positionStart, itemCount);
 
+                    if(positionStart == 0){
+                        _listView.scrollToPosition(0);
+                    }
+
                     plotGraph(_adapter.getConsumptions());
                 }
 
@@ -248,6 +256,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
                 public void onItemRangeRemoved(int positionStart, int itemCount) {
                     super.onItemRangeRemoved(positionStart, itemCount);
 
+                    Timber.d("onItemRangeRemoved");
                     plotGraph(_adapter.getConsumptions());
                 }
             });

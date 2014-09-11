@@ -75,8 +75,8 @@ public class DateHelper {
             // hours ago
             long timeMs = System.currentTimeMillis() - date.getMillis();
             long minutes = timeMs / 1000 / 60;
-            String minutePlural = (minutes == 1) ? "minute" : "minutes";
-            dateString = String.valueOf(minutes) + " " + minutePlural + " ago";
+            String minuteSuffix = (minutes == 1) ? "m" : "m";
+            dateString = String.valueOf(minutes) + "" + minuteSuffix + " ago";
 
             if(minutes == 0)
                 dateString = context.getString(R.string.just_now);
@@ -84,11 +84,11 @@ public class DateHelper {
             if (minutes > 60) {
                 long hours = minutes / 60;
                 long leftOverMinutes = minutes % 60;
-                String hourPlural = (hours == 1) ? "hour" : "hours";
-                minutePlural = (leftOverMinutes == 1) ? "minute" : "minutes";
-                dateString = String.valueOf(hours) + " " + hourPlural + " ";
+                String hourSuffix = (hours == 1) ? "h" : "h";
+                minuteSuffix = (leftOverMinutes == 1) ? "m" : "m";
+                dateString = String.valueOf(hours) + "" + hourSuffix + " ";
                 if(minutes > 0)
-                    dateString += leftOverMinutes + " " + minutePlural;
+                    dateString += leftOverMinutes + "" + minuteSuffix;
                 dateString += " ago";
             }
         }

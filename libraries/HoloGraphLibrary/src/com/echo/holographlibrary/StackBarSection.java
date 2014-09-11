@@ -96,16 +96,16 @@ public class StackBarSection {
         _velocity += acceleration * dt;
         _value += _velocity * dt;
         _lastTime = now;
-
-        if(isAtRest() == false) {
-            Log.d("StackBarSection", "" + _value + "/" + _targetValue + "/" + dt + "/" + _velocity + "/" + _springiness + "/" + _damping);
-        }
     }
 
     public boolean isAtRest() {
         final boolean standingStill = Math.abs(_velocity) < TOLERANCE;
         final boolean isAtTarget = (_targetValue - _value) < TOLERANCE;
-        return (standingStill && isAtTarget) || (_targetValue < TOLERANCE);
+        return (standingStill && isAtTarget);
+    }
+
+    public boolean isDrawable(){
+        return getTargetValue() > TOLERANCE || getValue() > TOLERANCE;
     }
 
     public float getTargetValue() {
