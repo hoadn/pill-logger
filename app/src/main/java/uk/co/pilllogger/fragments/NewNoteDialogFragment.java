@@ -25,6 +25,7 @@ import butterknife.OnClick;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.jobs.InsertPillJob;
+import uk.co.pilllogger.jobs.UpdatePillJob;
 import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
@@ -78,6 +79,31 @@ public class NewNoteDialogFragment extends InfoDialogFragment {
         ButterKnife.inject(this, view);
 
         setTypeface();
+
+        View doneLayout = view.findViewById(R.id.new_note_done_layout);
+        doneLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                _pill.setName(editPillName.getText().toString());
+//
+//                String pillSize = editPillSize.getText().toString();
+//                float size = pillSize.trim().length() > 0 ? Float.valueOf(pillSize) : 0;
+//                _pill.setSize(size);
+//                _pill.setUnits(spinner.getSelectedItem().toString());
+//                InputMethodManager im = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                im.hideSoftInputFromWindow(editPillName.getWindowToken(), 0);
+
+//                int delayMillis = getResources().getInteger(R.integer.slide_duration);
+//                view.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        _jobManager.addJobInBackground(new UpdatePillJob(_pill));
+//                    }
+//                }, delayMillis);
+
+                getActivity().getFragmentManager().popBackStack();
+            }
+        });
 
         return view;
     }

@@ -175,10 +175,6 @@ public class DialogActivity extends PillLoggerActivityBase{
                     fragment = new NewPillDialogFragment();
                     break;
 
-                case Note:
-                    _dialogTop.setVisibility(View.GONE);
-                    fragment = new NewNoteDialogFragment();
-                    break;
             }
         }
 
@@ -269,7 +265,6 @@ public class DialogActivity extends PillLoggerActivityBase{
 
     public enum DialogType{
         Consumption,
-        NewPill, Pill,
-        Note
+        NewPill, Pill
     }
 }

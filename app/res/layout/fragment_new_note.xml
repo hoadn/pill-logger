@@ -7,11 +7,11 @@
     <TextView
         android:id="@+id/new_note_title_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_grey_medium"
-        android:text="@string/new_pill_fragment_title"
+        android:layout_height="30dp"
+        android:textColor="@color/light_blue"
+        android:text="@string/new_note_fragment_title"
         android:gravity="center"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         android:paddingTop="10dp"
         />
@@ -19,7 +19,7 @@
         android:id="@+id/new_note_title"
         android:layout_width="match_parent"
         android:layout_weight="1"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:textColor="@color/text_grey"
         android:textCursorDrawable="@null"
         android:textSize="18sp"
@@ -30,12 +30,30 @@
         android:id="@+id/new_note_text"
         android:layout_width="match_parent"
         android:layout_weight="1"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:textColor="@color/text_grey"
         android:textCursorDrawable="@null"
         android:textSize="18sp"
         android:layout_margin="4dp"
         android:inputType="textCapWords"
         android:hint="@string/note_hint"/>
-
+    <LinearLayout
+        android:id="@+id/new_note_done_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="vertical">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/new_note_done"
+        android:text="@string/done_label"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textColor="@color/text_grey_medium"
+        android:drawableLeft="@drawable/navigation_back"/>
+    </LinearLayout>
 </LinearLayout>
