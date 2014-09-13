@@ -2,20 +2,18 @@ package uk.co.pilllogger.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Subscribe;
@@ -26,16 +24,12 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import hugo.weaving.DebugLog;
-import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.PillListAdapterFactory;
 import uk.co.pilllogger.adapters.PillRecyclerAdapter;
-import uk.co.pilllogger.adapters.PillsListAdapter;
-import uk.co.pilllogger.adapters.UnitAdapter;
 import uk.co.pilllogger.decorators.DividerItemDecoration;
 import uk.co.pilllogger.events.CreatedPillEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
-import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.jobs.InsertPillJob;
@@ -52,12 +46,15 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     PillListAdapterFactory _pillListAdapterFactory;
 
     public static final String TAG = "PillListFragment";
-    private RecyclerView _list;
+    private RecyclerView _listView;
     private EditText _addPillName;
     private EditText _addPillSize;
     private Spinner _unitSpinner;
     ColourIndicator _colour;
     private Activity _activity;
+
+    @Inject
+    Context _context;
 
     @Inject
     Provider<Pill> _pillProvider;
@@ -86,104 +83,16 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         v.setTag(R.id.tag_page_colour, color);
         v.setTag(R.id.tag_tab_icon_position, 1);
 
-        _list = (RecyclerView) v.findViewById(R.id.pill_list);
+        _listView = (RecyclerView) v.findViewById(R.id.pill_list);
 
-        _list.setHasFixedSize(true);
-        _list.addItemDecoration(new DividerItemDecoration(_activity, DividerItemDecoration.VERTICAL_LIST));
-        //_list.setOnItemClickListener(new PillItemClickListener(getActivity()));
+        _listView.setHasFixedSize(true);
+        _listView.addItemDecoration(new DividerItemDecoration(_activity, DividerItemDecoration.VERTICAL_LIST));
+        //_listView.setOnItemClickListener(new PillItemClickListener(getActivity()));
 
-        Typeface typeface = State.getSingleton().getTypeface();
-
-        TextView addPillTitle = (TextView) v.findViewById(R.id.pill_fragment_add_pill_title);
-        _addPillName = (EditText) v.findViewById(R.id.pill_fragment_add_pill_name);
-        _addPillSize = (EditText) v.findViewById(R.id.pill_fragment_add_pill_size);
-
-        TextView title = (TextView)v.findViewById(R.id.pill_fragment_title);
-        TextView colourText = (TextView)v.findViewById(R.id.pill_fragment_add_pill_colour);
-        TextView create = (TextView)v.findViewById(R.id.pill_fragment_add_pill_create);
-        addPillTitle.setTypeface(typeface);
-        _addPillName.setTypeface(typeface);
-        _addPillSize.setTypeface(typeface);
-        title.setTypeface(typeface);
-        colourText.setTypeface(typeface);
-        create.setTypeface(typeface);
-
-        _colour = (ColourIndicator)v.findViewById(R.id.pill_fragment_colour);
-        final View mainView = v;
-        _colour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final View colourHolder = mainView.findViewById(R.id.pill_fragment_colour_picker_container);
-                final ViewGroup colourContainer = (ViewGroup) colourHolder.findViewById(R.id.colour_container);
-                if (colourHolder.getVisibility() == View.VISIBLE) {
-                    int colourCount = colourContainer.getChildCount();
-                    for (int i = 0; i < colourCount; i++) {
-                        View colourView = colourContainer.getChildAt(i);
-                        if (colourView != null) {
-                            colourView.setOnClickListener(null);
-                        }
-                    }
-                    colourHolder.setVisibility(View.GONE);
-                } else {
-                    colourHolder.setVisibility(View.VISIBLE);
-                    int colourCount = colourContainer.getChildCount();
-                    for (int i = 0; i < colourCount; i++) {
-                        View colourView = colourContainer.getChildAt(i);
-                        if (colourView != null) {
-                            colourView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    int colour = ((ColourIndicator) view).getColour();
-                                    _colour.setColour(colour);
-                                    colourHolder.setVisibility(View.GONE);
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-        });
-
-        View completed = v.findViewById(R.id.pill_fragment_add_pill_completed);
-        completed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                completed();
-            }
-        });
-
-        _addPillSize.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    switch (keyCode) {
-                        case KeyEvent.KEYCODE_DPAD_CENTER:
-                        case KeyEvent.KEYCODE_ENTER:
-                            completed();
-                            return true;
-                        default:
-                            break;
-                    }
-                }
-                return false;
-            }
-        });
-        _addPillSize.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    completed();
-                    handled = true;
-                }
-                return handled;
-            }
-        });
-
-        _unitSpinner = (Spinner) v.findViewById(R.id.units_spinner);
-        String[] units = getResources().getStringArray(R.array.units_array);
-        UnitAdapter adapter = new UnitAdapter(_activity, android.R.layout.simple_spinner_item, units);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        _unitSpinner.setAdapter(adapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(_context);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        _listView.setLayoutManager(layoutManager);
+        _listView.setItemAnimator(new DefaultItemAnimator());
 
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(_activity);
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -200,12 +109,12 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(_activity);
         defaultSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
 
-        if(_list == null || _list.getAdapter() == null){
+        if(_listView == null || _listView.getAdapter() == null){
             return;
         }
 
         try {
-            _bus.unregister(_list.getAdapter());
+            _bus.unregister(_listView.getAdapter());
         }
         catch(IllegalArgumentException ignored){} // if this throws, we're not registered anyway
     }
@@ -217,7 +126,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 	public void setActivateOnItemClick(boolean activateOnItemClick) {
         // When setting CHOICE_MODE_SINGLE, ListView will automatically
         // give items the 'activated' state when touched.
-//		_list.setChoiceMode(
+//		_listView.setChoiceMode(
 //				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
 //						: ListView.CHOICE_MODE_NONE);
     }
@@ -229,10 +138,10 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     private void updatePills(List<Pill> pills){
         _pills = pills;
-        if(_list == null || pills.size() == 0)
+        if(_listView == null || pills.size() == 0)
             return;
 
-        if (_list.getAdapter() == null){ //we need to init the adapter
+        if (_listView.getAdapter() == null){ //we need to init the adapter
             Activity activity = getActivity();
 
             if(activity == null) // it's not gonna work without this
@@ -240,7 +149,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
             PillRecyclerAdapter adapter = _pillListAdapterFactory.create(activity, R.layout.pill_list_item, pills);
             _bus.register(adapter);
-            _list.setAdapter(adapter);
+            _listView.setAdapter(adapter);
         }
     }
 

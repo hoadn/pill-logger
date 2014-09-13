@@ -62,7 +62,7 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
         if(latest != null){
             String prefix = _context.getString(R.string.last_taken_message_prefix);
             String lastTaken = DateHelper.getRelativeDateTime(_context, latest.getDate(), true);
-            viewHolder.lastTaken.setText(prefix + " " + lastTaken);
+            viewHolder.lastTaken.setText(lastTaken);
         }
         else{
             viewHolder.lastTaken.setText(_context.getString(R.string.no_consumptions_message));
@@ -114,7 +114,6 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
         @InjectView(R.id.pill_list_last_taken) public TextView lastTaken;
         @InjectView(R.id.pill_list_colour) public ColourIndicator colour;
         @InjectView(R.id.pill_list_size) public TextView size;
-        @InjectView(R.id.pill_list_units) public TextView units;
 
         public ViewHolder(View itemView) {
             super(itemView);
