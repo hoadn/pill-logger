@@ -1,26 +1,41 @@
 package uk.co.pilllogger.adapters;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Subscribe;
 
+import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import hugo.weaving.DebugLog;
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
+import uk.co.pilllogger.events.CreateConsumptionEvent;
 import uk.co.pilllogger.events.CreatedPillEvent;
+import uk.co.pilllogger.events.DeletePillEvent;
+import uk.co.pilllogger.events.UpdatePillEvent;
+import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.DeletePillJob;
+import uk.co.pilllogger.jobs.InsertConsumptionsJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
@@ -37,11 +52,15 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
     private final List<Pill> _pills;
 
     Context _context;
+    private final JobManager _jobManager;
+    private final Activity _activity;
     private final ConsumptionRepository _consumptionRepository;
 
-    public PillRecyclerAdapter(List<Pill> pills, Context context, ConsumptionRepository consumptionRepository){
+    public PillRecyclerAdapter(List<Pill> pills, Context context, JobManager jobManager, Activity activity, ConsumptionRepository consumptionRepository){
         _pills = pills;
         _context = context;
+        _jobManager = jobManager;
+        _activity = activity;
         _consumptionRepository = consumptionRepository;
     }
 
@@ -164,4 +183,76 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
         _pills.add(0, event.getPill());
         notifyItemRangeInserted(0, 1);
     }
+
+    @Subscribe
+    public void dialogCreateConsumption(CreateConsumptionEvent event){
+        if(event.getPill() != null){
+            Consumption consumption = new Consumption(event.getPill(), new Date());
+            _jobManager.addJobInBackground(new InsertConsumptionsJob(consumption));
+            TrackerHelper.addConsumptionEvent(_context, "PillDialog");
+            Toast.makeText(_context, "Added consumption of " + event.getPill().getName(), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Subscribe @DebugLog
+    public void dialogDeletePill(DeletePillEvent event) {
+        AlertDialog cancelDialog = createCancelDialog(event.getPill(), "DialogDelete");
+        try {
+            cancelDialog.show();
+        } catch (WindowManager.BadTokenException ex) {
+            Timber.e(ex, "Error showing dialog");
+        }
+    }
+
+    @Subscribe @DebugLog
+    public void updatedPillEvent(UpdatedPillEvent event){
+        int indexOf = -1;
+
+        int i = 0;
+        for(Pill p : _pills){
+            if(p.getId() == event.getPill().getId()){
+                indexOf = i;
+                p.updateFromPill(event.getPill());
+                break;
+            }
+            i++;
+        }
+        if(indexOf < 0) {
+            return;
+        }
+
+        notifyItemRangeChanged(indexOf, 1);
+    }
+
+    private AlertDialog createCancelDialog(Pill pill, String deleteTrackerType) {
+        final Pill finalPill = pill;
+        final String deleteTrackerType1 = deleteTrackerType;
+        if (finalPill != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(_activity);
+            builder.setTitle(_context.getString(R.string.confirm_delete_title));
+            builder.setMessage(_context.getString(R.string.confirm_delete_message));
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    _jobManager.addJobInBackground(new DeletePillJob(finalPill));
+                    TrackerHelper.deletePillEvent(_context, deleteTrackerType1);
+
+                    int indexOf = _pills.indexOf(finalPill);
+                    _pills.remove(finalPill);
+                    notifyItemRangeRemoved(indexOf, 1);
+                    dialog.dismiss();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            return builder.create();
+        }
+        return null;
+    }
+
 }

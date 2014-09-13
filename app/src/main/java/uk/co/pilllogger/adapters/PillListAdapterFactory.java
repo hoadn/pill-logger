@@ -26,6 +26,6 @@ public class PillListAdapterFactory{
 
     public PillRecyclerAdapter create(Activity activity, int resourceId, List<Pill> pills){
         //return new PillsListAdapter(_context, _jobManager, activity, resourceId, pills, _consumptionRepository);
-        return new PillRecyclerAdapter(pills, _context, _consumptionRepository);
+        return new PillRecyclerAdapter(pills, _context, _jobManager, activity, _consumptionRepository);
     }
 }

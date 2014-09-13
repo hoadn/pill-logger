@@ -74,12 +74,14 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
             @Override @DebugLog
             public void onClick(View v) {
                 _bus.post(new CreateConsumptionEvent(_pill, PillInfoDialogFragment.this));
+                activity.finish();
             }
         });
         deletePillContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 _bus.post(new DeletePillEvent(_pill, PillInfoDialogFragment.this));
+                activity.finish();
             }
         });
         editPillContainer.setOnClickListener(new View.OnClickListener() {
