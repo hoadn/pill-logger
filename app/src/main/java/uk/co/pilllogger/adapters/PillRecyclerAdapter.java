@@ -9,12 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
+
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
+import uk.co.pilllogger.events.CreatedPillEvent;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
@@ -94,6 +97,13 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
             viewHolder.name.setText("Create new...");
             viewHolder.colour.setColour(Color.TRANSPARENT);
             viewHolder.size.setVisibility(View.GONE);
+
+            viewHolder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showNewPillDialog();
+                }
+            });
         }
     }
 
@@ -101,6 +111,13 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
         Intent intent = new Intent(_context, DialogActivity.class);
         intent.putExtra("DialogType", DialogActivity.DialogType.Pill.ordinal());
         intent.putExtra("PillId", pillId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        _context.startActivity(intent);
+    }
+
+    private void showNewPillDialog() {
+        Intent intent = new Intent(_context, DialogActivity.class);
+        intent.putExtra("DialogType", DialogActivity.DialogType.NewPill.ordinal());
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         _context.startActivity(intent);
     }
@@ -140,5 +157,11 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
         public void setOnClickListener(View.OnClickListener clickListener){
             itemView.setOnClickListener(clickListener);
         }
+    }
+
+    @Subscribe
+    public void pillAdded(CreatedPillEvent event){
+        _pills.add(0, event.getPill());
+        notifyItemRangeInserted(0, 1);
     }
 }

@@ -47,10 +47,6 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     public static final String TAG = "PillListFragment";
     private RecyclerView _listView;
-    private EditText _addPillName;
-    private EditText _addPillSize;
-    private Spinner _unitSpinner;
-    ColourIndicator _colour;
     private Activity _activity;
 
     @Inject
@@ -148,6 +144,18 @@ public class PillListFragment extends PillLoggerFragmentBase implements
                 return;
 
             PillRecyclerAdapter adapter = _pillListAdapterFactory.create(activity, R.layout.pill_list_item, pills);
+
+            adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                @Override
+                public void onItemRangeInserted(int positionStart, int itemCount) {
+                    super.onItemRangeInserted(positionStart, itemCount);
+
+                    if(positionStart == 0){
+                        _listView.scrollToPosition(0);
+                    }
+                }
+            });
+
             _bus.register(adapter);
             _listView.setAdapter(adapter);
         }
@@ -156,11 +164,6 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     @Subscribe
     public void pillInserted(CreatedPillEvent event) {
         _jobManager.addJobInBackground(new LoadPillsJob());
-        _addPillName.setText("");
-        _addPillSize.setText("");
-        _addPillSize.clearFocus();
-
-        LayoutHelper.hideKeyboard(getActivity());
     }
 
     @Override
@@ -181,26 +184,4 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
         return f;
     }
-
-    public void completed() {
-        if (!_addPillName.getText().toString().equals("")) {
-            Pill newPill = _pillProvider.get();
-            String pillName = _addPillName.getText().toString();
-            String units = _unitSpinner.getSelectedItem().toString();
-            newPill.setUnits(units);
-            newPill.setName(pillName);
-            newPill.setColour(_colour.getColour());
-
-            float pillSize = 0f;
-            if (!_addPillSize.getText().toString().matches("")) {
-                pillSize = Float.parseFloat(_addPillSize.getText().toString());
-            }
-            newPill.setSize(pillSize);
-
-            _jobManager.addJobInBackground(new InsertPillJob(newPill));
-
-            TrackerHelper.createPillEvent(getActivity(), TAG);
-        }
-    }
-
 }
