@@ -2,6 +2,7 @@ package uk.co.pilllogger.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,9 @@ import uk.co.pilllogger.views.ColourIndicator;
  * in uk.co.pilllogger.adapters.
  */
 public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapter.ViewHolder> {
+    private static final int NEW = 0;
+    private static final int EXISTING = 1;
+
     private final List<Pill> _pills;
 
     Context _context;
@@ -51,41 +55,46 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        final Pill pill = _pills.get(position);
-        if (pill == null) {
-            return;
-        }
-
-        viewHolder.name.setText(pill.getName());
-
-        Consumption latest = pill.getLatestConsumption(_consumptionRepository);
-        if(latest != null){
-            String prefix = _context.getString(R.string.last_taken_message_prefix);
-            String lastTaken = DateHelper.getRelativeDateTime(_context, latest.getDate(), true);
-            viewHolder.lastTaken.setText(lastTaken);
-        }
-        else{
-            viewHolder.lastTaken.setText(_context.getString(R.string.no_consumptions_message));
-        }
-
-        if(pill.getSize() <= 0){
-            viewHolder.size.setVisibility(View.INVISIBLE);
-        }
-        else{
-            viewHolder.size.setText(NumberHelper.getNiceFloatString(pill.getSize()) + pill.getUnits());
-            viewHolder.size.setVisibility(View.VISIBLE);
-        }
-
-        viewHolder.colour.setColour(pill.getColour());
-
-        viewHolder.pill = pill;
-
-        viewHolder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startDialog(pill.getId());
+        if(getItemViewType(position) == EXISTING) {
+            final Pill pill = _pills.get(position);
+            if (pill == null) {
+                return;
             }
-        });
+
+            viewHolder.name.setText(pill.getName());
+
+            Consumption latest = pill.getLatestConsumption(_consumptionRepository);
+            if (latest != null) {
+                String prefix = _context.getString(R.string.last_taken_message_prefix);
+                String lastTaken = DateHelper.getRelativeDateTime(_context, latest.getDate(), true);
+                viewHolder.lastTaken.setText(lastTaken);
+            } else {
+                viewHolder.lastTaken.setText(_context.getString(R.string.no_consumptions_message));
+            }
+
+            if (pill.getSize() <= 0) {
+                viewHolder.size.setVisibility(View.INVISIBLE);
+            } else {
+                viewHolder.size.setText(NumberHelper.getNiceFloatString(pill.getSize()) + pill.getUnits());
+                viewHolder.size.setVisibility(View.VISIBLE);
+            }
+
+            viewHolder.colour.setColour(pill.getColour());
+
+            viewHolder.pill = pill;
+
+            viewHolder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startDialog(pill.getId());
+                }
+            });
+        }
+        else{
+            viewHolder.name.setText("Create new...");
+            viewHolder.colour.setColour(Color.TRANSPARENT);
+            viewHolder.size.setVisibility(View.GONE);
+        }
     }
 
     private void startDialog(int pillId) {
@@ -98,11 +107,18 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
 
     @Override
     public int getItemCount() {
-        return _pills.size();
+        int count = 0;
+
+        if (_pills != null) {
+            count = _pills.size();
+        }
+
+        return count + 1;
     }
 
-    public void update(List<Pill> pills) {
-
+    @Override
+    public int getItemViewType(int position) {
+        return position == _pills.size() ? NEW : EXISTING;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{

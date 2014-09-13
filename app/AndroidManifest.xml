@@ -25,8 +25,8 @@
         <activity
                 android:name=".activities.MainActivity"
                 android:configChanges="orientation|keyboardHidden"
-                android:label="Pill Logger"
-                android:logo="@drawable/white_logo"
+                android:label=""
+                android:logo="@drawable/coloured_logo"
                 android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
