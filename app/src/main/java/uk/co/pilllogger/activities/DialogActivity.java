@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +21,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.InjectView;
 import hugo.weaving.DebugLog;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.fragments.ConsumptionInfoDialogFragment;
-import uk.co.pilllogger.fragments.NewNoteDialogFragment;
 import uk.co.pilllogger.fragments.NewPillDialogFragment;
 import uk.co.pilllogger.fragments.PillInfoDialogFragment;
 import uk.co.pilllogger.helpers.DateHelper;

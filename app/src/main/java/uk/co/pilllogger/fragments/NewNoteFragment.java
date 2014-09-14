@@ -10,31 +10,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.path.android.jobqueue.JobManager;
+
+import java.util.Date;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
 import uk.co.pilllogger.R;
-import uk.co.pilllogger.adapters.UnitAdapter;
-import uk.co.pilllogger.jobs.InsertPillJob;
+import uk.co.pilllogger.jobs.InsertNoteJob;
 import uk.co.pilllogger.jobs.UpdatePillJob;
 import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.views.ColourIndicator;
 
-public class NewNoteDialogFragment extends InfoDialogFragment {
+public class NewNoteFragment extends InfoDialogFragment {
 
     @InjectView(R.id.new_note_text)
-    EditText _newNoteName;
+    EditText _newNoteText;
 
     @InjectView(R.id.new_note_title)
     TextView _newNoteTitle;
@@ -45,18 +42,19 @@ public class NewNoteDialogFragment extends InfoDialogFragment {
     @Inject
     Provider<Pill> _pillProvider;
 
-    Pill _newPill;
+    Pill _pill;
     @Inject JobManager _jobManager;
 
     Note _note;
 
-    public NewNoteDialogFragment() {
+    public NewNoteFragment() {
         super();
     }
 
     @SuppressLint("ValidFragment")
-    public NewNoteDialogFragment(Pill pill){
+    public NewNoteFragment(Pill pill){
         super(pill);
+        _pill = pill;
     }
 
     @Override
@@ -72,9 +70,7 @@ public class NewNoteDialogFragment extends InfoDialogFragment {
             return null;
         }
 
-        _newPill = _pillProvider.get();
-
-        View view = inflater.inflate(R.layout.fragment_new_note, container, false);
+        final View view = inflater.inflate(R.layout.fragment_new_note, container, false);
 
         ButterKnife.inject(this, view);
 
@@ -84,22 +80,21 @@ public class NewNoteDialogFragment extends InfoDialogFragment {
         doneLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                _pill.setName(editPillName.getText().toString());
-//
-//                String pillSize = editPillSize.getText().toString();
-//                float size = pillSize.trim().length() > 0 ? Float.valueOf(pillSize) : 0;
-//                _pill.setSize(size);
-//                _pill.setUnits(spinner.getSelectedItem().toString());
-//                InputMethodManager im = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-//                im.hideSoftInputFromWindow(editPillName.getWindowToken(), 0);
+                _note = new Note();
+                _note.setText(_newNoteText.getText().toString());
+                _note.setTitle(_newNoteTitle.getText().toString());
+                _note.setPill(_pill);
+                _note.setDate(new Date());
+                InputMethodManager im = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                im.hideSoftInputFromWindow(_newNoteText.getWindowToken(), 0);
 
-//                int delayMillis = getResources().getInteger(R.integer.slide_duration);
-//                view.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        _jobManager.addJobInBackground(new UpdatePillJob(_pill));
-//                    }
-//                }, delayMillis);
+                int delayMillis = getResources().getInteger(R.integer.slide_duration);
+                view.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        _jobManager.addJobInBackground(new InsertNoteJob(_note));
+                    }
+                }, delayMillis);
 
                 getActivity().getFragmentManager().popBackStack();
             }
@@ -120,7 +115,7 @@ public class NewNoteDialogFragment extends InfoDialogFragment {
     private void setTypeface() {
         Typeface tf = State.getSingleton().getRobotoTypeface();
 
-        _newNoteName.setTypeface(tf);
+        _newNoteText.setTypeface(tf);
         _newNoteTitle.setTypeface(tf);
         _newNoteTitleText.setTypeface(tf);
     }

@@ -105,7 +105,7 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
         notesPillContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NotesFragment fragment = new NotesFragment(_pill);
+                NotesListFragment fragment = new NotesListFragment(_pill);
                 FragmentManager fm = PillInfoDialogFragment.this.getActivity().getFragmentManager();
                 fm.beginTransaction()
                         .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)

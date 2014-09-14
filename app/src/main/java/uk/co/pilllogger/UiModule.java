@@ -1,7 +1,5 @@
 package uk.co.pilllogger;
 
-import android.webkit.WebView;
-
 import dagger.Module;
 import uk.co.pilllogger.activities.AddConsumptionActivity;
 import uk.co.pilllogger.activities.AppWidgetConfigure;
@@ -19,9 +17,9 @@ import uk.co.pilllogger.fragments.ExportSelectDosageFragment;
 import uk.co.pilllogger.fragments.ExportSelectPillsFragment;
 import uk.co.pilllogger.fragments.ExportSelectTimeFragment;
 import uk.co.pilllogger.fragments.InfoDialogFragment;
-import uk.co.pilllogger.fragments.NewNoteDialogFragment;
+import uk.co.pilllogger.fragments.NewNoteFragment;
 import uk.co.pilllogger.fragments.NewPillDialogFragment;
-import uk.co.pilllogger.fragments.NotesFragment;
+import uk.co.pilllogger.fragments.NotesListFragment;
 import uk.co.pilllogger.fragments.PillInfoDialogFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
 import uk.co.pilllogger.fragments.PillRecurringFragment;
@@ -55,8 +53,8 @@ import uk.co.pilllogger.fragments.StatsFragment;
                 PillRecurringFragment.class,
                 SettingsFragment.class,
                 StatsFragment.class,
-                NotesFragment.class,
-                NewNoteDialogFragment.class
+                NotesListFragment.class,
+                NewNoteFragment.class
         },
         complete = false,
         library = true
