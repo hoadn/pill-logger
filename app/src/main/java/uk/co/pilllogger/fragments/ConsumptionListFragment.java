@@ -54,6 +54,7 @@ import uk.co.pilllogger.events.LoadedConsumptionsEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.RedrawGraphEvent;
 import uk.co.pilllogger.events.TakeConsumptionAgainEvent;
+import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
@@ -257,6 +258,12 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
                     super.onItemRangeRemoved(positionStart, itemCount);
 
                     Timber.d("onItemRangeRemoved");
+                    plotGraph(_adapter.getConsumptions());
+                }
+
+                @Override
+                public void onChanged() {
+                    super.onChanged();
                     plotGraph(_adapter.getConsumptions());
                 }
             });

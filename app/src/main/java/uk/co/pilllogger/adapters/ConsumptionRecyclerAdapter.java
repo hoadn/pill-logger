@@ -26,6 +26,7 @@ import uk.co.pilllogger.events.DecreaseConsumptionEvent;
 import uk.co.pilllogger.events.DeleteConsumptionEvent;
 import uk.co.pilllogger.events.IncreaseConsumptionEvent;
 import uk.co.pilllogger.events.TakeConsumptionAgainEvent;
+import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Consumption;
@@ -138,6 +139,7 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
     @Subscribe
     public void consumptionDeleted(DeleteConsumptionEvent event){
         String group = event.getConsumption().getGroup();
+        int pillId = event.getConsumption().getPillId();
 
         List<Consumption> toRemove = new ArrayList<Consumption>();
 
@@ -145,7 +147,7 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
         int count = 0;
         int indexOf = -1;
         for(Consumption c : _consumptions){
-            if(c.getGroup().equals(group)){
+            if(c.getGroup().equals(group) && c.getPillId() == pillId){
                 ++count;
 
                 if(indexOf == -1) {
@@ -204,5 +206,10 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
 
         _consumptions.addAll(indexOf, addedConsumptions);
         notifyItemRangeInserted(indexOf, addedConsumptions.size());
+    }
+
+    @Subscribe
+    public void onPillUpdated(UpdatedPillEvent event){
+        notifyDataSetChanged();
     }
 }

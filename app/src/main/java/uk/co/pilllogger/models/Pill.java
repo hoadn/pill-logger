@@ -319,4 +319,12 @@ public class Pill implements Serializable {
             c.setPill(this);
         }
     }
+
+    public void updateFromPill(Pill pill){
+        setSize(pill.getSize());
+        setName(pill.getName());
+        setFavourite(pill.isFavourite());
+        setColour(pill.getColour());
+        setUnits(pill.getUnits());
+    }
 }

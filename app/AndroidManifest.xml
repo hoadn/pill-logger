@@ -25,10 +25,10 @@
         <activity
                 android:name=".activities.MainActivity"
                 android:configChanges="orientation|keyboardHidden"
-                android:label="Pill Logger"
-                android:icon="@drawable/white_logo"
+                android:label=""
+                android:logo="@drawable/coloured_logo"
                 android:windowSoftInputMode="adjustPan">
-            <intent-filter>
+            <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>

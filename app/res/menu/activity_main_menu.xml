@@ -5,7 +5,7 @@
         android:id="@+id/add_consumption"
         android:title="Record consumption"
         android:showAsAction="always"
-        android:icon="@drawable/add"/>
+        android:icon="@drawable/coloured_add"/>
     <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
