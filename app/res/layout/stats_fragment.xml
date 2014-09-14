@@ -4,12 +4,6 @@
     android:layout_width="match_parent"
     android:orientation="vertical">
     <TextView
-        android:id="@+id/stats_fragment_title"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:text="@string/stats_fragment_title"
-        style="?attr/FragmentTitle"/>
-    <TextView
         android:id="@+id/stats_no_information"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,24 +21,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     android:paddingBottom="10dp">
     <TextView
         android:id="@+id/stats_most_taken_medicine_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/medicine_taken_most_often_title"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:layout_marginBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"/>
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="100dp"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp">
+        android:minHeight="100dp">
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -57,15 +49,18 @@
                 android:orientation="horizontal">
                 <uk.co.pilllogger.views.ColourIndicator
                     android:id="@+id/stats_most_taken_indicator_1st"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_gravity="center_vertical"/>
                 <TextView
                     android:id="@+id/stats_most_taken_medicine_1st"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:textSize="18sp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
+                    android:textSize="16sp"
                     tools:text="Paracetamol"/>
                 <TextView
                     android:id="@+id/stats_most_taken_count_1st"
@@ -83,15 +78,18 @@
                 android:orientation="horizontal">
                 <uk.co.pilllogger.views.ColourIndicator
                     android:id="@+id/stats_most_taken_indicator_2nd"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_gravity="center_vertical"/>
                 <TextView
                     android:id="@+id/stats_most_taken_medicine_2nd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:textSize="18sp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
+                    android:textSize="16sp"
                     tools:text="Paracetamol"/>
                 <TextView
                     android:id="@+id/stats_most_taken_count_2nd"
@@ -109,15 +107,18 @@
                 android:orientation="horizontal">
                 <uk.co.pilllogger.views.ColourIndicator
                     android:id="@+id/stats_most_taken_indicator_3rd"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_gravity="center_vertical"/>
                <TextView
                     android:id="@+id/stats_most_taken_medicine_3rd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:textSize="18sp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
+                    android:textSize="16sp"
                     tools:text="Paracetamol"/>
                 <TextView
                     android:id="@+id/stats_most_taken_count_3rd"
@@ -147,9 +148,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/hour_with_most_consumptions_title"
-        android:textSize="20sp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"/>
+        android:textSize="16sp"/>
     <uk.co.pilllogger.views.HourOfDayView
         android:id="@+id/stats_hour_most_graph"
         android:layout_width="match_parent"
@@ -169,9 +168,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/day_with_most_consumptions_title"
-        android:textSize="20sp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"/>
+        android:textSize="16sp"/>
     <TextView
         android:id="@+id/stats_day_most_consumptions"
         android:layout_width="wrap_content"

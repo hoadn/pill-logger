@@ -19,6 +19,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import hugo.weaving.DebugLog;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
@@ -58,6 +59,8 @@ public class Statistics{
         _context = context;
         _bus = bus;
         _consumptionRepository = consumptionRepository;
+
+        _bus.register(this);
     }
 
     private List<Consumption> filterConsumptions(Date startDate, Date endDate, List<Consumption> consumptions) {
@@ -499,7 +502,7 @@ public class Statistics{
         refreshConsumptionCaches(_consumptions);
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void pillsUpdated(UpdatedPillEvent event) {
         refreshConsumptionCaches(_consumptions);
     }

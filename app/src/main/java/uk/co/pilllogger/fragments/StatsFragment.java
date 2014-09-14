@@ -71,7 +71,6 @@ public class StatsFragment extends PillLoggerFragmentBase{
     @InjectView(R.id.stats_hour_most_consumptions_title) TextView _hourMostTakenTitle;
     @InjectView(R.id.stats_average_between_consumption_title) TextView _averageTimeBetweenTitle;
     @InjectView(R.id.stats_longest_between_consumption_title) TextView _longestTimeBetweenTitle;
-    @InjectView(R.id.stats_fragment_title) TextView _statsTitle;
     @InjectView(R.id.stats_day_most_consumptions_view) DayOfWeekView _dayOfWeekView;
     @InjectView(R.id.stats_total_consumption) TextView _totalConsumptions;
     @InjectView(R.id.stats_longest_streak) TextView _longestStreak;
@@ -97,8 +96,6 @@ public class StatsFragment extends PillLoggerFragmentBase{
         v.setTag(R.id.tag_tab_icon_position, 2);
 
         ButterKnife.inject(this, v);
-
-        setFont();
 
         return v;
     }
@@ -130,10 +127,10 @@ public class StatsFragment extends PillLoggerFragmentBase{
         super.onDestroyView();
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void statisticsUpdated(UpdatedStatisticsEvent event) {
-        if(!isAdded())
-            return;
+       // if(!isAdded())
+         //   return;
 
         List<Consumption> consumptions = event.getConsumptions();
 
@@ -231,22 +228,6 @@ public class StatsFragment extends PillLoggerFragmentBase{
         }
 
         GraphHelper.plotPieChart(pills, _medicineMostTakenGraph);
-    }
-
-    private void setFont() {
-        _medicineMostTaken1st.setTypeface(State.getSingleton().getTypeface());
-        _medicineMostTaken2nd.setTypeface(State.getSingleton().getTypeface());
-        _medicineMostTaken3rd.setTypeface(State.getSingleton().getTypeface());
-        _dayMostTaken.setTypeface(State.getSingleton().getTypeface());
-        _averageTimeBetween.setTypeface(State.getSingleton().getTypeface());
-        _longestTimeBetween.setTypeface(State.getSingleton().getTypeface());
-        _medicineMostTakenTitle.setTypeface(State.getSingleton().getTypeface());
-        _dayMostTakenTitle.setTypeface(State.getSingleton().getTypeface());
-        _hourMostTakenTitle.setTypeface(State.getSingleton().getTypeface());
-        _averageTimeBetweenTitle.setTypeface(State.getSingleton().getTypeface());
-        _longestTimeBetweenTitle.setTypeface(State.getSingleton().getTypeface());
-        _statsTitle.setTypeface(State.getSingleton().getTypeface());
-        _noInformation.setTypeface(State.getSingleton().getTypeface());
     }
 
     public static Fragment newInstance(int num) {
