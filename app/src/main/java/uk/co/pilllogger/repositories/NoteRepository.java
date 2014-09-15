@@ -37,6 +37,7 @@ public class NoteRepository extends BaseRepository<Note> {
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.Notes.COLUMN_PILL_ID, note.getPillId());
         values.put(DatabaseContract.Notes.COLUMN_DATE_TIME, note.getDate().getTime());
+        values.put(DatabaseContract.Notes.COLUMN_NOTE_TITLE, note.getTitle());
         values.put(DatabaseContract.Notes.COLUMN_CONTENT, note.getText());
 
         return values;
@@ -48,6 +49,7 @@ public class NoteRepository extends BaseRepository<Note> {
                 DatabaseContract.Notes._ID,
                 DatabaseContract.Notes.COLUMN_PILL_ID,
                 DatabaseContract.Notes.COLUMN_DATE_TIME,
+                DatabaseContract.Notes.COLUMN_NOTE_TITLE,
                 DatabaseContract.Notes.COLUMN_CONTENT
         };
     }

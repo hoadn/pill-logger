@@ -1,11 +1,12 @@
 package uk.co.pilllogger.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Nicholas.Allen on 08/09/2014.
  */
-public class Note {
+public class Note implements Serializable {
     private Date _date;
     private String _title;
     private String _text;
