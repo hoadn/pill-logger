@@ -16,7 +16,6 @@ import javax.inject.Provider;
 
 import timber.log.Timber;
 import uk.co.pilllogger.database.DatabaseContract;
-import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
 
@@ -38,7 +37,7 @@ public class NoteRepository extends BaseRepository<Note> {
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.Notes.COLUMN_PILL_ID, note.getPillId());
         values.put(DatabaseContract.Notes.COLUMN_DATE_TIME, note.getDate().getTime());
-        values.put(DatabaseContract.Notes.COLUMN_NOTE, note.getText());
+        values.put(DatabaseContract.Notes.COLUMN_CONTENT, note.getText());
 
         return values;
     }
@@ -49,7 +48,7 @@ public class NoteRepository extends BaseRepository<Note> {
                 DatabaseContract.Notes._ID,
                 DatabaseContract.Notes.COLUMN_PILL_ID,
                 DatabaseContract.Notes.COLUMN_DATE_TIME,
-                DatabaseContract.Notes.COLUMN_NOTE
+                DatabaseContract.Notes.COLUMN_CONTENT
         };
     }
 
@@ -63,7 +62,7 @@ public class NoteRepository extends BaseRepository<Note> {
         Note note = new Note();
         note.setId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.Notes._ID)));
         note.setDate(new Date(cursor.getLong(cursor.getColumnIndex(DatabaseContract.Notes.COLUMN_DATE_TIME))));
-        note.setText(cursor.getString(cursor.getColumnIndex(DatabaseContract.Notes.COLUMN_NOTE)));
+        note.setText(cursor.getString(cursor.getColumnIndex(DatabaseContract.Notes.COLUMN_CONTENT)));
         int pillId = cursor.getInt(cursor.getColumnIndex(DatabaseContract.Notes.COLUMN_PILL_ID));
 
         if(pill == null){
@@ -197,7 +196,7 @@ public class NoteRepository extends BaseRepository<Note> {
         List<Note> notes = new ArrayList<Note>();
         if (db != null) {
             Cursor c = db.query(
-                    DatabaseContract.Consumptions.TABLE_NAME,
+                    DatabaseContract.Notes.TABLE_NAME,
                     projection,
                     null,
                     null,

@@ -36,7 +36,7 @@ public final class DatabaseContract {
         public static final String TABLE_NAME = "notes";
         public static final String COLUMN_PILL_ID = "pill_id";
         public static final String COLUMN_NOTE_TITLE = "title";
-        public static final String COLUMN_NOTE = "note";
+        public static final String COLUMN_CONTENT = "content";
         public static final String COLUMN_DATE_TIME = "date_time";
     }
 
@@ -78,7 +78,7 @@ public final class DatabaseContract {
                         Notes._ID,
                         Notes.COLUMN_PILL_ID,
                         Notes.COLUMN_NOTE_TITLE,
-                        Notes.COLUMN_NOTE,
+                        Notes.COLUMN_CONTENT,
                         Notes.COLUMN_DATE_TIME);
     }
 
