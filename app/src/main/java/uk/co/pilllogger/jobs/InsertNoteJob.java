@@ -6,11 +6,9 @@ import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
-import uk.co.pilllogger.events.CreatedPillEvent;
+import uk.co.pilllogger.events.CreatedNoteEvent;
 import uk.co.pilllogger.models.Note;
-import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.NoteRepository;
-import uk.co.pilllogger.repositories.PillRepository;
 
 public class InsertNoteJob extends Job {
 
@@ -36,7 +34,7 @@ public class InsertNoteJob extends Job {
     public void onRun() throws Throwable {
         _noteRepository.insert(_note);
 
-        //_bus.post(new CreatedPillEvent(_pill));
+        _bus.post(new CreatedNoteEvent(_note));
     }
 
     @Override

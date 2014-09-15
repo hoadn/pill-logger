@@ -28,7 +28,7 @@ import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 
-public class NewNoteFragment extends InfoDialogFragment {
+public class NewNoteFragment extends PillLoggerFragmentBase {
 
     @InjectView(R.id.new_note_text)
     EditText _newNoteText;
@@ -39,10 +39,8 @@ public class NewNoteFragment extends InfoDialogFragment {
     @InjectView(R.id.new_note_title_text)
     TextView _newNoteTitleText;
 
-    @Inject
-    Provider<Pill> _pillProvider;
-
     Pill _pill;
+
     @Inject JobManager _jobManager;
 
     Note _note;
@@ -53,13 +51,7 @@ public class NewNoteFragment extends InfoDialogFragment {
 
     @SuppressLint("ValidFragment")
     public NewNoteFragment(Pill pill){
-        super(pill);
         _pill = pill;
-    }
-
-    @Override
-    protected int getLayoutId() {
-        return R.layout.fragment_new_note;
     }
 
     @Override
