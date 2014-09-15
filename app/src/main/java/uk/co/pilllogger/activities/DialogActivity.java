@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,11 +94,6 @@ public class DialogActivity extends PillLoggerActivityBase{
         _dialogTop = findById(this, R.id.info_dialog_top);
 
         setFragment();
-
-        Typeface typeface = State.getSingleton().getTypeface();
-        _title.setTypeface(typeface);
-        _lastTaken.setTypeface(typeface);
-        _dosage.setTypeface(typeface);
 
         bindPill();
 
@@ -204,12 +198,6 @@ public class DialogActivity extends PillLoggerActivityBase{
         _secondStatsIndicator = (ImageView) findViewById(R.id.pill_stats_30d_indicator);
         _thirdStats = (TextView) findViewById(R.id.pill_stats_all_time);
         _statsTitle = (TextView) findViewById(R.id.info_dialog_daily_title);
-
-        Typeface typeface = State.getSingleton().getTypeface();
-        _firstStats.setTypeface(typeface);
-        _secondStats.setTypeface(typeface);
-        _thirdStats.setTypeface(typeface);
-        _statsTitle.setTypeface(typeface);
 
         _statsContainer = findViewById(R.id.pill_stats_container);
 

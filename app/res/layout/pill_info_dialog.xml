@@ -6,7 +6,7 @@
     <LinearLayout
         android:id="@+id/info_dialog_take_now"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/default_list_item_height"
         android:orientation="horizontal"
         android:background="?android:attr/selectableItemBackground"
         style="?attr/ExportItem">
@@ -25,7 +25,8 @@
             android:paddingLeft="5dp"
             android:paddingRight="10dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:layout_gravity="center_vertical">
             <TextView
                 android:id="@+id/info_dialog_add_consumption_title"
                 android:text="@string/info_dialog_take_now"
@@ -50,7 +51,7 @@
     <LinearLayout
         android:id="@+id/info_dialog_edit_pill"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/default_list_item_height"
         android:orientation="horizontal"
         android:background="?android:attr/selectableItemBackground"
         style="?attr/ExportItem">
@@ -67,7 +68,8 @@
             android:paddingLeft="5dp"
             android:paddingRight="10dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:layout_gravity="center_vertical">
             <TextView
                 android:id="@+id/info_dialog_edit_pill_title"
                 android:text="@string/info_dialog_edit_pill_title"
@@ -97,7 +99,7 @@
     <LinearLayout
         android:id="@+id/info_dialog_delete_pill"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/default_list_item_height"
         android:orientation="horizontal"
         android:background="?android:attr/selectableItemBackground"
         style="?attr/ExportItem">
@@ -116,7 +118,8 @@
             android:paddingLeft="5dp"
             android:paddingRight="10dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:layout_gravity="center_vertical">
             <TextView
                 android:id="@+id/info_dialog_delete_pill_title"
                 android:text="@string/info_dialog_delete"
