@@ -195,6 +195,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
         if(_listView != null && _listView.getAdapter() != null) {
             _listView.getAdapter().notifyDataSetChanged();
         }
+
+        setupPills(_pills);
     }
 
     @Override

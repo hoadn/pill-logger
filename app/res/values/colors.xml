@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="action_bar">#009688</color>
+    <color name="action_bar_text">#004d40</color>
     <color name="background_grey">#dedede</color>
     <color name="text_grey">#333333</color>
     <color name="grey_divider">#1e000000</color>
