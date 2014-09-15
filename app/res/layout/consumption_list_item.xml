@@ -57,7 +57,7 @@
                 style="?attr/ConsumptionPillName"
                 android:layout_marginBottom="2dp"/>
 
-            <TextView android:textSize="16sp"
+            <TextView android:textSize="14sp"
                       android:id="@+id/consumption_list_size"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"

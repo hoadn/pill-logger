@@ -7,14 +7,16 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:id="@+id/pill_list_item"
+    android:clickable="false"
     tools:layout_height="@dimen/add_consumption_pill_list_item_height">
 
     <uk.co.pilllogger.views.ColourIndicator
         android:id="@+id/add_consumption_pill_colour"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:padding="8dp"
-        android:layout_marginLeft="5dp"
+        android:padding="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_gravity="center_vertical"
         android:color="@color/pill_colour1"
         />
@@ -23,14 +25,16 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/add_consumption_pill_list_item_height"
         android:orientation="vertical"
-         android:layout_toRightOf="@id/add_consumption_pill_colour"
         android:layout_centerVertical="true"
         android:gravity="center_vertical">
         <TextView
-            android:textSize="18dp"
+            android:textSize="16sp"
             android:id="@+id/pill_list_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:singleLine="true"
             tools:text="Ibuprofen"/>
 
 
@@ -39,7 +43,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/text_grey_medium"
-            android:text="@string/no_consumptions_message"/>
+            android:text="@string/no_consumptions_message"
+            android:textSize="12sp"/>
 
     </LinearLayout>
 
@@ -91,7 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <TextView android:textSize="14dp"
+            <TextView android:textSize="14sp"
                       android:id="@+id/pill_list_size"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
@@ -102,6 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/pill_units"
+                android:textSize="14sp"
 
                 android:textColor="@color/text_grey_medium"/>
         </LinearLayout>

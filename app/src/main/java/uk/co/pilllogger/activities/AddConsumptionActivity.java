@@ -154,17 +154,12 @@ public class AddConsumptionActivity extends PillLoggerActivityBase implements
         _reminderDateSpinner = (Spinner) findViewById(R.id.add_consumption_reminder_date);
         _reminderTimeSpinner = (Spinner)findViewById(R.id.add_consumption_reminder_time);
 
-        Typeface typeface = State.getSingleton().getTypeface();
         _newPillName = (TextView) findViewById(R.id.pill_fragment_add_pill_name);
         _newPillSize = (TextView) findViewById(R.id.pill_fragment_add_pill_size);
         TextView title = (TextView) findViewById(R.id.pill_fragment_add_pill_title);
         TextView colourText = (TextView) findViewById(R.id.pill_fragment_add_pill_colour);
         TextView create = (TextView) findViewById(R.id.pill_fragment_add_pill_create);
-        _newPillName.setTypeface(typeface);
-        _newPillSize.setTypeface(typeface);
         title.setVisibility(View.GONE);
-        colourText.setTypeface(typeface);
-        create.setTypeface(typeface);
 
         _colour = (ColourIndicator) findViewById(R.id.pill_fragment_colour);
         _colour.setColour(getResources().getColor(R.color.pill_colour7));

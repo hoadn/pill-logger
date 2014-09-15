@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="action_bar_height">101dp</dimen>
+    <dimen name="action_bar_height">95dp</dimen>
     <dimen name="tab_bar_height">78dp</dimen>
     <dimen name="tutorial_action_bar_height">121dp</dimen>
 

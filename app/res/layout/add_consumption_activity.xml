@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
     android:orientation="vertical"
     style="?AddConsumptionBackground">
     <LinearLayout
@@ -13,7 +11,7 @@
         android:layout_height="50dp"
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:background="@color/done_cancel_grey">
+        android:background="@color/action_bar">
         <LinearLayout
             android:id="@+id/add_consumption_cancel_layout"
             android:layout_height="match_parent"
@@ -108,7 +106,7 @@
             android:id="@+id/add_consumption_pill_list"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:listSelector="@drawable/grey_selector"
+            android:listSelector="@android:color/transparent"
             android:fadeScrollbars="false"
             android:visibility="visible"
             tools:listitem="@layout/add_consumption_pill_list"/>

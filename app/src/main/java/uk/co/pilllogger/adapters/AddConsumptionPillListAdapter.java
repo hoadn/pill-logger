@@ -105,15 +105,6 @@ public class AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
         public ExistingViewHolder(View view){
             super(view);
             ButterKnife.inject(this, view);
-            setTypeFace();
-        }
-
-        private void setTypeFace(){
-            Typeface typeface = State.getSingleton().getTypeface();
-            name.setTypeface(typeface);
-            size.setTypeface(typeface);
-            units.setTypeface(typeface);
-            lastTaken.setTypeface(typeface);
         }
     }
 

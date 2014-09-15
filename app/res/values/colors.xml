@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="action_bar">#009688</color>
     <color name="background_grey">#dedede</color>
     <color name="text_grey">#333333</color>
     <color name="grey_divider">#1e000000</color>
@@ -73,7 +74,7 @@
     <color name="consumption_size_professional">@color/consumption_secondary_professional</color>
 
     <color name="professional_background">#FFFFFFFF</color>
-    <color name="default_text_professional">#000000</color>
+    <color name="default_text_professional">#de000000</color>
     <color name="secondary_text_professional">#89000000</color>
     <color name="tab_mask_professional">#004d40</color>
     <color name="stackbar_graph_line_professional">#DDDDDD</color>
