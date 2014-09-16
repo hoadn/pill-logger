@@ -132,8 +132,9 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
         _listView.setLayoutManager(layoutManager);
         _listView.setItemAnimator(new DefaultItemAnimator());
 
-        if (_listView.getAdapter() != null) //Trying this to make the list refresh after adding the new consumption
+        if (_listView.getAdapter() != null) { //Trying this to make the list refresh after adding the new consumption
             _listView.getAdapter().notifyDataSetChanged();
+        }
 
         TextView noConsumptions = (TextView) v.findViewById(R.id.no_consumption_text);
         Typeface typeface = State.getSingleton().getTypeface();
@@ -225,77 +226,71 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
                 noConsumption.setVisibility(View.GONE);
             }
 
-            List<Consumption> removeConsumptions = new ArrayList<Consumption>();
-            for(Consumption c : _consumptions){
-                if(_allPills.containsKey(c.getPillId()) == false){
-                    removeConsumptions.add(c);
-                }
-            }
+            if(_listView.getAdapter() == null) {
+                Timber.d("Creating new ConsumptionRecyclerAdapter");
+                _adapter = new ConsumptionRecyclerAdapter(_consumptions, _context);
 
-            _consumptions.removeAll(removeConsumptions);
+                _adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                    @Override
+                    public void onItemRangeChanged(int positionStart, int itemCount) {
+                        super.onItemRangeChanged(positionStart, itemCount);
 
-            _adapter = new ConsumptionRecyclerAdapter(_consumptions, _context);
-
-            _adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-                @Override
-                public void onItemRangeChanged(int positionStart, int itemCount) {
-                    super.onItemRangeChanged(positionStart, itemCount);
-
-                    plotGraph(_adapter.getConsumptions());
-                }
-
-                @Override
-                public void onItemRangeInserted(int positionStart, int itemCount) {
-                    super.onItemRangeInserted(positionStart, itemCount);
-
-                    if(positionStart == 0){
-                        _listView.scrollToPosition(0);
+                        plotGraph(_adapter.getConsumptions());
                     }
 
-                    plotGraph(_adapter.getConsumptions());
+                    @Override
+                    public void onItemRangeInserted(int positionStart, int itemCount) {
+                        super.onItemRangeInserted(positionStart, itemCount);
+
+                        if (positionStart == 0) {
+                            _listView.scrollToPosition(0);
+                        }
+
+                        plotGraph(_adapter.getConsumptions());
+                    }
+
+                    @Override
+                    public void onItemRangeRemoved(int positionStart, int itemCount) {
+                        super.onItemRangeRemoved(positionStart, itemCount);
+
+                        Timber.d("onItemRangeRemoved");
+                        plotGraph(_adapter.getConsumptions());
+                    }
+
+                    @Override
+                    public void onChanged() {
+                        super.onChanged();
+                        plotGraph(_adapter.getConsumptions());
+                    }
+                });
+
+                //This is the code to provide a sectioned list
+                List<SimpleSectionedRecyclerViewAdapter.Section> sections = getConsumptionSections();
+
+                //Add your adapter to the sectionAdapter
+                SimpleSectionedRecyclerViewAdapter sectionedAdapter = new
+                        SimpleSectionedRecyclerViewAdapter(_context, R.layout.section, R.id.section_text, _adapter);
+                sectionedAdapter.setSections(sections);
+
+                _bus.register(_adapter);
+
+                if (_listView.getAdapter() != null) {
+                    _bus.unregister(_listView.getAdapter());
                 }
 
-                @Override
-                public void onItemRangeRemoved(int positionStart, int itemCount) {
-                    super.onItemRangeRemoved(positionStart, itemCount);
+                _listView.setAdapter(_adapter);
+                _listView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        View view = v.findViewById(R.id.graph_layout);
+                        if (view != null)
+                            view.getParent().requestDisallowInterceptTouchEvent(false);
+                        return false;
+                    }
+                });
 
-                    Timber.d("onItemRangeRemoved");
-                    plotGraph(_adapter.getConsumptions());
-                }
-
-                @Override
-                public void onChanged() {
-                    super.onChanged();
-                    plotGraph(_adapter.getConsumptions());
-                }
-            });
-
-            //This is the code to provide a sectioned list
-            List<SimpleSectionedRecyclerViewAdapter.Section> sections = getConsumptionSections();
-
-            //Add your adapter to the sectionAdapter
-            SimpleSectionedRecyclerViewAdapter sectionedAdapter = new
-                    SimpleSectionedRecyclerViewAdapter(_context, R.layout.section,R.id.section_text, _adapter);
-            sectionedAdapter.setSections(sections);
-
-            _bus.register(_adapter);
-
-            if (_listView.getAdapter() != null) {
-                _bus.unregister(_listView.getAdapter());
+                plotGraph(_consumptions);
             }
-
-            _listView.setAdapter(_adapter);
-            _listView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    View view = v.findViewById(R.id.graph_layout);
-                    if (view != null)
-                        view.getParent().requestDisallowInterceptTouchEvent(false);
-                    return false;
-                }
-            });
-
-            plotGraph(_consumptions);
         }
         TrackerHelper.updateUserProfile(activity, _pills.size(), _consumptions, _statistics);
 

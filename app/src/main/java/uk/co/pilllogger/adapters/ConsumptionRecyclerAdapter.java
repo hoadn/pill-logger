@@ -18,6 +18,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
@@ -127,7 +128,7 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
         }
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void consumptionTakenAgain(TakeConsumptionAgainEvent event){
         Consumption eventConsumption = event.getConsumption();
 
@@ -136,7 +137,7 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
         notifyItemRangeInserted(0, 1);
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void consumptionDeleted(DeleteConsumptionEvent event){
         String group = event.getConsumption().getGroup();
         int pillId = event.getConsumption().getPillId();
@@ -163,7 +164,7 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
         notifyItemRangeRemoved(indexOf, count);
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void consumptionIncreased(IncreaseConsumptionEvent event){
         int indexOf = _consumptions.indexOf(event.getConsumption());
 
@@ -172,7 +173,7 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
         notifyItemRangeChanged(indexOf, 1);
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void consumptionDecreased(DecreaseConsumptionEvent event){
         int indexOf = _consumptions.indexOf(event.getConsumption());
 
@@ -181,7 +182,7 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
         notifyItemRangeChanged(indexOf, 1);
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void consumptionAdded(CreatedConsumptionEvent event){
         List<Consumption> addedConsumptions = event.getConsumptions();
 
@@ -190,11 +191,17 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
         }
 
         DateTime whenAdded = new DateTime(addedConsumptions.get(0).getDate());
+        String group = addedConsumptions.get(0).getGroup();
 
         int i = 0;
         int indexOf = 0;
         for(Consumption c : _consumptions) {
             DateTime consumptionDate = new DateTime(c.getDate());
+
+            if(c.getGroup().equals(group)){
+                // this group is already in this list, bomb out!
+                return;
+            }
 
             if (consumptionDate.isBefore(whenAdded)) {
                 indexOf = i;
@@ -204,11 +211,13 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
             ++i;
         }
 
+        Timber.d("Consumption was added. Adding to list");
+
         _consumptions.addAll(indexOf, addedConsumptions);
         notifyItemRangeInserted(indexOf, addedConsumptions.size());
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void onPillUpdated(UpdatedPillEvent event){
         notifyDataSetChanged();
     }
