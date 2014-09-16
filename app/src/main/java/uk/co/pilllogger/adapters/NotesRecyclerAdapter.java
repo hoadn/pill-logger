@@ -1,5 +1,7 @@
 package uk.co.pilllogger.adapters;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -8,37 +10,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.squareup.otto.Subscribe;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
-import uk.co.pilllogger.events.DecreaseConsumptionEvent;
-import uk.co.pilllogger.events.DeleteConsumptionEvent;
-import uk.co.pilllogger.events.IncreaseConsumptionEvent;
-import uk.co.pilllogger.events.TakeConsumptionAgainEvent;
-import uk.co.pilllogger.helpers.DateHelper;
-import uk.co.pilllogger.helpers.NumberHelper;
+import uk.co.pilllogger.fragments.NewNoteFragment;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Note;
-import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.views.ColourIndicator;
 
 public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdapter.ViewHolder> {
 
     private final List<Note> _notes;
 
-    Context _context;
+    Activity _activity;
 
-    public NotesRecyclerAdapter(List<Note> notes, Context context){
+    public NotesRecyclerAdapter(List<Note> notes, Activity activity){
         _notes = notes;
-        _context = context;
+        _activity = activity;
     }
 
     @Override
@@ -48,7 +39,6 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
                 .inflate(R.layout.notes_list_item, null);
 
         // create ViewHolder
-
         return new ViewHolder(itemLayoutView);
     }
 
@@ -68,18 +58,19 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
         holder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //startDialog(note);
+                startNoteEditFragment(note);
             }
         });
     }
 
-    private void startDialog(Consumption consumption) {
-        Intent intent = new Intent(_context, DialogActivity.class);
-        intent.putExtra("DialogType", DialogActivity.DialogType.Consumption.ordinal());
-        intent.putExtra("ConsumptionGroup", consumption.getGroup());
-        intent.putExtra("PillId", consumption.getPillId());
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        _context.startActivity(intent);
+    private void startNoteEditFragment(Note note) {
+        NewNoteFragment fragment = new NewNoteFragment(note);
+        FragmentManager fm = _activity.getFragmentManager();
+        fm.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)
+                .replace(R.id.export_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

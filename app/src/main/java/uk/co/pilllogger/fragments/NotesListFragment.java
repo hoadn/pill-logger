@@ -120,7 +120,7 @@ public class NotesListFragment extends PillLoggerFragmentBase {
     public void notesLoaded(LoadedNotesEvent event) {
         _notes = event.getNotes();
 
-        _adapter = new NotesRecyclerAdapter(_notes, _context);
+        _adapter = new NotesRecyclerAdapter(_notes, getActivity());
         _listView.setAdapter(_adapter);
     }
 }

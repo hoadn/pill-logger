@@ -62,10 +62,11 @@ public class NoteRepository extends BaseRepository<Note> {
 
     protected Note getFromCursor(Cursor cursor, Pill pill) {
         Note note = new Note();
-        note.setId(cursor.getInt(cursor.getColumnIndex(DatabaseContract.Notes._ID)));
-        note.setDate(new Date(cursor.getLong(cursor.getColumnIndex(DatabaseContract.Notes.COLUMN_DATE_TIME))));
-        note.setText(cursor.getString(cursor.getColumnIndex(DatabaseContract.Notes.COLUMN_CONTENT)));
-        int pillId = cursor.getInt(cursor.getColumnIndex(DatabaseContract.Notes.COLUMN_PILL_ID));
+        note.setId(getInt(cursor, DatabaseContract.Notes._ID));
+        note.setDate(new Date(getLong(cursor, DatabaseContract.Notes.COLUMN_DATE_TIME)));
+        note.setText(getString(cursor, DatabaseContract.Notes.COLUMN_CONTENT));
+        note.setTitle(getString(cursor, DatabaseContract.Notes.COLUMN_NOTE_TITLE));
+        int pillId = getInt(cursor ,DatabaseContract.Notes.COLUMN_PILL_ID);
 
         if(pill == null){
             pill = _pillProvider.get();
@@ -103,7 +104,19 @@ public class NoteRepository extends BaseRepository<Note> {
 
     @Override
     public void update(Note note) {
-        throw new UnsupportedOperationException();
+        SQLiteDatabase db = _dbCreator.getWritableDatabase();
+
+        ContentValues values = getContentValues(note);
+
+        if(db != null){
+            db.update(
+                    DatabaseContract.Notes.TABLE_NAME,
+                    values,
+                    "_ID = ?",
+                    new String[]{String.valueOf(note.getId())});
+
+            Timber.d("Note updated");
+        }
     }
 
     @Override

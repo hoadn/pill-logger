@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.JobManager;
 
 import java.util.Date;
@@ -23,6 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.jobs.InsertNoteJob;
+import uk.co.pilllogger.jobs.UpdateNoteJob;
 import uk.co.pilllogger.jobs.UpdatePillJob;
 import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
@@ -54,6 +56,11 @@ public class NewNoteFragment extends PillLoggerFragmentBase {
         _pill = pill;
     }
 
+    @SuppressLint("ValidFragment")
+    public NewNoteFragment(Note note){
+        _note = note;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         Activity activity = getActivity();
@@ -68,26 +75,50 @@ public class NewNoteFragment extends PillLoggerFragmentBase {
 
         setTypeface();
 
+        if (_note != null) {
+            _newNoteText.setText(_note.getText());
+            _newNoteTitle.setText(_note.getTitle());
+        }
+
         View doneLayout = view.findViewById(R.id.new_note_done_layout);
         doneLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _note = new Note();
-                _note.setText(_newNoteText.getText().toString());
-                _note.setTitle(_newNoteTitle.getText().toString());
-                _note.setPill(_pill);
-                _note.setDate(new Date());
+                final Job job;
+                String noteText = _newNoteText.getText().toString();
+                String noteTitle = _newNoteTitle.getText().toString();
+                int delayMillis = getResources().getInteger(R.integer.slide_duration);
+                if (_note == null) {
+                    _note = new Note();
+                    _note.setText(_newNoteText.getText().toString());
+                    _note.setTitle(_newNoteTitle.getText().toString());
+                    _note.setPill(_pill);
+                    _note.setDate(new Date());
+
+                    job = new InsertNoteJob(_note);
+                }
+                else {
+
+                    if (noteText != "") {
+                        _note.setText(noteText);
+                    }
+                    if (noteTitle != "") {
+                        _note.setTitle(noteTitle);
+                    }
+                    job = new UpdateNoteJob(_note);
+                }
+
+                if (noteTitle != "" || noteText != "") {
+                    view.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            _jobManager.addJobInBackground(job);
+                        }
+                    }, delayMillis);
+                }
+
                 InputMethodManager im = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 im.hideSoftInputFromWindow(_newNoteText.getWindowToken(), 0);
-
-                int delayMillis = getResources().getInteger(R.integer.slide_duration);
-                view.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        _jobManager.addJobInBackground(new InsertNoteJob(_note));
-                    }
-                }, delayMillis);
-
                 getActivity().getFragmentManager().popBackStack();
             }
         });
