@@ -25,7 +25,7 @@
         <activity
                 android:name=".activities.MainActivity"
                 android:configChanges="orientation|keyboardHidden"
-                android:label=""
+                android:label="@string/app_name"
                 android:logo="@drawable/coloured_logo"
                 android:windowSoftInputMode="adjustPan">
             <intent-filter android:label="@string/app_name">
