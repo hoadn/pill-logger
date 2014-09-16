@@ -87,6 +87,7 @@ public class NewNoteFragment extends PillLoggerFragmentBase {
                 final Job job;
                 String noteText = _newNoteText.getText().toString();
                 String noteTitle = _newNoteTitle.getText().toString();
+                boolean runJob = true;
                 int delayMillis = getResources().getInteger(R.integer.slide_duration);
                 if (_note == null) {
                     _note = new Note();
@@ -98,7 +99,9 @@ public class NewNoteFragment extends PillLoggerFragmentBase {
                     job = new InsertNoteJob(_note);
                 }
                 else {
-
+                    if (_note.getText().equals(noteText) && _note.getTitle().equals(noteTitle)) {
+                        runJob = false;
+                    }
                     if (noteText != "") {
                         _note.setText(noteText);
                     }
@@ -108,7 +111,7 @@ public class NewNoteFragment extends PillLoggerFragmentBase {
                     job = new UpdateNoteJob(_note);
                 }
 
-                if (noteTitle != "" || noteText != "") {
+                if ((noteTitle != "" || noteText != "") && runJob) {
                     view.postDelayed(new Runnable() {
                         @Override
                         public void run() {
