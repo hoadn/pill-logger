@@ -26,6 +26,7 @@ import butterknife.InjectView;
 import hugo.weaving.DebugLog;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.NotesRecyclerAdapter;
+import uk.co.pilllogger.decorators.DividerItemDecoration;
 import uk.co.pilllogger.events.LoadedNotesEvent;
 import uk.co.pilllogger.jobs.LoadNotesJob;
 import uk.co.pilllogger.models.Note;
@@ -77,6 +78,7 @@ public class NotesListFragment extends PillLoggerFragmentBase {
 
         _listView = (RecyclerView) view.findViewById(R.id.notes_list);
         _listView.setHasFixedSize(true);
+        _listView.addItemDecoration(new DividerItemDecoration(_context, DividerItemDecoration.VERTICAL_LIST));
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(_context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
