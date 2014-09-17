@@ -35,7 +35,7 @@
         android:textCursorDrawable="@null"
         android:textSize="18sp"
         android:layout_margin="4dp"
-        android:inputType="textCapWords"
+        android:inputType="textMultiLine"
         android:hint="@string/note_hint"/>
     <LinearLayout
         android:id="@+id/new_note_done_layout"

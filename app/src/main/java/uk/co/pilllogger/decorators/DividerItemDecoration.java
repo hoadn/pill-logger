@@ -40,6 +40,8 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private Drawable mDivider;
 
+    private boolean _showFullLength = false;
+
     private int mOrientation;
 
     public DividerItemDecoration(Context context, int orientation) {
@@ -48,6 +50,15 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         mDivider = a.getDrawable(0);
         a.recycle();
         setOrientation(orientation);
+    }
+
+    public DividerItemDecoration(Context context, int orientation, boolean fullLength) {
+        _context = context;
+        final TypedArray a = context.obtainStyledAttributes(ATTRS);
+        mDivider = a.getDrawable(0);
+        a.recycle();
+        setOrientation(orientation);
+        showFullLength(fullLength);
     }
 
     public void setOrientation(int orientation) {
@@ -66,8 +77,15 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
+    public void showFullLength(boolean fullLength) {
+        _showFullLength = fullLength;
+    }
+
     public void drawVertical(Canvas c, RecyclerView parent) {
-        float leftPadding = LayoutHelper.dpToPx(_context, 72);
+        float leftPadding = 0f;
+        if (!_showFullLength) {
+            leftPadding = LayoutHelper.dpToPx(_context, 72);
+        }
         final int left = (int) (parent.getPaddingLeft() + leftPadding);
         final int right = parent.getWidth() - parent.getPaddingRight();
 

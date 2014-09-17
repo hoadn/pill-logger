@@ -78,7 +78,7 @@ public class NotesListFragment extends PillLoggerFragmentBase {
 
         _listView = (RecyclerView) view.findViewById(R.id.notes_list);
         _listView.setHasFixedSize(true);
-        _listView.addItemDecoration(new DividerItemDecoration(_context, DividerItemDecoration.VERTICAL_LIST));
+        _listView.addItemDecoration(new DividerItemDecoration(_context, DividerItemDecoration.VERTICAL_LIST, true));
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(_context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
