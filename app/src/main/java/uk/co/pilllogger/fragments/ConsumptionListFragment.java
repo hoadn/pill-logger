@@ -170,7 +170,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
         super.onStop();
     }
 
-    @Override
+    @Override @DebugLog
     public void onDestroyView(){
         super.onDestroyView();
 
@@ -179,6 +179,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
         }
 
         try {
+            _consumptions.clear();
+            _consumptions.addAll(_adapter.getConsumptions());
             _bus.unregister(_listView.getAdapter());
         }
         catch(IllegalArgumentException ignored){} // if this throws, we're not registered anyway
