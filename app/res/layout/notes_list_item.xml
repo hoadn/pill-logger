@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:padding="5dp"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
-    android:orientation="horizontal">
-
+>
+    <ImageView
+        android:id="@+id/notes_list_delete"
+        android:layout_width="30dp"
+        android:layout_height="fill_parent"
+        android:src="@drawable/cancel"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
     <LinearLayout
         android:id="@+id/notes_list_layout"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/notes_list_delete">
 
         <TextView
             android:id="@+id/notes_list_title"
@@ -26,10 +34,6 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
-    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="fill_parent"
-        android:src="@drawable/cancel"
-        android:layout_centerVertical="true"/>
 
-</LinearLayout>
+
+</RelativeLayout>
