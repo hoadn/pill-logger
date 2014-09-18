@@ -10,13 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.path.android.jobqueue.JobManager;
+
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
 import uk.co.pilllogger.fragments.NewNoteFragment;
+import uk.co.pilllogger.jobs.DeleteNoteJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.state.State;
@@ -27,9 +32,13 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
 
     Activity _activity;
 
-    public NotesRecyclerAdapter(List<Note> notes, Activity activity){
+
+    JobManager _jobManager;
+
+    public NotesRecyclerAdapter(List<Note> notes, Activity activity, JobManager jobManager){
         _notes = notes;
         _activity = activity;
+        _jobManager = jobManager;
     }
 
     @Override
@@ -55,12 +64,23 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
         holder.text.setTypeface(State.getSingleton().getRobotoTypeface());
         holder.title.setTypeface(State.getSingleton().getRobotoTypeface());
 
+        holder.setDeleteClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteNote(note);
+            }
+        });
+
         holder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startNoteEditFragment(note);
             }
         });
+    }
+
+    private void deleteNote(Note note) {
+        _jobManager.addJob(new DeleteNoteJob(note));
     }
 
     private void startNoteEditFragment(Note note) {
@@ -83,8 +103,10 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
+
         @InjectView(R.id.notes_list_title) public TextView title;
         @InjectView(R.id.notes_list_text) public TextView text;
+        @InjectView(R.id.notes_list_delete) public View delete;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -94,6 +116,10 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
 
         public void setOnClickListener(View.OnClickListener clickListener){
             itemView.setOnClickListener(clickListener);
+        }
+
+        public void setDeleteClickListener(View.OnClickListener clickListener){
+            delete.setOnClickListener(clickListener);
         }
     }
 

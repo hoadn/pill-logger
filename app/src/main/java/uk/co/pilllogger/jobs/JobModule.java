@@ -20,7 +20,8 @@ import dagger.Provides;
                 DeletePillJob.class,
                 LoadNotesJob.class,
                 InsertNoteJob.class,
-                UpdateNoteJob.class
+                UpdateNoteJob.class,
+                DeleteNoteJob.class
         },
         library = true,
         complete = false
