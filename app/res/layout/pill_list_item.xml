@@ -12,8 +12,8 @@
         android:orientation="horizontal"
         android:tag="selector"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:minHeight="72dp"
+        android:layout_height="@dimen/default_list_item_height"
+        android:minHeight="@dimen/default_list_item_height"
         android:clickable="false">
 
         <uk.co.pilllogger.views.ColourIndicator

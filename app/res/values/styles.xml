@@ -50,9 +50,10 @@
     <!-- ActionBar styles -->
     <style name="PartiallyTransparentActionBar"
            parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">#009688</item>
-        <item name="android:backgroundSplit">#009688</item>
-        <item name="android:backgroundStacked">#009688</item>
+        <item name="android:background">@color/action_bar</item>
+        <item name="android:backgroundSplit">@color/action_bar</item>
+        <item name="android:backgroundStacked">@color/action_bar</item>
+        <item name="android:displayOptions">useLogo|showHome</item>
     </style>
 
     <style name="PartiallyTransparentActionBarTab"
@@ -90,7 +91,7 @@
     <style name="ConsumptionPillName">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">16sp</item>
 
     </style>
 

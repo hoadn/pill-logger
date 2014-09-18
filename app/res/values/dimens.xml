@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="field_bottom_margin">10dp</dimen>
-    <dimen name="add_consumption_pill_list_item_height">60dp</dimen>
+    <dimen name="add_consumption_pill_list_item_height">@dimen/default_list_item_height</dimen>
     <dimen name="action_bar_height">101dp</dimen>
     <dimen name="tab_bar_height">78dp</dimen>
     <dimen name="tutorial_action_bar_height">121dp</dimen>
@@ -32,4 +32,5 @@
     <dimen name="elevation_low">1dp</dimen>
     <dimen name="elevation_high">4dp</dimen>
     <dimen name="add_button_margin">16dp</dimen>
+    <dimen name="default_list_item_height">72dp</dimen>
 </resources>

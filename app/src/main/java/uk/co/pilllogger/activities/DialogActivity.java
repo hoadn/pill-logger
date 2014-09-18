@@ -94,11 +94,6 @@ public class DialogActivity extends PillLoggerActivityBase{
 
         setFragment();
 
-        Typeface typeface = State.getSingleton().getTypeface();
-        _title.setTypeface(typeface);
-        _lastTaken.setTypeface(typeface);
-        _dosage.setTypeface(typeface);
-
         bindPill();
 
         setupStats();
@@ -203,12 +198,6 @@ public class DialogActivity extends PillLoggerActivityBase{
         _secondStatsIndicator = (ImageView) findViewById(R.id.pill_stats_30d_indicator);
         _thirdStats = (TextView) findViewById(R.id.pill_stats_all_time);
         _statsTitle = (TextView) findViewById(R.id.info_dialog_daily_title);
-
-        Typeface typeface = State.getSingleton().getTypeface();
-        _firstStats.setTypeface(typeface);
-        _secondStats.setTypeface(typeface);
-        _thirdStats.setTypeface(typeface);
-        _statsTitle.setTypeface(typeface);
 
         _statsContainer = findViewById(R.id.pill_stats_container);
 

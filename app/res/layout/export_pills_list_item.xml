@@ -22,7 +22,7 @@
         <RelativeLayout
             android:id="@+id/pill_info_container"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/pill_list_item_height"
+            android:layout_height="@dimen/default_list_item_height"
             android:padding="10dp">
             <LinearLayout
                 android:layout_width="wrap_content"

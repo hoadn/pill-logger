@@ -19,6 +19,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import hugo.weaving.DebugLog;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
@@ -58,6 +59,8 @@ public class Statistics{
         _context = context;
         _bus = bus;
         _consumptionRepository = consumptionRepository;
+
+        _bus.register(this);
     }
 
     private List<Consumption> filterConsumptions(Date startDate, Date endDate, List<Consumption> consumptions) {
@@ -434,7 +437,11 @@ public class Statistics{
     }
 
     public void refreshConsumptionCaches(List<Consumption> consumptions){
-        _consumptions = consumptions;
+        if(_consumptions == null){
+            _consumptions = new ArrayList<Consumption>();
+        }
+        _consumptions.clear();
+        _consumptions.addAll(consumptions);
 
         _pillAmountsCache = null;
         _dayWithMostConsumptionsCache = -1;
@@ -472,7 +479,7 @@ public class Statistics{
 
     @Subscribe
     public void consumptionAdded(CreatedConsumptionEvent event) {
-        _consumptions.addAll(event.getConsumptions());
+        //_consumptions.addAll(event.getConsumptions());
 
         refreshConsumptionCaches(_consumptions);
     }
@@ -499,7 +506,7 @@ public class Statistics{
         refreshConsumptionCaches(_consumptions);
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void pillsUpdated(UpdatedPillEvent event) {
         refreshConsumptionCaches(_consumptions);
     }
