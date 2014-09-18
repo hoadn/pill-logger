@@ -111,7 +111,7 @@ public class NewNoteFragment extends PillLoggerFragmentBase {
                     job = new UpdateNoteJob(_note);
                 }
 
-                if ((noteTitle != "" || noteText != "") && runJob) {
+                if ((!noteTitle.equals("") || !noteText.equals("")) && runJob) {
                     view.postDelayed(new Runnable() {
                         @Override
                         public void run() {
