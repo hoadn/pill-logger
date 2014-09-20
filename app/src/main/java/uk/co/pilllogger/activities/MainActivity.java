@@ -629,6 +629,9 @@ public class MainActivity extends PillLoggerActivityBase implements
                 theme = new ProfessionalTheme();
             }
 
+            // we are for now only supporting a single theme
+            theme = new ProfessionalTheme();
+
             State.getSingleton().setTheme(theme);
 
             _colour1 = getResources().getColor(theme.getConsumptionListBackgroundResourceId());
