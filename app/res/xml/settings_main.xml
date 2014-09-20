@@ -15,14 +15,6 @@
 
     <PreferenceCategory android:title="@string/pref_title_display" android:key="@string/pref_key_display">
         <uk.co.pilllogger.preferences.SummaryListPreference
-            android:title="@string/chooseTheme"
-            android:dialogTitle="@string/chooseTheme"
-            android:entries="@array/themeNames"
-            android:entryValues="@array/themes"
-            android:defaultValue="@string/rainbowTheme"
-            android:key="@string/pref_key_theme_list"
-            android:persistent="true"/>
-        <uk.co.pilllogger.preferences.SummaryListPreference
             android:title="@string/medicationListOrder"
             android:dialogTitle="@string/medicationListOrder"
             android:entries="@array/medicineSortOrder"
