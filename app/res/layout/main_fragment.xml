@@ -42,6 +42,12 @@
         tools:listitem="@layout/consumption_list_item"/>
     </LinearLayout>
 
+    <android.support.v4.widget.ContentLoadingProgressBar
+        android:id="@+id/consumption_progress"
+        android:layout_height="72dp"
+        android:layout_width="72dp"
+        android:layout_gravity="center"/>
+
     <com.shamanland.fab.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

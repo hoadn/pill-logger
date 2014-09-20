@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -90,6 +91,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
     private List<Consumption> _consumptions;
     private View _loading;
     private ConsumptionRecyclerAdapter _adapter;
+    private ContentLoadingProgressBar _progress;
 
     @DebugLog
     public static ConsumptionListFragment newInstance(int num){
@@ -122,6 +124,10 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
         _activity = getActivity();
 
         _graph = findById(v, R.id.consumption_graph);
+
+        _progress = findById(v, R.id.consumption_progress);
+
+        _progress.show();
 
         _listView = (RecyclerView) (v != null ? v.findViewById(R.id.main_consumption_list) : null);
         _listView.setHasFixedSize(true);
@@ -292,6 +298,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
                 });
 
                 plotGraph(_consumptions);
+                _progress.hide();
             }
         }
         TrackerHelper.updateUserProfile(activity, _pills.size(), _consumptions, _statistics);
