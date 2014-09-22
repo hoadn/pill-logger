@@ -26,6 +26,7 @@ public class LoadNoteFromPillJob extends Job {
     public LoadNoteFromPillJob(Pill pill)
     {
         super(new Params(Priority.HIGH));
+        _pill = pill;
     }
     
 
