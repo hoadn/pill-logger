@@ -9,23 +9,25 @@ import java.util.List;
 import javax.inject.Inject;
 
 import uk.co.pilllogger.events.LoadedNotesEvent;
-import uk.co.pilllogger.events.LoadedPillsEvent;
+import uk.co.pilllogger.events.LoadedNotesForPillEvent;
 import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.NoteRepository;
-import uk.co.pilllogger.repositories.PillRepository;
 
-public class LoadNotesJob extends Job {
+public class LoadNoteFromPillJob extends Job {
     @Inject
     Bus _bus;
 
     @Inject
     NoteRepository _noteRepository;
 
-    public LoadNotesJob() {
+    private Pill _pill;
+
+    public LoadNoteFromPillJob(Pill pill)
+    {
         super(new Params(Priority.HIGH));
     }
-
+    
 
     @Override
     public void onAdded() {
@@ -34,9 +36,9 @@ public class LoadNotesJob extends Job {
 
     @Override
     public void onRun() throws Throwable {
-        List<Note> notes = _noteRepository.getAll();
+        List<Note> notes = _noteRepository.getForPill(_pill);
 
-        _bus.post(new LoadedNotesEvent(notes));
+        _bus.post(new LoadedNotesForPillEvent(notes));
     }
 
     @Override
