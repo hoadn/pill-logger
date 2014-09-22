@@ -28,7 +28,9 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.NotesRecyclerAdapter;
 import uk.co.pilllogger.decorators.DividerItemDecoration;
 import uk.co.pilllogger.events.LoadedNotesEvent;
+import uk.co.pilllogger.events.LoadedNotesForPillEvent;
 import uk.co.pilllogger.jobs.DeleteNoteJob;
+import uk.co.pilllogger.jobs.LoadNoteFromPillJob;
 import uk.co.pilllogger.jobs.LoadNotesJob;
 import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
@@ -107,7 +109,7 @@ public class NotesListFragment extends PillLoggerFragmentBase {
         });
 
 
-        _jobManager.addJobInBackground(new LoadNotesJob());
+        _jobManager.addJobInBackground(new LoadNoteFromPillJob(_pill));
 
         setTypeface();
         return view;
@@ -121,7 +123,7 @@ public class NotesListFragment extends PillLoggerFragmentBase {
 
     @Subscribe
     @DebugLog
-    public void notesLoaded(LoadedNotesEvent event) {
+    public void notesLoaded(LoadedNotesForPillEvent event) {
         _notes = event.getNotes();
 
         _adapter = new NotesRecyclerAdapter(_notes, getActivity(), _jobManager);

@@ -41,6 +41,7 @@ public class NewNoteFragment extends PillLoggerFragmentBase {
     @InjectView(R.id.new_note_title_text)
     TextView _newNoteTitleText;
 
+
     Pill _pill;
 
     @Inject JobManager _jobManager;
@@ -78,6 +79,7 @@ public class NewNoteFragment extends PillLoggerFragmentBase {
         if (_note != null) {
             _newNoteText.setText(_note.getText());
             _newNoteTitle.setText(_note.getTitle());
+            _newNoteTitleText.setText("Edit Note");
         }
 
         View doneLayout = view.findViewById(R.id.new_note_done_layout);
