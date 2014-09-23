@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.path.android.jobqueue.JobManager;
+import com.squareup.otto.Subscribe;
+
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -18,8 +21,12 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import hugo.weaving.DebugLog;
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
+import uk.co.pilllogger.events.CreatedConsumptionEvent;
+import uk.co.pilllogger.events.CreatedNoteEvent;
 import uk.co.pilllogger.fragments.NewNoteFragment;
 import uk.co.pilllogger.jobs.DeleteNoteJob;
 import uk.co.pilllogger.models.Consumption;
@@ -121,6 +128,36 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
         public void setDeleteClickListener(View.OnClickListener clickListener){
             delete.setOnClickListener(clickListener);
         }
+    }
+
+    @Subscribe
+    @DebugLog
+    public void noteAdded(CreatedNoteEvent event){
+        Note note = event.getNote();
+
+        if(note == null){
+            return;
+        }
+
+        DateTime whenAdded = new DateTime(note.getDate());
+
+        int i = 0;
+        int indexOf = 0;
+        for(Note n : _notes) {
+            DateTime noteDate = new DateTime(n.getDate());
+
+            if (noteDate.isBefore(whenAdded)) {
+                indexOf = i;
+                break;
+            }
+
+            ++i;
+        }
+
+        Timber.d("Consumption was added. Adding to list");
+
+        _notes.add(indexOf, note);
+        //notifyItemRangeInserted(indexOf, addedConsumptions.size());
     }
 
 }
