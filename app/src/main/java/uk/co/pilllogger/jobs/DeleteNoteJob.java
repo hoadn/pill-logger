@@ -6,6 +6,7 @@ import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
+import uk.co.pilllogger.events.DeleteNoteEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
@@ -29,7 +30,7 @@ public class DeleteNoteJob extends Job {
 
     @Override
     public void onAdded() {
-        //_bus.post(new UpdatedNoteEvent(_note, true));
+        _bus.post(new DeleteNoteEvent(_note));
     }
 
     @Override

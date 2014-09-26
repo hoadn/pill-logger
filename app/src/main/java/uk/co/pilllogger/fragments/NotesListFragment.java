@@ -125,8 +125,32 @@ public class NotesListFragment extends PillLoggerFragmentBase {
     @DebugLog
     public void notesLoaded(LoadedNotesForPillEvent event) {
         _notes = event.getNotes();
-
         _adapter = new NotesRecyclerAdapter(_notes, getActivity(), _jobManager);
+
+        _bus.register(_adapter);
+
+        if (_listView.getAdapter() != null) {
+            _bus.unregister(_listView.getAdapter());
+        }
+
         _listView.setAdapter(_adapter);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        super.onDestroyView();
+
+        if(_listView == null || _listView.getAdapter() == null){
+            return;
+        }
+
+        try {
+            _notes.clear();
+            _notes.addAll(_adapter.getNotes());
+            _bus.unregister(_listView.getAdapter());
+        }
+        catch(IllegalArgumentException ignored){} // if this throws, we're not registered anyway
     }
 }

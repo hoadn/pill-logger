@@ -27,6 +27,7 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.CreatedNoteEvent;
+import uk.co.pilllogger.events.DeleteNoteEvent;
 import uk.co.pilllogger.fragments.NewNoteFragment;
 import uk.co.pilllogger.jobs.DeleteNoteJob;
 import uk.co.pilllogger.models.Consumption;
@@ -84,6 +85,10 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
                 startNoteEditFragment(note);
             }
         });
+    }
+
+    public List<Note> getNotes() {
+        return _notes;
     }
 
     private void deleteNote(Note note) {
@@ -154,10 +159,33 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
             ++i;
         }
 
-        Timber.d("Consumption was added. Adding to list");
+        Timber.d("Note was added. Adding to list");
 
         _notes.add(indexOf, note);
-        //notifyItemRangeInserted(indexOf, addedConsumptions.size());
+        notifyItemInserted(indexOf);
+    }
+
+    @Subscribe
+    @DebugLog
+    public void noteDeleted(DeleteNoteEvent event) {
+        Note note = event.getNote();
+        if (note == null) {
+            return;
+        }
+
+        int i = 0;
+        int toRemove = -1;
+        for (Note n : _notes) {
+            if (note.getId() == n.getId()) {
+                toRemove = i;
+            }
+            i++;
+        }
+
+        if (toRemove != -1) {
+            _notes.remove(note);
+            notifyItemRemoved(toRemove);
+        }
     }
 
 }
