@@ -10,8 +10,8 @@
     android:layout_height="wrap_content">
         <LinearLayout
             android:id="@+id/notes_done_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="35dp"
             android:background="?android:attr/selectableItemBackground"
             android:orientation="vertical"
             android:layout_alignParentLeft="true">
@@ -26,7 +26,7 @@
         <TextView
             android:id="@+id/notes_title"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="35dp"
             android:text="@string/info_dialog_notes_title"
             android:gravity="center"
             android:textColor="@color/light_blue"
@@ -34,8 +34,8 @@
             />
         <LinearLayout
             android:id="@+id/notes_add_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="35dp"
             android:background="?android:attr/selectableItemBackground"
             android:orientation="vertical"
             android:layout_alignParentRight="true">
