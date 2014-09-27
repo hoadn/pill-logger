@@ -67,4 +67,12 @@ public class Note implements Serializable {
     public void setTitle(String title) {
         _title = title;
     }
+
+    public void updateFromNote(Note note) {
+        setTitle(note.getTitle());
+        setId(note.getId());
+        setDate(note.getDate());
+        setPill(note.getPill());
+        setText(note.getText());
+    }
 }

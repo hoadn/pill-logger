@@ -27,6 +27,7 @@ import hugo.weaving.DebugLog;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.NotesRecyclerAdapter;
 import uk.co.pilllogger.decorators.DividerItemDecoration;
+import uk.co.pilllogger.events.CreatedNoteEvent;
 import uk.co.pilllogger.events.LoadedNotesEvent;
 import uk.co.pilllogger.events.LoadedNotesForPillEvent;
 import uk.co.pilllogger.jobs.DeleteNoteJob;
@@ -125,7 +126,7 @@ public class NotesListFragment extends PillLoggerFragmentBase {
     @DebugLog
     public void notesLoaded(LoadedNotesForPillEvent event) {
         _notes = event.getNotes();
-        _adapter = new NotesRecyclerAdapter(_notes, getActivity(), _jobManager);
+        _adapter = new NotesRecyclerAdapter(_notes, getActivity(), _jobManager, _listView);
 
         _bus.register(_adapter);
 

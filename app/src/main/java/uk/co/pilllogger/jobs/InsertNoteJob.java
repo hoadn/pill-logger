@@ -27,12 +27,14 @@ public class InsertNoteJob extends Job {
 
     @Override
     public void onAdded() {
-        _bus.post(new CreatedNoteEvent(_note));
+
     }
 
     @Override
     public void onRun() throws Throwable {
-        _noteRepository.insert(_note);
+        _note.setId((int) _noteRepository.insert(_note));
+
+        _bus.post(new CreatedNoteEvent(_note));
     }
 
     @Override

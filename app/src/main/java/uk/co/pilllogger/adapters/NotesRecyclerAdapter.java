@@ -28,6 +28,7 @@ import uk.co.pilllogger.activities.DialogActivity;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.CreatedNoteEvent;
 import uk.co.pilllogger.events.DeleteNoteEvent;
+import uk.co.pilllogger.events.UpdatedNoteEvent;
 import uk.co.pilllogger.fragments.NewNoteFragment;
 import uk.co.pilllogger.jobs.DeleteNoteJob;
 import uk.co.pilllogger.models.Consumption;
@@ -42,11 +43,13 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
 
 
     JobManager _jobManager;
+    private RecyclerView _listView;
 
-    public NotesRecyclerAdapter(List<Note> notes, Activity activity, JobManager jobManager){
+    public NotesRecyclerAdapter(List<Note> notes, Activity activity, JobManager jobManager, RecyclerView listView){
         _notes = notes;
         _activity = activity;
         _jobManager = jobManager;
+        _listView = listView;
     }
 
     @Override
@@ -160,9 +163,10 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
         }
 
         Timber.d("Note was added. Adding to list");
-
+        _listView.scrollToPosition(0);
         _notes.add(indexOf, note);
         notifyItemInserted(indexOf);
+
     }
 
     @Subscribe
@@ -185,6 +189,24 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
         if (toRemove != -1) {
             _notes.remove(note);
             notifyItemRemoved(toRemove);
+        }
+    }
+
+    @Subscribe
+    @DebugLog
+    public void noteUpdated(UpdatedNoteEvent event) {
+        Note note = event.getNote();
+        int indexChanged = -1;
+        int i = 0;
+        for (Note n : _notes) {
+            if (n.getId() == note.getId()) {
+                n.updateFromNote(note);
+                indexChanged = i;
+            }
+            i++;
+        }
+        if (indexChanged != -1) {
+            notifyItemChanged(indexChanged);
         }
     }
 
