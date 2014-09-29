@@ -208,7 +208,7 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
                 break;
             }
 
-            ++i;
+            indexOf = ++i;
         }
 
         Timber.d("Consumption was added. Adding to list");
