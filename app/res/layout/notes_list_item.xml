@@ -2,23 +2,32 @@
 <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:padding="5dp"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
 >
-    <ImageView
+    <RelativeLayout
         android:id="@+id/notes_list_delete"
-        android:layout_width="30dp"
-        android:layout_height="fill_parent"
-        android:src="@drawable/cancel"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:paddingRight="10dp"
+        android:background="?android:attr/selectableItemBackground"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true">
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/cancel"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
     <LinearLayout
         android:id="@+id/notes_list_layout"
         android:layout_width="wrap_content"
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:paddingTop="5dp"
+        android:paddingLeft="10dp"
+        android:paddingBottom="5dp"
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@id/notes_list_delete">
 
@@ -26,12 +35,16 @@
             android:id="@+id/notes_list_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="22sp"/>
+            android:textSize="20sp"
+            android:textColor="@color/text_grey"/>
 
         <TextView
             android:id="@+id/notes_list_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:textSize="14sp"
+            android:textColor="@color/text_grey_medium"/>
 
     </LinearLayout>
 

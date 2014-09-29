@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
+    android:paddingTop="10dp"
     android:background="@android:color/transparent">
     <RelativeLayout
     android:layout_width="match_parent"
@@ -55,6 +55,5 @@
         android:layout_height="200dp"
         android:layout_marginTop="0dp"
         tools:visibility="visible"
-        android:padding="5dp"
         tools:listitem="@layout/consumption_list_item"/>
 </LinearLayout>
