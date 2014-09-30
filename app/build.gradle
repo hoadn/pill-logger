@@ -8,6 +8,7 @@ buildscript {
         classpath 'com.jakewharton.hugo:hugo-plugin:1.1.+'
         classpath 'com.jakewharton.sdkmanager:gradle-plugin:0.12.+'
         classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+        classpath 'org.robolectric:robolectric-gradle-plugin:0.11.+'
     }
 }
 apply plugin: 'android-sdk-manager'
@@ -15,6 +16,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'crashlytics'
 apply plugin: 'hugo'
 apply from: '../deployment/pilllogger.gradle';
+apply plugin: 'robolectric'
 
 repositories {
     maven { url "http://dl.bintray.com/populov/maven" }
@@ -41,7 +43,35 @@ dependencies {
     compile 'com.intellij:annotations:+@jar'
     compile 'com.shamanland:fab:0.0.4'
     compile 'org.lucasr.twowayview:twowayview:0.1.1'
+
+    androidTestCompile('junit:junit:4.11') {
+        exclude module: 'hamcrest-core'
+    }
+    androidTestCompile('org.robolectric:robolectric:2.3') {
+        exclude module: 'classworlds'
+        exclude module: 'commons-logging'
+        exclude module: 'httpclient'
+        exclude module: 'maven-artifact'
+        exclude module: 'maven-artifact-manager'
+        exclude module: 'maven-error-diagnostics'
+        exclude module: 'maven-model'
+        exclude module: 'maven-project'
+        exclude module: 'maven-settings'
+        exclude module: 'plexus-container-default'
+        exclude module: 'plexus-interpolation'
+        exclude module: 'plexus-utils'
+        exclude module: 'wagon-file'
+        exclude module: 'wagon-http-lightweight'
+        exclude module: 'wagon-provider-api'
+    }
+
+    androidTestCompile('com.jakewharton.espresso:espresso:1.1-r3') {
+        exclude group: 'com.squareup.dagger'
+    }
+    androidTestCompile 'com.squareup:fest-android:1.0.+'
+
 }
+
 
 android {
     compileSdkVersion 19
@@ -74,6 +104,9 @@ android {
             manifest.srcFile 'AndroidManifest.xml'
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
+        }
+        androidTest {
+            setRoot('src/test')
         }
     }
 }
