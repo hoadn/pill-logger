@@ -18,6 +18,6 @@ public class NumberHelperTest {
     @Test
     public void getNiceFloatString_truncates_round_numbers(){
         String niceString = NumberHelper.getNiceFloatString(4.0f);
-        assertEquals("3", niceString);
+        assertEquals("4", niceString);
     }
 }
