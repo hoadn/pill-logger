@@ -23,4 +23,6 @@ before_install:
   - export TERM=dumb
   # Setup deployment dummy file
   - cp deployment/pilllogger.gradle.example deployment/pilllogger.gradle
-script: ./gradlew assembleDebug
+script: 
+  - ./gradlew check
+  - ./gradlew assembleDebug
