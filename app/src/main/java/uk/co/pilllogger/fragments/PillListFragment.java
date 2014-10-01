@@ -29,11 +29,14 @@ import uk.co.pilllogger.adapters.PillListAdapterFactory;
 import uk.co.pilllogger.adapters.PillRecyclerAdapter;
 import uk.co.pilllogger.decorators.DividerItemDecoration;
 import uk.co.pilllogger.events.CreatedPillEvent;
+import uk.co.pilllogger.events.LoadedNotesEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.jobs.InsertPillJob;
+import uk.co.pilllogger.jobs.LoadNotesJob;
 import uk.co.pilllogger.jobs.LoadPillsJob;
+import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.views.ColourIndicator;
@@ -57,6 +60,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     @Inject JobManager _jobManager;
     private List<Pill> _pills;
+    private List<Note> _notes;
 
     public PillListFragment() {
 	}
@@ -132,9 +136,20 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         updatePills(event.getPills());
     }
 
-    private void updatePills(List<Pill> pills){
-        _pills = pills;
-        if(_listView == null || pills.size() == 0)
+    @Subscribe
+    @DebugLog
+    public void notesLoaded(LoadedNotesEvent event) {
+        _notes = event.getNotes();
+        for (Note note : _notes) {
+            for (Pill pill : _pills) {
+                if (note.getPillId() == pill.getId()) {
+                    pill.addNote(note);
+                    break;
+                }
+            }
+        }
+
+        if(_listView == null || _pills.size() == 0)
             return;
 
         if (_listView.getAdapter() == null){ //we need to init the adapter
@@ -143,7 +158,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             if(activity == null) // it's not gonna work without this
                 return;
 
-            PillRecyclerAdapter adapter = _pillListAdapterFactory.create(activity, R.layout.pill_list_item, pills);
+            PillRecyclerAdapter adapter = _pillListAdapterFactory.create(activity, R.layout.pill_list_item, _pills);
 
             adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
                 @Override
@@ -158,6 +173,13 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
             _bus.register(adapter);
             _listView.setAdapter(adapter);
+        }
+    }
+
+    private void updatePills(List<Pill> pills){
+        _pills = pills;
+        if (_notes == null || _notes.size() == 0) {
+            _jobManager.addJobInBackground(new LoadNotesJob());
         }
     }
 

@@ -16,9 +16,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
+import uk.co.pilllogger.events.CreatedNoteEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.helpers.NumberHelper;
@@ -40,6 +42,7 @@ public class Pill implements Serializable {
     private Consumption _latest = null;
     private Consumption _first = null;
 
+    private List<Note> _notes = new ArrayList<Note>();
     private List<Consumption> _consumptions = new ArrayList<Consumption>();
 
     @Inject
@@ -113,6 +116,16 @@ public class Pill implements Serializable {
 
     public List<Consumption> getConsumptions() {
         return _consumptions;
+    }
+
+    public void addNote(Note note) {
+        if (!_notes.contains(note)) {
+            _notes.add(note);
+        }
+    }
+
+    public List<Note> getNotes() {
+        return _notes;
     }
 
     public Consumption getLatestConsumption(ConsumptionRepository consumptionRepository) {
@@ -244,6 +257,15 @@ public class Pill implements Serializable {
                     _latest = c;
                 }
             }
+        }
+    }
+
+    @Subscribe
+    @DebugLog
+    public void noteAdded(CreatedNoteEvent event) {
+        Note note = event.getNote();
+        if (note.getPillId() == _id) {
+            _notes.add(note);
         }
     }
 

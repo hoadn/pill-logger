@@ -164,8 +164,10 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
 
         Timber.d("Note was added. Adding to list");
         _listView.scrollToPosition(0);
-        _notes.add(indexOf, note);
-        notifyItemInserted(indexOf);
+        if (!_notes.contains(note)) {
+            _notes.add(indexOf, note);
+            notifyItemInserted(indexOf);
+        }
 
     }
 

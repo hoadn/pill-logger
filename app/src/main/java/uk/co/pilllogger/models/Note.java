@@ -1,7 +1,9 @@
 package uk.co.pilllogger.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Nicholas.Allen on 08/09/2014.

@@ -60,12 +60,11 @@ public class NotesListFragment extends PillLoggerFragmentBase {
     private RecyclerView _listView;
     private Pill _pill;
     private NotesRecyclerAdapter _adapter;
-    private List<Note> _notes;
+    private List<Note> _notes = new ArrayList<Note>();
 
     @SuppressLint("ValidFragment")
     public NotesListFragment(Pill pill) {
         _pill = pill;
-        _notes = new ArrayList<Note>();
     }
 
     public NotesListFragment() {
@@ -109,23 +108,7 @@ public class NotesListFragment extends PillLoggerFragmentBase {
             }
         });
 
-
-        _jobManager.addJobInBackground(new LoadNoteFromPillJob(_pill));
-
-        setTypeface();
-        return view;
-    }
-
-    public void setTypeface() {
-        Typeface typeface = State.getSingleton().getRobotoTypeface();
-        _notesTitle.setTypeface(typeface);
-
-    }
-
-    @Subscribe
-    @DebugLog
-    public void notesLoaded(LoadedNotesForPillEvent event) {
-        _notes = event.getNotes();
+        _notes = _pill.getNotes();
         _adapter = new NotesRecyclerAdapter(_notes, getActivity(), _jobManager, _listView);
 
         _bus.register(_adapter);
@@ -135,6 +118,15 @@ public class NotesListFragment extends PillLoggerFragmentBase {
         }
 
         _listView.setAdapter(_adapter);
+
+        setTypeface();
+        return view;
+    }
+
+    public void setTypeface() {
+        Typeface typeface = State.getSingleton().getRobotoTypeface();
+        _notesTitle.setTypeface(typeface);
+
     }
 
     @Override
