@@ -103,10 +103,10 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
             }
 
             if (pill.getNotes().size() > 0) {
-                viewHolder.noteIcon.setVisibility(View.GONE);
+                viewHolder.noteIcon.setVisibility(View.VISIBLE);
             }
             else {
-                viewHolder.noteIcon.setVisibility(View.VISIBLE);
+                viewHolder.noteIcon.setVisibility(View.GONE);
             }
 
             viewHolder.colour.setColour(pill.getColour());
@@ -123,6 +123,7 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
         else{
             viewHolder.name.setText("Create new...");
             viewHolder.colour.setColour(Color.TRANSPARENT);
+            viewHolder.noteIcon.setVisibility(View.GONE);
             viewHolder.size.setVisibility(View.GONE);
 
             viewHolder.setOnClickListener(new View.OnClickListener() {
