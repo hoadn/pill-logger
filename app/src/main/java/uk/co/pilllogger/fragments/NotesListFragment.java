@@ -140,8 +140,6 @@ public class NotesListFragment extends PillLoggerFragmentBase {
         }
 
         try {
-            _notes.clear();
-            _notes.addAll(_adapter.getNotes());
             _bus.unregister(_listView.getAdapter());
         }
         catch(IllegalArgumentException ignored){} // if this throws, we're not registered anyway

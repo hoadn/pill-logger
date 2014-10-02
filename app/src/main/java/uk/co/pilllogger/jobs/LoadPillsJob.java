@@ -10,8 +10,10 @@ import javax.inject.Inject;
 
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.models.Consumption;
+import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
+import uk.co.pilllogger.repositories.NoteRepository;
 import uk.co.pilllogger.repositories.PillRepository;
 
 public class LoadPillsJob extends Job {
@@ -20,6 +22,7 @@ public class LoadPillsJob extends Job {
 
     @Inject
     PillRepository _pillRepository;
+
 
     public LoadPillsJob() {
         super(new Params(Priority.HIGH));

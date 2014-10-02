@@ -28,6 +28,7 @@ import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.models.Consumption;
+import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
 
 /**
@@ -47,6 +48,9 @@ public class PillRepository extends BaseRepository<Pill>{
     public boolean isCached(){
         return _cache != null && _cache.size() > 0 && _getAllCalled;
     }
+
+    @Inject
+    NoteRepository _noteRepository;
 
     @Inject
     public PillRepository(Context context, Bus bus, ConsumptionRepository consumptionRepository, Provider<Pill> pillProvider){
@@ -222,6 +226,17 @@ public class PillRepository extends BaseRepository<Pill>{
                 c.moveToNext();
             }
             c.close();
+        }
+
+        List<Note> notes = _noteRepository.getAll();
+
+        for (Note note : notes) {
+            for (Pill pill : pills) {
+                if(pill.getId() == note.getPillId()) {
+                    pill.addNote(note);
+                    break;
+                }
+            }
         }
 
         return pills;

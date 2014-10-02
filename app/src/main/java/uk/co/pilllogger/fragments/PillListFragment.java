@@ -136,19 +136,8 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         updatePills(event.getPills());
     }
 
-    @Subscribe
-    @DebugLog
-    public void notesLoaded(LoadedNotesEvent event) {
-        _notes = event.getNotes();
-        for (Note note : _notes) {
-            for (Pill pill : _pills) {
-                if (note.getPillId() == pill.getId()) {
-                    pill.addNote(note);
-                    break;
-                }
-            }
-        }
-
+    private void updatePills(List<Pill> pills){
+        _pills = pills;
         if(_listView == null || _pills.size() == 0)
             return;
 
@@ -158,7 +147,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             if(activity == null) // it's not gonna work without this
                 return;
 
-            PillRecyclerAdapter adapter = _pillListAdapterFactory.create(activity, R.layout.pill_list_item, _pills);
+            PillRecyclerAdapter adapter = _pillListAdapterFactory.create(activity, R.layout.pill_list_item, pills);
 
             adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
                 @Override
@@ -173,13 +162,6 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
             _bus.register(adapter);
             _listView.setAdapter(adapter);
-        }
-    }
-
-    private void updatePills(List<Pill> pills){
-        _pills = pills;
-        if (_notes == null || _notes.size() == 0) {
-            _jobManager.addJobInBackground(new LoadNotesJob());
         }
     }
 

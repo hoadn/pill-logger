@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -101,6 +102,13 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
                 viewHolder.size.setVisibility(View.VISIBLE);
             }
 
+            if (pill.getNotes().size() > 0) {
+                viewHolder.noteIcon.setVisibility(View.GONE);
+            }
+            else {
+                viewHolder.noteIcon.setVisibility(View.VISIBLE);
+            }
+
             viewHolder.colour.setColour(pill.getColour());
 
             viewHolder.pill = pill;
@@ -166,6 +174,7 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
         @InjectView(R.id.pill_list_last_taken) public TextView lastTaken;
         @InjectView(R.id.pill_list_colour) public ColourIndicator colour;
         @InjectView(R.id.pill_list_size) public TextView size;
+        @InjectView(R.id.pill_list_notes_icon) public ImageView noteIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);
