@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.path.android.jobqueue.JobManager;
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
@@ -113,28 +114,25 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
         return _notes.size();
     }
 
-    public List<Note> getConsumptions() {
-        return _notes;
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder{
-
-        @InjectView(R.id.notes_list_title) public TextView title;
-        @InjectView(R.id.notes_list_text) public TextView text;
-        @InjectView(R.id.notes_list_delete) public View delete;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-
-            ButterKnife.inject(this, itemView);
+    @Subscribe @DebugLog
+    public void noteDeleted(DeleteNoteEvent event) {
+        Note note = event.getNote();
+        if (note == null) {
+            return;
         }
 
-        public void setOnClickListener(View.OnClickListener clickListener){
-            itemView.setOnClickListener(clickListener);
+        int i = 0;
+        int toRemove = -1;
+        for (Note n : _notes) {
+            if (note.getId() == n.getId()) {
+                toRemove = i;
+            }
+            i++;
         }
 
-        public void setDeleteClickListener(View.OnClickListener clickListener){
-            delete.setOnClickListener(clickListener);
+        if (toRemove != -1) {
+            _notes.remove(note);
+            notifyItemRemoved(toRemove);
         }
     }
 
@@ -173,29 +171,6 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
 
     @Subscribe
     @DebugLog
-    public void noteDeleted(DeleteNoteEvent event) {
-        Note note = event.getNote();
-        if (note == null) {
-            return;
-        }
-
-        int i = 0;
-        int toRemove = -1;
-        for (Note n : _notes) {
-            if (note.getId() == n.getId()) {
-                toRemove = i;
-            }
-            i++;
-        }
-
-        if (toRemove != -1) {
-            _notes.remove(note);
-            notifyItemRemoved(toRemove);
-        }
-    }
-
-    @Subscribe
-    @DebugLog
     public void noteUpdated(UpdatedNoteEvent event) {
         Note note = event.getNote();
         int indexChanged = -1;
@@ -211,5 +186,28 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
             notifyItemChanged(indexChanged);
         }
     }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder{
+
+        @InjectView(R.id.notes_list_title) public TextView title;
+        @InjectView(R.id.notes_list_text) public TextView text;
+        @InjectView(R.id.notes_list_delete) public View delete;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+
+            ButterKnife.inject(this, itemView);
+        }
+
+        public void setOnClickListener(View.OnClickListener clickListener){
+            itemView.setOnClickListener(clickListener);
+        }
+
+        public void setDeleteClickListener(View.OnClickListener clickListener){
+            delete.setOnClickListener(clickListener);
+        }
+    }
+
+
 
 }
