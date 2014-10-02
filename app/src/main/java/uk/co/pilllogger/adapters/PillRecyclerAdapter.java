@@ -28,7 +28,9 @@ import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
 import uk.co.pilllogger.events.CreateConsumptionEvent;
+import uk.co.pilllogger.events.CreatedNoteEvent;
 import uk.co.pilllogger.events.CreatedPillEvent;
+import uk.co.pilllogger.events.DeleteNoteEvent;
 import uk.co.pilllogger.events.DeletePillEvent;
 import uk.co.pilllogger.events.UpdatePillEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
@@ -38,6 +40,7 @@ import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.jobs.DeletePillJob;
 import uk.co.pilllogger.jobs.InsertConsumptionsJob;
 import uk.co.pilllogger.models.Consumption;
+import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.views.ColourIndicator;
@@ -265,4 +268,33 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
         return null;
     }
 
+
+    @Subscribe
+    @DebugLog
+    public void noteDeleted(DeleteNoteEvent event) {
+        Note note = event.getNote();
+        updatePillNoteInfo(note, 0);
+    }
+
+    @Subscribe
+    @DebugLog
+    public void noteAdded(CreatedNoteEvent event) {
+        Note note = event.getNote();
+        updatePillNoteInfo(note, 1);
+    }
+
+    private void updatePillNoteInfo(Note note, int size) {
+        int pillId = note.getPillId();
+
+        int i = 0;
+        for (Pill pill : _pills) {
+            if (pill.getId() == pillId) {
+                if (pill.getNotes().size() == size) {
+                    notifyItemRangeChanged(i, 1);
+                }
+                return;
+            }
+            i++;
+        }
+    }
 }

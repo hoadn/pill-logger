@@ -21,6 +21,7 @@ import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.CreatedNoteEvent;
+import uk.co.pilllogger.events.DeleteNoteEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.helpers.NumberHelper;
@@ -264,8 +265,17 @@ public class Pill implements Serializable {
     @DebugLog
     public void noteAdded(CreatedNoteEvent event) {
         Note note = event.getNote();
-        if (note.getPillId() == _id) {
+        if (!_notes.contains(note)) {
             _notes.add(note);
+        }
+    }
+
+    @Subscribe
+    @DebugLog
+    public void noteDeleted(DeleteNoteEvent event) {
+        Note note = event.getNote();
+        if (_notes.contains(note)) {
+            _notes.remove(note);
         }
     }
 
