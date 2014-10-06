@@ -24,6 +24,7 @@ import uk.co.pilllogger.events.CreatedNoteEvent;
 import uk.co.pilllogger.events.DeleteNoteEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
+import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 
@@ -45,9 +46,11 @@ public class Pill implements Serializable {
 
     private List<Note> _notes = new ArrayList<Note>();
     private List<Consumption> _consumptions = new ArrayList<Consumption>();
+    private Bus _bus;
 
     @Inject
-    public Pill(Bus bus) {
+     public Pill(Bus bus) {
+        _bus = bus;
         bus.register(this);
     }
 
@@ -268,6 +271,7 @@ public class Pill implements Serializable {
         if (!_notes.contains(note)) {
             _notes.add(note);
         }
+        _bus.post(new UpdatedPillEvent(this));
     }
 
     @Subscribe
@@ -277,6 +281,7 @@ public class Pill implements Serializable {
         if (_notes.contains(note)) {
             _notes.remove(note);
         }
+        _bus.post(new UpdatedPillEvent(this));
     }
 
     @Subscribe

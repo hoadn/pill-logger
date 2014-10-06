@@ -267,32 +267,4 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
         }
         return null;
     }
-
-
-    @Subscribe
-    @DebugLog
-    public void noteDeleted(DeleteNoteEvent event) {
-        Note note = event.getNote();
-        updatePillNoteInfo(note);
-    }
-
-    @Subscribe
-    @DebugLog
-    public void noteAdded(CreatedNoteEvent event) {
-        Note note = event.getNote();
-        updatePillNoteInfo(note);
-    }
-
-    private void updatePillNoteInfo(Note note) {
-        int pillId = note.getPillId();
-
-        int i = 0;
-        for (Pill pill : _pills) {
-            if (pill.getId() == pillId) {
-                notifyItemRangeChanged(i, 1);
-                return;
-            }
-            i++;
-        }
-    }
 }

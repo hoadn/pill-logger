@@ -16,6 +16,7 @@ import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -47,7 +48,7 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
     private RecyclerView _listView;
 
     public NotesRecyclerAdapter(List<Note> notes, Activity activity, JobManager jobManager, RecyclerView listView){
-        _notes = notes;
+        _notes = new ArrayList(notes);
         _activity = activity;
         _jobManager = jobManager;
         _listView = listView;
