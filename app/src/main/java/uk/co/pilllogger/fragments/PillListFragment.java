@@ -134,7 +134,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     private void updatePills(List<Pill> pills){
         _pills = pills;
-        if(_listView == null || pills.size() == 0)
+        if(_listView == null)
             return;
 
         if (_listView.getAdapter() == null){ //we need to init the adapter

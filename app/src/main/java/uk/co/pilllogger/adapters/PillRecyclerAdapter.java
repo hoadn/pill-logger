@@ -113,7 +113,7 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
             });
         }
         else{
-            viewHolder.name.setText("Create new...");
+            viewHolder.name.setText("Create new medicine...");
             viewHolder.colour.setColour(Color.TRANSPARENT);
             viewHolder.size.setVisibility(View.GONE);
 
