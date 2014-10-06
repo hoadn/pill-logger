@@ -53,6 +53,7 @@ import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.events.LoadedConsumptionsEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
+import uk.co.pilllogger.events.PreferencesChangedEvent;
 import uk.co.pilllogger.events.RedrawGraphEvent;
 import uk.co.pilllogger.events.TakeConsumptionAgainEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
@@ -478,5 +479,12 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
             }
         };
         executeRunnable(runnable);
+    }
+
+    @Subscribe
+    public void preferencesChanged(PreferencesChangedEvent event){
+        if(_adapter != null){
+            _adapter.notifyDataSetChanged();
+        }
     }
 }

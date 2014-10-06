@@ -13,7 +13,6 @@ import com.squareup.otto.Subscribe;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -81,7 +80,9 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
             }
             holder.colour.setColour(pill.getColour());
         }
-        holder.date.setText(DateHelper.getRelativeDateTime(_context, consumption.getDate()));
+        String dateTime = DateHelper.getUserPreferenceDateTime(_context, consumption.getDate());
+
+        holder.date.setText(dateTime);
         holder.quantity.setText(String.valueOf(consumption.getQuantity()));
 
         holder.setOnClickListener(new View.OnClickListener() {

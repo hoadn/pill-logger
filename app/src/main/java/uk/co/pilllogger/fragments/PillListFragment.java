@@ -30,6 +30,7 @@ import uk.co.pilllogger.adapters.PillRecyclerAdapter;
 import uk.co.pilllogger.decorators.DividerItemDecoration;
 import uk.co.pilllogger.events.CreatedPillEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
+import uk.co.pilllogger.events.PreferencesChangedEvent;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.jobs.InsertPillJob;
@@ -57,6 +58,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     @Inject JobManager _jobManager;
     private List<Pill> _pills;
+    private PillRecyclerAdapter _adapter;
 
     public PillListFragment() {
 	}
@@ -143,21 +145,21 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             if(activity == null) // it's not gonna work without this
                 return;
 
-            PillRecyclerAdapter adapter = _pillListAdapterFactory.create(activity, R.layout.pill_list_item, pills);
+            _adapter = _pillListAdapterFactory.create(activity, R.layout.pill_list_item, pills);
 
-            adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            _adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
                 @Override
                 public void onItemRangeInserted(int positionStart, int itemCount) {
                     super.onItemRangeInserted(positionStart, itemCount);
 
-                    if(positionStart == 0){
+                    if (positionStart == 0) {
                         _listView.scrollToPosition(0);
                     }
                 }
             });
 
-            _bus.register(adapter);
-            _listView.setAdapter(adapter);
+            _bus.register(_adapter);
+            _listView.setAdapter(_adapter);
         }
     }
 
@@ -171,6 +173,13 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         if(isAdded() && getActivity() != null) {
             if (key.equals(getActivity().getResources().getString(R.string.pref_key_medication_list_order)) || key.equals(getActivity().getResources().getString(R.string.pref_key_reverse_order)))
                 _jobManager.addJobInBackground(new LoadPillsJob());
+        }
+    }
+
+    @Subscribe
+    public void preferencesChanged(PreferencesChangedEvent event){
+        if(_adapter != null){
+            _adapter.notifyDataSetChanged();
         }
     }
 

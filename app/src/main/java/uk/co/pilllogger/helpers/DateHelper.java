@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 import java.util.Date;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.state.State;
 
 /**
  * Created by alex on 13/11/2013.
@@ -58,20 +59,43 @@ public class DateHelper {
     }
 
     public static String getRelativeDateTime(Context context, Date date, boolean isPrefixed){
-        return getRelativeDateTime(context, new DateTime(date), isPrefixed);
+        return getDateTimeStringImpl(context, new DateTime(date), isPrefixed, true);
     }
 
     public static String getRelativeDateTime(Context context, DateTime date){
-        return getRelativeDateTime(context, date, false);
+        return getDateTimeStringImpl(context, date, false, true);
     }
 
-    public static String getRelativeDateTime(Context context, DateTime date, boolean isPrefixed){
+    public static String getAbsoluteDateTime(Context context, Date date){
+        return getAbsoluteDateTime(context, date, false);
+    }
 
+    public static String getAbsoluteDateTime(Context context, Date date, boolean isPrefixed){
+        return getDateTimeStringImpl(context, new DateTime(date), isPrefixed, false);
+    }
+
+    public static String getAbsoluteDateTime(Context context, DateTime date){
+        return getDateTimeStringImpl(context, date, false, false);
+    }
+
+    public static String getUserPreferenceDateTime(Context context, Date date){
+        return getUserPreferenceDateTime(context, date, false);
+    }
+
+    public static String getUserPreferenceDateTime(Context context, Date date, boolean isPrefixed){
+        return getDateTimeStringImpl(context, new DateTime(date), isPrefixed, State.getSingleton().isUseRelativeTimes());
+    }
+
+    public static String getUserPreferenceDateTime(Context context, DateTime date){
+        return getDateTimeStringImpl(context, date, false, State.getSingleton().isUseRelativeTimes());
+    }
+
+    private static String getDateTimeStringImpl(Context context, DateTime date, boolean isPrefixed, boolean isRelative){
         String dateString;
         if (isDateInFuture(date)) {
             dateString = setAsDateAndTime(context, date);
         }
-        else if(date.plusHours(23).isAfterNow()){
+        else if(date.plusHours(23).isAfterNow() && isRelative){
             // hours ago
             long timeMs = System.currentTimeMillis() - date.getMillis();
             long minutes = timeMs / 1000 / 60;

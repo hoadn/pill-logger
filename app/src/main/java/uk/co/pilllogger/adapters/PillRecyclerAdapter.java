@@ -88,7 +88,7 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
             Consumption latest = pill.getLatestConsumption(_consumptionRepository);
             if (latest != null) {
                 String prefix = _context.getString(R.string.last_taken_message_prefix);
-                String lastTaken = DateHelper.getRelativeDateTime(_context, latest.getDate(), true);
+                String lastTaken = DateHelper.getUserPreferenceDateTime(_context, latest.getDate());
                 viewHolder.lastTaken.setText(lastTaken);
             } else {
                 viewHolder.lastTaken.setText(_context.getString(R.string.no_consumptions_message));

@@ -5,12 +5,16 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
+import org.joda.time.DateTime;
+
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.WebViewActivity;
+import uk.co.pilllogger.helpers.DateHelper;
 
 /**
  * Created by alex on 30/10/2013.
@@ -61,6 +65,14 @@ public class SettingsFragment extends PreferenceFragment{
                         return true;
                     }
                 });
+            }
+
+            CheckBoxPreference relativeDates = (CheckBoxPreference) findPreference(getString(R.string.pref_key_relative_times));
+            if(relativeDates != null){
+                DateTime example = DateTime.now().minusHours(3).minusMinutes(26);
+                String prefix = getString(R.string.pref_summary_relative_times_prefix);
+                relativeDates.setSummaryOn(prefix + " " + DateHelper.getRelativeDateTime(_context, example));
+                relativeDates.setSummaryOff(prefix + " " + DateHelper.getAbsoluteDateTime(_context, example));
             }
         }
     }
