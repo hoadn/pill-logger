@@ -6,6 +6,7 @@ import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
+import hugo.weaving.DebugLog;
 import uk.co.pilllogger.events.CreatedNoteEvent;
 import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.repositories.NoteRepository;
@@ -20,17 +21,18 @@ public class InsertNoteJob extends Job {
     @Inject
     Bus _bus;
 
+    @DebugLog
     public InsertNoteJob(Note note){
         super(new Params(Priority.LOW).persist());
         _note = note;
     }
 
-    @Override
+    @Override @DebugLog
     public void onAdded() {
 
     }
 
-    @Override
+    @Override @DebugLog
     public void onRun() throws Throwable {
         _note.setId((int) _noteRepository.insert(_note));
 

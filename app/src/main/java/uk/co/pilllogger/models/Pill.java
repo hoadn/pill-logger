@@ -46,10 +46,10 @@ public class Pill implements Serializable {
 
     private List<Note> _notes = new ArrayList<Note>();
     private List<Consumption> _consumptions = new ArrayList<Consumption>();
-    private Bus _bus;
+    private transient Bus _bus;
 
-    @Inject
-     public Pill(Bus bus) {
+    @Inject @DebugLog
+    public Pill(Bus bus) {
         _bus = bus;
         bus.register(this);
     }
@@ -271,6 +271,8 @@ public class Pill implements Serializable {
         if (!_notes.contains(note)) {
             _notes.add(note);
         }
+
+        Timber.d(String.valueOf("_bus is null: " + _bus == null));
         _bus.post(new UpdatedPillEvent(this));
     }
 

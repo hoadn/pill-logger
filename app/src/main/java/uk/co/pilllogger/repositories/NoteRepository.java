@@ -14,6 +14,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.models.Note;
@@ -59,7 +60,6 @@ public class NoteRepository extends BaseRepository<Note> {
         return getFromCursor(cursor, null);
     }
 
-
     protected Note getFromCursor(Cursor cursor, Pill pill) {
         Note note = new Note();
         note.setId(getInt(cursor, DatabaseContract.Notes._ID));
@@ -83,7 +83,7 @@ public class NoteRepository extends BaseRepository<Note> {
         return DatabaseContract.Notes.TABLE_NAME;
     }
 
-    @Override
+    @Override @DebugLog
     public long insert(Note note) {
         SQLiteDatabase db = _dbCreator.getWritableDatabase();
 

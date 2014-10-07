@@ -22,6 +22,7 @@ import javax.inject.Provider;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import hugo.weaving.DebugLog;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.jobs.InsertNoteJob;
 import uk.co.pilllogger.jobs.UpdateNoteJob;
@@ -40,7 +41,6 @@ public class NewNoteFragment extends PillLoggerFragmentBase {
 
     @InjectView(R.id.new_note_title_text)
     TextView _newNoteTitleText;
-
 
     Pill _pill;
 
@@ -84,7 +84,7 @@ public class NewNoteFragment extends PillLoggerFragmentBase {
 
         View doneLayout = view.findViewById(R.id.new_note_done_layout);
         doneLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
+            @Override @DebugLog
             public void onClick(View v) {
                 final Job job;
                 String noteText = _newNoteText.getText().toString();
@@ -137,8 +137,6 @@ public class NewNoteFragment extends PillLoggerFragmentBase {
 
         ButterKnife.reset(this);
     }
-
-
 
     private void setTypeface() {
         Typeface tf = State.getSingleton().getRobotoTypeface();
