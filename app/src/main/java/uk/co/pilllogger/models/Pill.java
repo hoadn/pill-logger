@@ -24,6 +24,7 @@ import uk.co.pilllogger.events.CreatedNoteEvent;
 import uk.co.pilllogger.events.DeleteNoteEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
+import uk.co.pilllogger.events.PillNotesChangeEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
@@ -267,23 +268,32 @@ public class Pill implements Serializable {
     @Subscribe
     @DebugLog
     public void noteAdded(CreatedNoteEvent event) {
+        boolean iconChanged = (_notes.size() == 0);
         Note note = event.getNote();
         if (!_notes.contains(note)) {
             _notes.add(note);
         }
+        iconChanged = (iconChanged && _notes.size() == 1);
 
         Timber.d(String.valueOf("_bus is null: " + _bus == null));
-        _bus.post(new UpdatedPillEvent(this));
+        if (iconChanged) {
+            _bus.post(new PillNotesChangeEvent(this));
+        }
     }
 
     @Subscribe
     @DebugLog
     public void noteDeleted(DeleteNoteEvent event) {
+        boolean iconChanged = (_notes.size() == 1);
         Note note = event.getNote();
         if (_notes.contains(note)) {
             _notes.remove(note);
         }
-        _bus.post(new UpdatedPillEvent(this));
+        iconChanged = (iconChanged && _notes.size() == 0);
+
+        if (iconChanged) {
+            _bus.post(new PillNotesChangeEvent(this));
+        }
     }
 
     @Subscribe

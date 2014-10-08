@@ -32,7 +32,9 @@ import uk.co.pilllogger.events.CreatedNoteEvent;
 import uk.co.pilllogger.events.CreatedPillEvent;
 import uk.co.pilllogger.events.DeleteNoteEvent;
 import uk.co.pilllogger.events.DeletePillEvent;
+import uk.co.pilllogger.events.PillNotesChangeEvent;
 import uk.co.pilllogger.events.UpdatePillEvent;
+import uk.co.pilllogger.events.UpdatedNoteEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.NumberHelper;
@@ -236,6 +238,23 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
         }
 
         notifyItemRangeChanged(indexOf, 1);
+    }
+
+    @Subscribe @DebugLog
+    public void updatedPillNoteEvent(PillNotesChangeEvent event) {
+        int pillId = event.getPill().getId();
+        int indexOf = -1;
+        int i = 0;
+        for (Pill pill : _pills) {
+            if (pill.getId() == pillId) {
+                indexOf = i;
+            }
+            i++;
+        }
+
+        if (indexOf >= 0) {
+            notifyItemChanged(indexOf);
+        }
     }
 
     private AlertDialog createCancelDialog(Pill pill, String deleteTrackerType) {
