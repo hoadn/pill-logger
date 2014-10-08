@@ -268,15 +268,19 @@ public class Pill implements Serializable {
     @Subscribe
     @DebugLog
     public void noteAdded(CreatedNoteEvent event) {
-        boolean iconChanged = (_notes.size() == 0);
+        // this isn't our note
+        if(event.getNote().getPillId() != getId()){
+            return;
+        }
+
+        boolean noNotes = _notes.isEmpty();
         Note note = event.getNote();
         if (!_notes.contains(note)) {
             _notes.add(note);
         }
-        iconChanged = (iconChanged && _notes.size() == 1);
 
-        Timber.d(String.valueOf("_bus is null: " + _bus == null));
-        if (iconChanged) {
+        // we didn't have notes before, now we do
+        if (noNotes && _notes.isEmpty() == false) {
             _bus.post(new PillNotesChangeEvent(this));
         }
     }
@@ -284,14 +288,20 @@ public class Pill implements Serializable {
     @Subscribe
     @DebugLog
     public void noteDeleted(DeleteNoteEvent event) {
-        boolean iconChanged = (_notes.size() == 1);
+        // this isn't our note
+        if(event.getNote().getPillId() != getId()){
+            return;
+        }
+
+        boolean hadNotes = !_notes.isEmpty();
+
         Note note = event.getNote();
         if (_notes.contains(note)) {
             _notes.remove(note);
         }
-        iconChanged = (iconChanged && _notes.size() == 0);
 
-        if (iconChanged) {
+        // we had notes before, now we don't
+        if (hadNotes && _notes.isEmpty()) {
             _bus.post(new PillNotesChangeEvent(this));
         }
     }
@@ -375,5 +385,15 @@ public class Pill implements Serializable {
         setFavourite(pill.isFavourite());
         setColour(pill.getColour());
         setUnits(pill.getUnits());
+    }
+
+    public void destroy() {
+        if(_bus != null){
+            _bus.unregister(this);
+        }
+        _consumptions.clear();
+        _notes.clear();
+        _first = null;
+        _latest = null;
     }
 }

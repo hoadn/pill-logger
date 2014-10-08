@@ -107,11 +107,11 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
                 viewHolder.size.setVisibility(View.VISIBLE);
             }
 
-            if (pill.getNotes().size() > 0) {
-                viewHolder.noteIcon.setVisibility(View.VISIBLE);
+            if (pill.getNotes().isEmpty()) {
+                viewHolder.noteIcon.setVisibility(View.GONE);
             }
             else {
-                viewHolder.noteIcon.setVisibility(View.GONE);
+                viewHolder.noteIcon.setVisibility(View.VISIBLE);
             }
 
             viewHolder.colour.setColour(pill.getColour());
@@ -248,6 +248,7 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
         for (Pill pill : _pills) {
             if (pill.getId() == pillId) {
                 indexOf = i;
+                break;
             }
             i++;
         }

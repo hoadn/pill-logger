@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import hugo.weaving.DebugLog;
 import uk.co.pilllogger.events.LoadedConsumptionsEvent;
 import uk.co.pilllogger.models.Consumption;
+import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.repositories.PillRepository;
 
@@ -61,6 +62,10 @@ public class LoadConsumptionsJob extends Job {
         }
 
         for(Consumption c : consumptions){
+            Pill currentPill = c.getPill();
+
+            currentPill.destroy();
+
             c.setPill(_pillRepository.get(c.getPillId()));
         }
 
