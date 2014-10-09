@@ -31,7 +31,7 @@ import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 
-public class NewNoteFragment extends PillLoggerFragmentBase {
+public class NoteFragment extends PillLoggerFragmentBase {
 
     @InjectView(R.id.new_note_text)
     EditText _newNoteText;
@@ -48,17 +48,17 @@ public class NewNoteFragment extends PillLoggerFragmentBase {
 
     Note _note;
 
-    public NewNoteFragment() {
+    public NoteFragment() {
         super();
     }
 
     @SuppressLint("ValidFragment")
-    public NewNoteFragment(Pill pill){
+    public NoteFragment(Pill pill){
         _pill = pill;
     }
 
     @SuppressLint("ValidFragment")
-    public NewNoteFragment(Note note){
+    public NoteFragment(Note note){
         _note = note;
     }
 

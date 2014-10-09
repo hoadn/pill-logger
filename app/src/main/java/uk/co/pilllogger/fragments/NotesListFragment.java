@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.path.android.jobqueue.JobManager;
-import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,16 +22,9 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import hugo.weaving.DebugLog;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.NotesRecyclerAdapter;
 import uk.co.pilllogger.decorators.DividerItemDecoration;
-import uk.co.pilllogger.events.CreatedNoteEvent;
-import uk.co.pilllogger.events.LoadedNotesEvent;
-import uk.co.pilllogger.events.LoadedNotesForPillEvent;
-import uk.co.pilllogger.jobs.DeleteNoteJob;
-import uk.co.pilllogger.jobs.LoadNoteFromPillJob;
-import uk.co.pilllogger.jobs.LoadNotesJob;
 import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
@@ -91,7 +83,7 @@ public class NotesListFragment extends PillLoggerFragmentBase {
         _addNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NewNoteFragment fragment = new NewNoteFragment(_pill);
+                NoteFragment fragment = new NoteFragment(_pill);
                 FragmentManager fm = NotesListFragment.this.getActivity().getFragmentManager();
                 fm.beginTransaction()
                         .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)

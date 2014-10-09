@@ -77,4 +77,30 @@ public class Note implements Serializable {
         setPill(note.getPill());
         setText(note.getText());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Note note = (Note) o;
+
+        if (_id != note._id) return false;
+        if (_date != null ? !_date.equals(note._date) : note._date != null) return false;
+        if (!_pill.equals(note._pill)) return false;
+        if (_text != null ? !_text.equals(note._text) : note._text != null) return false;
+        if (_title != null ? !_title.equals(note._title) : note._title != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = _date != null ? _date.hashCode() : 0;
+        result = 31 * result + (_title != null ? _title.hashCode() : 0);
+        result = 31 * result + (_text != null ? _text.hashCode() : 0);
+        result = 31 * result + _pill.hashCode();
+        result = 31 * result + _id;
+        return result;
+    }
 }
