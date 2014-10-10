@@ -23,7 +23,7 @@ public class InsertNoteJob extends Job {
 
     @DebugLog
     public InsertNoteJob(Note note){
-        super(new Params(Priority.LOW).persist());
+        super(new Params(Priority.LOW));
         _note = note;
     }
 
