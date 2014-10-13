@@ -27,11 +27,13 @@ import javax.inject.Inject;
 
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.LoadedConsumptionsEvent;
+import uk.co.pilllogger.events.LoadedMaxDosagesEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.PurchasedFeatureEvent;
 import uk.co.pilllogger.fragments.ExportMainFragment;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.jobs.LoadConsumptionsJob;
+import uk.co.pilllogger.jobs.LoadMaxDosagesJob;
 import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.ExportSettings;
@@ -48,8 +50,7 @@ import uk.co.pilllogger.tasks.GetMaxDosagesTask;
  */
 public class ExportActivity extends PillLoggerActivityBase
         implements
-        IExportService,
-        GetMaxDosagesTask.ITaskComplete {
+        IExportService {
 
     private static final String TAG = "ExportActivity";
     private List<Pill> _pillsList;
@@ -72,8 +73,6 @@ public class ExportActivity extends PillLoggerActivityBase
         }
 
         _jobManager.addJobInBackground(new LoadConsumptionsJob(true));
-
-        new GetMaxDosagesTask(this, this).execute();
         Display display = getWindowManager().getDefaultDisplay();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
         Point size = new Point();
@@ -282,11 +281,6 @@ public class ExportActivity extends PillLoggerActivityBase
     @Override
     public TextView getSummaryTextView() {
         return _exportSubTitle;
-    }
-
-    @Override
-    public void maxConsumptionsReceived(Map<Integer, Integer> pillConsumptionMaxQuantityMap) {
-        _maxDosages = pillConsumptionMaxQuantityMap;
     }
 
     @Subscribe

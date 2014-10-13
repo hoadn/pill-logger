@@ -14,10 +14,6 @@ import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.repositories.PillRepository;
 
-/**
- * Created by Alex on 24/08/2014
- * in uk.co.pilllogger.jobs.
- */
 public class LoadConsumptionsJob extends Job {
 
     @Inject
