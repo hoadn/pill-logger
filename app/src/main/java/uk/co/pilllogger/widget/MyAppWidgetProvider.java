@@ -11,6 +11,8 @@ import android.graphics.Bitmap;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.path.android.jobqueue.JobManager;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +27,7 @@ import uk.co.pilllogger.activities.AppWidgetConfigure;
 import uk.co.pilllogger.helpers.ColourHelper;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.InsertConsumptionsJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
@@ -39,6 +42,10 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
     public static String CLICK_ACTION = "ClickAction";
     @Inject
     PillRepository _pillRepository;
+
+    @Inject
+    JobManager _jobManager;
+
     private ObjectGraph _objectGraph;
 
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -222,6 +229,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
                 Date d = new Date();
                 for(int j = 0; j < quantity; j++) {
                     Consumption consumption = new Consumption(pill, d, group);
+                    _jobManager.addJobInBackground(new InsertConsumptionsJob(consumption));
                     //new InsertConsumptionTask(context, consumption).execute();
                 }
                 Toast.makeText(context, quantity + " " + pill.getName() + " added", Toast.LENGTH_SHORT).show();
