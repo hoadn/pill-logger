@@ -87,7 +87,6 @@ public class Note implements Serializable {
 
         if (_id != note._id) return false;
         if (_date != null ? !_date.equals(note._date) : note._date != null) return false;
-        if (!_pill.equals(note._pill)) return false;
         if (_text != null ? !_text.equals(note._text) : note._text != null) return false;
         if (_title != null ? !_title.equals(note._title) : note._title != null) return false;
 
@@ -99,7 +98,6 @@ public class Note implements Serializable {
         int result = _date != null ? _date.hashCode() : 0;
         result = 31 * result + (_title != null ? _title.hashCode() : 0);
         result = 31 * result + (_text != null ? _text.hashCode() : 0);
-        result = 31 * result + _pill.hashCode();
         result = 31 * result + _id;
         return result;
     }

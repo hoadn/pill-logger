@@ -50,6 +50,7 @@ import uk.co.pilllogger.billing.Inventory;
 import uk.co.pilllogger.billing.SkuDetails;
 import uk.co.pilllogger.dialogs.ThemeChoiceDialog;
 import uk.co.pilllogger.events.LoadedPillsEvent;
+import uk.co.pilllogger.events.PreferencesChangedEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
@@ -109,6 +110,7 @@ public class MainActivity extends PillLoggerActivityBase implements
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         updateTheme(getString(R.string.pref_key_theme_list));
+        setRelativeTimesPreference();
 
         ViewGroup wrapper = setContentViewWithWrapper(R.layout.activity_main);
         this.setTitle("Consumption");
@@ -651,5 +653,17 @@ public class MainActivity extends PillLoggerActivityBase implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         _themeChanged = updateTheme(key);
+
+        if(key.equals(getString(R.string.pref_key_relative_times))){
+            setRelativeTimesPreference();
+
+            _bus.post(new PreferencesChangedEvent());
+        }
+    }
+
+    private void setRelativeTimesPreference() {
+        Boolean isRelative = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_key_relative_times), true);
+
+        State.getSingleton().setUseRelativeTimes(isRelative);
     }
 }

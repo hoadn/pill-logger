@@ -6,7 +6,7 @@ import org.robolectric.annotation.Config;
 
 import uk.co.pilllogger.RobolectricGradleTestRunner;
 
-import static junit.framework.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * Created by Alex on 26/09/2014
@@ -18,6 +18,12 @@ public class NumberHelperTest {
     @Test
     public void getNiceFloatString_truncates_round_numbers(){
         String niceString = NumberHelper.getNiceFloatString(4.0f);
-        assertEquals("4", niceString);
+        assertThat(niceString).isEqualTo("4");
+    }
+
+    @Test
+    public void getNiceFloatString_leaves_decimals_intact(){
+        String niceString = NumberHelper.getNiceFloatString(4.5f);
+        assertThat(niceString).isEqualTo("4.5");
     }
 }

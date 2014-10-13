@@ -24,6 +24,12 @@ repositories {
     mavenCentral()
 }
 
+// extend the runtime
+configurations {
+    androidTestCompile.extendsFrom runtime
+    androidTestRuntime.extendsFrom unitTestCompile
+}
+
 dependencies {
     compile 'com.android.support:support-v4:20.0.+'
     compile 'com.android.support:support-v13:20.0+'
@@ -44,9 +50,11 @@ dependencies {
     compile 'com.shamanland:fab:0.0.4'
     compile 'org.lucasr.twowayview:twowayview:0.1.1'
 
+    androidTestCompile files("$project.buildDir/intermediates/classes/defaultFlavor/debug")
     androidTestCompile('junit:junit:4.11') {
         exclude module: 'hamcrest-core'
     }
+    androidTestCompile 'com.google.android:android:4.1.1.4'
     androidTestCompile('org.robolectric:robolectric:2.3') {
         exclude module: 'classworlds'
         exclude module: 'commons-logging'
@@ -68,10 +76,20 @@ dependencies {
     androidTestCompile('com.jakewharton.espresso:espresso:1.1-r3') {
         exclude group: 'com.squareup.dagger'
     }
-    androidTestCompile 'com.squareup:fest-android:1.0.+'
-
+    androidTestCompile 'com.squareup.assertj:assertj-android:1.0.0'
+    androidTestCompile 'com.viewpagerindicator:library:2.4.1@aar'
+    androidTestCompile 'com.crashlytics.android:crashlytics:1.+'
+    androidTestCompile 'com.doomonafireball.betterpickers:library:1.5.2'
+    androidTestCompile "com.mixpanel.android:mixpanel-android:4.2.1@aar"
+    androidTestCompile 'com.jakewharton.timber:timber:2.4.+'
+    androidTestCompile 'com.jakewharton:butterknife:5.1.1'
+    androidTestCompile 'com.squareup:otto:1.3.5'
+    androidTestCompile 'com.path:android-priority-jobqueue:1.1.2'
+    androidTestCompile 'com.squareup.dagger:dagger:1.2.0'
+    androidTestCompile 'com.intellij:annotations:+@jar'
+    androidTestCompile 'com.shamanland:fab:0.0.4'
+    androidTestCompile 'org.lucasr.twowayview:twowayview:0.1.1'
 }
-
 
 android {
     compileSdkVersion 19
@@ -106,7 +124,27 @@ android {
             assets.srcDirs = ['assets']
         }
         androidTest {
-            setRoot('src/test')
+            java.srcDir file('src/test/java')
+            resources.srcDir file('src/test/resources')
         }
     }
 }
+
+// add a new unitTest sourceSet
+sourceSets {
+    androidTest {
+        java.srcDir file('src/test/java')
+        resources.srcDir file('src/test/resources')
+    }
+}
+
+
+// add the unitTest task
+task androidTest(type:Test, dependsOn: assemble) {
+    description = "run unit tests"
+    testClassesDir = project.sourceSets.androidTest.output.classesDir
+    classpath = project.sourceSets.androidTest.runtimeClasspath
+}
+
+// bind to check
+check.dependsOn androidTest

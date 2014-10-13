@@ -39,6 +39,7 @@ public class State {
     private MixpanelAPI _mixpanelAPI = null;
     private IabHelper _iabHelper;
     private boolean _isDebuggable;
+    private boolean _useRelativeTimes = true;
 
     private State() {
     }
@@ -181,6 +182,14 @@ public class State {
 
     public boolean isDebuggable() {
         return _isDebuggable;
+    }
+
+    public boolean isUseRelativeTimes() {
+        return _useRelativeTimes;
+    }
+
+    public void setUseRelativeTimes(boolean useRelativeTimes) {
+        _useRelativeTimes = useRelativeTimes;
     }
 }
 

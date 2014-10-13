@@ -31,6 +31,7 @@ import uk.co.pilllogger.decorators.DividerItemDecoration;
 import uk.co.pilllogger.events.CreatedPillEvent;
 import uk.co.pilllogger.events.LoadedNotesEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
+import uk.co.pilllogger.events.PreferencesChangedEvent;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.jobs.InsertPillJob;
@@ -60,8 +61,8 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     @Inject JobManager _jobManager;
     private List<Pill> _pills;
-    private List<Note> _notes;
 
+	private PillRecyclerAdapter _adapter;	private List<Note> _notes;
     public PillListFragment() {
 	}
 
@@ -138,7 +139,8 @@ public class PillListFragment extends PillLoggerFragmentBase implements
 
     private void updatePills(List<Pill> pills){
         _pills = pills;
-        if(_listView == null || _pills.size() == 0)
+
+        if(_listView == null || pills.size() == 0)
             return;
 
         if (_listView.getAdapter() == null){ //we need to init the adapter
@@ -147,21 +149,22 @@ public class PillListFragment extends PillLoggerFragmentBase implements
             if(activity == null) // it's not gonna work without this
                 return;
 
-            PillRecyclerAdapter adapter = _pillListAdapterFactory.create(activity, R.layout.pill_list_item, pills);
+            _adapter = _pillListAdapterFactory.create(activity, R.layout.pill_list_item, pills);
 
-            adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+
+            _adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
                 @Override
                 public void onItemRangeInserted(int positionStart, int itemCount) {
                     super.onItemRangeInserted(positionStart, itemCount);
 
-                    if(positionStart == 0){
+                    if (positionStart == 0) {
                         _listView.scrollToPosition(0);
                     }
                 }
             });
 
-            _bus.register(adapter);
-            _listView.setAdapter(adapter);
+            _bus.register(_adapter);
+            _listView.setAdapter(_adapter);
         }
     }
 
@@ -175,6 +178,13 @@ public class PillListFragment extends PillLoggerFragmentBase implements
         if(isAdded() && getActivity() != null) {
             if (key.equals(getActivity().getResources().getString(R.string.pref_key_medication_list_order)) || key.equals(getActivity().getResources().getString(R.string.pref_key_reverse_order)))
                 _jobManager.addJobInBackground(new LoadPillsJob());
+        }
+    }
+
+    @Subscribe
+    public void preferencesChanged(PreferencesChangedEvent event){
+        if(_adapter != null){
+            _adapter.notifyDataSetChanged();
         }
     }
 

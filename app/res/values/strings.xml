@@ -170,6 +170,9 @@
     <string name="consumption_info_dialog_decrease_toast">Quantity decreased</string>
     <string name="pref_title_reverse_order">Reverse Medicine Sort Order</string>
     <string name="pref_key_reverse_order">reverse_order_key</string>
+    <string name="pref_title_relative_times">Relative Times</string>
+    <string name="pref_key_relative_times">relative_dates_key</string>
+    <string name="pref_summary_relative_times_prefix">e.g.</string>
     <string name="info_daily_title_units">Average daily units</string>
     <string name="info_daily_title_dosage">Average daily dosage</string>
     <string name="most_taken">Most Taken</string>
