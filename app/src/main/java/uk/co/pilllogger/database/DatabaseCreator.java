@@ -24,7 +24,7 @@ public class DatabaseCreator extends SQLiteOpenHelper{
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        switch(oldVersion){
+        switch(newVersion){
             case 6:
                 db.execSQL(DatabaseContract.CreateTables.CREATE_TUTORIAL_TABLE);
             case 7:
@@ -41,9 +41,10 @@ public class DatabaseCreator extends SQLiteOpenHelper{
     }
 
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        switch(newVersion){
+        switch(oldVersion){
             case 9:
                 db.execSQL(DatabaseContract.DeleteIndicies.DELETE_CONSUMPTION_DATE_INDEX);
+                break;
             case 8:
             case 7:
                 db.execSQL(DatabaseContract.DeleteTables.DELETE_TUTORIALS_TABLE);
