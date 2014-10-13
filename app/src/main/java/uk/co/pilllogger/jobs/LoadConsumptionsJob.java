@@ -50,14 +50,10 @@ public class LoadConsumptionsJob extends Job {
     public void onRun() throws Throwable {
         List<Consumption> consumptions;
         if(_group == null){
-            consumptions = _consumptionRepository.getAll();
+            consumptions = _consumptionRepository.getAll(_pillRepository.getAll());
         }
         else{
             consumptions = _consumptionRepository.getForGroup(_group);
-        }
-
-        for(Consumption c : consumptions){
-            c.setPill(_pillRepository.get(c.getPillId()));
         }
 
         if(_shouldGroup && consumptions.size() > 0) {
