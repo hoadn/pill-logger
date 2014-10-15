@@ -57,11 +57,7 @@ public class PillRepository extends BaseRepository<Pill>{
 
     @Produce @DebugLog
     public LoadedPillsEvent produceLoadedPills(){
-        List<Pill> pills = new ArrayList<Pill>();
-
-        if(isCached()){
-            pills = getAll();
-        }
+        List<Pill> pills = getAll();
 
         return new LoadedPillsEvent(pills);
     }

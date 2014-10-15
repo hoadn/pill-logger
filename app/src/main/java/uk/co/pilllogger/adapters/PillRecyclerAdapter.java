@@ -111,8 +111,12 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
                     startDialog(pill.getId());
                 }
             });
+
+
+            viewHolder.nameContainer.getLayoutParams().width = _context.getResources().getDimensionPixelSize(R.dimen.pill_name_container_width);
         }
         else{
+            viewHolder.nameContainer.getLayoutParams().width = _context.getResources().getDimensionPixelSize(R.dimen.new_pill_name_container_width);
             viewHolder.name.setText("Create new medicine...");
             viewHolder.colour.setColour(Color.TRANSPARENT);
             viewHolder.size.setVisibility(View.GONE);
@@ -162,6 +166,7 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
         public boolean open;
         public boolean selected;
         public ViewGroup container;
+        @InjectView(R.id.pill_list_name_container) public ViewGroup nameContainer;
         @InjectView(R.id.pill_list_name) public TextView name;
         @InjectView(R.id.pill_list_last_taken) public TextView lastTaken;
         @InjectView(R.id.pill_list_colour) public ColourIndicator colour;
