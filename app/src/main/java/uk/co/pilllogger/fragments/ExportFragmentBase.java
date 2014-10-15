@@ -18,14 +18,14 @@ public class ExportFragmentBase extends PillLoggerFragmentBase {
     protected IExportService _exportService;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        initService();
+    public void onAttach(Activity activity) {
+        initService(activity);
+        super.onAttach(activity);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        initService();
+        //initService();
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -46,8 +46,7 @@ public class ExportFragmentBase extends PillLoggerFragmentBase {
         }
     }
 
-    private void initService(){
-        Activity activity = getActivity();
+    private void initService(Activity activity){
 
         if (activity == null) {
             return;

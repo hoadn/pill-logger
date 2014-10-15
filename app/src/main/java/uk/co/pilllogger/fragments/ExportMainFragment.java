@@ -248,7 +248,7 @@ public class ExportMainFragment extends ExportFragmentBase {
     }
 
     private void updatePillSummary(Context context){
-        if (context == null) {
+        if (context == null || _finishedView == null) {
             return;
         }
 
@@ -258,7 +258,7 @@ public class ExportMainFragment extends ExportFragmentBase {
     }
 
     private void updateDateSummary(Context context){
-        if(context == null) {
+        if(context == null || _finishedView == null) {
             return;
         }
 
@@ -268,7 +268,7 @@ public class ExportMainFragment extends ExportFragmentBase {
     }
 
     private void updateTimeSummary(Context context){
-        if(context == null) {
+        if(context == null || _finishedView == null) {
             return;
         }
 

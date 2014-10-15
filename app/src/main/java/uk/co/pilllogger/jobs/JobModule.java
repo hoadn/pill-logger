@@ -13,6 +13,7 @@ import dagger.Provides;
         injects = {
                 LoadPillsJob.class,
                 LoadConsumptionsJob.class,
+                LoadMaxDosagesJob.class,
                 InsertConsumptionsJob.class,
                 DeleteConsumptionJob.class,
                 InsertPillJob.class,

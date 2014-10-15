@@ -221,7 +221,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
         _consumptions = event.getConsumptions();
         Activity activity = getActivity();
 
-        if(activity == null) // the method won't work without the activity, so let's not crash trying.
+        if(activity == null || _mainLayout == null) // the method won't work without the activity, so let's not crash trying.
             return;
 
         TextView noConsumption = (TextView) activity.findViewById(R.id.no_consumption_text);

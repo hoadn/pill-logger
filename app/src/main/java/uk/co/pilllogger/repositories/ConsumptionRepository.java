@@ -6,10 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.squareup.otto.Bus;
+import com.squareup.otto.Produce;
 
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +28,8 @@ import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
+import uk.co.pilllogger.events.LoadedConsumptionsEvent;
+import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 
@@ -40,6 +44,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     private Map<Integer, Map<Integer, Consumption>> _pillConsumptionCache = new ConcurrentHashMap<Integer, Map<Integer, Consumption>>();
     private Map<Integer, Consumption> _consumptionsCache = new ConcurrentHashMap<Integer, Consumption>();
     private Map<String, Map<Integer, Consumption>> _groupConsumptionCache = new ConcurrentHashMap<String, Map<Integer, Consumption>>();
+    private boolean _getAllCalled;
 
     @Inject
     public ConsumptionRepository(Context context, Bus bus, Provider<Pill> pillProvider) {
@@ -53,6 +58,21 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
                 && _pillConsumptionCache.get(pillId) != null;
     }
 
+    public boolean isCached(){
+        return _consumptionsCache != null && _consumptionsCache.size() > 0 && _getAllCalled;
+    }
+
+    @Produce
+    public LoadedConsumptionsEvent produceLoadedConsumptions(){
+        List<Consumption> consumptions = new ArrayList<Consumption>();
+
+        if(isCached()){
+            consumptions = new ArrayList<Consumption>(_consumptionsCache.values());
+            consumptions = groupConsumptions(consumptions);
+        }
+
+        return new LoadedConsumptionsEvent(consumptions);
+    }
 
     @Override
     protected ContentValues getContentValues(Consumption consumption) {
@@ -85,19 +105,26 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         return DatabaseContract.Consumptions.TABLE_NAME;
     }
 
-    private Consumption getFromCursor(Cursor c, Pill pill) {
+    private Consumption getFromCursor(Cursor c, List<Pill> pills) {
         Consumption consumption = new Consumption();
         consumption.setId(c.getInt(c.getColumnIndex(DatabaseContract.Consumptions._ID)));
         consumption.setDate(new Date(c.getLong(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_DATE_TIME))));
         consumption.setGroup(c.getString(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_GROUP)));
         int pillId = c.getInt(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_PILL_ID));
 
-        if(pill == null){
-            pill = _pillProvider.get();
-            pill.setId(pillId);
+        for(Pill pill : pills){
+            if(pill.getId() == pillId){
+                consumption.setPill(pill);
+                break;
+            }
         }
 
-        consumption.setPill(pill);
+        if(consumption.getPill() == null){
+            Pill tempPill = _pillProvider.get();
+            tempPill.setId(pillId);
+
+            consumption.setPill(tempPill);
+        }
 
         addToCaches(consumption);
 
@@ -286,7 +313,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
             c.moveToFirst();
             while (!c.isAfterLast()) {
-                Consumption consumption = getFromCursor(c, pill); // we don't want to recursively cause ourselves trouble, we already have the pill
+                Consumption consumption = getFromCursor(c, Arrays.asList(pill)); // we don't want to recursively cause ourselves trouble, we already have the pill
                 consumption.setPill(pill);
                 consumptions.add(consumption);
                 c.moveToNext();
@@ -394,6 +421,12 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         }
         */
 
+        return getAll(new ArrayList<Pill>());
+    }
+
+    public List<Consumption> getAll(List<Pill> pills) {
+        _getAllCalled = true;
+
         SQLiteDatabase db = _dbCreator.getReadableDatabase();
 
         String[] projection = getProjection();
@@ -413,7 +446,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
             if (c.moveToFirst()) {
                 while (!c.isAfterLast()) {
-                    Consumption consumption = getFromCursor(c);
+                    Consumption consumption = getFromCursor(c, pills);
                     consumptions.add(consumption);
                     c.moveToNext();
                 }
