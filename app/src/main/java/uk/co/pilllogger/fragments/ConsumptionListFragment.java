@@ -75,7 +75,7 @@ import static butterknife.ButterKnife.findById;
 /**
  * Created by nick on 23/10/13.
  */
-public class ConsumptionListFragment extends PillLoggerFragmentBase{
+public class ConsumptionListFragment extends PillLoggerFragmentBase {
     @Inject
     Context _context;
     @Inject Statistics _statistics;
@@ -93,6 +93,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
     private View _loading;
     private ConsumptionRecyclerAdapter _adapter;
     private ContentLoadingProgressBar _progress;
+    private TextView _noConsumption;
 
     @DebugLog
     public static ConsumptionListFragment newInstance(int num){
@@ -143,11 +144,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
             _listView.getAdapter().notifyDataSetChanged();
         }
 
-        TextView noConsumptions = (TextView) v.findViewById(R.id.no_consumption_text);
-        Typeface typeface = State.getSingleton().getTypeface();
-        if (typeface != null){
-            noConsumptions.setTypeface(typeface);
-        }
+        _noConsumption = (TextView) v.findViewById(R.id.no_consumption_text);
 
         return v;
     }
@@ -224,15 +221,12 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
         if(activity == null || _mainLayout == null) // the method won't work without the activity, so let's not crash trying.
             return;
 
-        TextView noConsumption = (TextView) activity.findViewById(R.id.no_consumption_text);
         if (_consumptions.size() == 0) {
-            noConsumption.setVisibility(View.VISIBLE);
-            _listView.setVisibility(View.GONE);
+            hideConsumptionList(_noConsumption);
         }
         else {
             if (_listView.getVisibility() == View.GONE) {
-                _listView.setVisibility(View.VISIBLE);
-                noConsumption.setVisibility(View.GONE);
+                showConsumptionList(_noConsumption);
             }
 
             if(_listView.getAdapter() == null) {
@@ -255,6 +249,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
                             _listView.scrollToPosition(0);
                         }
 
+                        showConsumptionList(_noConsumption);
                         plotGraph(_adapter.getConsumptions());
                     }
 
@@ -264,6 +259,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
 
                         Timber.d("onItemRangeRemoved");
                         plotGraph(_adapter.getConsumptions());
+                        consumptionsReceived(new LoadedConsumptionsEvent(_adapter.getConsumptions()));
                     }
 
                     @Override
@@ -305,6 +301,16 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
         TrackerHelper.updateUserProfile(activity, _pills.size(), _consumptions, _statistics);
 
         _statistics.refreshConsumptionCaches(_consumptions);
+    }
+
+    private void showConsumptionList(TextView noConsumption) {
+        _listView.setVisibility(View.VISIBLE);
+        noConsumption.setVisibility(View.GONE);
+    }
+
+    private void hideConsumptionList(TextView noConsumption) {
+        noConsumption.setVisibility(View.VISIBLE);
+        _listView.setVisibility(View.GONE);
     }
 
     @DebugLog
@@ -455,14 +461,14 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
                 _jobManager.addJobInBackground(new LoadConsumptionsJob(true));
             }
             else{
-                if(_listView.getAdapter() == null){
+                if(_listView != null && _listView.getAdapter() == null){
                     consumptionsReceived(new LoadedConsumptionsEvent(_consumptions));
                 }
             }
         }
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void consumptionDeleted(DeletedConsumptionEvent event) {
         final Consumption consumption1 = event.getConsumption();
         Runnable runnable = new Runnable(){
@@ -474,7 +480,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase{
                             consumption2.setQuantity(consumption2.getQuantity() - 1);
                         }
                     }
-                    consumptionsReceived(new LoadedConsumptionsEvent(_consumptions));
+                    consumptionsReceived(new LoadedConsumptionsEvent(_adapter.getConsumptions()));
                 }
             }
         };
