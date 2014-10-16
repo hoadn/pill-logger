@@ -2,6 +2,7 @@ package uk.co.pilllogger.adapters;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,23 +28,25 @@ import uk.co.pilllogger.events.UpdatedNoteEvent;
 import uk.co.pilllogger.fragments.NoteFragment;
 import uk.co.pilllogger.jobs.DeleteNoteJob;
 import uk.co.pilllogger.models.Note;
+import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 
 public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdapter.ViewHolder> {
 
+    private static final int NEW = 0;
+    private static final int EXISTING = 1;
     private final List<Note> _notes;
-
     Activity _activity;
-
-
     JobManager _jobManager;
     private RecyclerView _listView;
+    private Pill _pill;
 
-    public NotesRecyclerAdapter(List<Note> notes, Activity activity, JobManager jobManager, RecyclerView listView){
+    public NotesRecyclerAdapter(List<Note> notes, Activity activity, JobManager jobManager, RecyclerView listView, Pill pill){
         _notes = new ArrayList(notes);
         _activity = activity;
         _jobManager = jobManager;
         _listView = listView;
+        _pill = pill;
     }
 
     @Override
@@ -58,30 +61,54 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final Note note = _notes.get(position);
+        if (getItemViewType(position) == EXISTING) {
+            final Note note = _notes.get(position);
+            if (note == null) {
+                return;
+            }
 
-        if (note == null) {
-            return;
+            holder.title.setText(note.getTitle());
+            holder.text.setText(note.getText());
+            holder.text.setTypeface(State.getSingleton().getRobotoTypeface());
+            holder.title.setTypeface(State.getSingleton().getRobotoTypeface());
+
+            holder.setDeleteClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    deleteNote(note);
+                }
+            });
+
+            holder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startNoteEditFragment(note);
+                }
+            });
+        }
+        else {
+            holder.layout.setVisibility(View.GONE);
+            holder.createNote.setTypeface(State.getSingleton().getRobotoTypeface());
+            holder.createNote.setVisibility(View.VISIBLE);
+
+            holder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showNewNoteFragment(_pill);
+                }
+            });
         }
 
-        holder.title.setText(note.getTitle());
-        holder.text.setText(note.getText());
-        holder.text.setTypeface(State.getSingleton().getRobotoTypeface());
-        holder.title.setTypeface(State.getSingleton().getRobotoTypeface());
+    }
 
-        holder.setDeleteClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deleteNote(note);
-            }
-        });
-
-        holder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startNoteEditFragment(note);
-            }
-        });
+    private void showNewNoteFragment(Pill pill) {
+        NoteFragment fragment = new NoteFragment(pill);
+        FragmentManager fm = _activity.getFragmentManager();
+        fm.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)
+                .replace(R.id.export_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     public List<Note> getNotes() {
@@ -104,7 +131,11 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
 
     @Override
     public int getItemCount() {
-        return _notes.size();
+        int i = 0;
+        if (_notes != null) {
+            i = _notes.size();
+        }
+        return ++i;
     }
 
     @Subscribe @DebugLog
@@ -185,6 +216,8 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
         @InjectView(R.id.notes_list_title) public TextView title;
         @InjectView(R.id.notes_list_text) public TextView text;
         @InjectView(R.id.notes_list_delete) public View delete;
+        @InjectView(R.id.notes_item_layout) public View layout;
+        @InjectView(R.id.create_note) public TextView createNote;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -199,6 +232,11 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
         public void setDeleteClickListener(View.OnClickListener clickListener){
             delete.setOnClickListener(clickListener);
         }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position == _notes.size() ? NEW : EXISTING;
     }
 
 

@@ -43,9 +43,6 @@ public class NotesListFragment extends PillLoggerFragmentBase {
     @InjectView(R.id.notes_title)
     public TextView _notesTitle;
 
-    @InjectView(R.id.notes_add_layout)
-    public View _addNote;
-
     @InjectView(R.id.notes_done_layout)
     public View _notesDone;
 
@@ -79,20 +76,6 @@ public class NotesListFragment extends PillLoggerFragmentBase {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         _listView.setLayoutManager(layoutManager);
 
-
-        _addNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NoteFragment fragment = new NoteFragment(_pill);
-                FragmentManager fm = NotesListFragment.this.getActivity().getFragmentManager();
-                fm.beginTransaction()
-                        .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)
-                        .replace(R.id.export_container, fragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
-
         _notesDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,7 +84,7 @@ public class NotesListFragment extends PillLoggerFragmentBase {
         });
 
         _notes = _pill.getNotes();
-        _adapter = new NotesRecyclerAdapter(_notes, getActivity(), _jobManager, _listView);
+        _adapter = new NotesRecyclerAdapter(_notes, getActivity(), _jobManager, _listView, _pill);
 
         _bus.register(_adapter);
 

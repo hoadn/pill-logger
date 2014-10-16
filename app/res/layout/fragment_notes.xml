@@ -32,20 +32,6 @@
             android:textColor="@color/light_blue"
             android:textSize="22sp"
             />
-        <LinearLayout
-            android:id="@+id/notes_add_layout"
-            android:layout_width="50dp"
-            android:layout_height="35dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:orientation="vertical"
-            android:layout_alignParentRight="true">
-            <ImageView
-                android:id="@+id/add_note"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:src="@drawable/new_note"
-                android:layout_gravity="center"/>
-        </LinearLayout>
     </RelativeLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/notes_list"
