@@ -440,8 +440,11 @@ public class Statistics{
         if(_consumptions == null){
             _consumptions = new ArrayList<Consumption>();
         }
-        _consumptions.clear();
-        _consumptions.addAll(consumptions);
+
+        if(_consumptions != consumptions) {
+            _consumptions.clear();
+            _consumptions.addAll(consumptions);
+        }
 
         _pillAmountsCache = null;
         _dayWithMostConsumptionsCache = -1;
@@ -479,7 +482,13 @@ public class Statistics{
 
     @Subscribe
     public void consumptionAdded(CreatedConsumptionEvent event) {
-        //_consumptions.addAll(event.getConsumptions());
+        for(Consumption c : event.getConsumptions()){
+            if(_consumptions.contains(c)){
+                continue;
+            }
+
+            _consumptions.add(c);
+        }
 
         refreshConsumptionCaches(_consumptions);
     }
