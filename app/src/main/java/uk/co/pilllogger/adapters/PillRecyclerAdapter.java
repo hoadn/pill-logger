@@ -45,6 +45,7 @@ import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
+import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.views.ColourIndicator;
 
 /**
@@ -83,6 +84,9 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
+        viewHolder.name.setTypeface(State.getSingleton().getRobotoTypeface());
+        viewHolder.lastTaken.setTypeface(State.getSingleton().getRobotoTypeface());
+        viewHolder.size.setTypeface(State.getSingleton().getRobotoTypeface());
         if(getItemViewType(position) == EXISTING) {
             final Pill pill = _pills.get(position);
             if (pill == null) {
