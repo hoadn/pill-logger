@@ -9,7 +9,7 @@
         android:id="@+id/create_note"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:textSize="20dp"
+        android:textSize="16dp"
         android:gravity="center_vertical"
         android:padding="10dp"
         android:text="Create new note..."
