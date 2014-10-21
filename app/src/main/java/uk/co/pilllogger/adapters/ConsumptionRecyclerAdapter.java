@@ -145,7 +145,7 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
 
         List<Consumption> toRemove = new ArrayList<Consumption>();
 
-        int i = 0;
+        int i = 1;
         int count = 0;
         int indexOf = -1;
         for(Consumption c : _consumptions){
@@ -162,7 +162,7 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
             ++i;
         }
         _consumptions.removeAll(toRemove);
-        notifyItemRangeRemoved(indexOf, count);
+        //notifyItemRangeRemoved(indexOf, count);
     }
 
     @Subscribe @DebugLog
