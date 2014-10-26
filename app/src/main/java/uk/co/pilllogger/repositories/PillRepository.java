@@ -247,6 +247,9 @@ public class PillRepository extends BaseRepository<Pill>{
             comparator = new Comparator<Pill>() {
                 @Override
                 public int compare(Pill pill1, Pill pill2) {
+                    if ((pill1 == null && pill2 == null) || pill1 == pill2) {
+                        return 0;
+                    }
                     return pill1.getName().compareTo(pill2.getName());
                 }
             };
@@ -255,6 +258,9 @@ public class PillRepository extends BaseRepository<Pill>{
             comparator = new Comparator<Pill>() {
                 @Override
                 public int compare(Pill pill1, Pill pill2) {
+                    if ((pill1 == null && pill2 == null) || pill1 == pill2) {
+                        return 0;
+                    }
                     return ((Integer)pill2.getId()).compareTo(pill1.getId());
                 }
             };
@@ -263,6 +269,11 @@ public class PillRepository extends BaseRepository<Pill>{
             comparator = new Comparator<Pill>() {
                 @Override
                 public int compare(Pill pill1, Pill pill2) {
+                    if ((pill1 == null && pill2 == null)
+                            || pill1 == pill2
+                            || (pill1.getLatestConsumption(_context) == null && pill2.getLatestConsumption(_context) == null)) {
+                        return 0;
+                    }
                     if(pill1.getLatestConsumption(_context) == null)
                         return 1;
                     if(pill2.getLatestConsumption(_context) == null)
@@ -275,6 +286,11 @@ public class PillRepository extends BaseRepository<Pill>{
             comparator = new Comparator<Pill>() {
                 @Override
                 public int compare(Pill pill1, Pill pill2) {
+                    if ((pill1 == null && pill2 == null)
+                            || pill1 == pill2
+                            || (pill1.getLatestConsumption(_context) == null && pill2.getLatestConsumption(_context) == null)) {
+                        return 0;
+                    }
                     if(pill1.getLatestConsumption(_context) == null)
                         return 1;
                     if(pill2.getLatestConsumption(_context) == null)
