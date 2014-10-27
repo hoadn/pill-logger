@@ -173,6 +173,15 @@ public class AddConsumptionPillListAdapter extends ArrayAdapter<Pill> {
                         existingViewHolder.units.setText(pill.getUnits());
                         existingViewHolder.size.setVisibility(View.VISIBLE);
                         existingViewHolder.units.setVisibility(View.VISIBLE);
+                        Integer value = State.getSingleton().getOpenPills().get(pill);
+                        existingViewHolder.amount.setText(value == null ? "0" : String.valueOf(value));
+                        if (value != null) {
+                            int colour = value > 0 ? _context.getResources().getColor(R.color.highlight_blue) : Color.TRANSPARENT;
+                            existingViewHolder.container.setBackgroundColor(colour);
+                        }
+                        else {
+                            existingViewHolder.container.setBackgroundColor(Color.TRANSPARENT);
+                        }
                     }
                     existingViewHolder.color.setColour(pill.getColour());
 
