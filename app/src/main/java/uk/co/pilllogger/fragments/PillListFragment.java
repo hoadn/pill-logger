@@ -62,7 +62,9 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     @Inject JobManager _jobManager;
     private List<Pill> _pills;
 
-	private PillRecyclerAdapter _adapter;	private List<Note> _notes;
+	private PillRecyclerAdapter _adapter;
+    private List<Note> _notes;
+
     public PillListFragment() {
 	}
 

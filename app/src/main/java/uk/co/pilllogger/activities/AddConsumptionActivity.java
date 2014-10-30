@@ -9,6 +9,9 @@ import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
@@ -55,7 +58,9 @@ import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
+import uk.co.pilllogger.adapters.AddConsumptionPillRecyclerAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.decorators.DividerItemDecoration;
 import uk.co.pilllogger.events.CreatedPillEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.helpers.AlarmHelper;
@@ -81,7 +86,7 @@ public class AddConsumptionActivity extends PillLoggerActivityBase implements
         DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener,
         GetTutorialSeenTask.ITaskComplete,
-        AddConsumptionPillListAdapter.IConsumptionSelected{
+        AddConsumptionPillRecyclerAdapter.IConsumptionSelected{
 
     @Inject
     PillRepository _pillRepository;
@@ -97,11 +102,11 @@ public class AddConsumptionActivity extends PillLoggerActivityBase implements
     private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
     private static final String FRAG_TAG_TIME_PICKER = "fragent_time_picker_name";
 
-    ListView _pillsList;
+    RecyclerView _pillsList;
     Activity _activity;
     TextView _newPillName;
     TextView _newPillSize;
-    AddConsumptionPillListAdapter _adapter;
+    AddConsumptionPillRecyclerAdapter _adapter;
     View _selectPillLayout;
     View _newPillLayout;
     Spinner _timeSpinner;
@@ -134,17 +139,26 @@ public class AddConsumptionActivity extends PillLoggerActivityBase implements
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        _activity = this;
+
         setTheme(State.getSingleton().getTheme().getStyleResourceId());
 
         setContentView(R.layout.add_consumption_activity);
 
-        _pillsList = (ListView)findViewById(R.id.add_consumption_pill_list);
+        _pillsList = (RecyclerView) findViewById(R.id.add_consumption_pill_list);
+
+        _pillsList.setHasFixedSize(true);
+        _pillsList.addItemDecoration(new DividerItemDecoration(_activity, DividerItemDecoration.VERTICAL_LIST));
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(_context);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        _pillsList.setLayoutManager(layoutManager);
+        _pillsList.setItemAnimator(new DefaultItemAnimator());
 
         if(_pillRepository.isCached() == false) { // this should be handled by the producer
             _jobManager.addJobInBackground(new LoadPillsJob());
         }
 
-        _activity = this;
         _selectPillLayout = _activity.findViewById(R.id.add_consumption_pill_list);
         _newPillLayout = _activity.findViewById(R.id.add_consumption_quick_create);
 
@@ -466,7 +480,7 @@ public class AddConsumptionActivity extends PillLoggerActivityBase implements
             }
         });
 
-        _adapter = new AddConsumptionPillListAdapter(this, this, R.layout.add_consumption_pill_list, event.getPills(), true, _consumptionRepository);
+        _adapter = new AddConsumptionPillRecyclerAdapter(this, this, R.layout.add_consumption_pill_list, event.getPills(), true, _consumptionRepository);
          _pillsList.setAdapter(_adapter);
 
         _adapter.updateAdapter(event.getPills());
@@ -515,7 +529,7 @@ public class AddConsumptionActivity extends PillLoggerActivityBase implements
 
     public void done(View view, final boolean futureConsumptionOk) {
         final View v = view;
-        AddConsumptionPillListAdapter adapter = (AddConsumptionPillListAdapter) _pillsList.getAdapter();
+        AddConsumptionPillRecyclerAdapter adapter = (AddConsumptionPillRecyclerAdapter) _pillsList.getAdapter();
         List<Pill> consumptionPills = adapter.getPillsConsumed();
 
         Date consumptionDate = getDateFromSpinners(_dateSpinner, _timeSpinner, new Date());

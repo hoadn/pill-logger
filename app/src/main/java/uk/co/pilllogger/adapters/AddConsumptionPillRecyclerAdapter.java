@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -71,7 +72,7 @@ public class AddConsumptionPillRecyclerAdapter extends RecyclerView.Adapter<AddC
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemLayoutView = LayoutInflater.from(parent.getContext())
                 .inflate(_resourceId, null);
 
@@ -90,6 +91,16 @@ public class AddConsumptionPillRecyclerAdapter extends RecyclerView.Adapter<AddC
                         showNewPillDialog();
                     }
                 });
+
+                holder.add.setVisibility(View.GONE);
+                holder.amount.setVisibility(View.GONE);
+                holder.buttonLayout.setVisibility(View.GONE);
+                holder.lastTaken.setVisibility(View.GONE);
+                holder.minus.setVisibility(View.GONE);
+                holder.name.setVisibility(View.GONE);
+                holder.size.setVisibility(View.GONE);
+                holder.units.setVisibility(View.GONE);
+
                 break;
 
             case EXISTING:
@@ -119,6 +130,29 @@ public class AddConsumptionPillRecyclerAdapter extends RecyclerView.Adapter<AddC
                 holder.add.setOnClickListener(new buttonClick(true, holder.amount, holder.container, position, this));
                 holder.minus.setOnClickListener(new buttonClick(false, holder.amount, holder.container, position, this));
 
+                Integer currentAmount = State.getSingleton().getOpenPills().get(pill);
+
+                if (currentAmount == null) {
+                    currentAmount = 0;
+                }
+
+                if(currentAmount > 0){
+                    holder.container.setBackgroundColor(_context.getResources().getColor(R.color.highlight_blue));
+                }
+                else{
+                    holder.container.setBackgroundColor(Color.TRANSPARENT);
+                }
+
+                holder.amount.setText(String.valueOf(currentAmount));
+
+                holder.add.setVisibility(View.VISIBLE);
+                holder.amount.setVisibility(View.VISIBLE);
+                holder.buttonLayout.setVisibility(View.VISIBLE);
+                holder.lastTaken.setVisibility(View.VISIBLE);
+                holder.minus.setVisibility(View.VISIBLE);
+                holder.name.setVisibility(View.VISIBLE);
+                holder.size.setVisibility(View.VISIBLE);
+                holder.units.setVisibility(View.VISIBLE);
         }
     }
 
@@ -130,28 +164,13 @@ public class AddConsumptionPillRecyclerAdapter extends RecyclerView.Adapter<AddC
         @InjectView(R.id.add_consumption_after_click_layout) public View buttonLayout;
         @InjectView(R.id.add_consumption_amount) public TextView amount;
         @InjectView(R.id.add_consumption_pill_colour) public ColourIndicator color;
-        @InjectView(R.id.add_consumption_add) public TextView add;
-        @InjectView(R.id.add_consumption_minus) public ColourIndicator minus;
+        @InjectView(R.id.add_consumption_add) public ImageView add;
+        @InjectView(R.id.add_consumption_minus) public ImageView minus;
         @InjectView(R.id.pill_list_item) public View container;
 
         public ViewHolder(View view){
             super(view);
             ButterKnife.inject(this, view);
-        }
-    }
-
-    public static class NewViewHolder extends ViewHolder{
-        @InjectView(R.id.pill_list_create_new) public TextView create_new;
-
-        public NewViewHolder(View view){
-            super(view);
-            ButterKnife.inject(this, view);
-            setTypeFace();
-        }
-
-        private void setTypeFace(){
-            Typeface typeface = State.getSingleton().getTypeface();
-            create_new.setTypeface(typeface);
         }
     }
 
@@ -161,7 +180,7 @@ public class AddConsumptionPillRecyclerAdapter extends RecyclerView.Adapter<AddC
         _context.startActivity(intent);
     }
 
-    @Override
+    /*@Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
         ViewHolder holder = null;
@@ -233,10 +252,10 @@ public class AddConsumptionPillRecyclerAdapter extends RecyclerView.Adapter<AddC
 
         }
         return v;
-    }
+    }*/
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         int count = 0;
 
         if (_pills != null) {
@@ -249,11 +268,6 @@ public class AddConsumptionPillRecyclerAdapter extends RecyclerView.Adapter<AddC
     @Override
     public int getItemViewType(int position) {
         return position == _pills.size() ? NEW : EXISTING;
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return 2;
     }
 
     public void updateAdapter(List<Pill> pills) {
