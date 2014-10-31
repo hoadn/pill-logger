@@ -82,6 +82,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase {
     Context _context;
     @Inject Statistics _statistics;
     @Inject JobManager _jobManager;
+    @Inject ConsumptionRepository _consumptionRepository;
 
     public static final String TAG = "ConsumptionListFragment";
     RecyclerView _listView;
@@ -95,6 +96,7 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase {
     private View _loading;
     private ConsumptionRecyclerAdapter _adapter;
     private ContentLoadingProgressBar _progress;
+
     private TextView _noConsumption;
 
     @DebugLog
@@ -222,6 +224,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase {
 
         if(activity == null || _mainLayout == null) // the method won't work without the activity, so let's not crash trying.
             return;
+
+        _consumptions = _consumptionRepository.groupConsumptions(_consumptions);
 
         if (_consumptions.size() == 0) {
             hideConsumptionList(_noConsumption);
