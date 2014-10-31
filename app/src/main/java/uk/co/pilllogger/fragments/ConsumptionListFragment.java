@@ -48,9 +48,11 @@ import uk.co.pilllogger.adapters.GraphPillListAdapter;
 import uk.co.pilllogger.adapters.SimpleSectionedRecyclerViewAdapter;
 import uk.co.pilllogger.decorators.DividerItemDecoration;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
+import uk.co.pilllogger.events.DecreaseConsumptionEvent;
 import uk.co.pilllogger.events.DeleteConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
+import uk.co.pilllogger.events.IncreaseConsumptionEvent;
 import uk.co.pilllogger.events.LoadedConsumptionsEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.PreferencesChangedEvent;
@@ -325,6 +327,16 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase {
         _listView.scrollToPosition(0);
 
         _jobManager.addJobInBackground(new InsertConsumptionsJob(event.getConsumptionsToInsert()));
+    }
+
+    @Subscribe
+    public void consumptionIncreased(IncreaseConsumptionEvent event){
+        _jobManager.addJobInBackground(new InsertConsumptionsJob(event.getConsumption()));
+    }
+
+    @Subscribe
+    public void consumptionDecreased(DecreaseConsumptionEvent event){
+        _jobManager.addJobInBackground(new DeleteConsumptionJob(event.getConsumption(), false));
     }
 
     @Subscribe
