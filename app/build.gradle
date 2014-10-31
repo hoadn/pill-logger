@@ -31,9 +31,9 @@ configurations {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:20.0.+'
-    compile 'com.android.support:support-v13:20.0+'
-    compile "com.android.support:recyclerview-v7:21.0.0-rc1"
+    compile 'com.android.support:support-v4:21.0.+'
+    compile 'com.android.support:support-v13:21.0.+'
+    compile "com.android.support:recyclerview-v7:21.0.+"
     compile project(':libraries:HoloGraphLibrary')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.viewpagerindicator:library:2.4.1@aar'

@@ -112,9 +112,9 @@ public class Consumption implements Comparable, Serializable {
 
         Consumption that = (Consumption) o;
 
-        if (_id != that._id) return false;
         if (_date != null ? !_date.equals(that._date) : that._date != null) return false;
         if (_group != null ? !_group.equals(that._group) : that._group != null) return false;
+        if (getPillId() != that.getPillId()) return false;
 
         return true;
     }
