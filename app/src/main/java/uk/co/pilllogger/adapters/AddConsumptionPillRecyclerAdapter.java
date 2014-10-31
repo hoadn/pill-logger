@@ -97,9 +97,11 @@ public class AddConsumptionPillRecyclerAdapter extends RecyclerView.Adapter<AddC
                 holder.buttonLayout.setVisibility(View.GONE);
                 holder.lastTaken.setVisibility(View.GONE);
                 holder.minus.setVisibility(View.GONE);
-                holder.name.setVisibility(View.GONE);
                 holder.size.setVisibility(View.GONE);
                 holder.units.setVisibility(View.GONE);
+                holder.color.setColour(Color.TRANSPARENT);
+
+                holder.name.setText("Create new medicine...");
 
                 break;
 
