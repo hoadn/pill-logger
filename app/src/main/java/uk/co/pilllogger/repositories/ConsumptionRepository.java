@@ -97,7 +97,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
     @Override
     protected Consumption getFromCursor(Cursor c) {
-        return getFromCursor(c, null);
+        return getFromCursor(c, new ArrayList<Pill>());
     }
 
     @Override
@@ -111,7 +111,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         consumption.setDate(new Date(c.getLong(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_DATE_TIME))));
         consumption.setGroup(c.getString(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_GROUP)));
         int pillId = c.getInt(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_PILL_ID));
-
+ 
         for(Pill pill : pills){
             if(pill.getId() == pillId){
                 consumption.setPill(pill);
