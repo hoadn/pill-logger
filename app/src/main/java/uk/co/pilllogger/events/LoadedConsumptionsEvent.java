@@ -10,10 +10,16 @@ import uk.co.pilllogger.models.Consumption;
  * in uk.co.pilllogger.events.
  */
 public class LoadedConsumptionsEvent {
+    private String _group = null;
     private List<Consumption> _consumptions;
 
     public LoadedConsumptionsEvent(List<Consumption> consumptions) {
         _consumptions = consumptions;
+    }
+
+    public LoadedConsumptionsEvent(List<Consumption> consumptions, String group) {
+        this(consumptions);
+        _group = group;
     }
 
     public List<Consumption> getConsumptions() {
@@ -21,5 +27,9 @@ public class LoadedConsumptionsEvent {
             _consumptions = new ArrayList<Consumption>();
         }
         return _consumptions;
+    }
+
+    public String getGroup() {
+        return _group;
     }
 }

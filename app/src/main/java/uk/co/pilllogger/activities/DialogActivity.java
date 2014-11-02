@@ -17,6 +17,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -33,7 +34,6 @@ import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.repositories.PillRepository;
-import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.views.ColourIndicator;
 import static butterknife.ButterKnife.findById;
 
@@ -143,7 +143,7 @@ public class DialogActivity extends PillLoggerActivityBase{
                 case Consumption:
                     String consumptionGroup = intent.getStringExtra("ConsumptionGroup");
 
-                    List<Consumption> consumptions = _consumptionRepository.getForGroup(consumptionGroup);
+                    List<Consumption> consumptions = _consumptionRepository.getForGroup(consumptionGroup, new ArrayList<Pill>());
 
                     consumptions = _consumptionRepository.groupConsumptions(consumptions);
 

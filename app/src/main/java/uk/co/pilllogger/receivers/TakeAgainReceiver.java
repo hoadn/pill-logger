@@ -32,6 +32,7 @@ public class TakeAgainReceiver extends InjectingBroadcastReceiver {
 
     @Inject
     Bus _bus;
+    private String _group;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -40,16 +41,19 @@ public class TakeAgainReceiver extends InjectingBroadcastReceiver {
         _context = context;
         Log.d(TAG, "Intent received");
 
-        String group = intent.getStringExtra(context.getString(R.string.intent_extra_notification_consumption_group));
+        _group = intent.getStringExtra(context.getString(R.string.intent_extra_notification_consumption_group));
 
-        Log.d(TAG, "Group: " + group);
+        Log.d(TAG, "Group: " + _group);
         _bus.register(this);
-        _jobManager.addJobInBackground(new LoadConsumptionsJob(false, group));
+        _jobManager.addJobInBackground(new LoadConsumptionsJob(false, _group));
 
     }
 
     @Subscribe
     public void consumptionsReceived(LoadedConsumptionsEvent event) {
+        if(event.getGroup() == null || event.getGroup().equals(_group) == false){
+            return;
+        }
 
         String consumptionGroup = UUID.randomUUID().toString();
         Date consumptionDate = new Date();

@@ -50,10 +50,11 @@ public class ReminderReceiver extends InjectingBroadcastReceiver {
 
     @Subscribe
     public void consumptionsReceived(LoadedConsumptionsEvent event) {
-        if(event.getConsumptions().size() > 0)
+        if(event.getConsumptions().size() > 0 && event.getGroup() != null && event.getGroup().equals(_group)) {
             NotificationHelper.Notification(_context, true, "", true, true, event.getConsumptions(), _group);
 
-        _bus.unregister(this);
+            _bus.unregister(this);
+        }
     }
 
 

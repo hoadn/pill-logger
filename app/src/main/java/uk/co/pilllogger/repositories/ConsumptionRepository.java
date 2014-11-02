@@ -111,7 +111,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         consumption.setDate(new Date(c.getLong(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_DATE_TIME))));
         consumption.setGroup(c.getString(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_GROUP)));
         int pillId = c.getInt(c.getColumnIndex(DatabaseContract.Consumptions.COLUMN_PILL_ID));
- 
+
         for(Pill pill : pills){
             if(pill.getId() == pillId){
                 consumption.setPill(pill);
@@ -363,12 +363,13 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         return map;
     }
 
-    public List<Consumption> getForGroup(String group) {
-        if(_groupConsumptionCache != null
+    @DebugLog
+    public List<Consumption> getForGroup(String group, List<Pill> pills) {
+        /*if(_groupConsumptionCache != null
                 && _groupConsumptionCache.size() > 0
                 && _groupConsumptionCache.containsKey(group)) {
             return new ArrayList<Consumption>(_groupConsumptionCache.get(group).values());
-        }
+        }*/
 
         SQLiteDatabase db = _dbCreator.getReadableDatabase();
 
@@ -391,7 +392,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
 
             c.moveToFirst();
             while (!c.isAfterLast()) {
-                Consumption consumption = getFromCursor(c);
+                Consumption consumption = getFromCursor(c, pills);
                 consumptions.add(consumption);
                 c.moveToNext();
             }
