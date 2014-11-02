@@ -380,6 +380,11 @@ public class Pill implements Serializable {
     }
 
     public void updateFromPill(Pill pill){
+
+        if(pill == null) {
+            return;
+        }
+
         setSize(pill.getSize());
         setName(pill.getName());
         setFavourite(pill.isFavourite());

@@ -517,6 +517,17 @@ public class Statistics{
 
     @Subscribe @DebugLog
     public void pillsUpdated(UpdatedPillEvent event) {
+
+        for (Consumption consumption : _consumptions) {
+            Pill pill = consumption.getPill();
+
+            if(pill.getId() != event.getPill().getId()){
+                continue;
+            }
+
+            pill.updateFromPill(event.getPill());
+        };
+
         refreshConsumptionCaches(_consumptions);
     }
 }

@@ -220,6 +220,17 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
 
     @Subscribe @DebugLog
     public void onPillUpdated(UpdatedPillEvent event){
+
+        for (Consumption consumption : _consumptions) {
+            Pill pill = consumption.getPill();
+
+            if(pill.getId() != event.getPill().getId()){
+                continue;
+            }
+
+            pill.updateFromPill(event.getPill());
+        };
+
         notifyDataSetChanged();
     }
 }
