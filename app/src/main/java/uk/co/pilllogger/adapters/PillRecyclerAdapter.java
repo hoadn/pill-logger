@@ -28,13 +28,10 @@ import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.DialogActivity;
 import uk.co.pilllogger.events.CreateConsumptionEvent;
-import uk.co.pilllogger.events.CreatedNoteEvent;
 import uk.co.pilllogger.events.CreatedPillEvent;
-import uk.co.pilllogger.events.DeleteNoteEvent;
 import uk.co.pilllogger.events.DeletePillEvent;
+import uk.co.pilllogger.events.PillLatestConsumptionUpdatedEvent;
 import uk.co.pilllogger.events.PillNotesChangeEvent;
-import uk.co.pilllogger.events.UpdatePillEvent;
-import uk.co.pilllogger.events.UpdatedNoteEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.NumberHelper;
@@ -42,7 +39,6 @@ import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.jobs.DeletePillJob;
 import uk.co.pilllogger.jobs.InsertConsumptionsJob;
 import uk.co.pilllogger.models.Consumption;
-import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.State;
@@ -231,13 +227,19 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
 
     @Subscribe @DebugLog
     public void updatedPillEvent(UpdatedPillEvent event){
+        pillUpdated(event.getPill(), true);
+    }
+
+    private void pillUpdated(Pill pill, boolean update) {
         int indexOf = -1;
 
         int i = 0;
         for(Pill p : _pills){
-            if(p.getId() == event.getPill().getId()){
+            if(p.getId() == pill.getId()){
                 indexOf = i;
-                p.updateFromPill(event.getPill());
+                if(update) {
+                    p.updateFromPill(pill);
+                }
                 break;
             }
             i++;
@@ -247,6 +249,11 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
         }
 
         notifyItemRangeChanged(indexOf, 1);
+    }
+
+    @Subscribe @DebugLog
+    public void pillLatestConsumptionUpdated(PillLatestConsumptionUpdatedEvent event){
+        pillUpdated(event.getPill(), false);
     }
 
     @Subscribe @DebugLog

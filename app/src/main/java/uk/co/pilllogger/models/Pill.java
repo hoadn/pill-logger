@@ -22,8 +22,8 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.CreatedNoteEvent;
 import uk.co.pilllogger.events.DeleteNoteEvent;
-import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
+import uk.co.pilllogger.events.PillLatestConsumptionUpdatedEvent;
 import uk.co.pilllogger.events.PillNotesChangeEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.NumberHelper;
@@ -260,6 +260,8 @@ public class Pill implements Serializable {
 
                 if (_latest == null || c.getDate().getTime() > _latest.getDate().getTime()) {
                     _latest = c;
+
+                    _bus.post(new PillLatestConsumptionUpdatedEvent(this));
                 }
             }
         }
@@ -281,7 +283,7 @@ public class Pill implements Serializable {
 
         // we didn't have notes before, now we do
         if (noNotes && _notes.isEmpty() == false) {
-            _bus.post(new PillNotesChangeEvent(this));
+            _bus.post(new PillLatestConsumptionUpdatedEvent(this));
         }
     }
 
@@ -306,39 +308,37 @@ public class Pill implements Serializable {
         }
     }
 
-    @Subscribe
-    public void consumptionDeleted(DeletedConsumptionEvent event) {
-        Consumption consumption = event.getConsumption();
-        if (consumption != null) {
-            if (consumption.getPillId() == _id && _consumptions.contains(consumption)) {
-                _consumptions.remove(consumption);
+    @Subscribe @DebugLog
+    public void consumptionDeleted(DeletedConsumptionGroupEvent event) {
 
-                if(_latest != null && consumption.getId() == _latest.getId())
-                    _latest = null;
-            }
-        }
-    }
+        String group = event.getGroup();
+        int pillId = event.getPillId();
 
-    @Subscribe
-    public void consumptionPillGroupDeleted(DeletedConsumptionGroupEvent event) {
         List<Consumption> toRemove = new ArrayList<Consumption>();
 
-        if(event.getGroup() == null)
-            return;
-
+        int i = 1;
+        int indexOf = -1;
         for(Consumption c : _consumptions){
-            String consumptionGroup = c.getGroup();
-            if(consumptionGroup == null)
-                continue;
+            if(c.getGroup().equals(group) && c.getPillId() == pillId){
 
-            if(c.getGroup().equals(event.getGroup()) && c.getPillId() == event.getPillId())
+                if(indexOf == -1) {
+                    indexOf = i;
+                }
+
                 toRemove.add(c);
 
-            if(_latest != null && c.getId() == _latest.getId())
-                _latest = null;
-        }
+                if(_latest != null && c.getId() == _latest.getId()) {
+                    _latest = null;
+                }
+            }
 
+            ++i;
+        }
         _consumptions.removeAll(toRemove);
+
+        if(_latest == null && toRemove.isEmpty() == false){
+            _bus.post(new PillLatestConsumptionUpdatedEvent(this));
+        }
     }
 
     public float getDailyAverage(){
@@ -381,7 +381,7 @@ public class Pill implements Serializable {
 
     public void updateFromPill(Pill pill){
 
-        if(pill == null) {
+        if(pill == null || pill == this) {
             return;
         }
 
