@@ -229,6 +229,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
                 Date d = new Date();
                 for(int j = 0; j < quantity; j++) {
                     Consumption consumption = new Consumption(pill, d, group);
+                    consumption.setQuantity(quantity);
                     _jobManager.addJobInBackground(new InsertConsumptionsJob(consumption));
                     //new InsertConsumptionTask(context, consumption).execute();
                 }
