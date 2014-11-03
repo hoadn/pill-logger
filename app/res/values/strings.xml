@@ -205,6 +205,6 @@
     <string name="new_pill_fragment_title">New Medicine</string>
     <string name="new_note_fragment_title">New Note</string>
     <string name="edit_pill_summary_text">Edit name, dosage, colour etc.</string>
-    <string name="pill_notes_summary_text">View or edit notes for this medication</string>
+    <string name="pill_notes_summary_text">View/edit notes for this medicine</string>
     <string name="info_dialog_take_again">Take again</string>
 </resources>
