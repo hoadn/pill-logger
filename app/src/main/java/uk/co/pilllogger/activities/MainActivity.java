@@ -49,6 +49,7 @@ import uk.co.pilllogger.billing.IabResult;
 import uk.co.pilllogger.billing.Inventory;
 import uk.co.pilllogger.billing.SkuDetails;
 import uk.co.pilllogger.dialogs.ThemeChoiceDialog;
+import uk.co.pilllogger.events.LoadedConsumptionsEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.PreferencesChangedEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
@@ -98,6 +99,7 @@ public class MainActivity extends PillLoggerActivityBase implements
     private IabHelper _billingHelper;
     private boolean _dialogShown = false;
     @Inject JobManager _jobManager;
+    private boolean _firstLoad = true;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -249,7 +251,7 @@ public class MainActivity extends PillLoggerActivityBase implements
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
 
         if(State.getSingleton().getIabHelper() == null) {
@@ -480,6 +482,19 @@ public class MainActivity extends PillLoggerActivityBase implements
     private void startAddConsumptionActivity(){
         Intent intent = new Intent(this, AddConsumptionActivity.class);
         this.startActivity(intent);
+    }
+
+    @Subscribe
+    public void consumptionsReceived(LoadedConsumptionsEvent event){
+        if(_firstLoad == false){
+            return;
+        }
+
+        _firstLoad = false;
+
+        if(event.getConsumptions().isEmpty()){
+            _fragmentPager.setCurrentItem(1, false);
+        }
     }
 
     @Subscribe @DebugLog
