@@ -413,7 +413,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         _tutorialService = new TutorialService(pages);
 
-        new GetTutorialSeenTask(MainActivity.this, ConsumptionListFragment.TAG, this).execute();
+        // new GetTutorialSeenTask(MainActivity.this, ConsumptionListFragment.TAG, this).execute();
     }
 
     @Override
@@ -586,7 +586,7 @@ public class MainActivity extends PillLoggerActivityBase implements
     public void startTutorial(String tag) {
 
         final TutorialPage page = _tutorialService.getTutorialPage(tag);
-        if(page == null) {
+        if(page == null || true) {
             return; // no tutorial available for this page
         }
 
