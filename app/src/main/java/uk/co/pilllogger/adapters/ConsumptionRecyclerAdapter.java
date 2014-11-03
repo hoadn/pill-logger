@@ -13,6 +13,7 @@ import com.squareup.otto.Subscribe;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -43,7 +44,7 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
 
     Context _context;
 
-    public ConsumptionRecyclerAdapter(List<Consumption> consumptions, Context context){
+    public ConsumptionRecyclerAdapter(List<Consumption> consumptions, Context context) {
         _consumptions = consumptions;
         _context = context;
     }

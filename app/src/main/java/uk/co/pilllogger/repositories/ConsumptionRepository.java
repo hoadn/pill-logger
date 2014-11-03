@@ -45,6 +45,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     private Map<Integer, Consumption> _consumptionsCache = new ConcurrentHashMap<Integer, Consumption>();
     private Map<String, Map<Integer, Consumption>> _groupConsumptionCache = new ConcurrentHashMap<String, Map<Integer, Consumption>>();
     private boolean _getAllCalled;
+    private List<Pill> _pills;
 
     @Inject
     public ConsumptionRepository(Context context, Bus bus, Provider<Pill> pillProvider) {
@@ -120,10 +121,23 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
         }
 
         if(consumption.getPill() == null){
-            Pill tempPill = _pillProvider.get();
-            tempPill.setId(pillId);
+            boolean found = false;
+            if(_pills != null){
+                for (Pill pill : _pills) {
+                    if(pill.getId() == pillId){
+                        consumption.setPill(pill);
+                        found = true;
+                        break;
+                    }
+                }
+            }
 
-            consumption.setPill(tempPill);
+            if(found == false) {
+                Pill tempPill = _pillProvider.get();
+                tempPill.setId(pillId);
+
+                consumption.setPill(tempPill);
+            }
         }
 
         addToCaches(consumption);
@@ -426,6 +440,7 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
     }
 
     public List<Consumption> getAll(List<Pill> pills) {
+        _pills = pills;
         _getAllCalled = true;
 
         SQLiteDatabase db = _dbCreator.getReadableDatabase();

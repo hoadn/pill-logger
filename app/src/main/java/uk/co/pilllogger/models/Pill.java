@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.adapters.ConsumptionRecyclerAdapter;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.CreatedNoteEvent;
 import uk.co.pilllogger.events.DeleteNoteEvent;
@@ -400,5 +401,9 @@ public class Pill implements Serializable {
         _notes.clear();
         _first = null;
         _latest = null;
+    }
+
+    public boolean isEmpty(){
+        return _name.equals("");
     }
 }
