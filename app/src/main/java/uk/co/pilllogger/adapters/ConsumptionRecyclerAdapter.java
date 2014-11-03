@@ -162,7 +162,7 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
             ++i;
         }
         _consumptions.removeAll(toRemove);
-        //notifyItemRangeRemoved(indexOf, count);
+        notifyItemRangeRemoved(indexOf, count);
     }
 
     @Subscribe @DebugLog
