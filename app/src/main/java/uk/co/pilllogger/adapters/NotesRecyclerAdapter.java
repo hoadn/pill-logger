@@ -26,6 +26,7 @@ import uk.co.pilllogger.events.CreatedNoteEvent;
 import uk.co.pilllogger.events.DeleteNoteEvent;
 import uk.co.pilllogger.events.UpdatedNoteEvent;
 import uk.co.pilllogger.fragments.NoteFragment;
+import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.jobs.DeleteNoteJob;
 import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
@@ -66,11 +67,13 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
             if (note == null) {
                 return;
             }
-
             holder.title.setText(note.getTitle());
+
+            String dateTime = DateHelper.formatDateAndTime(_activity, note.getDate());
+            dateTime += " " + DateHelper.getTime(_activity, note.getDate());
+            holder.date.setText(dateTime);
+
             holder.text.setText(note.getText());
-            holder.text.setTypeface(State.getSingleton().getRobotoTypeface());
-            holder.title.setTypeface(State.getSingleton().getRobotoTypeface());
 
             holder.setDeleteClickListener(new View.OnClickListener() {
                 @Override
@@ -214,6 +217,7 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
         @InjectView(R.id.notes_list_title) public TextView title;
+        @InjectView(R.id.notes_list_date) public TextView date;
         @InjectView(R.id.notes_list_text) public TextView text;
         @InjectView(R.id.notes_list_delete) public View delete;
         @InjectView(R.id.notes_item_layout) public View layout;
@@ -223,6 +227,14 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
             super(itemView);
 
             ButterKnife.inject(this, itemView);
+
+            setTypeface();
+        }
+
+        private void setTypeface() {
+            text.setTypeface(State.getSingleton().getRobotoTypeface());
+            date.setTypeface(State.getSingleton().getRobotoTypeface());
+            title.setTypeface(State.getSingleton().getRobotoTypeface());
         }
 
         public void setOnClickListener(View.OnClickListener clickListener){
