@@ -142,7 +142,7 @@ public class PillListFragment extends PillLoggerFragmentBase implements
     private void updatePills(List<Pill> pills){
         _pills = pills;
 
-        if(_listView == null || pills.size() == 0)
+        if(_listView == null)
             return;
 
         if (_listView.getAdapter() == null){ //we need to init the adapter
@@ -152,7 +152,6 @@ public class PillListFragment extends PillLoggerFragmentBase implements
                 return;
 
             _adapter = _pillListAdapterFactory.create(activity, R.layout.pill_list_item, pills);
-
 
             _adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
                 @Override

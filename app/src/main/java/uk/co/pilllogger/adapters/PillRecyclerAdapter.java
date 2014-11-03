@@ -80,9 +80,6 @@ public class PillRecyclerAdapter extends RecyclerView.Adapter<PillRecyclerAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        viewHolder.name.setTypeface(State.getSingleton().getRobotoTypeface());
-        viewHolder.lastTaken.setTypeface(State.getSingleton().getRobotoTypeface());
-        viewHolder.size.setTypeface(State.getSingleton().getRobotoTypeface());
         if(getItemViewType(position) == EXISTING) {
             final Pill pill = _pills.get(position);
             if (pill == null) {
