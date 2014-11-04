@@ -58,7 +58,7 @@ public class DayOfWeekView extends View
         _indicatorPaint.setAntiAlias(true);
         _textPaint.setTextSize(13 * getResources().getDisplayMetrics().density);
         _textPaint.setColor(_textColour);
-        _textPaint.setTypeface(State.getSingleton().getTypeface());
+        //_textPaint.setTypeface(State.getSingleton().getTypeface());
         _textPaint.setAntiAlias(true);
     }
 

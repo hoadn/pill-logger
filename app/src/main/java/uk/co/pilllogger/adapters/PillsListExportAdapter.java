@@ -11,6 +11,7 @@ import java.util.Set;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.activities.ExportActivity;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.services.IExportService;
 import uk.co.pilllogger.state.State;
 
@@ -27,8 +28,8 @@ public class PillsListExportAdapter extends PillsListBaseAdapter {
 
     public Set<Pill> getSelectedPills(){ return _selectedPills; }
 
-    public PillsListExportAdapter(Activity activity, int textViewResourceId, List<Pill> pills, IExportService exportService) {
-        super(activity, textViewResourceId, pills);
+    public PillsListExportAdapter(Activity activity, int textViewResourceId, List<Pill> pills, IExportService exportService, ConsumptionRepository consumptionRepository) {
+        super(activity, textViewResourceId, pills, consumptionRepository);
         _exportService = exportService;
         _activity = (ExportActivity) activity;
         _previouslySelected = _exportService.getExportSettings().getSelectedPills();

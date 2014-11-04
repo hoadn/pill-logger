@@ -1,6 +1,7 @@
 package uk.co.pilllogger.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.NumberHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.views.ColourIndicator;
 
@@ -23,19 +25,17 @@ import uk.co.pilllogger.views.ColourIndicator;
  */
 public abstract class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
 
-    protected final Bus _bus;
+    protected ConsumptionRepository _consumptionRepository;
 
     @DebugLog
-    public PillsListBaseAdapter(Activity activity, int textViewResourceId, List<Pill> pills) {
-        super(activity, textViewResourceId, pills);
-        _bus = State.getSingleton().getBus();
-
-        _bus.register(this);
+    public PillsListBaseAdapter(Context context, int textViewResourceId, List<Pill> pills, ConsumptionRepository consumptionRepository) {
+        super(context, textViewResourceId, pills);
+        _consumptionRepository = consumptionRepository;
     }
 
     @Override
     public void destroy() {
-        _bus.unregister(this);
+
     }
 
     public static class ViewHolder extends ActionBarArrayAdapter.ViewHolder {
@@ -53,7 +53,7 @@ public abstract class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
         public View shadow;
     }
 
-    @Override
+    @Override @DebugLog
     protected ActionBarArrayAdapter.ViewHolder initViewHolder(View v) {
         ViewHolder holder = new ViewHolder();
         holder.container = (ViewGroup) v.findViewById(R.id.selector_container);
@@ -65,9 +65,9 @@ public abstract class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
         holder.pickerContainer = (ViewGroup) v.findViewById(R.id.pill_list_colour_picker_container);
         holder.shadow = v.findViewById(R.id.shadow);
 
-        holder.name.setTypeface(State.getSingleton().getTypeface());
-        holder.size.setTypeface(State.getSingleton().getTypeface());
-        holder.lastTaken.setTypeface(State.getSingleton().getTypeface());
+        //holder.name.setTypeface(State.getSingleton().getTypeface());
+        //holder.size.setTypeface(State.getSingleton().getTypeface());
+        //holder.lastTaken.setTypeface(State.getSingleton().getTypeface());
         v.setTag(holder);
 
         return holder;
@@ -84,14 +84,14 @@ public abstract class PillsListBaseAdapter extends ActionBarArrayAdapter<Pill> {
             if (pill != null) {
                 holder.name.setText(pill.getName());
 
-                Consumption latest = pill.getLatestConsumption(_activity);
+                Consumption latest = pill.getLatestConsumption(_consumptionRepository);
                 if(latest != null){
-                    String prefix = _activity.getString(R.string.last_taken_message_prefix);
-                    String lastTaken = DateHelper.getRelativeDateTime(_activity, latest.getDate(), true);
+                    String prefix = _context.getString(R.string.last_taken_message_prefix);
+                    String lastTaken = DateHelper.getRelativeDateTime(_context, latest.getDate(), true);
                     holder.lastTaken.setText(prefix + " " + lastTaken);
                 }
                 else{
-                    holder.lastTaken.setText(_activity.getString(R.string.no_consumptions_message));
+                    holder.lastTaken.setText(_context.getString(R.string.no_consumptions_message));
                 }
 
                 if(pill.getSize() <= 0){

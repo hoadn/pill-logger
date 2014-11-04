@@ -1,8 +1,6 @@
 package uk.co.pilllogger.activities;
 
 import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -31,13 +29,15 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
@@ -49,25 +49,22 @@ import uk.co.pilllogger.billing.IabResult;
 import uk.co.pilllogger.billing.Inventory;
 import uk.co.pilllogger.billing.SkuDetails;
 import uk.co.pilllogger.dialogs.ThemeChoiceDialog;
+import uk.co.pilllogger.events.LoadedConsumptionsEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
+import uk.co.pilllogger.events.PreferencesChangedEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.PillListFragment;
-import uk.co.pilllogger.fragments.StatsFragment;
-import uk.co.pilllogger.helpers.CrashlyticsTree;
-import uk.co.pilllogger.helpers.ExportHelper;
 import uk.co.pilllogger.helpers.FeedbackHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.InsertConsumptionsJob;
+import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.FeatureType;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.GetConsumptionsTask;
-import uk.co.pilllogger.tasks.GetFavouritePillsTask;
-import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.GetTutorialSeenTask;
-import uk.co.pilllogger.tasks.InsertConsumptionTask;
 import uk.co.pilllogger.themes.ITheme;
 import uk.co.pilllogger.themes.ProfessionalTheme;
 import uk.co.pilllogger.themes.RainbowTheme;
@@ -83,9 +80,11 @@ import uk.co.pilllogger.widget.MyAppWidgetProvider;
  * Created by nick on 22/10/13.
  */
 public class MainActivity extends PillLoggerActivityBase implements
-        GetFavouritePillsTask.ITaskComplete,
         GetTutorialSeenTask.ITaskComplete,
-        SharedPreferences.OnSharedPreferenceChangeListener, GetConsumptionsTask.ITaskComplete {
+        SharedPreferences.OnSharedPreferenceChangeListener {
+
+    @Inject
+    PillRepository _pillRepository;
 
     private static final String TAG = "MainActivity";
     private MyViewPager _fragmentPager;
@@ -99,6 +98,8 @@ public class MainActivity extends PillLoggerActivityBase implements
     private boolean _themeChanged;
     private IabHelper _billingHelper;
     private boolean _dialogShown = false;
+    @Inject JobManager _jobManager;
+    private boolean _firstLoad = true;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,20 +107,12 @@ public class MainActivity extends PillLoggerActivityBase implements
         boolean isDebuggable = 0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE);
         State.getSingleton().setIsDebuggable(isDebuggable);
 
-        if(savedInstanceState == null) {
-            if (!isDebuggable) {
-                Crashlytics.start(this);
-                Timber.plant(new CrashlyticsTree());
-            } else {
-                Timber.plant(new Timber.DebugTree());
-            }
-        }
-
         _themeChanged = false;
 
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         updateTheme(getString(R.string.pref_key_theme_list));
+        setRelativeTimesPreference();
 
         ViewGroup wrapper = setContentViewWithWrapper(R.layout.activity_main);
         this.setTitle("Consumption");
@@ -193,8 +186,9 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-        if(PillRepository.getSingleton(this).isCached() == false) {
-            new GetPillsTask(this).execute();
+        Timber.d("Is PillRepository cached: " + _pillRepository.isCached());
+        if(_pillRepository.isCached() == false) {
+            _jobManager.addJobInBackground(new LoadPillsJob());
         }
 
         Integer gradientBackgroundResourceId = State.getSingleton().getTheme().getWindowBackgroundResourceId();
@@ -257,7 +251,7 @@ public class MainActivity extends PillLoggerActivityBase implements
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
 
         if(State.getSingleton().getIabHelper() == null) {
@@ -421,7 +415,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         _tutorialService = new TutorialService(pages);
 
-        new GetTutorialSeenTask(MainActivity.this, ConsumptionListFragment.TAG, this).execute();
+        // new GetTutorialSeenTask(MainActivity.this, ConsumptionListFragment.TAG, this).execute();
     }
 
     @Override
@@ -488,6 +482,19 @@ public class MainActivity extends PillLoggerActivityBase implements
     private void startAddConsumptionActivity(){
         Intent intent = new Intent(this, AddConsumptionActivity.class);
         this.startActivity(intent);
+    }
+
+    @Subscribe
+    public void consumptionsReceived(LoadedConsumptionsEvent event){
+        if(_firstLoad == false || event.isLoadedFromDb() == false){
+            return;
+        }
+
+        _firstLoad = false;
+
+        if(event.getConsumptions().isEmpty()){
+            _fragmentPager.setCurrentItem(1, false);
+        }
     }
 
     @Subscribe @DebugLog
@@ -561,7 +568,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
     private void addConsumption(Pill pill){
         Consumption consumption = new Consumption(pill, new Date());
-        new InsertConsumptionTask(MainActivity.this, consumption).execute();
+        _jobManager.addJobInBackground(new InsertConsumptionsJob(consumption));
 
         TrackerHelper.addConsumptionEvent(MainActivity.this, "FavouriteMenu");
 
@@ -591,22 +598,10 @@ public class MainActivity extends PillLoggerActivityBase implements
         sendBroadcast(intent);
     }
 
-    @Override
-    public void favouritePillsReceived(List<Pill> pills) {
-        if(_menu == null)
-            return;
-
-        for (Pill pill : pills) {
-            if (_menu.findItem(pill.getId()) == null) {
-                addPillToMenu(pill);
-            }
-        }
-    }
-
     public void startTutorial(String tag) {
 
         final TutorialPage page = _tutorialService.getTutorialPage(tag);
-        if(page == null) {
+        if(page == null || true) {
             return; // no tutorial available for this page
         }
 
@@ -651,13 +646,18 @@ public class MainActivity extends PillLoggerActivityBase implements
                 theme = new ProfessionalTheme();
             }
 
+            // we are for now only supporting a single theme
+            theme = new ProfessionalTheme();
+
             State.getSingleton().setTheme(theme);
 
             _colour1 = getResources().getColor(theme.getConsumptionListBackgroundResourceId());
             _colour2 = getResources().getColor(theme.getPillListBackgroundResourceId());
             _colour3 = getResources().getColor(theme.getStatsBackgroundResourceId());
 
-            setTheme(State.getSingleton().getTheme().getStyleResourceId());
+            int styleResourceId = State.getSingleton().getTheme().getStyleResourceId();
+            setTheme(styleResourceId);
+            _context.setTheme(styleResourceId);
 
             return true;
         }
@@ -668,11 +668,17 @@ public class MainActivity extends PillLoggerActivityBase implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         _themeChanged = updateTheme(key);
+
+        if(key.equals(getString(R.string.pref_key_relative_times))){
+            setRelativeTimesPreference();
+
+            _bus.post(new PreferencesChangedEvent());
+        }
     }
 
-    @Override
-    public void consumptionsReceived(List<Consumption> consumptions) {
-        ExportHelper export = ExportHelper.getSingleton(this);
-        export.exportToCsv(consumptions);
+    private void setRelativeTimesPreference() {
+        Boolean isRelative = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_key_relative_times), true);
+
+        State.getSingleton().setUseRelativeTimes(isRelative);
     }
 }

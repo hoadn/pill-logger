@@ -1,20 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:id="@+id/selector_container"
+    android:background="@drawable/consumption_background">
+
+<LinearLayout
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="@dimen/add_consumption_pill_list_item_height"
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:id="@+id/pill_list_item"
+    android:clickable="false"
     tools:layout_height="@dimen/add_consumption_pill_list_item_height">
 
     <uk.co.pilllogger.views.ColourIndicator
         android:id="@+id/add_consumption_pill_colour"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:padding="8dp"
-        android:layout_marginLeft="5dp"
+        android:padding="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_gravity="center_vertical"
         android:color="@color/pill_colour1"
         />
@@ -23,14 +34,16 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/add_consumption_pill_list_item_height"
         android:orientation="vertical"
-         android:layout_toRightOf="@id/add_consumption_pill_colour"
         android:layout_centerVertical="true"
         android:gravity="center_vertical">
         <TextView
-            android:textSize="18dp"
+            android:textSize="16sp"
             android:id="@+id/pill_list_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:singleLine="true"
             tools:text="Ibuprofen"/>
 
 
@@ -39,17 +52,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/text_grey_medium"
-            android:text="@string/no_consumptions_message"/>
+            android:text="@string/no_consumptions_message"
+            android:textSize="12sp"/>
 
     </LinearLayout>
-
-
+</LinearLayout>
     <LinearLayout
         android:id="@+id/add_consumption_after_click_layout"
         android:layout_height="@dimen/add_consumption_pill_list_item_height"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:gravity="right"
+        android:layout_width="140dp"
+        android:layout_alignParentRight="true"
         android:orientation="horizontal">
         <ImageView
             android:layout_width="40dp"
@@ -72,39 +84,40 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-        <TextView
-            android:id="@+id/add_consumption_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add_consumption_quantity_default"
-            android:textStyle="bold"
-            android:gravity="center"/>
-         <TextView
-            android:id="@+id/add_consumption_suffix"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="x"
-            android:textColor="@color/text_grey_medium"
-            android:gravity="center"/>
-                </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView android:textSize="14dp"
-                      android:id="@+id/pill_list_size"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:textColor="@color/text_grey_medium"
-                      tools:text="200"/>
-            <TextView
-                android:id="@+id/pill_list_units"
+                <TextView
+                    android:id="@+id/add_consumption_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_consumption_quantity_default"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/add_consumption_suffix"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="x"
+                    android:textColor="@color/text_grey_medium"
+                    android:gravity="center"/>
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/pill_units"
+                android:orientation="horizontal">
+                <TextView android:textSize="14sp"
+                          android:id="@+id/pill_list_size"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:textColor="@color/text_grey_medium"
+                          tools:text="200"/>
+                <TextView
+                    android:id="@+id/pill_list_units"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pill_units"
+                    android:textSize="14sp"
 
-                android:textColor="@color/text_grey_medium"/>
-        </LinearLayout>
+                    android:textColor="@color/text_grey_medium"/>
+            </LinearLayout>
         </LinearLayout>
         <ImageView
             android:layout_width="40dp"
@@ -118,7 +131,5 @@
             android:clickable="true"
             android:background="?android:attr/selectableItemBackground"
             android:focusable="false"/>
-
     </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

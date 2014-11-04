@@ -8,8 +8,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
@@ -33,6 +35,7 @@ import android.widget.TimePicker;
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -48,47 +51,62 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
+import uk.co.pilllogger.adapters.AddConsumptionPillRecyclerAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.decorators.DividerItemDecoration;
 import uk.co.pilllogger.events.CreatedPillEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.helpers.AlarmHelper;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.InsertConsumptionsJob;
+import uk.co.pilllogger.jobs.InsertPillJob;
+import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.tasks.GetTutorialSeenTask;
-import uk.co.pilllogger.tasks.InsertConsumptionTask;
-import uk.co.pilllogger.tasks.InsertPillTask;
 import uk.co.pilllogger.tasks.SetTutorialSeenTask;
 import uk.co.pilllogger.views.ColourIndicator;
 
 /**
  * Created by nick on 24/10/13.
  */
-public class AddConsumptionActivity extends FragmentActivity implements
+public class AddConsumptionActivity extends PillLoggerActivityBase implements
         DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener,
         GetTutorialSeenTask.ITaskComplete,
-        AddConsumptionPillListAdapter.IConsumptionSelected{
+        AddConsumptionPillRecyclerAdapter.IConsumptionSelected{
+
+    @Inject
+    PillRepository _pillRepository;
+
+    @Inject
+    ConsumptionRepository _consumptionRepository;
+
+    @Inject
+    JobManager _jobManager;
 
     private static final String TAG = "AddConsumptionActivity";
     public static String DATE_FORMAT = "E, MMM dd, yyyy";
     private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
     private static final String FRAG_TAG_TIME_PICKER = "fragent_time_picker_name";
 
-    ListView _pillsList;
+    RecyclerView _pillsList;
     Activity _activity;
     TextView _newPillName;
     TextView _newPillSize;
-    AddConsumptionPillListAdapter _adapter;
+    AddConsumptionPillRecyclerAdapter _adapter;
     View _selectPillLayout;
     View _newPillLayout;
     Spinner _timeSpinner;
@@ -110,25 +128,37 @@ public class AddConsumptionActivity extends FragmentActivity implements
     ViewGroup _reminderHoursContainer;
     EditText _reminderHours;
     TextView _reminderHoursSuffix;
+
+    @Inject
     Bus _bus;
+
+    @Inject
+    Provider<Pill> _pillProvider;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        _activity = this;
+
         setTheme(State.getSingleton().getTheme().getStyleResourceId());
 
         setContentView(R.layout.add_consumption_activity);
 
-        _bus = State.getSingleton().getBus();
+        _pillsList = (RecyclerView) findViewById(R.id.add_consumption_pill_list);
 
-        _pillsList = (ListView)findViewById(R.id.add_consumption_pill_list);
+        _pillsList.setHasFixedSize(true);
+        _pillsList.addItemDecoration(new DividerItemDecoration(_activity, DividerItemDecoration.VERTICAL_LIST));
 
-        if(PillRepository.getSingleton(this).isCached() == false) { // this should be handled by the producer
-            new GetPillsTask(this).execute();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(_context);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        _pillsList.setLayoutManager(layoutManager);
+        _pillsList.setItemAnimator(new DefaultItemAnimator());
+
+        if(_pillRepository.isCached() == false) { // this should be handled by the producer
+            _jobManager.addJobInBackground(new LoadPillsJob());
         }
 
-        _activity = this;
         _selectPillLayout = _activity.findViewById(R.id.add_consumption_pill_list);
         _newPillLayout = _activity.findViewById(R.id.add_consumption_quick_create);
 
@@ -138,17 +168,12 @@ public class AddConsumptionActivity extends FragmentActivity implements
         _reminderDateSpinner = (Spinner) findViewById(R.id.add_consumption_reminder_date);
         _reminderTimeSpinner = (Spinner)findViewById(R.id.add_consumption_reminder_time);
 
-        Typeface typeface = State.getSingleton().getTypeface();
         _newPillName = (TextView) findViewById(R.id.pill_fragment_add_pill_name);
         _newPillSize = (TextView) findViewById(R.id.pill_fragment_add_pill_size);
         TextView title = (TextView) findViewById(R.id.pill_fragment_add_pill_title);
         TextView colourText = (TextView) findViewById(R.id.pill_fragment_add_pill_colour);
         TextView create = (TextView) findViewById(R.id.pill_fragment_add_pill_create);
-        _newPillName.setTypeface(typeface);
-        _newPillSize.setTypeface(typeface);
         title.setVisibility(View.GONE);
-        colourText.setTypeface(typeface);
-        create.setTypeface(typeface);
 
         _colour = (ColourIndicator) findViewById(R.id.pill_fragment_colour);
         _colour.setColour(getResources().getColor(R.color.pill_colour7));
@@ -267,20 +292,6 @@ public class AddConsumptionActivity extends FragmentActivity implements
             setDoneEnabled(false);
 
         new GetTutorialSeenTask(this, TAG, this).execute();
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-
-        _bus.register(this);
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-
-        _bus.unregister(this);
     }
 
     private void setUpRadioGroups() {
@@ -454,8 +465,8 @@ public class AddConsumptionActivity extends FragmentActivity implements
                 if (_addedPills.contains(pill2) && !_addedPills.contains(pill1)) {
                     return 1;
                 }
-                Consumption pill1Consumption = pill1.getLatestConsumption(_activity);
-                Consumption pill2Consumption = pill2.getLatestConsumption(_activity);
+                Consumption pill1Consumption = pill1.getLatestConsumption(_consumptionRepository);
+                Consumption pill2Consumption = pill2.getLatestConsumption(_consumptionRepository);
                 if (pill1Consumption == null && pill2Consumption == null) {
                     return 0;
                 }
@@ -465,11 +476,11 @@ public class AddConsumptionActivity extends FragmentActivity implements
                 if (pill2Consumption == null && pill1Consumption != null) {
                     return -1;
                 }
-                return pill2.getLatestConsumption(_activity).getDate().compareTo(pill1.getLatestConsumption(_activity).getDate());
+                return pill2.getLatestConsumption(_consumptionRepository).getDate().compareTo(pill1.getLatestConsumption(_consumptionRepository).getDate());
             }
         });
 
-        _adapter = new AddConsumptionPillListAdapter(this, this, R.layout.add_consumption_pill_list, event.getPills(), true);
+        _adapter = new AddConsumptionPillRecyclerAdapter(this, this, R.layout.add_consumption_pill_list, event.getPills(), true, _consumptionRepository);
          _pillsList.setAdapter(_adapter);
 
         _adapter.updateAdapter(event.getPills());
@@ -518,7 +529,7 @@ public class AddConsumptionActivity extends FragmentActivity implements
 
     public void done(View view, final boolean futureConsumptionOk) {
         final View v = view;
-        AddConsumptionPillListAdapter adapter = (AddConsumptionPillListAdapter) _pillsList.getAdapter();
+        AddConsumptionPillRecyclerAdapter adapter = (AddConsumptionPillRecyclerAdapter) _pillsList.getAdapter();
         List<Pill> consumptionPills = adapter.getPillsConsumed();
 
         Date consumptionDate = getDateFromSpinners(_dateSpinner, _timeSpinner, new Date());
@@ -561,10 +572,13 @@ public class AddConsumptionActivity extends FragmentActivity implements
                     .show();
         }
         else {
+            List<Consumption> consumptions = new ArrayList<Consumption>();
             for (Pill pill : consumptionPills) {
                 Consumption consumption = new Consumption(pill, consumptionDate, consumptionGroup);
-                new InsertConsumptionTask(this, consumption).execute();
+                consumptions.add(consumption);
             }
+
+            _jobManager.addJobInBackground(new InsertConsumptionsJob(consumptions));
 
             if(reminderDate != null){
                 AlarmHelper.addReminderAlarm(this, reminderDate, consumptionGroup, true);
@@ -584,7 +598,7 @@ public class AddConsumptionActivity extends FragmentActivity implements
         if (_adapter != null) {
             _addedPills.add(event.getPill());
 
-            new GetPillsTask(_activity).execute();
+            _jobManager.addJobInBackground(new LoadPillsJob());
             _adapter.addOpenPill(event.getPill());
             _adapter.addConsumedPill(event.getPill());
 
@@ -626,12 +640,15 @@ public class AddConsumptionActivity extends FragmentActivity implements
             if(!_newPillSize.getText().toString().equals("")){
                 size = Float.parseFloat(String.valueOf(_newPillSize.getText()));
             }
-            Pill pill = new Pill(name, size);
+            Pill pill = _pillProvider.get();
+
+            pill.setName(String.valueOf(name));
+            pill.setSize(size);
             String units = String.valueOf(_unitSpinner.getSelectedItem());
             pill.setUnits(units);
             pill.setColour(_colour.getColour());
 
-            new InsertPillTask(_activity, pill, (InsertPillTask.ITaskComplete)_activity).execute();
+            _jobManager.addJobInBackground(new InsertPillJob(pill));
 
             TrackerHelper.createPillEvent(_activity, TAG);
             _addedPills.add(pill);

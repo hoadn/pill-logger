@@ -29,15 +29,11 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Region;
-import android.graphics.drawable.NinePatchDrawable;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,18 +42,39 @@ public class StackBarGraph extends View {
 
 	private final static int VALUE_FONT_SIZE = 15, AXIS_LABEL_FONT_SIZE = 15;
 
-    private List<StackBar> mBars = new ArrayList<StackBar>();
+    private List<StackBar> _stackBars = new ArrayList<StackBar>();
     private Paint mPaint = new Paint();
     private Paint mTextPaint = new Paint();
-    private Rect mRectangle = null;
+    private RectF mRectangle = null;
     private boolean mShowBarText = true;
     private int mIndexSelected = -1;
     private OnBarClickedListener mListener;
-    private Bitmap mFullImage;
-    private boolean mShouldUpdate = false;
+    private Bitmap _fullImage;
+    private boolean _shouldUpdate = false;
     private int rightPadding = 50;
     private boolean _noData;
     private int _lineColour;
+
+    private Runnable animator = new Runnable() {
+        @Override
+        public void run() {
+            boolean needNewFrame = false;
+            long now = AnimationUtils.currentAnimationTimeMillis();
+            for (StackBar dynamics : _stackBars) {
+                for(StackBarSection section : dynamics.getSections()) {
+                    section.update(now);
+                    if (!section.isAtRest()) {
+                        needNewFrame = true;
+                    }
+                }
+            }
+            if (needNewFrame) {
+                postDelayed(this, 20);
+            }
+            _shouldUpdate = true;
+            invalidate();
+        }
+    };
 
     public boolean getShouldDrawGrid() {
         return mShouldDrawGridHorizontal;
@@ -70,30 +87,32 @@ public class StackBarGraph extends View {
     private boolean mShouldDrawGridHorizontal = false;
     private boolean mShouldDrawGridVertical = false;
 
-    private Context mContext = null;
+    private Context _context = null;
 
     public StackBarGraph(Context context) {
         super(context);
-        mContext = context;
+        _context = context;
     }
 
     public StackBarGraph(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mContext = context;
+        _context = context;
     }
     
     public void setShowBarText(boolean show){
         mShowBarText = show;
     }
-    
+
     public void setBars(List<StackBar> points){
-        this.mBars = points;
-        mShouldUpdate = true;
-        postInvalidate();
+        this._stackBars = points;
+        _noData = false;
+        _shouldUpdate = true;
+        removeCallbacks(animator);
+        post(animator);
     }
     
     public List<StackBar> getBars(){
-        return this.mBars;
+        return this._stackBars;
     }
 
     public void setNoData(boolean noData) {
@@ -105,10 +124,10 @@ public class StackBarGraph extends View {
     }
 
     public void onDraw(Canvas ca) {
-        if (mFullImage == null || mShouldUpdate) {
-            float density = mContext.getResources().getDisplayMetrics().density;
-            mFullImage = Bitmap.createBitmap(getWidth(), getHeight(), Config.ARGB_8888);
-            Canvas canvas = new Canvas(mFullImage);
+        if (_fullImage == null || _shouldUpdate) {
+            float density = _context.getResources().getDisplayMetrics().density;
+            _fullImage = Bitmap.createBitmap(getWidth(), getHeight(), Config.ARGB_8888);
+            Canvas canvas = new Canvas(_fullImage);
 
             if (_noData) {
                 Paint textPaint = new Paint();
@@ -124,20 +143,18 @@ public class StackBarGraph extends View {
                         ((getWidth() - textWidth) /2),
                         ((getHeight() - (textPaint.descent() + textPaint.ascent())) /2),
                         textPaint);
-                ca.drawBitmap(mFullImage, 0, 0, null);
+                ca.drawBitmap(_fullImage, 0, 0, null);
                 return;
             }
-            NinePatchDrawable popup = (NinePatchDrawable)this.getResources().getDrawable(R.drawable.popup_black);
 
             float maxValue = 0;
-            float padding = 1 * mContext.getResources().getDisplayMetrics().density;
-            int selectPadding = (int) (4 * mContext.getResources().getDisplayMetrics().density);
-            float bottomPadding = 20 * mContext.getResources().getDisplayMetrics().density;
-            float leftPadding = padding;
+            float padding = 1 * _context.getResources().getDisplayMetrics().density;
+            float bottomPadding = 20 * _context.getResources().getDisplayMetrics().density;
+            float leftPadding = 16 * _context.getResources().getDisplayMetrics().density;
 
             float usableHeight;
             if (mShowBarText) {
-                this.mPaint.setTextSize(VALUE_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
+                this.mPaint.setTextSize(VALUE_FONT_SIZE * _context.getResources().getDisplayMetrics().scaledDensity);
                 Rect r3 = new Rect();
                 this.mPaint.getTextBounds("$", 0, 1, r3);
                 usableHeight = getHeight()-(bottomPadding*2)-Math.abs(r3.top-r3.bottom)-24 * density;
@@ -145,10 +162,10 @@ public class StackBarGraph extends View {
                 usableHeight = getHeight()-(bottomPadding*2);
             }
 
-            this.mTextPaint.setTextSize(VALUE_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
+            this.mTextPaint.setTextSize(VALUE_FONT_SIZE * _context.getResources().getDisplayMetrics().scaledDensity);
             this.mTextPaint.setAntiAlias(true);
             // Maximum y value = sum of all values.
-            for (final StackBar bar : mBars) {
+            for (final StackBar bar : _stackBars) {
                 if (bar.getTotalValue() > maxValue) {
                     maxValue = bar.getTotalValue();
                 }
@@ -158,9 +175,9 @@ public class StackBarGraph extends View {
                 rightPadding = 75;
             }
 
-            float barWidth = (getWidth() - (padding*2)*mBars.size() - (leftPadding + rightPadding))/mBars.size();
+            float barWidth = (getWidth() - (padding*2)* _stackBars.size() - (leftPadding + rightPadding))/ _stackBars.size();
 
-            mRectangle = new Rect();
+            mRectangle = new RectF();
 
             mPaint.setColor(_lineColour);
             mPaint.setStrokeWidth(padding);
@@ -171,7 +188,7 @@ public class StackBarGraph extends View {
             if(mShouldDrawGridHorizontal){
                 float singleItemHeight = usableHeight / maxValue;
                 for(int i = 0; i <= maxValue; i++){
-                    if(maxValue > 10){
+                    if(maxValue > 5){
                         if(i % 5 > 0){
                             continue;
                         }
@@ -192,7 +209,7 @@ public class StackBarGraph extends View {
             }
 
             int count = 0;
-            for (final StackBar bar : mBars) {
+            for (final StackBar bar : _stackBars) {
                 float currentTop = 0;
                 for(final StackBarSection section : bar.getSections()){
                     // Set bar bounds
@@ -201,19 +218,18 @@ public class StackBarGraph extends View {
                     int right = (int)((padding*2)*count + padding + barWidth*(count+1)) + (int)leftPadding;
                     int bottom = (int)(getHeight()-bottomPadding);
 
-                    if(section.getValue() > 0){
+                    if(section.isDrawable()){
                         bottom -= currentTop;
                         top -= currentTop;
-                        if(section.getValue() > 1)
+                        if(section.getTargetValue() > 1)
                            top -= padding * (section.getValue() - 1);
                     }
 
                     int stroke = (int)(padding * 1.5f);
 
-                    mRectangle.set(left + stroke / 2, top + stroke / 2, right - stroke / 2, bottom - stroke / 2);
+                    mRectangle.set(left + stroke / 2.0f, top + stroke / 2.0f, right - stroke / 2.0f, bottom - stroke / 2.0f);
 
-                    if(section.getValue() > 0){
-
+                    if(section.isDrawable()){
                         if(!section.isTranslucent()) {
                             this.mPaint.setColor(Color.WHITE);
                             this.mPaint.setStrokeWidth(stroke);
@@ -232,32 +248,8 @@ public class StackBarGraph extends View {
                         this.mPaint.setStyle(Paint.Style.FILL);
                         mRectangle.set(left + stroke, top + stroke, right - stroke, bottom - stroke);
                         canvas.drawRect(mRectangle, this.mPaint);
-
-                        // Create selection region
-                        Path path = new Path();
-                        path.addRect(new RectF(mRectangle.left-selectPadding, mRectangle.top-selectPadding, mRectangle.right+selectPadding, mRectangle.bottom+selectPadding), Path.Direction.CW);
-                        section.setPath(path);
-                        section.setRegion(new Region(mRectangle.left-selectPadding, mRectangle.top-selectPadding, mRectangle.right+selectPadding, mRectangle.bottom+selectPadding));
                     }
 
-                    // Draw value text
-                    if (mShowBarText && section.getValue() > 0){
-                        this.mTextPaint.setColor(Color.WHITE);
-                        Rect r2 = new Rect();
-                        this.mTextPaint.getTextBounds(section.getValueString(), 0, 1, r2);
-
-                        int boundLeft = (int) (((mRectangle.left+mRectangle.right)/2)-(this.mTextPaint.measureText(section.getValueString())/2)-10 * mContext.getResources().getDisplayMetrics().density);
-                        int boundTop = (int) (mRectangle.top+(r2.top-r2.bottom)-18 * mContext.getResources().getDisplayMetrics().density);
-                        int boundRight = (int)(((mRectangle.left+mRectangle.right)/2)+(this.mTextPaint.measureText(section.getValueString())/2)+10 * mContext.getResources().getDisplayMetrics().density);
-                        popup.setBounds(boundLeft, boundTop, boundRight, mRectangle.top-stroke);
-                        popup.draw(canvas);
-
-                        canvas.drawText(
-                                section.getValueString(),
-                                (int)(((mRectangle.left+mRectangle.right)/2)-(this.mTextPaint.measureText(section.getValueString()))/2),
-                                mRectangle.top-(mRectangle.top - boundTop)/2f+(float)Math.abs(r2.top-r2.bottom)/2f*0.5f,
-                                this.mTextPaint);
-                    }
                     if (mIndexSelected == count && mListener != null) {
                         this.mPaint.setColor(Color.parseColor("#33B5E5"));
                         this.mPaint.setAlpha(100);
@@ -266,31 +258,31 @@ public class StackBarGraph extends View {
                     }
                     currentTop += (bottom-top);
 
-                    if(section.getValue() > 0)
+                    if(section.isDrawable())
                         currentTop += padding;
                 }
 
                 // Draw x-axis label text
                 mTextPaint.setColor(Color.argb(150, 0, 0, 0));
-                this.mTextPaint.setTextSize(AXIS_LABEL_FONT_SIZE * mContext.getResources().getDisplayMetrics().scaledDensity);
+                this.mTextPaint.setTextSize(AXIS_LABEL_FONT_SIZE * _context.getResources().getDisplayMetrics().scaledDensity);
                 int x = (int)(((mRectangle.left+mRectangle.right)/2)-(this.mTextPaint.measureText(bar.getName())/2));
-                int y = (int) (getHeight()-6 * mContext.getResources().getDisplayMetrics().scaledDensity);
+                int y = (int) (getHeight()-6 * _context.getResources().getDisplayMetrics().scaledDensity);
                 canvas.drawText(bar.getName(), x, y, this.mTextPaint);
                 count++;
             }
 
-            mShouldUpdate = false;
+            _shouldUpdate = false;
         }
         
-        ca.drawBitmap(mFullImage, 0, 0, null);
+        ca.drawBitmap(_fullImage, 0, 0, null);
         
     }
     
     @Override
     protected void onDetachedFromWindow()
     {
-    	if(mFullImage != null)
-    		mFullImage.recycle();
+    	if(_fullImage != null)
+    		_fullImage.recycle();
     	
     	super.onDetachedFromWindow();
     }

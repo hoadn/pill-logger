@@ -122,14 +122,14 @@ public class TrackerHelper {
         sendEvent(context, "Usage", "WidgetCreated", source);
     }
 
-    public static void updateUserProfile(Context context, int pills, List<Consumption> consumptions){
+    public static void updateUserProfile(Context context, int pills, List<Consumption> consumptions, Statistics statistics){
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         MixpanelAPI.People people = State.getSingleton().getMixpanelAPI().getPeople();
         people.setOnce("First Seen", new Date());
         people.set("Medicines", pills);
 
-        int totalConsumptions = Statistics.getInstance(context).getTotalConsumptions(consumptions);
+        int totalConsumptions = statistics.getTotalConsumptions(consumptions);
         people.set("Consumptions", totalConsumptions);
 
         String theme = defaultSharedPreferences.getString(context.getString(R.string.pref_key_theme_list), context.getString(R.string.professionalTheme));

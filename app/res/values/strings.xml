@@ -5,6 +5,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="pill_name_hint">Name</string>
+    <string name="note_hint">Note</string>
+    <string name="note_title_hint">Note Title</string>
     <string name="pill_size_hint">Size</string>
     <string name="units">g</string>
     <string name="add_button">Add</string>
@@ -138,6 +140,7 @@
     <string name="confirm_delete_title">Confirm Delete</string>
     <string name="confirm_delete_message">This will delete all history for this medication</string>
     <string name="info_dialog_edit_pill_title">Edit medicine</string>
+    <string name="info_dialog_notes_title">Notes</string>
     <string name="edit_pill_size_label">Size: </string>
     <string name="edit_pill_name_label">Name: </string>
     <string name="edit_pill_dialog_title">Edit Medicine Info</string>
@@ -167,6 +170,9 @@
     <string name="consumption_info_dialog_decrease_toast">Quantity decreased</string>
     <string name="pref_title_reverse_order">Reverse Medicine Sort Order</string>
     <string name="pref_key_reverse_order">reverse_order_key</string>
+    <string name="pref_title_relative_times">Relative Times</string>
+    <string name="pref_key_relative_times">relative_dates_key</string>
+    <string name="pref_summary_relative_times_prefix">e.g.</string>
     <string name="info_daily_title_units">Average daily units</string>
     <string name="info_daily_title_dosage">Average daily dosage</string>
     <string name="most_taken">Most Taken</string>
@@ -197,6 +203,8 @@
     <string name="twenty_four_hour_short_hand">24h: </string>
     <string name="edit_pill_fragment_title">Edit Medicine</string>
     <string name="new_pill_fragment_title">New Medicine</string>
+    <string name="new_note_fragment_title">New Note</string>
     <string name="edit_pill_summary_text">Edit name, dosage, colour etc.</string>
+    <string name="pill_notes_summary_text">View/edit notes for this medicine</string>
     <string name="info_dialog_take_again">Take again</string>
 </resources>

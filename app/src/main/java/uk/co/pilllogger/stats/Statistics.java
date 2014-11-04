@@ -2,6 +2,7 @@ package uk.co.pilllogger.stats;
 
 import android.content.Context;
 
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
@@ -15,19 +16,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import hugo.weaving.DebugLog;
 import uk.co.pilllogger.events.CreatedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionEvent;
 import uk.co.pilllogger.events.DeletedConsumptionGroupEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
+import uk.co.pilllogger.events.UpdatedStatisticsEvent;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
-import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.GetConsumptionsTask;
 
 /**
  * Created by nick on 07/03/14.
  */
+@Singleton
 public class Statistics{
 
     private Context _context;
@@ -45,18 +50,17 @@ public class Statistics{
     private int _longestStreakCache = -1;
     private int _currentStreakCache = -1;
 
-    private static Statistics _instance;
+    private final Bus _bus;
+    ConsumptionRepository _consumptionRepository;
+    private List<Consumption> _consumptions;
 
-    public static Statistics getInstance(Context context) {
-        if(_instance == null) {
-            _instance = new Statistics(context);
-            State.getSingleton().getBus().register(_instance);
-        }
-        return _instance;
-    }
-
-    private Statistics(Context context){
+    @Inject
+    public Statistics(Context context, Bus bus, ConsumptionRepository consumptionRepository){
         _context = context;
+        _bus = bus;
+        _consumptionRepository = consumptionRepository;
+
+        _bus.register(this);
     }
 
     private List<Consumption> filterConsumptions(Date startDate, Date endDate, List<Consumption> consumptions) {
@@ -282,7 +286,7 @@ public class Statistics{
         if (!(consumptions.size() > 0))
             return null;
         Collections.sort(consumptions);
-        consumptions = ConsumptionRepository.getSingleton(context).groupConsumptions(consumptions); //Need grouped consumptions for this to be accurate
+        consumptions = _consumptionRepository.groupConsumptions(consumptions); //Need grouped consumptions for this to be accurate
         Consumption lastConsumption = consumptions.get(0);
         Consumption firstConsumption = consumptions.get(consumptions.size() - 1);
 
@@ -433,6 +437,15 @@ public class Statistics{
     }
 
     public void refreshConsumptionCaches(List<Consumption> consumptions){
+        if(_consumptions == null){
+            _consumptions = new ArrayList<Consumption>();
+        }
+
+        if(_consumptions != consumptions) {
+            _consumptions.clear();
+            _consumptions.addAll(consumptions);
+        }
+
         _pillAmountsCache = null;
         _dayWithMostConsumptionsCache = -1;
         _hourWithMostConsumptionsCache = -1;
@@ -457,6 +470,8 @@ public class Statistics{
         getTotalConsumptions(consumptions);
         getLongestStreak(consumptions);
         getCurrentStreak(consumptions);
+
+        _bus.post(new UpdatedStatisticsEvent(consumptions));
     }
 
     private void refreshPillCaches(List<Consumption> consumptions){
@@ -467,41 +482,52 @@ public class Statistics{
 
     @Subscribe
     public void consumptionAdded(CreatedConsumptionEvent event) {
-        new GetConsumptionsTask(_context, new GetConsumptionsTask.ITaskComplete() {
-            @Override
-            public void consumptionsReceived(List<Consumption> consumptions) {
-                refreshConsumptionCaches(consumptions);
+        for(Consumption c : event.getConsumptions()){
+            if(_consumptions.contains(c)){
+                continue;
             }
-        }, false).execute();
+
+            _consumptions.add(c);
+        }
+
+        refreshConsumptionCaches(_consumptions);
     }
 
     @Subscribe
     public void consumptionDeleted(DeletedConsumptionEvent event) {
-        new GetConsumptionsTask(_context, new GetConsumptionsTask.ITaskComplete() {
-            @Override
-            public void consumptionsReceived(List<Consumption> consumptions) {
-                refreshConsumptionCaches(consumptions);
-            }
-        }, false).execute();
+        _consumptions.remove(event.getConsumption());
+
+        refreshConsumptionCaches(_consumptions);
     }
 
     @Subscribe
     public void consumptionPillGroupDeleted(DeletedConsumptionGroupEvent event) {
-        new GetConsumptionsTask(_context, new GetConsumptionsTask.ITaskComplete() {
-            @Override
-            public void consumptionsReceived(List<Consumption> consumptions) {
-                refreshConsumptionCaches(consumptions);
+        List<Consumption> removeConsumptions = new ArrayList<Consumption>();
+        for(Consumption c : _consumptions){
+            if(c.getPillId() == event.getPillId()
+                    && c.getGroup().equals(event.getGroup())){
+                removeConsumptions.add(c);
             }
-        }, false).execute();
+        }
+
+        _consumptions.removeAll(removeConsumptions);
+
+        refreshConsumptionCaches(_consumptions);
     }
 
-    @Subscribe
+    @Subscribe @DebugLog
     public void pillsUpdated(UpdatedPillEvent event) {
-        new GetConsumptionsTask(_context, new GetConsumptionsTask.ITaskComplete() {
-            @Override
-            public void consumptionsReceived(List<Consumption> consumptions) {
-                refreshPillCaches(consumptions);
+
+        for (Consumption consumption : _consumptions) {
+            Pill pill = consumption.getPill();
+
+            if(pill.getId() != event.getPill().getId()){
+                continue;
             }
-        }, false).execute();
+
+            pill.updateFromPill(event.getPill());
+        };
+
+        refreshConsumptionCaches(_consumptions);
     }
 }

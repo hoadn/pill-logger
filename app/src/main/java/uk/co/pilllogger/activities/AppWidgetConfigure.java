@@ -12,11 +12,15 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Subscribe;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -25,9 +29,11 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.AddConsumptionPillListAdapter;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.repositories.ConsumptionRepository;
+import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.GetPillsTask;
 import uk.co.pilllogger.views.ColourIndicator;
 import uk.co.pilllogger.widget.MyAppWidgetProvider;
 
@@ -50,6 +56,14 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements AddCon
     Intent _newIntent;
     private int _selectedColour = -1;
 
+    @Inject
+    ConsumptionRepository _consumptionRepository;
+    @Inject
+    PillRepository _pillRepository;
+
+    @Inject
+    JobManager _jobManager;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -65,7 +79,7 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements AddCon
         setupColourIndicators();
 
         this.setResult(RESULT_CANCELED);
-        new GetPillsTask(this).execute();
+        _jobManager.addJobInBackground(new LoadPillsJob());
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -83,7 +97,7 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements AddCon
         ListView pillsList = (ListView) findViewById(R.id.widget_configure_pill_list);
 
         if (pillsList != null) {
-            final AddConsumptionPillListAdapter adapter = new AddConsumptionPillListAdapter(this, this, R.layout.add_consumption_pill_list, event.getPills(), false);
+            final AddConsumptionPillListAdapter adapter = new AddConsumptionPillListAdapter(this, this, R.layout.add_consumption_pill_list, event.getPills(), false, _consumptionRepository);
             pillsList.setAdapter(adapter);
 
             View button = findViewById(R.id.widget_configure_add);
@@ -232,7 +246,7 @@ public class AppWidgetConfigure extends PillLoggerActivityBase implements AddCon
 
         editor.apply();
 
-        MyAppWidgetProvider.updateWidget(this, _appWidgetId, appWidgetManager);
+        MyAppWidgetProvider.updateWidget(this, _appWidgetId, appWidgetManager, _pillRepository);
 
         Intent resultValue = new Intent();
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, _appWidgetId);

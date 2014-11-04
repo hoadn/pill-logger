@@ -1,5 +1,7 @@
 package uk.co.pilllogger.events;
 
+import java.util.List;
+
 import uk.co.pilllogger.models.Consumption;
 
 /**
@@ -7,13 +9,14 @@ import uk.co.pilllogger.models.Consumption;
  * in uk.co.pilllogger.events.
  */
 public class CreatedConsumptionEvent {
-    private final Consumption _consumption;
+    private final List<Consumption> _consumptions;
 
-    public CreatedConsumptionEvent(Consumption consumption) {
-        _consumption = consumption;
+    public CreatedConsumptionEvent(List<Consumption> consumptions) {
+
+        _consumptions = consumptions;
     }
 
-    public Consumption getConsumption() {
-        return _consumption;
+    public List<Consumption> getConsumptions() {
+        return _consumptions;
     }
 }

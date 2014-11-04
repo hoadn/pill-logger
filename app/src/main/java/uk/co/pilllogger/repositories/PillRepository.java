@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 
+import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 
 import java.util.ArrayList;
@@ -16,6 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
 import uk.co.pilllogger.R;
@@ -23,39 +28,40 @@ import uk.co.pilllogger.database.DatabaseContract;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.models.Consumption;
+import uk.co.pilllogger.models.Note;
 import uk.co.pilllogger.models.Pill;
 
 /**
  * Created by alex on 14/11/2013.
  */
+@Singleton
 public class PillRepository extends BaseRepository<Pill>{
+
+    ConsumptionRepository _consumptionRepository;
+
     private static final String TAG = "PillRepository";
     private static PillRepository _instance;
     private Map<Integer, Pill> _cache = new ConcurrentHashMap<Integer, Pill>();
     private boolean _getAllCalled = false;
+    private Provider<Pill> _pillProvider;
 
     public boolean isCached(){
         return _cache != null && _cache.size() > 0 && _getAllCalled;
     }
 
-    private PillRepository(Context context){
-        super(context);
-    }
+    @Inject
+    NoteRepository _noteRepository;
 
-    public static PillRepository getSingleton(Context context) {
-        if (_instance == null) {
-            _instance = new PillRepository(context);
-        }
-        return _instance;
+    @Inject
+    public PillRepository(Context context, Bus bus, ConsumptionRepository consumptionRepository, Provider<Pill> pillProvider){
+        super(context, bus);
+        _consumptionRepository = consumptionRepository;
+        _pillProvider = pillProvider;
     }
 
     @Produce @DebugLog
     public LoadedPillsEvent produceLoadedPills(){
-        List<Pill> pills = new ArrayList<Pill>();
-
-        if(isCached()){
-            pills = getAll();
-        }
+        List<Pill> pills = getAll();
 
         return new LoadedPillsEvent(pills);
     }
@@ -92,7 +98,7 @@ public class PillRepository extends BaseRepository<Pill>{
     }
 
     protected Pill getFromCursor(Cursor c, boolean getConsumptions) {
-        Pill pill = new Pill();
+        Pill pill = _pillProvider.get();
         pill.setId(getInt(c, DatabaseContract.Pills._ID));
         pill.setName(getString(c, DatabaseContract.Pills.COLUMN_NAME));
         pill.setSize(getFloat(c, DatabaseContract.Pills.COLUMN_SIZE));
@@ -103,7 +109,7 @@ public class PillRepository extends BaseRepository<Pill>{
         pill.setFavourite(fav != 0);
 
         if(getConsumptions) {
-            List<Consumption> consumptions = ConsumptionRepository.getSingleton(_context).getForPill(pill);
+            List<Consumption> consumptions = _consumptionRepository.getForPill(pill);
             pill.getConsumptions().addAll(consumptions);
         }
 
@@ -166,9 +172,9 @@ public class PillRepository extends BaseRepository<Pill>{
                     new String[]{id});
         }
 
-        List<Consumption> pillConsumptions = ConsumptionRepository.getSingleton(_context).getForPill(pill);
+        List<Consumption> pillConsumptions = _consumptionRepository.getForPill(pill);
         for (Consumption consumption : pillConsumptions) {
-            ConsumptionRepository.getSingleton(_context).delete(consumption);
+            _consumptionRepository.delete(consumption);
         }
         notifyUpdated(pill, true);
     }
@@ -218,6 +224,17 @@ public class PillRepository extends BaseRepository<Pill>{
             c.close();
         }
 
+        List<Note> notes = _noteRepository.getAll();
+
+        for (Note note : notes) {
+            for (Pill pill : pills) {
+                if(pill.getId() == note.getPillId()) {
+                    pill.addNote(note);
+                    break;
+                }
+            }
+        }
+
         return pills;
     }
 
@@ -228,7 +245,7 @@ public class PillRepository extends BaseRepository<Pill>{
         return getList(selection, selectionArgs, true);
     }
 
-    @Override
+    @Override @DebugLog
     public List<Pill> getAll() {
         List<Pill> pills = getList(null, null, false);
         /*
@@ -271,14 +288,14 @@ public class PillRepository extends BaseRepository<Pill>{
                 public int compare(Pill pill1, Pill pill2) {
                     if ((pill1 == null && pill2 == null)
                             || pill1 == pill2
-                            || (pill1.getLatestConsumption(_context) == null && pill2.getLatestConsumption(_context) == null)) {
+                            || (pill1.getLatestConsumption(_consumptionRepository) == null && pill2.getLatestConsumption(_context) == null)) {
                         return 0;
                     }
                     if(pill1.getLatestConsumption(_context) == null)
                         return 1;
-                    if(pill2.getLatestConsumption(_context) == null)
+                    if(pill2.getLatestConsumption(_consumptionRepository) == null)
                         return -1;
-                    return pill2.getLatestConsumption(_context).getDate().compareTo(pill1.getLatestConsumption(_context).getDate());
+                    return pill2.getLatestConsumption(_consumptionRepository).getDate().compareTo(pill1.getLatestConsumption(_consumptionRepository).getDate());
                 }
             };
         }
@@ -288,12 +305,12 @@ public class PillRepository extends BaseRepository<Pill>{
                 public int compare(Pill pill1, Pill pill2) {
                     if ((pill1 == null && pill2 == null)
                             || pill1 == pill2
-                            || (pill1.getLatestConsumption(_context) == null && pill2.getLatestConsumption(_context) == null)) {
+                            || (pill1.getLatestConsumption(_consumptionRepository) == null && pill2.getLatestConsumption(_context) == null)) {
                         return 0;
                     }
                     if(pill1.getLatestConsumption(_context) == null)
                         return 1;
-                    if(pill2.getLatestConsumption(_context) == null)
+                    if(pill2.getLatestConsumption(_consumptionRepository) == null)
                         return -1;
                     return (((Integer)pill2.getConsumptions().size()).compareTo(pill1.getConsumptions().size()));
                 }
@@ -321,7 +338,5 @@ public class PillRepository extends BaseRepository<Pill>{
             _cache.remove(pill.getId());
         else
             _cache.put(pill.getId(), pill);
-
-        _bus.post(new UpdatedPillEvent(pill));
     }
 }

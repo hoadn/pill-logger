@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<style name="AppTheme" parent="@android:style/Theme.Material.Light">
+        &lt;!&ndash; All customizations that are NOT specific to a particular API-level can go here. &ndash;&gt;
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:actionBarStyle">@style/PartiallyTransparentActionBar</item>
+        <item name="android:actionBarTabStyle">@style/PartiallyTransparentActionBarTab</item>
+        <item name="android:actionBarTabBarStyle">@android:style/Widget.Holo.ActionBar.TabBar</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.Example</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu.Example</item>
+    </style>-->
+</resources>

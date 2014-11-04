@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +17,11 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.InjectView;
+import javax.inject.Inject;
+
 import hugo.weaving.DebugLog;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.UpdatedPillEvent;
@@ -33,7 +34,6 @@ import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.repositories.PillRepository;
-import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.views.ColourIndicator;
 import static butterknife.ButterKnife.findById;
 
@@ -41,7 +41,10 @@ import static butterknife.ButterKnife.findById;
  * Created by Alex on 22/05/2014
  * in uk.co.pilllogger.activities.
  */
-public class DialogActivity extends FragmentActivity{
+public class DialogActivity extends PillLoggerActivityBase{
+
+    @Inject
+    ConsumptionRepository _consumptionRepository;
 
     private static final String TAG = "DialogActivity";
     private Pill _pill;
@@ -58,15 +61,14 @@ public class DialogActivity extends FragmentActivity{
     private TextView _title;
     private TextView _lastTaken;
     private TextView _dosage;
-    private Bus _bus;
+    @Inject Bus _bus;
     private ViewGroup _dialogTop;
+    @Inject PillRepository _pillRepository;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_dialog);
-
-        _bus = State.getSingleton().getBus();
 
         Display display = getWindowManager().getDefaultDisplay();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
@@ -92,11 +94,6 @@ public class DialogActivity extends FragmentActivity{
 
         setFragment();
 
-        Typeface typeface = State.getSingleton().getTypeface();
-        _title.setTypeface(typeface);
-        _lastTaken.setTypeface(typeface);
-        _dosage.setTypeface(typeface);
-
         bindPill();
 
         setupStats();
@@ -106,7 +103,7 @@ public class DialogActivity extends FragmentActivity{
         if(_pill != null) {
             _colour.setColour(_pill.getColour());
 
-            Consumption lastConsumption = _pill.getLatestConsumption(this);
+            Consumption lastConsumption = _pill.getLatestConsumption(_consumptionRepository);
             if (lastConsumption != null) {
                 String lastTakenText = getString(R.string.info_dialog_last_taken) + " " + DateHelper.formatDateAndTime(this, lastConsumption.getDate());
                 lastTakenText += " " + DateHelper.getTime(this, lastConsumption.getDate());
@@ -138,7 +135,7 @@ public class DialogActivity extends FragmentActivity{
 
             int pillId = intent.getIntExtra("PillId", -1);
             if (pillId >= 0) {
-                _pill = PillRepository.getSingleton(this).get(pillId);
+                _pill = _pillRepository.get(pillId);
             }
 
             switch (dialogType) {
@@ -146,14 +143,16 @@ public class DialogActivity extends FragmentActivity{
                 case Consumption:
                     String consumptionGroup = intent.getStringExtra("ConsumptionGroup");
 
-                    List<Consumption> consumptions = ConsumptionRepository.getSingleton(this).getForGroup(consumptionGroup);
+                    List<Consumption> consumptions = _consumptionRepository.getForGroup(consumptionGroup, new ArrayList<Pill>());
 
-                    consumptions = ConsumptionRepository.getSingleton(this).groupConsumptions(consumptions);
+                    consumptions = _consumptionRepository.groupConsumptions(consumptions);
 
                     for (Consumption consumption : consumptions) {
                         if (consumption.getPillId() != pillId) {
                             continue;
                         }
+
+                        consumption.setPill(_pill);
 
                         fragment = new ConsumptionInfoDialogFragment(this, consumption);
                         break;
@@ -167,6 +166,7 @@ public class DialogActivity extends FragmentActivity{
                     _dialogTop.setVisibility(View.GONE);
                     fragment = new NewPillDialogFragment();
                     break;
+
             }
         }
 
@@ -191,22 +191,6 @@ public class DialogActivity extends FragmentActivity{
         super.onBackPressed();
     }
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-
-        State.getSingleton().setAppVisible(true);
-        _bus.register(this);
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-
-        State.getSingleton().setAppVisible(false);
-        _bus.unregister(this);
-    }
-
     private void setupStats() {
         _firstStats = (TextView) findViewById(R.id.pill_stats_7d);
         _firstStatsIndicator = (ImageView) findViewById(R.id.pill_stats_7d_indicator);
@@ -214,12 +198,6 @@ public class DialogActivity extends FragmentActivity{
         _secondStatsIndicator = (ImageView) findViewById(R.id.pill_stats_30d_indicator);
         _thirdStats = (TextView) findViewById(R.id.pill_stats_all_time);
         _statsTitle = (TextView) findViewById(R.id.info_dialog_daily_title);
-
-        Typeface typeface = State.getSingleton().getTypeface();
-        _firstStats.setTypeface(typeface);
-        _secondStats.setTypeface(typeface);
-        _thirdStats.setTypeface(typeface);
-        _statsTitle.setTypeface(typeface);
 
         _statsContainer = findViewById(R.id.pill_stats_container);
 

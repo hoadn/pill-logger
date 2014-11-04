@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 import java.util.Date;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.state.State;
 
 /**
  * Created by alex on 13/11/2013.
@@ -58,25 +59,48 @@ public class DateHelper {
     }
 
     public static String getRelativeDateTime(Context context, Date date, boolean isPrefixed){
-        return getRelativeDateTime(context, new DateTime(date), isPrefixed);
+        return getDateTimeStringImpl(context, new DateTime(date), isPrefixed, true);
     }
 
     public static String getRelativeDateTime(Context context, DateTime date){
-        return getRelativeDateTime(context, date, false);
+        return getDateTimeStringImpl(context, date, false, true);
     }
 
-    public static String getRelativeDateTime(Context context, DateTime date, boolean isPrefixed){
+    public static String getAbsoluteDateTime(Context context, Date date){
+        return getAbsoluteDateTime(context, date, false);
+    }
 
+    public static String getAbsoluteDateTime(Context context, Date date, boolean isPrefixed){
+        return getDateTimeStringImpl(context, new DateTime(date), isPrefixed, false);
+    }
+
+    public static String getAbsoluteDateTime(Context context, DateTime date){
+        return getDateTimeStringImpl(context, date, false, false);
+    }
+
+    public static String getUserPreferenceDateTime(Context context, Date date){
+        return getUserPreferenceDateTime(context, date, false);
+    }
+
+    public static String getUserPreferenceDateTime(Context context, Date date, boolean isPrefixed){
+        return getDateTimeStringImpl(context, new DateTime(date), isPrefixed, State.getSingleton().isUseRelativeTimes());
+    }
+
+    public static String getUserPreferenceDateTime(Context context, DateTime date){
+        return getDateTimeStringImpl(context, date, false, State.getSingleton().isUseRelativeTimes());
+    }
+
+    private static String getDateTimeStringImpl(Context context, DateTime date, boolean isPrefixed, boolean isRelative){
         String dateString;
         if (isDateInFuture(date)) {
             dateString = setAsDateAndTime(context, date);
         }
-        else if(date.plusHours(23).isAfterNow()){
+        else if(date.plusHours(23).isAfterNow() && isRelative){
             // hours ago
             long timeMs = System.currentTimeMillis() - date.getMillis();
             long minutes = timeMs / 1000 / 60;
-            String minutePlural = (minutes == 1) ? "minute" : "minutes";
-            dateString = String.valueOf(minutes) + " " + minutePlural + " ago";
+            String minuteSuffix = (minutes == 1) ? "m" : "m";
+            dateString = String.valueOf(minutes) + "" + minuteSuffix + " ago";
 
             if(minutes == 0)
                 dateString = context.getString(R.string.just_now);
@@ -84,11 +108,11 @@ public class DateHelper {
             if (minutes > 60) {
                 long hours = minutes / 60;
                 long leftOverMinutes = minutes % 60;
-                String hourPlural = (hours == 1) ? "hour" : "hours";
-                minutePlural = (leftOverMinutes == 1) ? "minute" : "minutes";
-                dateString = String.valueOf(hours) + " " + hourPlural + " ";
+                String hourSuffix = (hours == 1) ? "h" : "h";
+                minuteSuffix = (leftOverMinutes == 1) ? "m" : "m";
+                dateString = String.valueOf(hours) + "" + hourSuffix + " ";
                 if(minutes > 0)
-                    dateString += leftOverMinutes + " " + minutePlural;
+                    dateString += leftOverMinutes + "" + minuteSuffix;
                 dateString += " ago";
             }
         }
@@ -113,7 +137,7 @@ public class DateHelper {
     private static String setAsDateAndTime(Context context, DateTime date) {
         String dateString;
         // on {date}
-        dateString = (String)DateUtils.getRelativeTimeSpanString(context, date.getMillis(), true);
+        dateString = (String)DateUtils.getRelativeTimeSpanString(context, date.getMillis(), false);
 
         // at {time}
         return dateString += " " + DateUtils.getRelativeTimeSpanString(context, date.withDate(DateTime.now().year().get(), DateTime.now().monthOfYear().get(), DateTime.now().getDayOfMonth()).getMillis(), true);

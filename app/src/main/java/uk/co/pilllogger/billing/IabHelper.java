@@ -796,6 +796,9 @@ public class IabHelper {
     }
 
     int querySkuDetails(Inventory inv, List<String> moreSkus) throws RemoteException, JSONException {
+        if(mContext == null || mService == null){
+            return BILLING_RESPONSE_RESULT_BILLING_UNAVAILABLE;
+        }
         logDebug("Querying SKU details.");
         ArrayList<String> skuList = new ArrayList<String>();
         skuList.addAll(inv.getAllOwnedSkus());

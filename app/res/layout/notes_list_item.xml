@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground">
+    <TextView
+        android:id="@+id/create_note"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textSize="16dp"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:text="Create new note..."
+        android:textColor="@color/text_grey_medium"
+        android:visibility="gone"/>
+    <RelativeLayout
+        android:id="@+id/notes_item_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/notes_list_delete"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:paddingRight="10dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/cancel"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/notes_list_layout"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="5dp"
+            android:paddingLeft="10dp"
+            android:paddingBottom="5dp"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/notes_list_delete">
+            <TextView
+                android:id="@+id/notes_list_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                tools:text="Note Title"
+                android:textColor="@color/text_grey"/>
+            <TextView
+                android:id="@+id/notes_list_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                tools:text="11/3/2014 3:50PM"
+                android:visibility="visible"
+                android:textColor="@color/text_grey"/>
+            <TextView
+                android:id="@+id/notes_list_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                tools:text="This is some note text"
+                android:textColor="@color/text_grey_medium"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</RelativeLayout>

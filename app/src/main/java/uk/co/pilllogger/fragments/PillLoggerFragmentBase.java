@@ -12,7 +12,14 @@ import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
 import com.squareup.otto.Bus;
 
+import java.util.Arrays;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import dagger.ObjectGraph;
 import hugo.weaving.DebugLog;
+import uk.co.pilllogger.activities.PillLoggerActivityBase;
 import uk.co.pilllogger.state.State;
 
 /**
@@ -20,19 +27,42 @@ import uk.co.pilllogger.state.State;
  */
 public class PillLoggerFragmentBase extends Fragment {
     private Tracker tracker;
-    Bus _bus;
+    @Inject Bus _bus;
+    private Activity _activity;
+    private boolean _attached;
+    private ObjectGraph _fragmentGraph;
 
     @Override
-    public void onResume(){
-        super.onResume();
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        _activity = activity;
+
+        if(!_attached){
+            PillLoggerActivityBase pillLoggerActivityBase = (PillLoggerActivityBase) activity;
+            _fragmentGraph = pillLoggerActivityBase.getActivityGraph().plus(getModules().toArray());
+            _fragmentGraph.inject(this);
+
+            _attached = true;
+        }
 
         _bus.register(this);
     }
 
     @Override
-    public void onPause(){
-        _bus.unregister(this);
+    public void onDetach() {
+        super.onDetach();
 
+        _bus.unregister(this);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+    }
+
+    @Override
+    public void onPause(){
         super.onPause();
     }
 
@@ -42,13 +72,13 @@ public class PillLoggerFragmentBase extends Fragment {
         super.onCreate(savedInstanceState);
 
         this.tracker = EasyTracker.getInstance(this.getActivity());
-
-        _bus = State.getSingleton().getBus();
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
+
+        _fragmentGraph = null;
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
@@ -71,5 +101,9 @@ public class PillLoggerFragmentBase extends Fragment {
             }
             catch(Exception ignored){}
         }
+    }
+
+    protected List<Object> getModules() {
+        return Arrays.<Object>asList();
     }
 }

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -12,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.path.android.jobqueue.JobManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -23,11 +23,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.events.LoadedConsumptionsEvent;
+import uk.co.pilllogger.events.LoadedMaxDosagesEvent;
 import uk.co.pilllogger.events.LoadedPillsEvent;
 import uk.co.pilllogger.events.PurchasedFeatureEvent;
 import uk.co.pilllogger.fragments.ExportMainFragment;
 import uk.co.pilllogger.helpers.DateHelper;
+import uk.co.pilllogger.jobs.LoadConsumptionsJob;
+import uk.co.pilllogger.jobs.LoadMaxDosagesJob;
+import uk.co.pilllogger.jobs.LoadPillsJob;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.ExportSettings;
 import uk.co.pilllogger.models.Pill;
@@ -35,19 +42,15 @@ import uk.co.pilllogger.repositories.PillRepository;
 import uk.co.pilllogger.services.IExportService;
 import uk.co.pilllogger.state.FeatureType;
 import uk.co.pilllogger.state.State;
-import uk.co.pilllogger.tasks.GetConsumptionsTask;
 import uk.co.pilllogger.tasks.GetMaxDosagesTask;
-import uk.co.pilllogger.tasks.GetPillsTask;
 
 /**
  * Created by Alex on 22/05/2014
  * in uk.co.pilllogger.activities.
  */
-public class ExportActivity extends FragmentActivity
+public class ExportActivity extends PillLoggerActivityBase
         implements
-        IExportService,
-        GetMaxDosagesTask.ITaskComplete,
-        GetConsumptionsTask.ITaskComplete {
+        IExportService {
 
     private static final String TAG = "ExportActivity";
     private List<Pill> _pillsList;
@@ -56,21 +59,20 @@ public class ExportActivity extends FragmentActivity
     private List<Consumption> _consumptions;
     private TextView _exportUnlockTitle;
     private TextView _exportSubTitle;
-    private Bus _bus;
+    @Inject Bus _bus;
+    @Inject PillRepository _pillRepository;
+    @Inject JobManager _jobManager;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_export);
 
-        if (!PillRepository.getSingleton(this).isCached()) {
-            new GetPillsTask(this).execute();
+        if (_pillRepository.isCached() == false) {
+            _jobManager.addJobInBackground(new LoadPillsJob());
         }
 
-        _bus = State.getSingleton().getBus();
-
-        new GetConsumptionsTask(this, this, true).execute();
-        new GetMaxDosagesTask(this, this).execute();
+        _jobManager.addJobInBackground(new LoadConsumptionsJob(true));
         Display display = getWindowManager().getDefaultDisplay();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
         Point size = new Point();
@@ -103,22 +105,6 @@ public class ExportActivity extends FragmentActivity
         if(State.getSingleton().hasFeature(FeatureType.export)){
             _exportUnlockTitle.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-
-        State.getSingleton().setAppVisible(true);
-        _bus.register(this);
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-
-        State.getSingleton().setAppVisible(false);
-        _bus.unregister(this);
     }
 
     @Subscribe
@@ -297,14 +283,9 @@ public class ExportActivity extends FragmentActivity
         return _exportSubTitle;
     }
 
-    @Override
-    public void maxConsumptionsReceived(Map<Integer, Integer> pillConsumptionMaxQuantityMap) {
-        _maxDosages = pillConsumptionMaxQuantityMap;
-    }
-
-    @Override
-    public void consumptionsReceived(List<Consumption> consumptions) {
-        _consumptions = consumptions;
+    @Subscribe
+    public void consumptionsReceived(LoadedConsumptionsEvent event) {
+        _consumptions = event.getConsumptions();
     }
 
     @Override

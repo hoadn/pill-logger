@@ -39,7 +39,7 @@ public class State {
     private MixpanelAPI _mixpanelAPI = null;
     private IabHelper _iabHelper;
     private boolean _isDebuggable;
-    private Bus _bus;
+    private boolean _useRelativeTimes = true;
 
     private State() {
     }
@@ -184,12 +184,12 @@ public class State {
         return _isDebuggable;
     }
 
-    public Bus getBus(){
-        if(_bus == null){
-            _bus = new AndroidBus(ThreadEnforcer.ANY);
-        }
+    public boolean isUseRelativeTimes() {
+        return _useRelativeTimes;
+    }
 
-        return _bus;
+    public void setUseRelativeTimes(boolean useRelativeTimes) {
+        _useRelativeTimes = useRelativeTimes;
     }
 }
 

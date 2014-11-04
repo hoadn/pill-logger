@@ -7,6 +7,8 @@ import android.widget.ListView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.PillRepository;
 
@@ -16,6 +18,7 @@ import uk.co.pilllogger.repositories.PillRepository;
 public class PillItemClickListener implements ListView.OnItemClickListener {
 
     Activity _activity;
+    @Inject PillRepository _pillRepository;
 
     public PillItemClickListener(Activity activity) {
         _activity = activity;
@@ -23,8 +26,7 @@ public class PillItemClickListener implements ListView.OnItemClickListener {
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        PillRepository dbHelper = PillRepository.getSingleton(_activity);
-        List<Pill> pills = dbHelper.getAll();
+        List<Pill> pills = _pillRepository.getAll();
         onItemSelected(pills.get(i).getId());
     }
 

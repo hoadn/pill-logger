@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.state.State;
 
@@ -17,14 +18,14 @@ import uk.co.pilllogger.state.State;
  * Created by alex on 12/11/2013.
  */
 public abstract class ActionBarArrayAdapter<T> extends ArrayAdapter<T>{
-    protected Activity _activity;
+    protected Context _context;
     protected int _resourceId;
     protected List<T> _data;
     private List<Integer> _selectedItems;
 
-    public ActionBarArrayAdapter(Activity activity, int resourceId, List<T> objects) {
-        super(activity, resourceId, objects);
-        _activity = activity;
+    public ActionBarArrayAdapter(Context context, int resourceId, List<T> objects) {
+        super(context, resourceId, objects);
+        _context = context;
         _resourceId = resourceId;
         _data = objects;
         _selectedItems = new ArrayList<Integer>();
@@ -38,7 +39,7 @@ public abstract class ActionBarArrayAdapter<T> extends ArrayAdapter<T>{
 
         View selector = v;
         if (v == null) {
-            LayoutInflater inflater = (LayoutInflater) _activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(_resourceId, null);
 
             ViewHolder viewHolder = initViewHolder(v);

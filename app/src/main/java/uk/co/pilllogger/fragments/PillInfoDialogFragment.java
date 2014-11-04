@@ -26,6 +26,8 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
     private TextView _editPillSummary;
     private TextView _deletePillSummary;
     private TextView _addConsumptionSummary;
+    private TextView _pillNotesTitle;
+    private TextView _pillNotesSummary;
 
     public PillInfoDialogFragment() {
         super();
@@ -56,8 +58,11 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
         _deletePillSummary = (TextView) activity.findViewById(R.id.info_dialog_delete_pill_summary);
         _editPill = (TextView) activity.findViewById(R.id.info_dialog_edit_pill_title);
         _editPillSummary = (TextView) activity.findViewById(R.id.info_dialog_edit_pill_summary);
+        _pillNotesTitle = (TextView) activity.findViewById(R.id.info_dialog_notes_title);
+        _pillNotesSummary = (TextView) activity.findViewById(R.id.info_dialog_notes_summary);
 
         View editPillContainer = activity.findViewById(R.id.info_dialog_edit_pill);
+        View notesPillContainer = activity.findViewById(R.id.info_dialog_notes);
         View addConsumptionContainer = activity.findViewById(R.id.info_dialog_take_now);
         View deletePillContainer = activity.findViewById(R.id.info_dialog_delete_pill);
 
@@ -74,18 +79,33 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
             @Override @DebugLog
             public void onClick(View v) {
                 _bus.post(new CreateConsumptionEvent(_pill, PillInfoDialogFragment.this));
+                activity.finish();
             }
         });
         deletePillContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 _bus.post(new DeletePillEvent(_pill, PillInfoDialogFragment.this));
+                activity.finish();
             }
         });
         editPillContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EditPillFragment fragment = new EditPillFragment(_pill);
+                FragmentManager fm = PillInfoDialogFragment.this.getActivity().getFragmentManager();
+                fm.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)
+                        .replace(R.id.export_container, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
+        notesPillContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NotesListFragment fragment = new NotesListFragment(_pill);
                 FragmentManager fm = PillInfoDialogFragment.this.getActivity().getFragmentManager();
                 fm.beginTransaction()
                         .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)
@@ -104,5 +124,7 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
         _deletePillSummary.setTypeface(typeface);
         _editPill.setTypeface(typeface);
         _editPillSummary.setTypeface(typeface);
+        _pillNotesTitle.setTypeface(typeface);
+        _pillNotesSummary.setTypeface(typeface);
     }
 }

@@ -1,12 +1,13 @@
 package uk.co.pilllogger.models;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 /**
  * Created by nick on 22/10/13.
  */
-public class Consumption implements Comparable {
+public class Consumption implements Comparable, Serializable {
 
     private Pill _pill;
     private Date _date;
@@ -111,9 +112,9 @@ public class Consumption implements Comparable {
 
         Consumption that = (Consumption) o;
 
-        if (_id != that._id) return false;
         if (_date != null ? !_date.equals(that._date) : that._date != null) return false;
         if (_group != null ? !_group.equals(that._group) : that._group != null) return false;
+        if (getPillId() != that.getPillId()) return false;
 
         return true;
     }
@@ -124,5 +125,18 @@ public class Consumption implements Comparable {
         result = 31 * result + _id;
         result = 31 * result + (_group != null ? _group.hashCode() : 0);
         return result;
+    }
+
+    public void incrementQuantity(){
+        ++_quantity;
+    }
+
+    public void decrementQuantity(){
+        --_quantity;
+
+        if(_quantity < 1){
+            _quantity = 1;
+        }
+
     }
 }
