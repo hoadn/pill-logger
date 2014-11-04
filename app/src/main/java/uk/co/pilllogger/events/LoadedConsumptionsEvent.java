@@ -12,6 +12,7 @@ import uk.co.pilllogger.models.Consumption;
 public class LoadedConsumptionsEvent {
     private String _group = null;
     private List<Consumption> _consumptions;
+    private boolean _loadedFromDb = true;
 
     public LoadedConsumptionsEvent(List<Consumption> consumptions) {
         _consumptions = consumptions;
@@ -31,5 +32,13 @@ public class LoadedConsumptionsEvent {
 
     public String getGroup() {
         return _group;
+    }
+
+    public boolean isLoadedFromDb() {
+        return _loadedFromDb;
+    }
+
+    public void setLoadedFromDb(boolean _loadedFromDb) {
+        this._loadedFromDb = _loadedFromDb;
     }
 }

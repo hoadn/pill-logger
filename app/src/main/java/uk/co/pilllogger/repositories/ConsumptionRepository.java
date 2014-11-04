@@ -72,7 +72,9 @@ public class ConsumptionRepository extends BaseRepository<Consumption>{
             consumptions = groupConsumptions(consumptions);
         }
 
-        return new LoadedConsumptionsEvent(consumptions);
+        LoadedConsumptionsEvent loadedConsumptionsEvent = new LoadedConsumptionsEvent(consumptions);
+        loadedConsumptionsEvent.setLoadedFromDb(_getAllCalled);
+        return loadedConsumptionsEvent;
     }
 
     @Override

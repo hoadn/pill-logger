@@ -486,7 +486,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
     @Subscribe
     public void consumptionsReceived(LoadedConsumptionsEvent event){
-        if(_firstLoad == false){
+        if(_firstLoad == false || event.isLoadedFromDb() == false){
             return;
         }
 
