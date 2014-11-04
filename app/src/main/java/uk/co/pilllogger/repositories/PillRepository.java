@@ -288,10 +288,10 @@ public class PillRepository extends BaseRepository<Pill>{
                 public int compare(Pill pill1, Pill pill2) {
                     if ((pill1 == null && pill2 == null)
                             || pill1 == pill2
-                            || (pill1.getLatestConsumption(_consumptionRepository) == null && pill2.getLatestConsumption(_context) == null)) {
+                            || (pill1.getLatestConsumption(_consumptionRepository) == null && pill2.getLatestConsumption(_consumptionRepository) == null)) {
                         return 0;
                     }
-                    if(pill1.getLatestConsumption(_context) == null)
+                    if(pill1.getLatestConsumption(_consumptionRepository) == null)
                         return 1;
                     if(pill2.getLatestConsumption(_consumptionRepository) == null)
                         return -1;
@@ -305,10 +305,10 @@ public class PillRepository extends BaseRepository<Pill>{
                 public int compare(Pill pill1, Pill pill2) {
                     if ((pill1 == null && pill2 == null)
                             || pill1 == pill2
-                            || (pill1.getLatestConsumption(_consumptionRepository) == null && pill2.getLatestConsumption(_context) == null)) {
+                            || (pill1.getLatestConsumption(_consumptionRepository) == null && pill2.getLatestConsumption(_consumptionRepository) == null)) {
                         return 0;
                     }
-                    if(pill1.getLatestConsumption(_context) == null)
+                    if(pill1.getLatestConsumption(_consumptionRepository) == null)
                         return 1;
                     if(pill2.getLatestConsumption(_consumptionRepository) == null)
                         return -1;
