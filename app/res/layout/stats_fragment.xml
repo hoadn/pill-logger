@@ -245,7 +245,7 @@
     <LinearLayout
         android:id="@+id/stats_total"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical">
         <TextView
@@ -267,7 +267,7 @@
         <LinearLayout
             android:id="@+id/stats_longest_consecutive"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
             <TextView
@@ -294,7 +294,7 @@
         <LinearLayout
             android:id="@+id/stats_current_consecutive"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
             <TextView

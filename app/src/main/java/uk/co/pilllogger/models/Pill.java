@@ -359,7 +359,7 @@ public class Pill implements Serializable {
         if(days == 0)
             days = totalDays;
 
-        if(days > totalDays)
+        if(days > totalDays && totalDays != 0)
             days = totalDays;
 
         int hours = days * 24;
