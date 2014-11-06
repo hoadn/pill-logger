@@ -197,7 +197,8 @@ public class GraphHelper {
     }
 
     public static void plotStackBarGraph(Map<Pill, SparseIntArray> data, int days, StackBarGraph view, int lineColour) {
-        view.setNoData(data.size() == 0);
+        boolean noData = data.size() == 0;
+        view.setNoData(noData);
 
         view.setLineColour(lineColour);
 
@@ -279,7 +280,7 @@ public class GraphHelper {
             }
 
             view.setShowBarText(false);
-            view.setBars(bars);
+            view.setBars(bars, noData);
             view.setShouldDrawGrid(true);
         }
     }

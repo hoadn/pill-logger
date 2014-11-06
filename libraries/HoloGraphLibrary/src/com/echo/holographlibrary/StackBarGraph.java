@@ -103,9 +103,9 @@ public class StackBarGraph extends View {
         mShowBarText = show;
     }
 
-    public void setBars(List<StackBar> points){
+    public void setBars(List<StackBar> points, boolean noData){
         this._stackBars = points;
-        _noData = false;
+        _noData = noData;
         _shouldUpdate = true;
         removeCallbacks(animator);
         post(animator);
@@ -132,9 +132,9 @@ public class StackBarGraph extends View {
             if (_noData) {
                 Paint textPaint = new Paint();
                 textPaint.setTextSize(16 * density);
-                textPaint.setColor(Color.WHITE);
+                textPaint.setColor(Color.BLACK);
                 textPaint.setAntiAlias(true);
-                String noConsumptions = "No Consumptions in the past 7 days";
+                String noConsumptions = "Nothing recorded in the past 7 days";
                 float textWidth = textPaint.measureText(noConsumptions);
                 Rect bounds = new Rect();
                 textPaint.getTextBounds("a", 0, 1, bounds);
