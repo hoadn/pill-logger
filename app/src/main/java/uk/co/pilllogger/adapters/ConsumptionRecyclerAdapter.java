@@ -30,6 +30,7 @@ import uk.co.pilllogger.events.TakeConsumptionAgainEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.NumberHelper;
+import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.views.ColourIndicator;
@@ -136,6 +137,8 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
 
         _consumptions.add(0, eventConsumption);
 
+        TrackerHelper.addConsumptionEvent(_context, "DialogTakeAgain");
+
         notifyItemRangeInserted(0, 1);
     }
 
@@ -164,6 +167,8 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
         }
         _consumptions.removeAll(toRemove);
         notifyItemRangeRemoved(indexOf, count);
+
+        TrackerHelper.deleteConsumptionEvent(_context, "DialogDelete");
     }
 
     @Subscribe @DebugLog
@@ -173,6 +178,8 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
         _consumptions.get(indexOf).incrementQuantity();
 
         notifyItemRangeChanged(indexOf, 1);
+
+        TrackerHelper.addConsumptionEvent(_context, "DialogIncrease");
     }
 
     @Subscribe @DebugLog
@@ -182,6 +189,8 @@ public class ConsumptionRecyclerAdapter extends RecyclerView.Adapter<Consumption
         _consumptions.get(indexOf).decrementQuantity();
 
         notifyItemRangeChanged(indexOf, 1);
+
+        TrackerHelper.deleteConsumptionEvent(_context, "DialogDecrease");
     }
 
     @Subscribe @DebugLog

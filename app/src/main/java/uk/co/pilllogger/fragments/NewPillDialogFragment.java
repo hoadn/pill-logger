@@ -23,6 +23,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.jobs.InsertPillJob;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
@@ -56,6 +57,8 @@ public class NewPillDialogFragment extends PillLoggerFragmentBase {
 
     Pill _newPill;
     @Inject JobManager _jobManager;
+
+    @Inject Context _context;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -144,6 +147,7 @@ public class NewPillDialogFragment extends PillLoggerFragmentBase {
 
         if (_newPill.getName().equals("") == false) {
             _jobManager.addJobInBackground(new InsertPillJob(_newPill));
+            TrackerHelper.createPillEvent(_context, "PillListFragment");
         }
 
         activity.finish();
