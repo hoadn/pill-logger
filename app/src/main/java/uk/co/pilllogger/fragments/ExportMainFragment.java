@@ -165,7 +165,7 @@ public class ExportMainFragment extends ExportFragmentBase {
                         return;
                     }
 
-                    SkuDetails exportSkuDetails = State.getSingleton().getAvailableFeatures().get(FeatureType.export);
+                    final SkuDetails exportSkuDetails = State.getSingleton().getAvailableFeatures().get(FeatureType.export);
                     if(exportSkuDetails != null) {
                         billingHelper.launchPurchaseFlow(activity, exportSkuDetails.getSku(), 10001, new IabHelper.OnIabPurchaseFinishedListener() {
                             @Override
@@ -183,6 +183,16 @@ public class ExportMainFragment extends ExportFragmentBase {
                                 _bus.post(new PurchasedFeatureEvent(FeatureType.export));
 
                                 setExportButtonText();
+
+                                try {
+                                    double charge = Double.parseDouble(exportSkuDetails.getPrice());
+                                    if (charge > 0) {
+                                        TrackerHelper.trackPurchase(FeatureType.export.name(), charge);
+                                    }
+                                }
+                                catch(Exception ex){
+                                    Timber.e(ex, "Tracking the purchase failed");
+                                }
                             }
                         }, TrackerHelper.getUniqueId(activity));
                     }

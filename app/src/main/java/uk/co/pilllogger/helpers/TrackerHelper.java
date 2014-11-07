@@ -98,12 +98,16 @@ public class TrackerHelper {
         sendEvent(context, "Usage", "CreatePill", source);
     }
 
-    public static void updatePillColourEvent(Context context, String source){
-        sendEvent(context, "Usage", "UpdatePillColour", source);
+    public static void updatePillEvent(Context context){
+        sendEvent(context, "Usage", "UpdatePill", "EditPillDialog");
     }
 
     public static void deletePillEvent(Context context, String source){
         sendEvent(context, "Usage", "DeletePill", source);
+    }
+
+    public static void exportDataEvent(Context context){
+        sendEvent(context, "Usage", "ExportData", "ExportDialog");
     }
 
     public static void showInfoDialogEvent(Context context, String source){
@@ -142,6 +146,19 @@ public class TrackerHelper {
         people.set("Reversed Sort Order", reversedOrder);
 
         Timber.v("DistinctId ProfileUpdate: " + people.getDistinctId());
+    }
+
+    public static void trackPurchase(String type, double charge){
+        MixpanelAPI.People people = State.getSingleton().getMixpanelAPI().getPeople();
+
+        JSONObject props = new JSONObject();
+        try {
+            props.put("Type", type);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        people.trackCharge(charge, props);
     }
 
     public static MixpanelAPI initMixPanel(Context context){
