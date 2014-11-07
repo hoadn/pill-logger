@@ -124,6 +124,11 @@ public class StackBarGraph extends View {
     }
 
     public void onDraw(Canvas ca) {
+
+        if(getHeight() <= 0){
+            return;
+        }
+
         if (_fullImage == null || _shouldUpdate) {
             float density = _context.getResources().getDisplayMetrics().density;
             _fullImage = Bitmap.createBitmap(getWidth(), getHeight(), Config.ARGB_8888);
