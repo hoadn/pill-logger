@@ -173,6 +173,8 @@
     <string name="pref_title_relative_times">Relative Times</string>
     <string name="pref_key_relative_times">relative_dates_key</string>
     <string name="pref_summary_relative_times_prefix">e.g.</string>
+    <string name="pref_title_graph_height">Graph Height</string>
+    <string name="pref_key_graph_height">graph_height_key</string>
     <string name="info_daily_title_units">Average daily units</string>
     <string name="info_daily_title_dosage">Average daily dosage</string>
     <string name="most_taken">Most Taken</string>
@@ -207,4 +209,13 @@
     <string name="edit_pill_summary_text">Edit name, dosage, colour etc.</string>
     <string name="pill_notes_summary_text">View/edit notes for this medicine</string>
     <string name="info_dialog_take_again">Take again</string>
+
+    <string name="hidden">Hidden</string>
+    <string name="small">Small</string>
+    <string name="medium">Medium</string>
+    <string name="large">Large</string>
+    <string name="huge">Huge</string>
+
+
+    <integer name="default_graph_height">150</integer>
 </resources>

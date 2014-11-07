@@ -35,4 +35,10 @@
     <dimen name="default_list_item_height">72dp</dimen>
     <dimen name="new_pill_name_container_width">180dp</dimen>
     <dimen name="pill_name_container_width">140dp</dimen>
+
+    <integer name="graph_hidden">0</integer>
+    <integer name="graph_small">100</integer>
+    <integer name="graph_medium">150</integer>
+    <integer name="graph_large">200</integer>
+    <integer name="graph_huge">250</integer>
 </resources>

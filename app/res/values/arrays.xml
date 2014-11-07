@@ -20,4 +20,18 @@
         <item>@string/order_created</item>
         <item>@string/most_taken</item>
     </string-array>
+    <string-array name="pref_array_graph_heights">
+        <item>@string/hidden</item>
+        <item>@string/small</item>
+        <item>@string/medium</item>
+        <item>@string/large</item>
+        <item>@string/huge</item>
+    </string-array>
+    <integer-array name="pref_array_graph_heights_values">
+        <item>@integer/graph_hidden</item>
+        <item>@integer/graph_small</item>
+        <item>@integer/graph_medium</item>
+        <item>@integer/graph_large</item>
+        <item>@integer/graph_huge</item>
+    </integer-array>
 </resources>

@@ -671,9 +671,9 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         if(key.equals(getString(R.string.pref_key_relative_times))){
             setRelativeTimesPreference();
-
-            _bus.post(new PreferencesChangedEvent());
         }
+
+        _bus.post(new PreferencesChangedEvent(sharedPreferences, key));
     }
 
     private void setRelativeTimesPreference() {

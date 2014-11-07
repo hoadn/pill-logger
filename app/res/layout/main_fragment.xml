@@ -26,7 +26,7 @@
     <com.echo.holographlibrary.StackBarGraph
         android:id="@+id/consumption_graph"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="250dp"
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"/>
 

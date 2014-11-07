@@ -25,6 +25,14 @@
         <CheckBoxPreference
             android:title="@string/pref_title_reverse_order"
             android:key="@string/pref_key_reverse_order"/>
+        <uk.co.pilllogger.preferences.SummaryListPreference
+            android:title="@string/pref_title_graph_height"
+            android:dialogTitle="@string/pref_title_graph_height"
+            android:entries="@array/pref_array_graph_heights"
+            android:entryValues="@array/pref_array_graph_heights"
+            android:defaultValue="Medium"
+            android:key="@string/pref_key_graph_height"
+            android:persistent="true"/>
         <CheckBoxPreference
             android:title="@string/pref_title_relative_times"
             android:key="@string/pref_key_relative_times"

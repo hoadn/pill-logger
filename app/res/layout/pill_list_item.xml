@@ -7,7 +7,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="0dp"
     android:id="@+id/selector_container"
-    android:background="@drawable/consumption_background">
+    android:background="@color/transparent">
     <LinearLayout
         android:orientation="horizontal"
         android:tag="selector"

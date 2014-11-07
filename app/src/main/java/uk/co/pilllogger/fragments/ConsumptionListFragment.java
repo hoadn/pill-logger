@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -61,6 +62,7 @@ import uk.co.pilllogger.events.TakeConsumptionAgainEvent;
 import uk.co.pilllogger.events.UpdatedPillEvent;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.GraphHelper;
+import uk.co.pilllogger.helpers.LayoutHelper;
 import uk.co.pilllogger.helpers.TrackerHelper;
 import uk.co.pilllogger.jobs.DeleteConsumptionJob;
 import uk.co.pilllogger.jobs.InsertConsumptionsJob;
@@ -131,6 +133,8 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase {
 
         _graph = findById(v, R.id.consumption_graph);
 
+        setGraphHeight();
+
         _progress = findById(v, R.id.consumption_progress);
 
         _progress.show();
@@ -151,6 +155,30 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase {
         _noConsumption = (TextView) v.findViewById(R.id.no_consumption_text);
 
         return v;
+    }
+
+    private void setGraphHeight() {
+        String graphKey = _context.getString(R.string.pref_key_graph_height);
+        String graphHeight = PreferenceManager.getDefaultSharedPreferences(_context).getString(graphKey, "150");
+        int graphHeightDp = 150;
+
+        if(graphHeight.equals(_context.getString(R.string.huge))){
+            graphHeightDp = _context.getResources().getInteger(R.integer.graph_huge);
+        }
+        if(graphHeight.equals(_context.getString(R.string.large))){
+            graphHeightDp = _context.getResources().getInteger(R.integer.graph_large);
+        }
+        if(graphHeight.equals(_context.getString(R.string.medium))){
+            graphHeightDp = _context.getResources().getInteger(R.integer.graph_medium);
+        }
+        if(graphHeight.equals(_context.getString(R.string.small))){
+            graphHeightDp = _context.getResources().getInteger(R.integer.graph_small);
+        }
+        if(graphHeight.equals(_context.getString(R.string.hidden))){
+            graphHeightDp = _context.getResources().getInteger(R.integer.graph_hidden);
+        }
+
+        _graph.getLayoutParams().height = (int) LayoutHelper.dpToPx(_context, graphHeightDp);
     }
 
     @Override
@@ -507,6 +535,10 @@ public class ConsumptionListFragment extends PillLoggerFragmentBase {
     public void preferencesChanged(PreferencesChangedEvent event){
         if(_adapter != null){
             _adapter.notifyDataSetChanged();
+        }
+
+        if(event.getKey().equals(_context.getString(R.string.pref_key_graph_height))){
+            setGraphHeight();
         }
     }
 }
