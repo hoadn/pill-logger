@@ -1,34 +1,24 @@
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:background="@color/action_bar"
     >
-    <RelativeLayout
-        android:id="@+id/colour_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <RelativeLayout
-            android:id="@+id/main_gradient"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="@dimen/action_bar_height"
-            android:paddingBottom="@dimen/action_bar_bottom_padding">
-            <uk.co.pilllogger.views.MyViewPager
-                android:id="@+id/fragment_pager"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent">
-            </uk.co.pilllogger.views.MyViewPager>
+    <uk.co.pilllogger.views.MyViewPager
+        android:id="@+id/fragment_pager"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+    </uk.co.pilllogger.views.MyViewPager>
 
-            <LinearLayout
-                android:id="@+id/fragment_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-            </LinearLayout>
-        </RelativeLayout>
-    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+    </LinearLayout>
     <RelativeLayout
         android:id="@+id/tutorial_layout"
         android:layout_width="match_parent"
@@ -59,4 +49,4 @@
 
 
     </RelativeLayout>
-</RelativeLayout>
+</FrameLayout>

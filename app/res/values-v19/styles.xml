@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppThemeLight" parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/PartiallyTransparentActionBar</item>
+        <item name="android:actionBarTabStyle">@style/PartiallyTransparentActionBarTab</item>
+        <item name="android:actionBarTabBarStyle">@android:style/Widget.Holo.ActionBar.TabBar</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+</resources>

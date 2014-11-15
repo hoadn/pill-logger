@@ -92,7 +92,7 @@ public class MainActivity extends PillLoggerActivityBase implements
     private int _colour1 = Color.argb(120, 0, 233, 255);
     private int _colour2 = Color.argb(120, 204, 51, 153);
     private int _colour3 = Color.argb(120, 81, 81, 81);
-    View _colourBackground;
+    View _background;
     private Menu _menu;
     private TutorialService _tutorialService;
     private boolean _themeChanged;
@@ -116,7 +116,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         ViewGroup wrapper = setContentViewWithWrapper(R.layout.activity_main);
         this.setTitle("Consumption");
-        _colourBackground = findViewById(R.id.colour_background);
+        _background = findViewById(R.id.drawer_layout);
 
         Typeface ttf = Typeface.create("sans-serif-condensed", Typeface.NORMAL);
         Typeface roboto = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Light.ttf");
@@ -134,7 +134,6 @@ public class MainActivity extends PillLoggerActivityBase implements
                     public void onPageScrollStateChanged(int state) {
                         super.onPageScrollStateChanged(state);
                         if (state == ViewPager.SCROLL_STATE_IDLE) {
-                            setBackgroundColour();
                         }
                     }
 
@@ -163,7 +162,6 @@ public class MainActivity extends PillLoggerActivityBase implements
         if(savedInstanceState != null) {
             Log.d(TAG, "Loading instance");
             _fragmentPager.setCurrentItem(savedInstanceState.getInt("item"));
-            setBackgroundColour();
         }
 
         View tutorial = findViewById(R.id.tutorial_layout);
@@ -182,7 +180,7 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         int tabMaskColour = getResources().getColor(State.getSingleton().getTheme().getTabMaskColourResourceId());
 
-        _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_colourBackground, this, tabMaskColour));
+        _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_fragmentPager, this, tabMaskColour));
 
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
@@ -312,23 +310,6 @@ public class MainActivity extends PillLoggerActivityBase implements
         startActivity(composeIntent);
     }
 
-    private void setBackgroundColour(){
-        int page = _fragmentPager.getCurrentItem();
-
-        // TODO: This code will break when colours change in fragments, needs to be updated
-        switch(page) {
-            case 0:
-                _colourBackground.setBackgroundColor(_colour1);
-                break;
-            case 1:
-                _colourBackground.setBackgroundColor(_colour2);
-                break;
-            case 2:
-                _colourBackground.setBackgroundColor(_colour3);
-                break;
-        }
-    }
-
     private void setupChrome(){
         final ActionBar actionBar = getActionBar();
         if(actionBar != null){
@@ -365,10 +346,6 @@ public class MainActivity extends PillLoggerActivityBase implements
                     actionBar.newTab()
                             .setCustomView(R.layout.tab_icon_charts)
                             .setTabListener(tabListener));
-
-            View view = findViewById(R.id.main_gradient);
-            if(view != null)
-                view.setBackgroundResource(State.getSingleton().getTheme().getGradientBackgroundResourceId());
         }
     }
 
