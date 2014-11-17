@@ -215,7 +215,8 @@
     <string name="medium">Medium</string>
     <string name="large">Large</string>
     <string name="huge">Huge</string>
-
+    <string name="pref_title_community">Google+ community</string>
+    <string name="pref_key_community">community</string>
 
     <integer name="default_graph_height">150</integer>
 </resources>

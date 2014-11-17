@@ -3,6 +3,7 @@ package uk.co.pilllogger.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -62,6 +63,21 @@ public class SettingsFragment extends PreferenceFragment{
                         composeIntent.putExtra(getString(R.string.key_show_feedback_button), true);
 
                         startActivity(composeIntent);
+                        return true;
+                    }
+                });
+            }
+
+            Preference community = findPreference(getString(R.string.pref_key_community));
+            if(community != null){
+                community.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        Uri webpage = Uri.parse("https://plus.google.com/communities/100765230896179453229");
+                        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+
+                        startActivity(intent);
+
                         return true;
                     }
                 });
