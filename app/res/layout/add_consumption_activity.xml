@@ -84,22 +84,83 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/white">
-    <TextView
-        android:id="@+id/add_consumption_select_pill_title"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:text="@string/add_consumption_title"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:textAllCaps="true"
-        style="?SecondaryText"/>
-    <View
-        android:id="@+id/add_consumption_select_pill_title_divider"
-        android:layout_height="1dp"
-        android:layout_width="match_parent"
-        android:layout_margin="5dp"
-        android:background="#CCCCCC" />
 
+        <!-- TIME -->
+        <TextView
+            android:id="@+id/add_consumption_select_time_title"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/add_consumption_time_title"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:textAllCaps="true"
+            style="?SecondaryText"/>
+        <View
+            android:id="@+id/add_consumption_select_time_title_divider"
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:layout_margin="5dp"
+            android:background="#CCCCCC" />
+
+        <LinearLayout
+            android:id="@+id/add_consumption_date_pickers_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:paddingBottom="10dp"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:id="@+id/add_consumption_date_container"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+
+                <Spinner
+                    android:id="@+id/add_consumption_date"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:clickable="false"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_grey"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/add_consumption_time_container"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+
+                <Spinner
+                    android:id="@+id/add_consumption_time"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:clickable="false"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_grey"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/add_consumption_select_pill_title"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/add_consumption_title"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:textAllCaps="true"
+            style="?SecondaryText"/>
+        <View
+            android:id="@+id/add_consumption_select_pill_title_divider"
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:layout_margin="5dp"
+            android:background="#CCCCCC" />
     <LinearLayout
         android:id="@+id/add_consumption_select_pill_layout"
         android:layout_height="0dp"
@@ -124,67 +185,6 @@
             android:visibility="gone">
             <include layout="@layout/add_new_medicine"
                 />
-        </LinearLayout>
-    </LinearLayout>
-
-<!-- TIME -->
-    <TextView
-        android:id="@+id/add_consumption_select_time_title"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:text="@string/add_consumption_time_title"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:textAllCaps="true"
-        style="?SecondaryText"/>
-    <View
-        android:id="@+id/add_consumption_select_time_title_divider"
-        android:layout_height="1dp"
-        android:layout_width="match_parent"
-        android:layout_margin="5dp"
-        android:background="#CCCCCC" />
-
-    <LinearLayout
-        android:id="@+id/add_consumption_date_pickers_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:paddingBottom="10dp"
-        android:orientation="horizontal"
-        android:visibility="visible"
-        android:baselineAligned="false">
-
-        <LinearLayout
-            android:id="@+id/add_consumption_date_container"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content">
-
-            <Spinner
-                android:id="@+id/add_consumption_date"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="15dp"
-                android:clickable="false"
-                android:textSize="18sp"
-                android:textColor="@color/text_grey"/>
-         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/add_consumption_time_container"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content">
-
-            <Spinner
-                android:id="@+id/add_consumption_time"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:clickable="false"
-                android:textSize="18sp"
-                android:textColor="@color/text_grey"/>
         </LinearLayout>
     </LinearLayout>
 

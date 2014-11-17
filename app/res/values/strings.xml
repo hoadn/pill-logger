@@ -12,7 +12,7 @@
     <string name="add_button">Add</string>
     <string name="title_pill_detail">Pill Detail</string>
     <string name="title_pill_list">Pills</string>
-    <string name="add_consumption_title">Record Consumption</string>
+    <string name="add_consumption_title">Choose medicine</string>
 
     <string name="drawer_consumption">Consumption</string>
     <string name="drawer_pills">Pills</string>
