@@ -1,0 +1,30 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:fitsSystemWindows="true"
+    android:background="@color/action_bar"
+    >
+
+    <LinearLayout
+        android:id="@+id/tablet_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+    <fragment
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        class="uk.co.pilllogger.fragments.PillListFragment"
+        android:id="@+id/fragment_pill_list"/>
+
+    <uk.co.pilllogger.views.MyViewPager
+        android:id="@+id/fragment_pager"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="4">
+    </uk.co.pilllogger.views.MyViewPager>
+    </LinearLayout>
+</FrameLayout>

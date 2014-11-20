@@ -21,21 +21,35 @@ import uk.co.pilllogger.fragments.StatsFragment;
  */
 public class SlidePagerAdapter extends FragmentStatePagerAdapter implements IconPagerAdapter {
 
-    public SlidePagerAdapter(FragmentManager fragmentManager) {
+    private final boolean _isTablet;
+
+    public SlidePagerAdapter(FragmentManager fragmentManager, boolean isTablet) {
         super(fragmentManager);
+        _isTablet = isTablet;
     }
 
     @Override @DebugLog
     public Fragment getItem(int position) {
-        switch(position){
-            case 0:
-                return ConsumptionListFragment.newInstance(position);
+        if(_isTablet){
+            switch (position) {
+                case 0:
+                    return ConsumptionListFragment.newInstance(position);
 
-            case 1:
-                return PillListFragment.newInstance(position);
+                case 1:
+                    return StatsFragment.newInstance(position);
+            }
+        }
+        else {
+            switch (position) {
+                case 0:
+                    return ConsumptionListFragment.newInstance(position);
 
-            case 2:
-                return StatsFragment.newInstance(position);
+                case 1:
+                    return PillListFragment.newInstance(position);
+
+                case 2:
+                    return StatsFragment.newInstance(position);
+            }
         }
 
         return null;
@@ -43,13 +57,23 @@ public class SlidePagerAdapter extends FragmentStatePagerAdapter implements Icon
 
     @Override
     public int getIconResId(int i) {
-        switch(i){
-            case 0:
-                return R.drawable.tab_consumptions;
-            case 1:
-                return R.drawable.tab_medicine;
-            case 2:
-                return R.drawable.tab_charts;
+        if(_isTablet) {
+            switch (i) {
+                case 0:
+                    return R.drawable.tab_consumptions;
+                case 1:
+                    return R.drawable.tab_charts;
+            }
+        }
+        else {
+            switch (i) {
+                case 0:
+                    return R.drawable.tab_consumptions;
+                case 1:
+                    return R.drawable.tab_medicine;
+                case 2:
+                    return R.drawable.tab_charts;
+            }
         }
 
         return R.drawable.cancel;
@@ -57,7 +81,7 @@ public class SlidePagerAdapter extends FragmentStatePagerAdapter implements Icon
 
     @Override
     public int getCount() {
-        return 3;
+        return _isTablet ? 2 : 3;
     }
 
 }

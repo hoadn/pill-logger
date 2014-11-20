@@ -81,6 +81,11 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
     }
 
     private void setColorOfTab(int tabPosition, float alpha){
+
+        if(tabPosition >= _actionBar.getTabCount()){
+            return;
+        }
+
         ActionBar.Tab tab = _actionBar.getTabAt(tabPosition);
         View tabCustomView = tab.getCustomView();
         ImageView tabImage = (ImageView) tabCustomView.findViewById(R.id.tab_icon_image);
