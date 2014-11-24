@@ -2,7 +2,9 @@ package uk.co.pilllogger.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -17,9 +19,11 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
@@ -29,26 +33,36 @@ import com.path.android.jobqueue.JobManager;
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import timber.log.Timber;
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.adapters.AddConsumptionPillRecyclerAdapter;
 import uk.co.pilllogger.adapters.UnitAdapter;
+import uk.co.pilllogger.helpers.AlarmHelper;
 import uk.co.pilllogger.helpers.DateHelper;
 import uk.co.pilllogger.helpers.NumberHelper;
+import uk.co.pilllogger.helpers.TrackerHelper;
+import uk.co.pilllogger.jobs.InsertConsumptionsJob;
 import uk.co.pilllogger.jobs.UpdatePillJob;
+import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.views.ColourIndicator;
 
 public class AddConsumptionFragment extends PillLoggerFragmentBase {
 
-    private static String DATE_FORMAT = "E, MMM dd, yyyy";
-    private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
-    private static final String FRAG_TAG_TIME_PICKER = "fragent_time_picker_name";
+    private String DATE_FORMAT = "E, MMM dd, yyyy";
+    private final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
+    private final String FRAG_TAG_TIME_PICKER = "fragent_time_picker_name";
+    private final String TAG = "AddConsumptionFragment";
     private View _view;
     private Date _consumptionDate = new Date();
     private Date _reminderDate = new Date();
@@ -80,6 +94,12 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
     @InjectView(R.id.add_consumption_fragment_set_reminder_title)
     public TextView _reminderTitle;
 
+    @InjectView(R.id.add_consumption_fragment_select_time_title)
+    public TextView _timeTitle;
+
+    @InjectView(R.id.add_consumption_fragment_quantity_title)
+    public TextView _quantityTitle;
+
     @InjectView(R.id.add_consumption_fragment_set_reminder_toggle)
     public CheckBox _reminderToggle;
 
@@ -88,6 +108,21 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
 
     @InjectView(R.id.add_consumption_fragment_reminder_layout)
     public View _reminderHoursContainer;
+
+    @InjectView(R.id.add_consumption_fragment_reminder_hours)
+    public EditText _reminderHours;
+
+    @InjectView(R.id.add_consumption_fragment_done_text)
+    public TextView _doneText;
+
+    @InjectView(R.id.add_consumption_fragment_cancel_text)
+    public TextView _cancelText;
+
+    @InjectView(R.id.add_consumption_fragment_done)
+    public View _doneLayout;
+
+    @InjectView(R.id.add_consumption_fragment_cancel)
+    public View _cancelLayout;
 
     public AddConsumptionFragment(){
 
@@ -102,6 +137,13 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         _view = inflater.inflate(R.layout.fragment_add_consumption, container, false);
         ButterKnife.inject(this, _view);
+
+        _quantityTitle.setTypeface(State.getSingleton().getRobotoTypeface());
+        _timeTitle.setTypeface(State.getSingleton().getRobotoTypeface());
+        _reminderTitle.setTypeface(State.getSingleton().getRobotoTypeface());
+        _doneText.setTypeface(State.getSingleton().getRobotoTypeface());
+        _cancelText.setTypeface(State.getSingleton().getRobotoTypeface());
+
 
         _decreaseQuantity.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,6 +189,20 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
         setUpRadioGroups();
         setUpSpinners();
 
+        _doneLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                done(false);
+            }
+        });
+
+        _cancelLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finished();
+            }
+        });
+
         return _view;
     }
 
@@ -168,7 +224,8 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
                     reminderTimeContainer.setVisibility(View.GONE);
                     reminderDatePickers.setVisibility(View.GONE);
                     reminderHoursContainer.setVisibility(View.VISIBLE);
-                } else {
+                }
+                else {
                     reminderDateContainer.setVisibility(View.VISIBLE);
                     reminderTimeContainer.setVisibility(View.VISIBLE);
                     reminderDatePickers.setVisibility(View.VISIBLE);
@@ -307,6 +364,72 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
 
         timePickerContainer.setOnClickListener(timeListener);
         reminderTimePickerContainer.setOnClickListener(timeListener);
+    }
+
+    public void done(final boolean futureConsumptionOk) {
+        Date consumptionDate = DateHelper.getDateFromSpinners(_dateSpinner, _timeSpinner, new Date(), this.getActivity());
+        Date reminderDate = null;
+        RadioButton reminderDateSelectorHours = (RadioButton)_view.findViewById(R.id.add_consumption_fragment_select_reminder_hours);
+
+        if(_reminderToggle.isChecked()){
+            if(!reminderDateSelectorHours.isChecked()){
+                reminderDate = DateHelper.getDateFromSpinners(_reminderDateSpinner, _reminderTimeSpinner, null, this.getActivity());
+            }
+            else {
+                int hours = 0;
+                try {
+                    hours = Integer.parseInt(_reminderHours.getText().toString());
+                }
+                catch(NumberFormatException e) {
+                    Timber.e("Parse of reminder hours error: " + e.getMessage());
+                }
+                reminderDate = DateTime.now().plusHours(hours).toDate();
+            }
+        }
+
+        if (DateHelper.isDateInFuture(consumptionDate) && !futureConsumptionOk) {
+            new AlertDialog.Builder(this.getActivity())
+                    .setMessage(getString(R.string.add_consumption_future_confirmation))
+                    .setCancelable(false)
+                    .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            AddConsumptionFragment.this.done(true);
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.no), null)
+                    .show();
+        }
+        else if(reminderDate != null && !DateHelper.isDateInFuture(reminderDate)){
+            new AlertDialog.Builder(this.getActivity())
+                    .setMessage(getString(R.string.add_consumption_reminder_warning_past))
+                    .setCancelable(true)
+                    .setNeutralButton(getString(R.string.ok), null)
+                    .show();
+        }
+        else {
+            List<Consumption> consumptions = new ArrayList<Consumption>();
+            int quantity = Integer.valueOf(_quantity.getText().toString());
+            for (int i = 0; i < quantity; i++) {
+                Consumption consumption = new Consumption(_pill, consumptionDate);
+                consumptions.add(consumption);
+            }
+
+
+            _jobManager.addJobInBackground(new InsertConsumptionsJob(consumptions, true));
+            Toast.makeText(this.getActivity(), quantity + " " + _pill.getName() + " added", Toast.LENGTH_SHORT).show();
+
+            if(reminderDate != null) {
+                AlarmHelper.addReminderAlarm(this.getActivity(), reminderDate, consumptions.get(0).getGroup(), true);
+            }
+
+            TrackerHelper.addConsumptionEvent(this.getActivity(), TAG);
+
+            finished();
+        }
+    }
+
+    private void finished() {
+        this.getActivity().getFragmentManager().popBackStack();
     }
 
 }

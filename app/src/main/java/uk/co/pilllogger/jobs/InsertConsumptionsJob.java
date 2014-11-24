@@ -7,6 +7,7 @@ import com.squareup.otto.Bus;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -36,6 +37,16 @@ public class InsertConsumptionsJob extends Job {
     public InsertConsumptionsJob(List<Consumption> consumptions){
         super(new Params(Priority.MID).persist());
 
+        _consumptions = consumptions;
+    }
+
+    @DebugLog
+    public InsertConsumptionsJob(List<Consumption> consumptions, boolean shouldGroup) {
+        super(new Params(Priority.MID).persist());
+        String consumptionGroup = UUID.randomUUID().toString();
+        for (Consumption c : consumptions) {
+            c.setGroup(consumptionGroup);
+        }
         _consumptions = consumptions;
     }
 

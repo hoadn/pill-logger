@@ -491,38 +491,6 @@ public class AddConsumptionActivity extends PillLoggerActivityBase implements
         finish();
     }
 
-    private Date getDateFromSpinners(Spinner date, Spinner time, Date defaultDate) {
-        if(date == null || time == null){
-            throw new IllegalArgumentException();
-        }
-
-        if(date.getSelectedItem() == null
-                || time.getSelectedItem() == null)
-            return defaultDate;
-
-        String selectedDate = date.getSelectedItem().toString();
-        String selectedTime = time.getSelectedItem().toString();
-
-        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
-        java.text.DateFormat tf = DateFormat.getTimeFormat(this);
-
-        try {
-            Date parsedDate = format.parse(selectedDate);
-            Date parsedTime = tf.parse(selectedTime);
-
-            DateTime parsedDateTime = new DateTime(parsedDate);
-            DateTime parsedTimeDateTime = new DateTime(parsedTime);
-            return parsedDateTime
-                    .withHourOfDay(parsedTimeDateTime.getHourOfDay())
-                    .withMinuteOfHour(parsedTimeDateTime.getMinuteOfHour())
-                    .toDate();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return defaultDate;
-    }
-
     public void done(View view){
         done(view, false);
     }
@@ -532,14 +500,13 @@ public class AddConsumptionActivity extends PillLoggerActivityBase implements
         AddConsumptionPillRecyclerAdapter adapter = (AddConsumptionPillRecyclerAdapter) _pillsList.getAdapter();
         List<Pill> consumptionPills = adapter.getPillsConsumed();
 
-        Date consumptionDate = getDateFromSpinners(_dateSpinner, _timeSpinner, new Date());
-        String consumptionGroup = UUID.randomUUID().toString();
+        Date consumptionDate = DateHelper.getDateFromSpinners(_dateSpinner, _timeSpinner, new Date(), this);
         Date reminderDate = null;
         RadioButton reminderDateSelectorHours = (RadioButton)findViewById(R.id.add_consumption_select_reminder_hours);
 
         if(_reminderToggle.isChecked()){
             if(!reminderDateSelectorHours.isChecked()){
-                reminderDate = getDateFromSpinners(_reminderDateSpinner, _reminderTimeSpinner, null);
+                reminderDate = DateHelper.getDateFromSpinners(_reminderDateSpinner, _reminderTimeSpinner, null, this);
             } else {
                 int hours = 0;
                 try {
@@ -574,14 +541,14 @@ public class AddConsumptionActivity extends PillLoggerActivityBase implements
         else {
             List<Consumption> consumptions = new ArrayList<Consumption>();
             for (Pill pill : consumptionPills) {
-                Consumption consumption = new Consumption(pill, consumptionDate, consumptionGroup);
+                Consumption consumption = new Consumption(pill, consumptionDate);
                 consumptions.add(consumption);
             }
 
-            _jobManager.addJobInBackground(new InsertConsumptionsJob(consumptions));
+            _jobManager.addJobInBackground(new InsertConsumptionsJob(consumptions, true));
 
             if(reminderDate != null){
-                AlarmHelper.addReminderAlarm(this, reminderDate, consumptionGroup, true);
+                AlarmHelper.addReminderAlarm(this, reminderDate, consumptions.get(0).getGroup(), true);
             }
 
             _adapter.clearOpenPillsList();

@@ -85,8 +85,6 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
                         .replace(R.id.export_container, fragment)
                         .addToBackStack(null)
                         .commit();
-//                _bus.post(new CreateConsumptionEvent(_pill, PillInfoDialogFragment.this));
-//                activity.finish();
             }
         });
         deletePillContainer.setOnClickListener(new View.OnClickListener() {

@@ -3,9 +3,12 @@ package uk.co.pilllogger.helpers;
 import android.content.Context;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
+import android.widget.Spinner;
 
 import org.joda.time.DateTime;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import uk.co.pilllogger.R;
@@ -15,6 +18,8 @@ import uk.co.pilllogger.state.State;
  * Created by alex on 13/11/2013.
  */
 public class DateHelper {
+
+    public static String DATE_FORMAT = "E, MMM dd, yyyy";
 
     public static String getPrettyDayOfMonth(DateTime dateTime){
         String dayOfMonth = dateTime.dayOfMonth().getAsText();
@@ -212,5 +217,37 @@ public class DateHelper {
         }
 
         return "";
+    }
+
+    public static Date getDateFromSpinners(Spinner date, Spinner time, Date defaultDate, Context context) {
+        if(date == null || time == null){
+            throw new IllegalArgumentException();
+        }
+
+        if(date.getSelectedItem() == null
+                || time.getSelectedItem() == null)
+            return defaultDate;
+
+        String selectedDate = date.getSelectedItem().toString();
+        String selectedTime = time.getSelectedItem().toString();
+
+        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
+        java.text.DateFormat tf = DateFormat.getTimeFormat(context);
+
+        try {
+            Date parsedDate = format.parse(selectedDate);
+            Date parsedTime = tf.parse(selectedTime);
+
+            DateTime parsedDateTime = new DateTime(parsedDate);
+            DateTime parsedTimeDateTime = new DateTime(parsedTime);
+            return parsedDateTime
+                    .withHourOfDay(parsedTimeDateTime.getHourOfDay())
+                    .withMinuteOfHour(parsedTimeDateTime.getMinuteOfHour())
+                    .toDate();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return defaultDate;
     }
 }

@@ -29,7 +29,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="10dp"
             android:textSize="20sp"
-            android:textColor="@color/text_grey_medium"
+            android:textColor="@color/text_grey"
             android:layout_gravity="center_vertical"/>
         <ImageView
             android:id="@+id/add_consumption_fragment_decrease"
@@ -49,7 +49,7 @@
             android:textStyle="bold"
             android:text="1"
             android:gravity="center_vertical"
-            android:textColor="@color/text_grey"/>
+            android:textColor="@color/text_grey_medium"/>
         <ImageView
             android:id="@+id/add_consumption_fragment_increase"
             android:text="@string/consumption_info_dialog_increase"
@@ -76,7 +76,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="10dp"
             android:textSize="20sp"
-            android:textColor="@color/text_grey_medium"
+            android:textColor="@color/text_grey"
             android:layout_gravity="center_vertical" />
         <LinearLayout
             android:id="@+id/add_consumption_fragment_date_container"
@@ -91,7 +91,7 @@
                 android:layout_width="match_parent"
                 android:clickable="false"
                 android:textSize="18sp"
-                android:textColor="@color/text_grey"/>
+                android:textColor="@color/text_grey_medium"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/add_consumption_fragment_time_container"
@@ -107,7 +107,7 @@
                 android:layout_marginLeft="15dp"
                 android:clickable="false"
                 android:textSize="18sp"
-                android:textColor="@color/text_grey"/>
+                android:textColor="@color/text_grey_medium"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -125,7 +125,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="10dp"
             android:textSize="20sp"
-            android:textColor="@color/text_grey_medium"
+            android:textColor="@color/text_grey"
             android:layout_gravity="center_vertical"/>
         <CheckBox
             android:id="@+id/add_consumption_fragment_set_reminder_toggle"
@@ -146,14 +146,14 @@
                      android:checked="true"
                      android:text="@string/reminder_hours"
                      android:visibility="gone"
-                     style="?DefaultText"/>
+                     android:textColor="@color/text_grey_medium"/>
         <RadioButton android:id="@+id/add_consumption_fragment_select_reminder_specific"
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
                      android:layout_marginLeft="20dp"
                      android:text="@string/add_consumption_reminder_select_specific_label"
                      android:visibility="gone"
-                     style="?DefaultText"/>
+                     android:textColor="@color/text_grey_medium"/>
     </RadioGroup>
     <LinearLayout
         android:id="@+id/add_consumption_fragment_reminder_layout"
@@ -213,7 +213,7 @@
                     android:layout_marginLeft="15dp"
                     android:clickable="false"
                     android:textSize="18sp"
-                    android:textColor="@color/text_grey"/>
+                    android:textColor="@color/text_grey_medium"/>
             </LinearLayout>
 
             <LinearLayout
@@ -230,7 +230,7 @@
                     android:layout_marginLeft="15dp"
                     android:clickable="false"
                     android:textSize="18sp"
-                    android:textColor="@color/text_grey"/>
+                    android:textColor="@color/text_grey_medium"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -238,19 +238,63 @@
         android:id="@+id/add_consumption_fragment_done_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/export_pills_done"
-            android:text="@string/done_label"
-            android:textSize="20sp"
-            android:layout_gravity="center"
-            android:gravity="center_vertical"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/text_grey_medium"
-            android:drawableLeft="@drawable/navigation_back"/>
+        android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/add_consumption_fragment_cancel"
+            android:layout_height="50dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:onClick="cancel">
+            <ImageView
+                android:id="@+id/add_consumption_cancel_icon"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
+                android:src="@drawable/cancel"/>
+            <TextView
+                android:id="@+id/add_consumption_fragment_cancel_text"
+                android:layout_height="match_parent"
+                android:singleLine="true"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:textColor="@color/text_grey_medium"
+                android:textSize="16dp"
+                android:text="Cancel"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/add_consumption_fragment_done"
+            android:layout_height="50dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:onClick="done">
+
+            <ImageView
+                android:id="@+id/add_consumption_done_icon"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
+                android:src="@drawable/tick"/>
+
+            <TextView
+                android:id="@+id/add_consumption_fragment_done_text"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:singleLine="true"
+                android:textSize="16dp"
+                android:textColor="@color/text_grey_medium"
+                android:gravity="center_vertical"
+                android:text="Done"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>
