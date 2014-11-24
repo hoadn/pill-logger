@@ -43,6 +43,11 @@
                 android:textColor="@color/text_grey_medium"
                 android:text="Take a Paracetamol now"/>
         </LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingRight="5dp"
+            android:src="@drawable/navigation_next"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"

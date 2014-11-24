@@ -140,6 +140,7 @@
     <string name="confirm_delete_title">Confirm Delete</string>
     <string name="confirm_delete_message">This will delete all history for this medication</string>
     <string name="info_dialog_edit_pill_title">Edit medicine</string>
+    <string name="add_consumption">Add Consumption</string>
     <string name="info_dialog_notes_title">Notes</string>
     <string name="edit_pill_size_label">Size: </string>
     <string name="edit_pill_name_label">Name: </string>

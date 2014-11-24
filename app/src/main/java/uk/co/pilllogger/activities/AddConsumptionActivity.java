@@ -481,7 +481,7 @@ public class AddConsumptionActivity extends PillLoggerActivityBase implements
         });
 
         _adapter = new AddConsumptionPillRecyclerAdapter(this, this, R.layout.add_consumption_pill_list, event.getPills(), true, _consumptionRepository);
-         _pillsList.setAdapter(_adapter);
+        _pillsList.setAdapter(_adapter);
 
         _adapter.updateAdapter(event.getPills());
     }

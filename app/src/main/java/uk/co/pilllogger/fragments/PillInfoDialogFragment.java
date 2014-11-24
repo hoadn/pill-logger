@@ -78,8 +78,15 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
         addConsumptionContainer.setOnClickListener(new View.OnClickListener() {
             @Override @DebugLog
             public void onClick(View v) {
-                _bus.post(new CreateConsumptionEvent(_pill, PillInfoDialogFragment.this));
-                activity.finish();
+                AddConsumptionFragment fragment = new AddConsumptionFragment(_pill);
+                FragmentManager fm = PillInfoDialogFragment.this.getActivity().getFragmentManager();
+                fm.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)
+                        .replace(R.id.export_container, fragment)
+                        .addToBackStack(null)
+                        .commit();
+//                _bus.post(new CreateConsumptionEvent(_pill, PillInfoDialogFragment.this));
+//                activity.finish();
             }
         });
         deletePillContainer.setOnClickListener(new View.OnClickListener() {

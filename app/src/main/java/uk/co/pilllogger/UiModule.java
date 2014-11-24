@@ -9,6 +9,7 @@ import uk.co.pilllogger.activities.MainActivity;
 import uk.co.pilllogger.activities.SettingsActivity;
 import uk.co.pilllogger.activities.WebViewActivity;
 import uk.co.pilllogger.adapters.NotesRecyclerAdapter;
+import uk.co.pilllogger.fragments.AddConsumptionFragment;
 import uk.co.pilllogger.fragments.ConsumptionInfoDialogFragment;
 import uk.co.pilllogger.fragments.ConsumptionListFragment;
 import uk.co.pilllogger.fragments.EditPillFragment;
@@ -56,7 +57,8 @@ import uk.co.pilllogger.fragments.StatsFragment;
                 StatsFragment.class,
                 NotesListFragment.class,
                 NoteFragment.class,
-                NotesRecyclerAdapter.class
+                NotesRecyclerAdapter.class,
+                AddConsumptionFragment.class
         },
         complete = false,
         library = true
