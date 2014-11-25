@@ -1,0 +1,126 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:padding="10dp"
+              android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:id="@+id/add_consumption_fragment_date_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_list_item_height"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+        <TextView
+            android:id="@+id/add_consumption_fragment_select_date_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/set_date"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:textSize="20sp"
+            android:textColor="@color/text_grey"
+            android:layout_gravity="center_vertical" />
+        <TextView
+            android:id="@+id/add_consumption_fragment_date_summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:textSize="14sp"
+            android:textColor="@color/text_grey_medium"
+            android:text="Current Date"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_divider_light" />
+    <LinearLayout
+        android:id="@+id/add_consumption_fragment_time_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_list_item_height"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+        <TextView
+            android:id="@+id/add_consumption_fragment_select_time_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/set_time"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:textSize="20sp"
+            android:textColor="@color/text_grey"
+            android:layout_gravity="center_vertical" />
+        <TextView
+            android:id="@+id/add_consumption_fragment_time_summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:textSize="14sp"
+            android:textColor="@color/text_grey_medium"
+            android:text="Current Time"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/add_consumption_fragment_done_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/add_consumption_fragment_set_time_cancel"
+            android:layout_height="50dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:onClick="cancel">
+            <ImageView
+                android:id="@+id/add_consumption_fragment_set_time_cancel_icon"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
+                android:src="@drawable/cancel"/>
+            <TextView
+                android:id="@+id/add_consumption_fragment_set_time_cancel_text"
+                android:layout_height="match_parent"
+                android:singleLine="true"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:textColor="@color/text_grey_medium"
+                android:textSize="16dp"
+                android:text="Cancel"/>
+
+        </LinearLayout>
+        <LinearLayout
+        android:id="@+id/add_consumption_fragment_set_time_done"
+        android:layout_height="50dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:onClick="done">
+
+            <ImageView
+                android:id="@+id/add_consumption_fragment_set_time_done_icon"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
+                android:src="@drawable/tick"/>
+
+            <TextView
+                android:id="@+id/add_consumption_fragment_set_time_done_text"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:singleLine="true"
+                android:textSize="16dp"
+                android:textColor="@color/text_grey_medium"
+                android:gravity="center_vertical"
+                android:text="Done"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

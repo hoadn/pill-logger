@@ -13,6 +13,7 @@ import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.CreateConsumptionEvent;
 import uk.co.pilllogger.events.DeletePillEvent;
 import uk.co.pilllogger.models.Pill;
+import uk.co.pilllogger.services.IAddConsumptionService;
 import uk.co.pilllogger.state.State;
 
 /**
@@ -78,7 +79,7 @@ public class PillInfoDialogFragment extends InfoDialogFragment {
         addConsumptionContainer.setOnClickListener(new View.OnClickListener() {
             @Override @DebugLog
             public void onClick(View v) {
-                AddConsumptionFragment fragment = new AddConsumptionFragment(_pill);
+                AddConsumptionFragment fragment = new AddConsumptionFragment(_pill, (IAddConsumptionService)getActivity());
                 FragmentManager fm = PillInfoDialogFragment.this.getActivity().getFragmentManager();
                 fm.beginTransaction()
                         .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)

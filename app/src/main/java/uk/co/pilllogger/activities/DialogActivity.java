@@ -18,6 +18,7 @@ import com.squareup.otto.Subscribe;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -34,6 +35,7 @@ import uk.co.pilllogger.models.Consumption;
 import uk.co.pilllogger.models.Pill;
 import uk.co.pilllogger.repositories.ConsumptionRepository;
 import uk.co.pilllogger.repositories.PillRepository;
+import uk.co.pilllogger.services.IAddConsumptionService;
 import uk.co.pilllogger.views.ColourIndicator;
 import static butterknife.ButterKnife.findById;
 
@@ -41,7 +43,7 @@ import static butterknife.ButterKnife.findById;
  * Created by Alex on 22/05/2014
  * in uk.co.pilllogger.activities.
  */
-public class DialogActivity extends PillLoggerActivityBase{
+public class DialogActivity extends PillLoggerActivityBase implements IAddConsumptionService {
 
     @Inject
     ConsumptionRepository _consumptionRepository;
@@ -64,6 +66,8 @@ public class DialogActivity extends PillLoggerActivityBase{
     @Inject Bus _bus;
     private ViewGroup _dialogTop;
     @Inject PillRepository _pillRepository;
+    private Date _consumptionDate;
+    private Date _reminderDate;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +101,11 @@ public class DialogActivity extends PillLoggerActivityBase{
         bindPill();
 
         setupStats();
+    }
+
+    public void setTopInfoHidden(boolean hide) {
+        View topInfo = findViewById(R.id.info_dialog_top);
+        topInfo.setVisibility(hide ? View.GONE : View.VISIBLE);
     }
 
     private void bindPill(){
@@ -247,6 +256,26 @@ public class DialogActivity extends PillLoggerActivityBase{
                 bindPill();
             }
         });
+    }
+
+    @Override
+    public Date getConsumptionDate() {
+        return _consumptionDate;
+    }
+
+    @Override
+    public void setConsumptionDate(Date date) {
+        _consumptionDate = date;
+    }
+
+    @Override
+    public Date getReminderDate() {
+        return _reminderDate;
+    }
+
+    @Override
+    public void setReminderDate(Date date) {
+        _reminderDate = date;
     }
 
     public enum DialogType{

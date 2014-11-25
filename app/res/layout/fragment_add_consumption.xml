@@ -5,20 +5,20 @@
     android:padding="10dp"
     android:background="@android:color/transparent">
     <TextView
+        android:id="@+id/add_consumption_fragment_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/add_consumption"
         android:gravity="center_horizontal"
-        android:textColor="@color/title_blue"
-        android:textAllCaps="true"
-        android:textSize="14sp"
+        android:textColor="@color/light_blue"
+        android:textSize="18dp"
         />
 
     <!-- Quantity -->
     <LinearLayout
         android:id="@+id/info_dialog_quantity"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/small_list_item_height"
+        android:layout_height="@dimen/default_list_item_height"
         android:orientation="horizontal">
         <TextView
             android:id="@+id/add_consumption_fragment_quantity_title"
@@ -62,177 +62,93 @@
     </LinearLayout>
 
     <!-- Time -->
-    <LinearLayout
-        android:id="@+id/add_consumption_fragment_date_pickers_layout"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/small_list_item_height"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/add_consumption_fragment_select_time_title"
-            android:layout_width="wrap_content"
-            android:layout_weight="0"
-            android:layout_height="wrap_content"
-            android:text="@string/add_consumption_time_title"
-            android:paddingLeft="5dp"
-            android:paddingRight="10dp"
-            android:textSize="20sp"
-            android:textColor="@color/text_grey"
-            android:layout_gravity="center_vertical" />
+        android:layout_height="1dp"
+        android:background="@color/grey_divider_light" />
+    <LinearLayout
+        android:id="@+id/add_consumption_fragment_set_time"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_list_item_height"
+        android:orientation="horizontal"
+        android:background="?android:attr/selectableItemBackground"
+        style="?attr/ExportItem">
         <LinearLayout
-            android:id="@+id/add_consumption_fragment_date_container"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:layout_gravity="center_vertical">
-
-            <Spinner
-                android:id="@+id/add_consumption_fragment_date"
-                android:layout_height="wrap_content"
+            <TextView
+                android:id="@+id/add_consumption_fragment_set_time_title"
+                android:text="Change Time"
                 android:layout_width="match_parent"
-                android:clickable="false"
-                android:textSize="18sp"
-                android:textColor="@color/text_grey_medium"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/add_consumption_fragment_time_container"
-            android:layout_width="wrap_content"
-            android:layout_weight="0"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical">
-
-            <Spinner
-                android:id="@+id/add_consumption_fragment_time"
                 android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/text_grey"
+                android:gravity="center_vertical"/>
+            <TextView
+                android:id="@+id/add_consumption_fragment_set_time_summary"
                 android:layout_width="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:clickable="false"
-                android:textSize="18sp"
-                android:textColor="@color/text_grey_medium"/>
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/text_grey_medium"
+                android:text="Now"/>
         </LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingRight="5dp"
+            android:src="@drawable/navigation_next"/>
     </LinearLayout>
 
     <!-- Reminder -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_divider_light" />
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/small_list_item_height"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/add_consumption_fragment_set_reminder_title"
-            android:text="@string/add_consumption_reminder_title"
+        android:id="@+id/add_consumption_fragment_set_reminder"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_list_item_height"
+        android:orientation="horizontal"
+        android:background="?android:attr/selectableItemBackground"
+        style="?attr/ExportItem">
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:paddingLeft="5dp"
             android:paddingRight="10dp"
-            android:textSize="20sp"
-            android:textColor="@color/text_grey"
-            android:layout_gravity="center_vertical"/>
-        <CheckBox
-            android:id="@+id/add_consumption_fragment_set_reminder_toggle"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_gravity="center_vertical">
+            <TextView
+                android:id="@+id/add_consumption_fragment_set_reminder_title"
+                android:text="Set Reminder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/text_grey"
+                android:gravity="center_vertical"/>
+            <TextView
+                android:id="@+id/add_consumption_fragment_set_reminder_summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/text_grey_medium"
+                android:text="Not Set"/>
+        </LinearLayout>
+        <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"/>
-    </LinearLayout>
-    <RadioGroup
-        android:id="@+id/add_consumption_fragment_reminder_type_selection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_vertical">
-        <RadioButton android:id="@+id/add_consumption_fragment_select_reminder_hours"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_marginLeft="20dp"
-                     android:checked="true"
-                     android:text="@string/reminder_hours"
-                     android:visibility="gone"
-                     android:textColor="@color/text_grey_medium"/>
-        <RadioButton android:id="@+id/add_consumption_fragment_select_reminder_specific"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_marginLeft="20dp"
-                     android:text="@string/add_consumption_reminder_select_specific_label"
-                     android:visibility="gone"
-                     android:textColor="@color/text_grey_medium"/>
-    </RadioGroup>
-    <LinearLayout
-        android:id="@+id/add_consumption_fragment_reminder_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
-        <LinearLayout
-            android:id="@+id/add_consumption_fragment_reminder_hours_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:orientation="horizontal"
-            android:paddingBottom="10dp"
-            android:paddingTop="3dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:text="@string/add_consumption_hours_prefix"
-                android:textSize="16sp"/>
-            <EditText
-                android:id="@+id/add_consumption_fragment_reminder_hours"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:hint="@string/add_consumption_hours_hint"/>
-            <TextView
-                android:id="@+id/add_consumption_fragment_reminder_hours_suffix"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/add_consumption_hours_suffix"
-                android:textSize="16sp"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/add_consumption_fragment_reminder_date_pickers_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:paddingBottom="10dp"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            android:baselineAligned="false">
-
-            <LinearLayout
-                android:id="@+id/add_consumption_fragment_reminder_date_container"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
-
-                <Spinner
-                    android:id="@+id/add_consumption_fragment_reminder_date"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="15dp"
-                    android:clickable="false"
-                    android:textSize="18sp"
-                    android:textColor="@color/text_grey_medium"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/add_consumption_fragment_reminder_time_container"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
-
-                <Spinner
-                    android:id="@+id/add_consumption_fragment_reminder_time"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:clickable="false"
-                    android:textSize="18sp"
-                    android:textColor="@color/text_grey_medium"/>
-            </LinearLayout>
-        </LinearLayout>
+            android:layout_height="match_parent"
+            android:paddingRight="5dp"
+            android:src="@drawable/navigation_next"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/add_consumption_fragment_done_layout"

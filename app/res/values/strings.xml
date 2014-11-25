@@ -218,6 +218,8 @@
     <string name="huge">Huge</string>
     <string name="pref_title_community">Google+ community</string>
     <string name="pref_key_community">community</string>
+    <string name="set_date">Set Date</string>
+    <string name="set_time">Set Time</string>
 
     <integer name="default_graph_height">150</integer>
 </resources>
