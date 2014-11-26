@@ -13,6 +13,7 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -76,6 +77,9 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
     @InjectView(R.id.add_consumption_fragment_title)
     public TextView _title;
 
+    @InjectView(R.id.add_consumption_fragment_sub_title)
+    public TextView _subTitle;
+
     @InjectView(R.id.add_consumption_fragment_decrease)
     public ImageView _decreaseQuantity;
 
@@ -105,12 +109,6 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
 
     @InjectView(R.id.add_consumption_fragment_quantity_title)
     public TextView _quantityTitle;
-
-    @InjectView(R.id.add_consumption_fragment_done_text)
-    public TextView _doneText;
-
-    @InjectView(R.id.add_consumption_fragment_cancel_text)
-    public TextView _cancelText;
 
     @InjectView(R.id.add_consumption_fragment_done)
     public View _doneLayout;
@@ -147,12 +145,10 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
         _view = inflater.inflate(R.layout.fragment_add_consumption, container, false);
         ButterKnife.inject(this, _view);
 
-        _title.setTypeface(State.getSingleton().getRobotoTypeface());
+        _subTitle.setTypeface(State.getSingleton().getRobotoTypeface());
         _quantityTitle.setTypeface(State.getSingleton().getRobotoTypeface());
         _timeTitle.setTypeface(State.getSingleton().getRobotoTypeface());
         _reminderTitle.setTypeface(State.getSingleton().getRobotoTypeface());
-        _doneText.setTypeface(State.getSingleton().getRobotoTypeface());
-        _cancelText.setTypeface(State.getSingleton().getRobotoTypeface());
 
         ((DialogActivity) getActivity()).setTopInfoHidden(true);
 
@@ -213,6 +209,7 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
 
     private void moveToNewFragment(PillLoggerFragmentBase fragment) {
         android.app.FragmentManager fm = this.getActivity().getFragmentManager();
+
         fm.beginTransaction()
                 .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)
                 .replace(R.id.export_container, fragment)
@@ -228,6 +225,8 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
             consumptionDate = new Date();
         }
 
+        Date reminderDate = _service.getReminderDate();
+
 
         if (DateHelper.isDateInFuture(_consumptionDate) && !futureConsumptionOk) {
             new AlertDialog.Builder(this.getActivity())
@@ -241,13 +240,13 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
                     .setNegativeButton(getString(R.string.no), null)
                     .show();
         }
-//        else if(reminderDate != null && !DateHelper.isDateInFuture(reminderDate)){
-//            new AlertDialog.Builder(this.getActivity())
-//                    .setMessage(getString(R.string.add_consumption_reminder_warning_past))
-//                    .setCancelable(true)
-//                    .setNeutralButton(getString(R.string.ok), null)
-//                    .show();
-//        }
+        else if(reminderDate != null && !DateHelper.isDateInFuture(reminderDate)){
+            new AlertDialog.Builder(this.getActivity())
+                    .setMessage(getString(R.string.add_consumption_reminder_warning_past))
+                    .setCancelable(true)
+                    .setNeutralButton(getString(R.string.ok), null)
+                    .show();
+        }
         else {
             List<Consumption> consumptions = new ArrayList<Consumption>();
             int quantity = Integer.valueOf(_quantity.getText().toString());
@@ -260,9 +259,9 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
             _jobManager.addJobInBackground(new InsertConsumptionsJob(consumptions, true));
             Toast.makeText(this.getActivity(), quantity + " " + _pill.getName() + " added", Toast.LENGTH_SHORT).show();
 
-//            if(reminderDate != null) {
-//                AlarmHelper.addReminderAlarm(this.getActivity(), reminderDate, consumptions.get(0).getGroup(), true);
-//            }
+            if(reminderDate != null) {
+                AlarmHelper.addReminderAlarm(this.getActivity(), reminderDate, consumptions.get(0).getGroup(), true);
+            }
 
             TrackerHelper.addConsumptionEvent(this.getActivity(), TAG);
 

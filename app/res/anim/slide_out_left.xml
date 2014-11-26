@@ -6,7 +6,7 @@
         android:duration="@integer/slide_duration"
         android:propertyName="x"
         android:valueFrom="0"
-        android:valueTo="-1000"
+        android:valueTo="@integer/slide_distance_neg"
         android:valueType="floatType" />
 
 </set>

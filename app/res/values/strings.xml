@@ -220,6 +220,8 @@
     <string name="pref_key_community">community</string>
     <string name="set_date">Set Date</string>
     <string name="set_time">Set Time</string>
+    <string name="add_consumption_sub_title">Modify details of new consumption</string>
+    <string name="add_consumption_set_time_title">Change Date and Time</string>
 
     <integer name="default_graph_height">150</integer>
 </resources>

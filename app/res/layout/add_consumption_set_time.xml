@@ -2,14 +2,28 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:padding="10dp"
               android:background="@android:color/transparent">
+
+    <TextView
+        android:id="@+id/add_consumption_fragment_set_time_title"
+        android:text="@string/add_consumption_set_time_title"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="18dp"
+        android:padding="20dp"
+        android:textColor="@color/action_bar"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_divider_lighter" />
 
     <LinearLayout
         android:id="@+id/add_consumption_fragment_date_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_list_item_height"
         android:orientation="vertical"
+        android:paddingLeft="10dp"
         android:gravity="center_vertical">
         <TextView
             android:id="@+id/add_consumption_fragment_select_date_title"
@@ -34,12 +48,13 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/grey_divider_light" />
+        android:background="@color/grey_divider_lighter" />
     <LinearLayout
         android:id="@+id/add_consumption_fragment_time_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_list_item_height"
         android:orientation="vertical"
+        android:paddingLeft="10dp"
         android:gravity="center_vertical">
         <TextView
             android:id="@+id/add_consumption_fragment_select_time_title"
@@ -61,66 +76,68 @@
             android:textColor="@color/text_grey_medium"
             android:text="Current Time"/>
     </LinearLayout>
-    <LinearLayout
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_divider_lighter" />
+    <RelativeLayout
         android:id="@+id/add_consumption_fragment_done_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="10dp"
+        >
         <LinearLayout
-            android:id="@+id/add_consumption_fragment_set_time_cancel"
+            android:id="@+id/add_consumption_fragment_set_time_done"
             android:layout_height="50dp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
             android:gravity="center"
+            android:layout_alignParentRight="true"
             android:orientation="horizontal"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
-            android:onClick="cancel">
-            <ImageView
-                android:id="@+id/add_consumption_fragment_set_time_cancel_icon"
-                android:layout_height="wrap_content"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp">
+            <TextView
+                android:id="@+id/add_consumption_fragment_set_time_done_text"
+                android:layout_height="match_parent"
                 android:layout_width="wrap_content"
+                android:singleLine="true"
+                android:textSize="14dp"
+                android:textColor="@color/action_bar"
+                android:textAllCaps="true"
                 android:gravity="center_vertical"
-                android:src="@drawable/cancel"/>
+                android:text="Ok"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/add_consumption_fragment_set_time_cancel"
+            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_toLeftOf="@id/add_consumption_fragment_set_time_done"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp">
             <TextView
                 android:id="@+id/add_consumption_fragment_set_time_cancel_text"
                 android:layout_height="match_parent"
                 android:singleLine="true"
                 android:gravity="center_vertical"
                 android:layout_width="wrap_content"
-                android:textColor="@color/text_grey_medium"
-                android:textSize="16dp"
+                android:textColor="@color/action_bar"
+                android:textSize="14dp"
+                android:textAllCaps="true"
                 android:text="Cancel"/>
 
         </LinearLayout>
-        <LinearLayout
-        android:id="@+id/add_consumption_fragment_set_time_done"
-        android:layout_height="50dp"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:onClick="done">
 
-            <ImageView
-                android:id="@+id/add_consumption_fragment_set_time_done_icon"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:gravity="center_vertical"
-                android:src="@drawable/tick"/>
 
-            <TextView
-                android:id="@+id/add_consumption_fragment_set_time_done_text"
-                android:layout_height="match_parent"
-                android:layout_width="wrap_content"
-                android:singleLine="true"
-                android:textSize="16dp"
-                android:textColor="@color/text_grey_medium"
-                android:gravity="center_vertical"
-                android:text="Done"/>
-
-        </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

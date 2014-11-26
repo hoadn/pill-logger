@@ -2,4 +2,6 @@
 <resources>
     <integer name="tutorial_animation_duration">350</integer>
     <integer name="slide_duration">250</integer>
+    <integer name="slide_distance">1000</integer>
+    <integer name="slide_distance_neg">-1000</integer>
 </resources>

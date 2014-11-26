@@ -51,6 +51,9 @@ public class AddConsumptionFragmentSetTime extends PillLoggerFragmentBase {
 
     @Inject JobManager _jobManager;
 
+    @InjectView(R.id.add_consumption_fragment_set_time_title)
+    public TextView _title;
+
     @InjectView(R.id.add_consumption_fragment_select_time_title)
     public TextView _timeTitle;
 
@@ -62,12 +65,6 @@ public class AddConsumptionFragmentSetTime extends PillLoggerFragmentBase {
 
     @InjectView(R.id.add_consumption_fragment_date_summary)
     public TextView _dateSummary;
-
-    @InjectView(R.id.add_consumption_fragment_set_time_done_text)
-    public TextView _doneText;
-
-    @InjectView(R.id.add_consumption_fragment_set_time_cancel_text)
-    public TextView _cancelText;
 
     @InjectView(R.id.add_consumption_fragment_set_time_done)
     public View _doneLayout;
@@ -91,8 +88,6 @@ public class AddConsumptionFragmentSetTime extends PillLoggerFragmentBase {
 
         _dateTitle.setTypeface(State.getSingleton().getRobotoTypeface());
         _timeTitle.setTypeface(State.getSingleton().getRobotoTypeface());
-        _doneText.setTypeface(State.getSingleton().getRobotoTypeface());
-        _cancelText.setTypeface(State.getSingleton().getRobotoTypeface());
 
         setUpSpinners();
 

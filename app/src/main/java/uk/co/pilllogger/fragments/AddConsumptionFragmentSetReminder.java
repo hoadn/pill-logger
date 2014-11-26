@@ -48,6 +48,9 @@ public class AddConsumptionFragmentSetReminder extends PillLoggerFragmentBase {
 
     @Inject JobManager _jobManager;
 
+    @InjectView(R.id.add_consumption_fragment_set_reminder_title)
+    public TextView _title;
+
     @InjectView(R.id.add_consumption_fragment_reminder_type_selection)
     public RadioGroup _reminderRadioGroup;
 
@@ -62,12 +65,6 @@ public class AddConsumptionFragmentSetReminder extends PillLoggerFragmentBase {
 
     @InjectView(R.id.add_consumption_fragment_reminder_time)
     public Spinner _timeSpinner;
-
-    @InjectView(R.id.add_consumption_fragment_done_text)
-    public TextView _doneText;
-
-    @InjectView(R.id.add_consumption_fragment_cancel_text)
-    public TextView _cancelText;
 
     @InjectView(R.id.add_consumption_fragment_done)
     public View _doneLayout;
@@ -88,11 +85,6 @@ public class AddConsumptionFragmentSetReminder extends PillLoggerFragmentBase {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         _view = inflater.inflate(R.layout.add_consumption_set_reminder, container, false);
         ButterKnife.inject(this, _view);
-
-//        _dateTitle.setTypeface(State.getSingleton().getRobotoTypeface());
-//        _timeTitle.setTypeface(State.getSingleton().getRobotoTypeface());
-        _doneText.setTypeface(State.getSingleton().getRobotoTypeface());
-        _cancelText.setTypeface(State.getSingleton().getRobotoTypeface());
 
         setUpRadioGroups();
         setUpSpinners();
