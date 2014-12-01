@@ -20,6 +20,16 @@
         class="uk.co.pilllogger.fragments.PillListFragment"
         android:id="@+id/fragment_pill_list"/>
 
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/grey_divider"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            />
+
     <uk.co.pilllogger.views.MyViewPager
         android:id="@+id/fragment_pager"
         android:layout_height="match_parent"
