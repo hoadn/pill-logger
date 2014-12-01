@@ -46,7 +46,5 @@
             android:textColor="@color/text_grey"
             android:textSize="@dimen/tutorial_font_size"
             android:text="@string/consumptionlist_tut_1"/>
-
-
     </RelativeLayout>
 </FrameLayout>

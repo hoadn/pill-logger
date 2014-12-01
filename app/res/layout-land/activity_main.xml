@@ -1,33 +1,24 @@
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:background="@color/action_bar"
     >
-    <RelativeLayout
-        android:id="@+id/colour_background"
+    <uk.co.pilllogger.views.MyViewPager
+        android:id="@+id/fragment_pager"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+    </uk.co.pilllogger.views.MyViewPager>
+
+    <LinearLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#70FFD100">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="@dimen/action_bar_height">
-            <uk.co.pilllogger.views.MyViewPager
-                android:id="@+id/fragment_pager"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent">
-            </uk.co.pilllogger.views.MyViewPager>
-
-            <LinearLayout
-                android:id="@+id/fragment_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-            </LinearLayout>
-        </RelativeLayout>
-    </RelativeLayout>
+        android:orientation="horizontal">
+    </LinearLayout>
     <RelativeLayout
         android:id="@+id/tutorial_layout"
         android:layout_width="match_parent"
@@ -55,7 +46,5 @@
             android:textColor="@color/text_grey"
             android:textSize="@dimen/tutorial_font_size"
             android:text="@string/consumptionlist_tut_1"/>
-
-
     </RelativeLayout>
-</RelativeLayout>
+</FrameLayout>
