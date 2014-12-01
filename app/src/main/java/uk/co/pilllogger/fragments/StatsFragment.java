@@ -92,8 +92,12 @@ public class StatsFragment extends PillLoggerFragmentBase{
             return null;
         }
         int color = getActivity().getResources().getColor(State.getSingleton().getTheme().getStatsBackgroundResourceId());
+
+        View tabletContainer = getActivity().findViewById(R.id.tablet_container);
+
         v.setTag(R.id.tag_page_colour, color);
-        v.setTag(R.id.tag_tab_icon_position, 2);
+
+        v.setTag(R.id.tag_tab_icon_position, tabletContainer == null ? 2 : 1);
 
         ButterKnife.inject(this, v);
 

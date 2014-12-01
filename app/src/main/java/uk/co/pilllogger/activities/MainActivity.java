@@ -1,6 +1,7 @@
 package uk.co.pilllogger.activities;
 
 import android.app.ActionBar;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -75,6 +76,7 @@ import uk.co.pilllogger.tutorial.TutorialService;
 import uk.co.pilllogger.views.ColourIndicator;
 import uk.co.pilllogger.views.MyViewPager;
 import uk.co.pilllogger.widget.MyAppWidgetProvider;
+import static butterknife.ButterKnife.findById;
 
 /**
  * Created by nick on 22/10/13.
@@ -89,9 +91,6 @@ public class MainActivity extends PillLoggerActivityBase implements
     private static final String TAG = "MainActivity";
     private MyViewPager _fragmentPager;
     private PagerAdapter _fragmentPagerAdapter;
-    private int _colour1 = Color.argb(120, 0, 233, 255);
-    private int _colour2 = Color.argb(120, 204, 51, 153);
-    private int _colour3 = Color.argb(120, 81, 81, 81);
     View _background;
     private Menu _menu;
     private TutorialService _tutorialService;
@@ -100,6 +99,8 @@ public class MainActivity extends PillLoggerActivityBase implements
     private boolean _dialogShown = false;
     @Inject JobManager _jobManager;
     private boolean _firstLoad = true;
+    private Fragment _pillListFragment;
+    private View _tabletContainer;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,7 +115,6 @@ public class MainActivity extends PillLoggerActivityBase implements
         updateTheme(getString(R.string.pref_key_theme_list));
         setRelativeTimesPreference();
 
-        ViewGroup wrapper = setContentViewWithWrapper(R.layout.activity_main);
         this.setTitle("Consumption");
         _background = findViewById(R.id.drawer_layout);
 
@@ -123,39 +123,23 @@ public class MainActivity extends PillLoggerActivityBase implements
         State.getSingleton().setTypeface(ttf);
         State.getSingleton().setRobotoTypeface(roboto);
 
-        final MainActivity activity = this;
+        setupCommonInterface();
 
+        _tabletContainer = findById(this, R.id.tablet_container);
         _fragmentPager = (MyViewPager)findViewById(R.id.fragment_pager);
 
+        _fragmentPagerAdapter = new SlidePagerAdapter(getFragmentManager(), _tabletContainer != null);
+
+        // pill list fragment is only used on the tablet interface
+        boolean isPhone = _tabletContainer == null;
+        if(isPhone){
+            setupPhoneInterface(savedInstanceState);
+        }
+        else{
+            setupTabletInterface(savedInstanceState);
+        }
+
         _fragmentPager.setOffscreenPageLimit(2);
-        _fragmentPager.setOnPageChangeListener(
-                new ViewPager.SimpleOnPageChangeListener() {
-                    @Override
-                    public void onPageScrollStateChanged(int state) {
-                        super.onPageScrollStateChanged(state);
-                        if (state == ViewPager.SCROLL_STATE_IDLE) {
-                        }
-                    }
-
-                    @Override
-                    public void onPageSelected(int position) {
-                        super.onPageSelected(position);
-
-                        String fragment = "";
-                        switch (position) {
-                            case 0:
-                                fragment = ConsumptionListFragment.TAG;
-                            break;
-                            case 1:
-                                fragment = PillListFragment.TAG;
-                                break;
-                        }
-
-                        new GetTutorialSeenTask(MainActivity.this, fragment, activity).execute();
-                    }
-                });
-
-        _fragmentPagerAdapter = new SlidePagerAdapter(getFragmentManager());
 
         _fragmentPager.setAdapter(_fragmentPagerAdapter);
 
@@ -164,21 +148,9 @@ public class MainActivity extends PillLoggerActivityBase implements
             _fragmentPager.setCurrentItem(savedInstanceState.getInt("item"));
         }
 
-        View tutorial = findViewById(R.id.tutorial_layout);
-        ViewGroup parent = (ViewGroup) tutorial.getParent();
-
-        if(parent != null){
-            parent.removeView(tutorial);
-        }
-
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT );
-        tutorial.setLayoutParams(params);
-
-        wrapper.addView(tutorial);
-
-        setupChrome();
-
         int tabMaskColour = getResources().getColor(State.getSingleton().getTheme().getTabMaskColourResourceId());
+
+        setupChrome(isPhone);
 
         _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_fragmentPager, this, tabMaskColour));
 
@@ -189,12 +161,39 @@ public class MainActivity extends PillLoggerActivityBase implements
             _jobManager.addJobInBackground(new LoadPillsJob());
         }
 
-        Integer gradientBackgroundResourceId = State.getSingleton().getTheme().getWindowBackgroundResourceId();
-        Drawable background = gradientBackgroundResourceId == null ? null : getResources().getDrawable(gradientBackgroundResourceId);
-        getWindow().setBackgroundDrawable(background);
-
         TrackerHelper.launchEvent(this);
         setupBilling();
+    }
+
+    private void setupTabletInterface(Bundle savedInstanceState){
+
+    }
+
+    private void setupPhoneInterface(Bundle savedInstanceState){
+
+    }
+
+    private void setupCommonInterface(){
+
+        ViewGroup wrapper = setContentViewWithWrapper(R.layout.activity_main);
+
+        View tutorial = findViewById(R.id.tutorial_layout);
+
+        // no tutorial in this layout
+        if (tutorial == null) {
+            return;
+        }
+
+        ViewGroup parent = (ViewGroup) tutorial.getParent();
+
+        if (parent != null) {
+            parent.removeView(tutorial);
+        }
+
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        tutorial.setLayoutParams(params);
+
+        wrapper.addView(tutorial);
     }
 
     private void setupBilling(){
@@ -310,7 +309,7 @@ public class MainActivity extends PillLoggerActivityBase implements
         startActivity(composeIntent);
     }
 
-    private void setupChrome(){
+    private void setupChrome(boolean isPhone){
         final ActionBar actionBar = getActionBar();
         if(actionBar != null){
             //actionBar.setDisplayShowHomeEnabled(false);
@@ -322,26 +321,32 @@ public class MainActivity extends PillLoggerActivityBase implements
             // Create a tab listener that is called when the user changes tabs.
             ActionBar.TabListener tabListener = new ActionBar.TabListener() {
                 public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                    _fragmentPager.setCurrentItem(tab.getPosition());
+                    if(_fragmentPager != null) {
+                        _fragmentPager.setCurrentItem(tab.getPosition());
+                    }
                 }
 
                 public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
                 }
 
                 public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                    // probably ignore this event
+                    if(_fragmentPager != null) {
+                        _fragmentPager.setCurrentItem(tab.getPosition());
+                    }
                 }
             };
-
 
             actionBar.addTab(
                     actionBar.newTab()
                             .setCustomView(R.layout.tab_icon_consumptions)
                             .setTabListener(tabListener));
-            actionBar.addTab(
-                    actionBar.newTab()
-                            .setCustomView(R.layout.tab_icon_pills)
-                            .setTabListener(tabListener));
+            // only add the pills tab if we're a phone
+            if(isPhone) {
+                actionBar.addTab(
+                        actionBar.newTab()
+                                .setCustomView(R.layout.tab_icon_pills)
+                                .setTabListener(tabListener));
+            }
             actionBar.addTab(
                     actionBar.newTab()
                             .setCustomView(R.layout.tab_icon_charts)
@@ -384,14 +389,15 @@ public class MainActivity extends PillLoggerActivityBase implements
         HashMap<String, TutorialPage> pages = new HashMap<String, TutorialPage>();
         View tutorialLayout = findViewById(R.id.tutorial_layout);
 
-        TutorialPage consumptionTutorial = new ConsumptionListTutorialPage(this, tutorialLayout);
-        TutorialPage pillsTutorial = new PillsListTutorialPage(this, tutorialLayout);
+        if(tutorialLayout != null) {
+            TutorialPage consumptionTutorial = new ConsumptionListTutorialPage(this, tutorialLayout);
+            TutorialPage pillsTutorial = new PillsListTutorialPage(this, tutorialLayout);
 
-        pages.put(ConsumptionListFragment.TAG, consumptionTutorial);
-        pages.put(PillListFragment.TAG, pillsTutorial);
+            pages.put(ConsumptionListFragment.TAG, consumptionTutorial);
+            pages.put(PillListFragment.TAG, pillsTutorial);
 
-        _tutorialService = new TutorialService(pages);
-
+            _tutorialService = new TutorialService(pages);
+        }
         // new GetTutorialSeenTask(MainActivity.this, ConsumptionListFragment.TAG, this).execute();
     }
 
@@ -419,7 +425,9 @@ public class MainActivity extends PillLoggerActivityBase implements
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.d(TAG, "Saving instance");
-        outState.putInt("item", _fragmentPager.getCurrentItem());
+        if(_fragmentPager != null) {
+            outState.putInt("item", _fragmentPager.getCurrentItem());
+        }
     }
 
     @Override
@@ -627,10 +635,6 @@ public class MainActivity extends PillLoggerActivityBase implements
             theme = new ProfessionalTheme();
 
             State.getSingleton().setTheme(theme);
-
-            _colour1 = getResources().getColor(theme.getConsumptionListBackgroundResourceId());
-            _colour2 = getResources().getColor(theme.getPillListBackgroundResourceId());
-            _colour3 = getResources().getColor(theme.getStatsBackgroundResourceId());
 
             int styleResourceId = State.getSingleton().getTheme().getStyleResourceId();
             setTheme(styleResourceId);
