@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import uk.co.pilllogger.R;
+import uk.co.pilllogger.views.MyViewPager;
 
 /**
  * Created by Nick on 07/12/13.
@@ -17,7 +18,7 @@ import uk.co.pilllogger.R;
 public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer {
 
     private static String TAG = "FadeBackgroundPageTransformer";
-    private final View _background;
+    private final MyViewPager _background;
     private final Activity _activity;
     private final int _tabColour;
     float[] _transitionModifiers = new float[4];
@@ -25,7 +26,7 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
     int _fadeTo;
     ActionBar _actionBar;
 
-    public FadeBackgroundPageTransformer(View background, Activity activity, int tabColour) {
+    public FadeBackgroundPageTransformer(MyViewPager background, Activity activity, int tabColour) {
         _background = background;
         _activity = activity;
         _tabColour = tabColour;
@@ -47,14 +48,16 @@ public class FadeBackgroundPageTransformer implements ViewPager.PageTransformer 
 
         int colour = (Integer)view.getTag(R.id.tag_page_colour);
         int tabPosition = (Integer)view.getTag(R.id.tag_tab_icon_position);
+
         if(position <= 1 && position > -1){ // page is visible
             if(position < 0)
                 _fadeTo = colour;
             else
                 _fadeFrom = colour;
 
-            if(position == 0) // if page takes up full screen, both colours are equal
+            if(position == 0) { // if page takes up full screen, both colours are equal
                 _fadeTo = colour;
+            }
 
             _transitionModifiers = calculateColourTransition(_fadeFrom, _fadeTo);
 

@@ -131,13 +131,13 @@ public class MainActivity extends PillLoggerActivityBase implements
         _fragmentPagerAdapter = new SlidePagerAdapter(getFragmentManager(), _tabletContainer != null);
 
         // pill list fragment is only used on the tablet interface
-        if(_tabletContainer == null){
+        boolean isPhone = _tabletContainer == null;
+        if(isPhone){
             setupPhoneInterface(savedInstanceState);
         }
         else{
             setupTabletInterface(savedInstanceState);
         }
-
 
         _fragmentPager.setOffscreenPageLimit(2);
 
@@ -150,9 +150,9 @@ public class MainActivity extends PillLoggerActivityBase implements
 
         int tabMaskColour = getResources().getColor(State.getSingleton().getTheme().getTabMaskColourResourceId());
 
-        _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_fragmentPager, this, tabMaskColour));
+        setupChrome(isPhone);
 
-        setupChrome();
+        _fragmentPager.setPageTransformer(true, new FadeBackgroundPageTransformer(_fragmentPager, this, tabMaskColour));
 
         defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
@@ -309,7 +309,7 @@ public class MainActivity extends PillLoggerActivityBase implements
         startActivity(composeIntent);
     }
 
-    private void setupChrome(){
+    private void setupChrome(boolean isPhone){
         final ActionBar actionBar = getActionBar();
         if(actionBar != null){
             //actionBar.setDisplayShowHomeEnabled(false);
@@ -330,7 +330,9 @@ public class MainActivity extends PillLoggerActivityBase implements
                 }
 
                 public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                    // probably ignore this event
+                    if(_fragmentPager != null) {
+                        _fragmentPager.setCurrentItem(tab.getPosition());
+                    }
                 }
             };
 
@@ -338,10 +340,13 @@ public class MainActivity extends PillLoggerActivityBase implements
                     actionBar.newTab()
                             .setCustomView(R.layout.tab_icon_consumptions)
                             .setTabListener(tabListener));
-            actionBar.addTab(
-                    actionBar.newTab()
-                            .setCustomView(R.layout.tab_icon_pills)
-                            .setTabListener(tabListener));
+            // only add the pills tab if we're a phone
+            if(isPhone) {
+                actionBar.addTab(
+                        actionBar.newTab()
+                                .setCustomView(R.layout.tab_icon_pills)
+                                .setTabListener(tabListener));
+            }
             actionBar.addTab(
                     actionBar.newTab()
                             .setCustomView(R.layout.tab_icon_charts)
