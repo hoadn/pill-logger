@@ -145,13 +145,19 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
         _view = inflater.inflate(R.layout.fragment_add_consumption, container, false);
         ButterKnife.inject(this, _view);
 
-        _subTitle.setTypeface(State.getSingleton().getRobotoTypeface());
-        _quantityTitle.setTypeface(State.getSingleton().getRobotoTypeface());
-        _timeTitle.setTypeface(State.getSingleton().getRobotoTypeface());
-        _reminderTitle.setTypeface(State.getSingleton().getRobotoTypeface());
+        if(_pill != null) {
+            _subTitle.setText("Take " + _pill.getName() + " " + _pill.getFormattedSize() + _pill.getUnits());
+        }
 
         ((DialogActivity) getActivity()).setTopInfoHidden(true);
 
+        setTypeFace();
+        setClickListeners();
+
+        return _view;
+    }
+
+    private void setClickListeners() {
         _decreaseQuantity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -203,8 +209,13 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
                 finished();
             }
         });
+    }
 
-        return _view;
+    private void setTypeFace() {
+        _subTitle.setTypeface(State.getSingleton().getRobotoTypeface());
+        _quantityTitle.setTypeface(State.getSingleton().getRobotoTypeface());
+        _timeTitle.setTypeface(State.getSingleton().getRobotoTypeface());
+        _reminderTitle.setTypeface(State.getSingleton().getRobotoTypeface());
     }
 
     private void moveToNewFragment(PillLoggerFragmentBase fragment) {
