@@ -62,6 +62,7 @@ import uk.co.pilllogger.views.ColourIndicator;
 
 public class AddConsumptionFragment extends PillLoggerFragmentBase {
     private Date _consumptionDate = new Date();
+    private int _consumptionQuantity = 1;
     private IAddConsumptionService _service;
 
     private Pill _pill;
@@ -119,6 +120,13 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
         _service = service;
     }
 
+    @SuppressLint("ValidFragment")
+    public AddConsumptionFragment(Consumption consumption, IAddConsumptionService service){
+        this(consumption.getPill(), service);
+
+        _consumptionQuantity = consumption.getQuantity();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -146,6 +154,8 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
 
         setTypeFace();
         setClickListeners();
+
+        _quantity.setText(String.valueOf(_consumptionQuantity));
 
         return view;
     }
@@ -274,8 +284,7 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
     }
 
     private void finished() {
-        this.getActivity().getFragmentManager().popBackStack();
-        ((DialogActivity) getActivity()).setTopInfoHidden(false);
+        this.getActivity().finish();
     }
 
 }

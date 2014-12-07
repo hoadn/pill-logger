@@ -1,8 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="#FFFFFF">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:background="#FFFFFF">
     <LinearLayout
         android:id="@+id/info_dialog_take_now"
         android:layout_width="match_parent"
@@ -41,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:textColor="@color/text_grey_medium"
-                android:text="Take a Paracetamol now"/>
+                tools:text="Take a Paracetamol now"/>
         </LinearLayout>
         <ImageView
             android:layout_width="wrap_content"

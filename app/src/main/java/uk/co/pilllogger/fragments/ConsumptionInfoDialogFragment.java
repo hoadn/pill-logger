@@ -2,6 +2,7 @@ package uk.co.pilllogger.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -9,12 +10,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import hugo.weaving.DebugLog;
 import uk.co.pilllogger.R;
 import uk.co.pilllogger.events.DecreaseConsumptionEvent;
 import uk.co.pilllogger.events.DeleteConsumptionEvent;
 import uk.co.pilllogger.events.IncreaseConsumptionEvent;
 import uk.co.pilllogger.events.TakeConsumptionAgainEvent;
 import uk.co.pilllogger.models.Consumption;
+import uk.co.pilllogger.services.IAddConsumptionService;
 import uk.co.pilllogger.state.State;
 
 /**
@@ -92,10 +95,15 @@ public class ConsumptionInfoDialogFragment extends InfoDialogFragment {
         }
 
         takeAgainContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
+            @Override @DebugLog
             public void onClick(View v) {
-                _bus.post(new TakeConsumptionAgainEvent(_consumption, ConsumptionInfoDialogFragment.this));
-                activity.finish();
+                AddConsumptionFragment fragment = new AddConsumptionFragment(_consumption, (IAddConsumptionService)getActivity());
+                FragmentManager fm = ConsumptionInfoDialogFragment.this.getActivity().getFragmentManager();
+                fm.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)
+                        .replace(R.id.export_container, fragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
         increase.setOnClickListener(new View.OnClickListener() {
