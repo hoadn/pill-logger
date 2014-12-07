@@ -61,14 +61,7 @@ import uk.co.pilllogger.state.State;
 import uk.co.pilllogger.views.ColourIndicator;
 
 public class AddConsumptionFragment extends PillLoggerFragmentBase {
-
-    private String DATE_FORMAT = "E, MMM dd, yyyy";
-    private final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
-    private final String FRAG_TAG_TIME_PICKER = "fragent_time_picker_name";
-    private final String TAG = "AddConsumptionFragment";
-    private View _view;
     private Date _consumptionDate = new Date();
-    private Date _reminderDate = new Date();
     private IAddConsumptionService _service;
 
     private Pill _pill;
@@ -142,8 +135,8 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        _view = inflater.inflate(R.layout.fragment_add_consumption, container, false);
-        ButterKnife.inject(this, _view);
+        View view = inflater.inflate(R.layout.fragment_add_consumption, container, false);
+        ButterKnife.inject(this, view);
 
         if(_pill != null) {
             _subTitle.setText("Take " + _pill.getName() + " " + _pill.getFormattedSize() + _pill.getUnits());
@@ -154,7 +147,7 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
         setTypeFace();
         setClickListeners();
 
-        return _view;
+        return view;
     }
 
     private void setClickListeners() {
@@ -274,7 +267,7 @@ public class AddConsumptionFragment extends PillLoggerFragmentBase {
                 AlarmHelper.addReminderAlarm(this.getActivity(), reminderDate, consumptions.get(0).getGroup(), true);
             }
 
-            TrackerHelper.addConsumptionEvent(this.getActivity(), TAG);
+            TrackerHelper.addConsumptionEvent(this.getActivity(), "AddConsumptionFragment");
 
             finished();
         }
