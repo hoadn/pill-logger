@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
@@ -23,7 +24,7 @@ import uk.co.pilllogger.state.State;
 /**
  * Created by alex on 25/01/2014.
  */
-public abstract class PillLoggerActivityBase extends FragmentActivity {
+public abstract class PillLoggerActivityBase extends ActionBarActivity {
 
     private ObjectGraph _activityGraph;
 

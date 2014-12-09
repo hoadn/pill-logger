@@ -224,4 +224,6 @@
     <string name="add_consumption_set_time_title">Change Date and Time</string>
 
     <integer name="default_graph_height">150</integer>
+
+    <string name="done_label">Done</string>
 </resources>

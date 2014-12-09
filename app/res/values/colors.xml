@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="transparent">#00000000</color>
+
     <color name="action_bar">#009688</color>
     <color name="action_bar_text">#004d40</color>
     <color name="background_grey">#dedede</color>

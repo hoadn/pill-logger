@@ -156,7 +156,7 @@ public class AddConsumptionFragmentSetTime extends PillLoggerFragmentBase {
                     RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
                             .newInstance(new RadialTimePickerDialog.OnTimeSetListener() {
                                              @Override
-                                             public void onTimeSet(RadialPickerLayout radialPickerLayout, int hourOfDay, int minute) {
+                                             public void onTimeSet(RadialTimePickerDialog radialPickerLayout, int hourOfDay, int minute) {
                                                  Date dt = new DateTime(finalDate)
                                                          .withHourOfDay(hourOfDay)
                                                          .withMinuteOfHour(minute)

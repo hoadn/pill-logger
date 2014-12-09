@@ -92,7 +92,7 @@ public class ExportSelectTimeFragment extends ExportFragmentBase {
                     RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
                             .newInstance(new RadialTimePickerDialog.OnTimeSetListener() {
                                              @Override
-                                             public void onTimeSet(RadialPickerLayout radialPickerLayout, int hourOfDay, int minute) {
+                                             public void onTimeSet(RadialTimePickerDialog radialPickerLayout, int hourOfDay, int minute) {
                                                  LocalTime lt = new LocalTime()
                                                          .withHourOfDay(hourOfDay)
                                                          .withMinuteOfHour(minute);
@@ -125,7 +125,7 @@ public class ExportSelectTimeFragment extends ExportFragmentBase {
                     RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
                             .newInstance(new RadialTimePickerDialog.OnTimeSetListener() {
                                              @Override
-                                             public void onTimeSet(RadialPickerLayout radialPickerLayout, int hourOfDay, int minute) {
+                                             public void onTimeSet(RadialTimePickerDialog radialPickerLayout, int hourOfDay, int minute) {
                                                  LocalTime lt = new LocalTime()
                                                          .withHourOfDay(hourOfDay)
                                                          .withMinuteOfHour(minute);

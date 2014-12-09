@@ -27,7 +27,7 @@
         <item name="android:popupMenuStyle">@style/PopupMenu.Example</item>
     </style>
 
-    <style name="AppThemeLight" parent="@android:style/Theme.Holo.Light">
+    <style name="AppThemeLight" parent="Theme.AppCompat.Light">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:actionBarStyle">@style/PartiallyTransparentActionBar</item>
@@ -38,7 +38,7 @@
         <item name="floatingActionButtonStyle">@style/AppTheme.Fab</item>
     </style>
 
-    <style name="Theme.Transparent" parent="@android:style/Theme.Holo.Light.Dialog">
+    <style name="Theme.Transparent" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>

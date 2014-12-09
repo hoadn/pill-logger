@@ -551,7 +551,7 @@ public class MainActivity extends PillLoggerActivityBase implements
         }
     }
 
-    private void addConsumption(Pill pill){
+    public void addConsumption(Pill pill){
         Consumption consumption = new Consumption(pill, new Date());
         _jobManager.addJobInBackground(new InsertConsumptionsJob(consumption));
 

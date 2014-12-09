@@ -1,2 +1,3 @@
-include ':app'
+include ':app', ':libraries:BetterPickers', ':'
 include ':libraries:HoloGraphLibrary'
+project(':libraries:BetterPickers').projectDir = new File('libraries/BetterPickers')
